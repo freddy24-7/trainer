@@ -1,8 +1,13 @@
+// This component is responsible for rendering the layout of the application.
+// It wraps the entire application in the ClerkProvider to manage the user context,
+// NextThemesProvider to manage the theme context,
+// and NextUIProvider to apply the UI theme and settings throughout the app.
 import type { Metadata } from 'next';
 import './globals.css';
 import NavBar from '@/components/navigation/NavBar';
 import { NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { ClerkProvider } from '@clerk/nextjs';
 import React from 'react';
 
 // Defining metadata for the page, which includes the title and description
@@ -17,20 +22,22 @@ type Props = {
 
 export default function RootLayout({ children }: Props) {
   return (
-    // Wrapping the application in ClerkProvider to manage the user context
-    <html lang="en">
-      <body>
-        {/* Wrapping the application in NextThemesProvider to manage the theme context */}
-        <NextThemesProvider attribute="class" defaultTheme="dark">
-          {/* Wrapping the application in NextUIProvider to apply the UI theme and settings throughout the app */}
-          <NextUIProvider>
-            {/* Rendering the NavBar at the top of the page for navigation */}
-            <NavBar />
-            {/* Main content area with container and padding styles applied */}
-            <main className="container mx-auto p-2">{children}</main>
-          </NextUIProvider>
-        </NextThemesProvider>
-      </body>
-    </html>
+    // Wrapping the entire application in ClerkProvider to manage the user context
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          {/* Wrapping the application in NextThemesProvider to manage the theme context */}
+          <NextThemesProvider attribute="class" defaultTheme="dark">
+            {/* Wrapping the application in NextUIProvider to apply the UI theme and settings throughout the app */}
+            <NextUIProvider>
+              {/* Rendering the NavBar at the top of the page for navigation */}
+              <NavBar />
+              {/* Main content area with container and padding styles applied */}
+              <main className="container mx-auto p-2">{children}</main>
+            </NextUIProvider>
+          </NextThemesProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

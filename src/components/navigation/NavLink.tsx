@@ -1,3 +1,5 @@
+//This component is responsible for rendering navigation links in the navigation bar.
+
 'use client';
 
 import { NavbarItem } from '@nextui-org/react';

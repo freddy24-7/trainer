@@ -1,3 +1,5 @@
+// Code for the 404 page
+
 import Link from 'next/link';
 import { LuAngry } from 'react-icons/lu'; // Import the LuAngry icon
 
