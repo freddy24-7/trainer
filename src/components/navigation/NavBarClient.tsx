@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { UserButton } from '@clerk/nextjs'; // Import only the UI component
+import { UserButton } from '@clerk/nextjs';
 
 type NavBarClientProps = {
   userId: string | null;
@@ -54,10 +54,10 @@ export default function NavBarClient({ userId }: NavBarClientProps) {
           </div>
         ) : (
           <div className="flex gap-4 items-center">
-            <Link href="/sign-up" className="text-white">
+            <Link href="/sign-up" className="text-gray-700">
               Sign up
             </Link>
-            <Link href="/sign-in" className="text-white">
+            <Link href="/sign-in" className="text-gray-700">
               Sign In
             </Link>
           </div>
