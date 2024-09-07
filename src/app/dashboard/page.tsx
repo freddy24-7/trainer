@@ -1,13 +1,14 @@
-//This page handles the dashboard page. It checks if the user is logged in and displays a welcome message.
-
+// This page component is responsible for rendering the dashboard page.
 import { auth, currentUser } from '@clerk/nextjs';
+import LoginModal from '@/components/LoginModal';
+import DashboardClient from '@/components/DashboardClient';
 
 export default async function DashboardPage() {
   const { userId } = auth();
   const user = await currentUser();
 
   if (!userId || !user) {
-    return <div>Please log in.</div>;
+    return <LoginModal />;
   }
 
   // Extract the required fields and convert the user to a plain object
@@ -16,9 +17,5 @@ export default async function DashboardPage() {
     username: user.username || 'Unknown',
   };
 
-  return (
-    <div className="mt-5 text-center max-w-xl mx-auto bg-brandcolor p-6 rounded">
-      <h1 className="text-3xl font-bold">Hoi {signedInUser.username}!</h1>
-    </div>
-  );
+  return <DashboardClient signedInUser={signedInUser} />;
 }

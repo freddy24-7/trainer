@@ -54,7 +54,7 @@ export async function GET() {
     });
   }
 
-  // Redirect the user to the dashboard
+  //Redirect the user to the dashboard
   return new NextResponse(null, {
     status: 302,
     headers: {
