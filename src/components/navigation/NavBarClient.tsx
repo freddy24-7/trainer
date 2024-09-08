@@ -7,6 +7,8 @@ import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
+import { CiHome } from 'react-icons/ci';
+import NavLink from '@/components/navigation/NavLink';
 
 type NavBarClientProps = {
   userId: string | null;
@@ -38,6 +40,9 @@ export default function NavBarClient({ userId }: NavBarClientProps) {
 
       {/* Right-aligned content for login, register, and theme toggle buttons */}
       <NavbarContent justify="end" className="hidden md:flex">
+        <NavLink href="/">
+          <CiHome size={24} className="ml-2" />
+        </NavLink>
         <Button
           variant="bordered"
           className="ml-4 text-white"
@@ -47,19 +52,19 @@ export default function NavBarClient({ userId }: NavBarClientProps) {
         </Button>
         {userId ? (
           <div className="flex gap-4 items-center">
-            <Link href="/dashboard" className="text-white">
+            <NavLink href="/dashboard" className="text-white">
               Dashboard
-            </Link>
+            </NavLink>
             <UserButton afterSignOutUrl="/" />
           </div>
         ) : (
           <div className="flex gap-4 items-center">
-            <Link href="/sign-up" className="text-gray-700">
+            <NavLink href="/sign-up" className="text-gray-700">
               Sign up
-            </Link>
-            <Link href="/sign-in" className="text-gray-700">
+            </NavLink>
+            <NavLink href="/sign-in" className="text-gray-700">
               Sign In
-            </Link>
+            </NavLink>
           </div>
         )}
       </NavbarContent>
@@ -68,6 +73,10 @@ export default function NavBarClient({ userId }: NavBarClientProps) {
       {menuOpen && (
         <div className="flex flex-col items-center bg-brandcolor w-auto py-4 mt-12">
           <div className="h-72 mr-7"></div>
+          <Link href="/" className="text-white w-auto my-2 flex items-center">
+            <CiHome size={24} />
+            <span className="ml-2">Home</span>
+          </Link>
           <Button
             variant="bordered"
             className="text-white w-auto my-2"

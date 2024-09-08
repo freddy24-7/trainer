@@ -13,12 +13,7 @@ export default function NavBar() {
       maxWidth="full"
       className="bg-brandcolor"
       classNames={{
-        item: [
-          'text-xl',
-          'text-white',
-          'uppercase',
-          'data-[active=true]:text-red-600',
-        ],
+        item: ['text-xl', 'text-white', 'data-[active=true]:text-red-600'],
       }}
     >
       {/* NavbarBrand represents the brand section of the Navbar */}
