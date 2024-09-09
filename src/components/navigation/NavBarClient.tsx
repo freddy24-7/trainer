@@ -1,4 +1,4 @@
-//This component is used to enable user interaction with the application.
+// This component is used to enable user interaction with the application.
 'use client';
 
 import { Button, NavbarContent } from '@nextui-org/react';
@@ -12,9 +12,10 @@ import NavLink from '@/components/navigation/NavLink';
 
 type NavBarClientProps = {
   userId: string | null;
+  userRole: string | null; // Receive the user role as a prop
 };
 
-export default function NavBarClient({ userId }: NavBarClientProps) {
+export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
   const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // State to control the mobile menu
   const { theme, setTheme } = useTheme();
@@ -23,6 +24,7 @@ export default function NavBarClient({ userId }: NavBarClientProps) {
   useEffect(() => {
     setMounted(true);
   }, []);
+
   if (!mounted) return null;
 
   return (
@@ -52,6 +54,12 @@ export default function NavBarClient({ userId }: NavBarClientProps) {
         </Button>
         {userId ? (
           <div className="flex gap-4 items-center">
+            {/* Conditionally render the Player-Management link if the user has the TRAINER role */}
+            {userRole === 'TRAINER' && (
+              <NavLink href="/player-management" className="text-white">
+                Player-Management
+              </NavLink>
+            )}
             <NavLink href="/dashboard" className="text-white">
               Dashboard
             </NavLink>
@@ -86,6 +94,15 @@ export default function NavBarClient({ userId }: NavBarClientProps) {
           </Button>
           {userId ? (
             <div className="flex flex-col items-center">
+              {/* Conditionally render the Player-Management link for TRAINER role */}
+              {userRole === 'TRAINER' && (
+                <Link
+                  href="/player-management"
+                  className="text-white w-auto my-2"
+                >
+                  Player-Management
+                </Link>
+              )}
               <Link href="/dashboard" className="text-white w-auto my-2">
                 Dashboard
               </Link>

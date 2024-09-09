@@ -1,12 +1,26 @@
-//This component is responsible for rendering the navigation bar at the top of the page.
+// //This component is responsible for rendering the navigation bar at the top of the page.
 import { Navbar, NavbarBrand } from '@nextui-org/react';
 import Link from 'next/link';
 import { IoFootball } from 'react-icons/io5';
 import { auth } from '@clerk/nextjs';
-import NavBarClient from './NavBarClient';
+import NavBarClient from './NavBarClient'; // Client Component
+import { PrismaClient } from '@prisma/client';
 
-export default function NavBar() {
+const prisma = new PrismaClient();
+
+export default async function NavBar() {
+  // Fetching the current user's ID from Clerk's auth module
   const { userId } = auth();
+
+  let userRole = null;
+
+  // Fetching the user's role from the database if the user is authenticated
+  if (userId) {
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+    userRole = user?.role || null;
+  }
 
   return (
     <Navbar
@@ -25,8 +39,8 @@ export default function NavBar() {
         </div>
       </NavbarBrand>
 
-      {/* Passing userId to NavBarClient to handle state and interactions */}
-      <NavBarClient userId={userId} />
+      {/* Passing userId and userRole to NavBarClient */}
+      <NavBarClient userId={userId} userRole={userRole} />
     </Navbar>
   );
 }
