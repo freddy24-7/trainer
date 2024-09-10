@@ -42,16 +42,23 @@ export async function GET() {
     );
   }
 
-  // Check if the user already exists in the database
-  let alreadyExistingUser = await prisma.user.findUnique({
-    where: { clerkId: parsedUser.data.clerkId },
-  });
-
-  // Create the user in the db if they do not already exist
-  if (!alreadyExistingUser) {
-    await prisma.user.create({
-      data: parsedUser.data,
+  try {
+    // Check if the user already exists in the database
+    let alreadyExistingUser = await prisma.user.findUnique({
+      where: { clerkId: parsedUser.data.clerkId },
     });
+
+    // Create the user in the db if they do not already exist
+    if (!alreadyExistingUser) {
+      await prisma.user.create({
+        data: parsedUser.data,
+      });
+    }
+  } catch (error) {
+    console.error('Error interacting with the database:', error);
+  } finally {
+    // Properly disconnect the PrismaClient to avoid open connections
+    await prisma.$disconnect();
   }
 
   //Redirect the user to the dashboard
