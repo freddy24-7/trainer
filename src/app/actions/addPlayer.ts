@@ -1,3 +1,5 @@
+// This server action is used to add a player to the database.
+
 'use server';
 
 import { PrismaClient } from '@prisma/client';
@@ -30,7 +32,6 @@ export async function addPlayer(data: { username: string; password: string }) {
     console.error('Error adding player:', error);
     return { success: false, error: 'Error registering the player.' };
   } finally {
-    // Properly disconnect the PrismaClient to avoid open connections
     await prisma.$disconnect();
   }
 }

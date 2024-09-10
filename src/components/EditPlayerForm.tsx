@@ -1,4 +1,4 @@
-// This component is used to add a new player
+// This component is responsible for rendering a form to edit a player.
 
 'use client';
 
@@ -14,32 +14,38 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
-import { addPlayer } from '@/app/actions/addPlayer';
+import { editPlayer } from '@/app/actions/editPlayer';
 
+// Defining the types based on the form data
 interface PlayerFormData {
   username: string;
   password: string;
 }
 
-// Props to include onAbort
-interface AddPlayerFormProps {
-  onPlayerAdded: (newPlayer: { id: number; username: string }) => void;
+// Defining the props for EditPlayerForm
+interface EditPlayerFormProps {
+  playerId: number;
+  initialUsername: string;
+  onPlayerEdited: (updatedPlayer: { id: number; username: string }) => void;
   onSubmissionStart: () => void;
   onAbort: () => void;
 }
 
-export default function AddPlayerForm({
-  onPlayerAdded,
+export default function EditPlayerForm({
+  playerId,
+  initialUsername,
+  onPlayerEdited,
   onSubmissionStart,
-  onAbort, // Use onAbort
-}: AddPlayerFormProps) {
+  onAbort,
+}: EditPlayerFormProps) {
   const [submissionError, setSubmissionError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track form submission state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Setting up the form with initial values and Zod validation
   const methods = useForm<PlayerFormData>({
     resolver: zodResolver(createPlayerSchema),
     defaultValues: {
-      username: '',
+      username: initialUsername,
       password: '',
     },
   });
@@ -52,23 +58,26 @@ export default function AddPlayerForm({
     reset,
   } = methods;
 
+  // Handling form submission
   const onSubmit = async (data: PlayerFormData) => {
     setSubmissionError(null);
     setIsSubmitting(true);
     onSubmissionStart();
 
-    const response = await addPlayer(data);
+    // Calling the server action to edit the player
+    const response = await editPlayer(playerId, data);
 
     if (response.success) {
       reset();
-      onPlayerAdded({ id: Math.random(), username: data.username });
+      onPlayerEdited({ id: playerId, username: data.username });
     } else {
-      setSubmissionError(response.error || 'Error registering the player.');
+      setSubmissionError(response.error || 'Error updating the player.');
     }
 
     setIsSubmitting(false);
   };
 
+  // Function to check validation before submission
   const checkValidationBeforeSubmit = async () => {
     const isValid = await trigger();
     if (isValid) {
@@ -79,6 +88,7 @@ export default function AddPlayerForm({
     }
   };
 
+  // Handling abort action
   const handleAbort = () => {
     setSubmissionError(null);
     setIsSubmitting(false);
@@ -125,7 +135,7 @@ export default function AddPlayerForm({
                     type="password"
                     {...field}
                     value={field.value || ''}
-                    placeholder="Enter a password"
+                    placeholder="Enter a new password"
                     className="input-class w-full p-2 border rounded"
                     autoComplete="current-password"
                   />
@@ -154,7 +164,7 @@ export default function AddPlayerForm({
           onClick={checkValidationBeforeSubmit}
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Submitting...' : 'Add Player'}
+          {isSubmitting ? 'Submitting...' : 'Update Player'}
         </Button>
       </form>
     </FormProvider>

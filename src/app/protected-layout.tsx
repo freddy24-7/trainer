@@ -7,7 +7,7 @@ import { ReactNode } from 'react';
 
 const prisma = new PrismaClient();
 
-// Define the layout's props, including requiredRole
+// Defining the layout's props, including requiredRole
 interface ProtectedLayoutProps {
   children: ReactNode;
   requiredRole: string;
