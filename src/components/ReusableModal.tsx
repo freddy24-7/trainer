@@ -1,5 +1,4 @@
 // This is a reusable modal component
-'use client';
 
 import {
   Modal,

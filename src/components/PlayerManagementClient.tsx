@@ -1,3 +1,5 @@
+// This component is a client-side implementation of the Player Management feature.
+
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
@@ -24,8 +26,11 @@ export default function PlayerManagementClient() {
   const [modalTitle, setModalTitle] = useState('');
   const [modalBody, setModalBody] = useState<ReactNode>(null);
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
-  const [editPlayerData, setEditPlayerData] = useState<Player | null>(null); // State to track player being edited
+  const [editPlayerData, setEditPlayerData] = useState<Player | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Ref to store the start time of the player submission
+  const submissionStartTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     const fetchPlayersAsync = async () => {
@@ -56,6 +61,16 @@ export default function PlayerManagementClient() {
           username: player.username ?? '',
         }));
         setPlayers(sanitizedPlayers);
+
+        // Calculate the elapsed time if submissionStartTimeRef is set
+        if (submissionStartTimeRef.current) {
+          const endTime = performance.now();
+          const elapsedTime = endTime - submissionStartTimeRef.current;
+          console.log(
+            `Time from submission to display: ${elapsedTime.toFixed(2)} ms`
+          );
+          submissionStartTimeRef.current = null; // Reset after logging
+        }
       } else {
         setError(response.error || 'Error fetching players.');
       }
@@ -78,6 +93,7 @@ export default function PlayerManagementClient() {
 
   const handleStartSubmission = () => {
     setSubmitting(true);
+    submissionStartTimeRef.current = performance.now();
   };
 
   const handleAbort = () => {
@@ -119,6 +135,9 @@ export default function PlayerManagementClient() {
 
   return (
     <div>
+      <h3 className="text-lg font-semibold mt-8 mb-4 text-black">
+        Player Management
+      </h3>
       <AddPlayerForm
         onPlayerAdded={handleAddPlayer}
         onSubmissionStart={handleStartSubmission}
@@ -148,19 +167,22 @@ export default function PlayerManagementClient() {
                   </CardHeader>
                   <Divider />
                   <CardBody>
-                    <Button
-                      color="primary"
-                      onClick={() => handleEditPlayer(player)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      color="danger"
-                      onClick={() => handleDeletePlayer(player.id)}
-                      className="ml-2"
-                    >
-                      Delete
-                    </Button>
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        color="primary"
+                        onClick={() => handleEditPlayer(player)}
+                        className="text-sm px-2 py-1"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        color="danger"
+                        onClick={() => handleDeletePlayer(player.id)}
+                        className="text-sm px-2 py-1"
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </CardBody>
                 </Card>
               ))}

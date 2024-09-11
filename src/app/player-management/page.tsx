@@ -8,9 +8,6 @@ export default function ManagementPage() {
     <ProtectedLayout requiredRole="TRAINER">
       <div className="flex items-center justify-center min-h-screen p-6 bg-gray-100">
         <div className="text-center">
-          <h2 className="text-xl font-bold mb-4 text-black">
-            Player Management
-          </h2>
           <PlayerManagementClient />
         </div>
       </div>

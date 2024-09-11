@@ -6,22 +6,22 @@ import { UserSchema } from '@/schemas/userSchema';
 const prisma = new PrismaClient();
 
 export async function GET() {
-  // Obtain the user id from the auth object
+  // Obtaining the user id from the auth object
   const { userId } = auth();
 
   if (!userId) {
     return NextResponse.redirect('/sign-in');
   }
 
-  // Obtain the user object from the currentUser function in Clerk
+  // Obtaining the user object from the currentUser function in Clerk
   const user = await currentUser();
 
-  // Check if the user is null before proceeding
+  // Checking if the user is null before proceeding
   if (!user) {
     return NextResponse.redirect('/sign-in');
   }
 
-  // Prepare the user data for validation, now that user is confirmed to be not null
+  // Preparing the user data for validation, now that user is confirmed to be not null
   const userData = {
     clerkId: user.id,
     username: user.username, // Ensure this value is always provided
@@ -30,7 +30,7 @@ export async function GET() {
 
   console.log('Validating user data with Zod:', userData);
 
-  // Validate the user data with Zod before interacting with Prisma
+  // Validating the user data with Zod before interacting with Prisma
   const parsedUser = UserSchema.safeParse(userData);
 
   if (!parsedUser.success) {
@@ -43,12 +43,12 @@ export async function GET() {
   }
 
   try {
-    // Check if the user already exists in the database
+    // Checking if the user already exists in the database
     let alreadyExistingUser = await prisma.user.findUnique({
       where: { clerkId: parsedUser.data.clerkId },
     });
 
-    // Create the user in the db if they do not already exist
+    // Creating the user in the db if they do not already exist
     if (!alreadyExistingUser) {
       await prisma.user.create({
         data: parsedUser.data,
@@ -57,11 +57,10 @@ export async function GET() {
   } catch (error) {
     console.error('Error interacting with the database:', error);
   } finally {
-    // Properly disconnect the PrismaClient to avoid open connections
     await prisma.$disconnect();
   }
 
-  //Redirect the user to the dashboard
+  //Redirecting the user to the dashboard
   return new NextResponse(null, {
     status: 302,
     headers: {

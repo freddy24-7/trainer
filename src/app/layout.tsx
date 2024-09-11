@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Props) {
     // Wrapping the entire application in ClerkProvider to manage the user context
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning={true}>
-        <body>
+        <body suppressHydrationWarning={true}>
           {/* Wrapping the application in NextThemesProvider to manage the theme context */}
           <NextThemesProvider attribute="class" defaultTheme="dark">
             {/* Wrapping the application in NextUIProvider to apply the UI theme and settings throughout the app */}

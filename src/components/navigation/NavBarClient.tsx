@@ -97,23 +97,26 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
               {/* Conditionally render the Player-Management link for TRAINER role */}
               {userRole === 'TRAINER' && (
                 <Link
-                  href="/player-management"
+                  href="/src/app/player-management"
                   className="text-white w-auto my-2"
                 >
                   Player-Management
                 </Link>
               )}
-              <Link href="/dashboard" className="text-white w-auto my-2">
+              <Link
+                href="/src/app/dashboard"
+                className="text-white w-auto my-2"
+              >
                 Dashboard
               </Link>
               <UserButton afterSignOutUrl="/" />
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <Link href="/sign-up" className="text-white w-auto my-2">
+              <Link href="/src/app/sign-up" className="text-white w-auto my-2">
                 Sign up
               </Link>
-              <Link href="/sign-in" className="text-white w-auto my-2">
+              <Link href="/src/app/sign-in" className="text-white w-auto my-2">
                 Sign In
               </Link>
             </div>
