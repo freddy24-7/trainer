@@ -9,6 +9,7 @@ import { NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { ClerkProvider } from '@clerk/nextjs';
 import React from 'react';
+import Providers from '@/utils/Providers';
 
 // Defining metadata for the page, which includes the title and description
 export const metadata: Metadata = {
@@ -30,10 +31,12 @@ export default function RootLayout({ children }: Props) {
           <NextThemesProvider attribute="class" defaultTheme="dark">
             {/* Wrapping the application in NextUIProvider to apply the UI theme and settings throughout the app */}
             <NextUIProvider>
-              {/* Rendering the NavBar at the top of the page for navigation */}
-              <NavBar />
-              {/* Main content area with container and padding styles applied */}
-              <main className="container mx-auto p-2">{children}</main>
+              <Providers>
+                {/* Rendering the NavBar at the top of the page for navigation */}
+                <NavBar />
+                {/* Main content area with container and padding styles applied */}
+                <main className="container mx-auto p-2">{children}</main>
+              </Providers>
             </NextUIProvider>
           </NextThemesProvider>
         </body>

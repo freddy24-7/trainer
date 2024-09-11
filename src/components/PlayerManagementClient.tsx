@@ -2,7 +2,8 @@
 
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import AddPlayerForm from '@/components/AddPlayerForm';
 import EditPlayerForm from '@/components/EditPlayerForm';
 import { getPlayers } from '@/app/actions/getPlayers';
@@ -17,9 +18,13 @@ interface Player {
   username: string;
 }
 
+type GetPlayersResponse = {
+  success: boolean;
+  players?: Player[];
+  error?: string;
+};
+
 export default function PlayerManagementClient() {
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,86 +32,61 @@ export default function PlayerManagementClient() {
   const [modalBody, setModalBody] = useState<ReactNode>(null);
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
   const [editPlayerData, setEditPlayerData] = useState<Player | null>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Ref to store the start time of the player submission
   const submissionStartTimeRef = useRef<number | null>(null);
 
+  // Using React Query to fetch players
+  const {
+    data,
+    isLoading,
+    refetch,
+    error: queryError,
+  } = useQuery<GetPlayersResponse, Error>({
+    queryKey: ['players'], // Query key explicitly as an array
+    queryFn: async () => await getPlayers(),
+  });
+
+  const players = data?.players || [];
+
+  // Logging the time taken when the data changes and the player list is updated
   useEffect(() => {
-    const fetchPlayersAsync = async () => {
-      abortControllerRef.current = new AbortController();
-
-      try {
-        await fetchPlayers();
-      } catch (error) {
-        console.error('Error fetching players:', error);
-      }
-    };
-    void fetchPlayersAsync();
-    return () => {
-      abortControllerRef.current?.abort();
-    };
-  }, []);
-
-  const fetchPlayers = async () => {
-    abortControllerRef.current = new AbortController();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await getPlayers();
-      if (response.success && response.players) {
-        const sanitizedPlayers = response.players.map((player) => ({
-          id: player.id,
-          username: player.username ?? '',
-        }));
-        setPlayers(sanitizedPlayers);
-
-        // Calculate the elapsed time if submissionStartTimeRef is set
-        if (submissionStartTimeRef.current) {
-          const endTime = performance.now();
-          const elapsedTime = endTime - submissionStartTimeRef.current;
-          console.log(
-            `Time from submission to display: ${elapsedTime.toFixed(2)} ms`
-          );
-          submissionStartTimeRef.current = null; // Reset after logging
-        }
-      } else {
-        setError(response.error || 'Error fetching players.');
-      }
-    } catch (err) {
-      const error = err as Error;
-      if (error.name === 'AbortError') {
-        console.log('Fetch aborted');
-      } else {
-        setError('Failed to fetch players.');
-      }
-    } finally {
-      setLoading(false);
+    if (submissionStartTimeRef.current !== null && data && data.players) {
+      const endTime = performance.now();
+      const elapsedTime = endTime - submissionStartTimeRef.current;
+      console.log(
+        `Time from submission to display: ${elapsedTime.toFixed(2)} ms`
+      );
+      submissionStartTimeRef.current = null; // Reset after logging
     }
-  };
+  }, [data]);
+
+  if (queryError) {
+    setError(queryError.message || 'Failed to fetch players.');
+  }
+
+  if (data && !data.success) {
+    setError(data.error || 'Error fetching players.');
+  }
 
   const handleAddPlayer = async () => {
     setSubmitting(false);
-    await fetchPlayers();
+    await refetch();
   };
 
   const handleStartSubmission = () => {
     setSubmitting(true);
-    submissionStartTimeRef.current = performance.now();
+    submissionStartTimeRef.current = performance.now(); // Start the timer when the submission starts
   };
 
   const handleAbort = () => {
-    abortControllerRef.current?.abort();
     setSubmitting(false);
-    setLoading(false);
     setError(null);
-    setPlayers([]);
   };
 
   const handlePlayerEdited = async () => {
     setSubmitting(false);
-    await fetchPlayers();
+    await refetch();
     setEditPlayerData(null);
     setIsModalOpen(false);
   };
@@ -124,7 +104,7 @@ export default function PlayerManagementClient() {
       const response = await deletePlayer(playerId);
       if (response.success) {
         setModalBody(<p>Player deleted successfully!</p>);
-        await fetchPlayers();
+        await refetch();
       } else {
         setModalBody(<p className="text-red-500">{response.error}</p>);
       }
@@ -148,19 +128,19 @@ export default function PlayerManagementClient() {
         Current Players
       </h3>
 
-      {(loading || submitting) && (
+      {(isLoading || submitting) && (
         <div className="flex justify-center my-4">
-          <Spinner size="lg" color="primary" />
+          <Spinner size="lg" color="success" />
         </div>
       )}
 
-      {!loading && !submitting && (
+      {!isLoading && !submitting && (
         <>
           {error ? (
             <p className="text-red-500">{error}</p>
           ) : players.length > 0 ? (
             <ul className="space-y-2">
-              {players.map((player) => (
+              {players.map((player: Player) => (
                 <Card key={player.id} className="max-w-md mx-auto mb-4">
                   <CardHeader className="flex justify-between items-center">
                     <span className="text-md">{player.username}</span>
@@ -193,7 +173,6 @@ export default function PlayerManagementClient() {
         </>
       )}
 
-      {/* Reusable Modal for edit and delete actions */}
       <ReusableModal
         isOpen={isModalOpen}
         onClose={() => {

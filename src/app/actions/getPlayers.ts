@@ -21,7 +21,16 @@ export async function getPlayers() {
       },
     });
 
-    return { success: true, players };
+    // Ensuring the data is serialized into a plain object
+    const serializedPlayers = JSON.parse(
+      JSON.stringify(players, (_, value) => {
+        // Ensure `username` is a string to avoid null issues
+        if (value === null) return '';
+        return value;
+      })
+    );
+
+    return { success: true, players: serializedPlayers };
   } catch (error) {
     console.error('Error fetching players:', error);
     return { success: false, error: 'Error fetching players.' };
