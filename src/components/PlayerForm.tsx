@@ -1,4 +1,4 @@
-// This component is a form for creating or editing a player.
+// This component is a form editing a player.
 
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

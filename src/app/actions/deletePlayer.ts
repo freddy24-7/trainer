@@ -2,10 +2,8 @@
 
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 import { users } from '@clerk/clerk-sdk-node'; // Import Clerk SDK users
-
-const prisma = new PrismaClient();
 
 export async function deletePlayer(playerId: number) {
   try {
@@ -36,7 +34,5 @@ export async function deletePlayer(playerId: number) {
   } catch (error) {
     console.error('Error deleting player:', error);
     return { success: false, error: 'Error deleting the player.' };
-  } finally {
-    await prisma.$disconnect();
   }
 }

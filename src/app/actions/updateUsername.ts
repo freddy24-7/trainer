@@ -1,8 +1,6 @@
 // This server action is used to update the username of a user (trainer) in the database.
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export async function updateUsername(clerkId: string, newUsername: string) {
   try {
@@ -36,7 +34,5 @@ export async function updateUsername(clerkId: string, newUsername: string) {
   } catch (error) {
     console.error('Error updating username:', error);
     return { success: false, error: 'Error updating username' };
-  } finally {
-    await prisma.$disconnect();
   }
 }

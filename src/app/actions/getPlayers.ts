@@ -2,9 +2,8 @@
 
 'use server';
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
 
 export async function getPlayers() {
   try {
@@ -21,20 +20,11 @@ export async function getPlayers() {
       },
     });
 
-    // Ensuring the data is serialized into a plain object
-    const serializedPlayers = JSON.parse(
-      JSON.stringify(players, (_, value) => {
-        // Ensure `username` is a string to avoid null issues
-        if (value === null) return '';
-        return value;
-      })
-    );
+    revalidatePath('/player/management');
 
-    return { success: true, players: serializedPlayers };
+    return { success: true, players };
   } catch (error) {
     console.error('Error fetching players:', error);
     return { success: false, error: 'Error fetching players.' };
-  } finally {
-    await prisma.$disconnect();
   }
 }

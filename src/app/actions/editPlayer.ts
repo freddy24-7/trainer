@@ -2,10 +2,8 @@
 
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 import { users } from '@clerk/clerk-sdk-node';
-
-const prisma = new PrismaClient();
 
 export async function editPlayer(
   playerId: number,
@@ -31,7 +29,5 @@ export async function editPlayer(
   } catch (error) {
     console.error('Error editing player:', error);
     return { success: false, error: 'Error updating the player.' };
-  } finally {
-    await prisma.$disconnect();
   }
 }
