@@ -14,6 +14,33 @@ model User {
   username  String?  @unique
   role      Role     @default(TRAINER)
   createdAt DateTime @default(now())
+  teamId    Int?
+  team      Team?    @relation(fields: [teamId], references: [id])
+}
+
+model Team {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  players        User[]
+  poules         Poule[]          @relation("PrimaryTeam")
+  PouleOpponents PouleOpponents[]
+}
+
+model Poule {
+  id        Int              @id @default(autoincrement())
+  name      String           @unique
+  teamId    Int
+  team      Team             @relation("PrimaryTeam", fields: [teamId], references: [id])
+  opponents PouleOpponents[]
+  createdAt DateTime         @default(now())
+}
+
+model PouleOpponents {
+  id      Int   @id @default(autoincrement())
+  pouleId Int
+  teamId  Int
+  poule   Poule @relation(fields: [pouleId], references: [id])
+  team    Team  @relation(fields: [teamId], references: [id])
 }
 
 enum Role {

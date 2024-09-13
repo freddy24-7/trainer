@@ -1,4 +1,5 @@
 // This component is for zod validation of a player submission in server actions.
+
 'use client';
 
 import { useFormState } from 'react-dom';

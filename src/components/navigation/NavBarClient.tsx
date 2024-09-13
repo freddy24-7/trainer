@@ -60,6 +60,12 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
                 Player-Management
               </NavLink>
             )}
+            {/* Conditionally render the Poule-Management link if the user has the required role */}
+            {userRole === 'TRAINER' && (
+              <NavLink href="/poule-management" className="text-white">
+                Poule-Management
+              </NavLink>
+            )}
             <NavLink href="/dashboard" className="text-white">
               Dashboard
             </NavLink>
@@ -97,26 +103,32 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
               {/* Conditionally render the Player-Management link for TRAINER role */}
               {userRole === 'TRAINER' && (
                 <Link
-                  href="/src/app/player-management"
+                  href="/player-management"
                   className="text-white w-auto my-2"
                 >
                   Player-Management
                 </Link>
               )}
-              <Link
-                href="/src/app/dashboard"
-                className="text-white w-auto my-2"
-              >
+              {/* Conditionally render the Poule-Management link for TRAINER role */}
+              {userRole === 'TRAINER' && (
+                <Link
+                  href="/poule-management"
+                  className="text-white w-auto my-2"
+                >
+                  Poule-Management
+                </Link>
+              )}
+              <Link href="/dashboard" className="text-white w-auto my-2">
                 Dashboard
               </Link>
               <UserButton afterSignOutUrl="/" />
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <Link href="/src/app/sign-up" className="text-white w-auto my-2">
+              <Link href="/sign-up" className="text-white w-auto my-2">
                 Sign up
               </Link>
-              <Link href="/src/app/sign-in" className="text-white w-auto my-2">
+              <Link href="/sign-in" className="text-white w-auto my-2">
                 Sign In
               </Link>
             </div>

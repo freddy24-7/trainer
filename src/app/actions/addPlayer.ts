@@ -44,10 +44,10 @@ export default async function addPlayer(
         createdAt: new Date(),
       },
     });
-    revalidatePath('/player/management');
+    revalidatePath('/player-management');
 
     // Redirecting after successful addition
-    redirect('/player/management');
+    redirect('/player-management');
   } catch (error) {
     console.error('Error adding player:', error);
 

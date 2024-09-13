@@ -3,13 +3,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { deletePlayer } from '@/app/actions/deletePlayer'; // Server action for deletion
+import { deletePlayer } from '@/app/actions/deletePlayer';
 import { Spinner } from '@nextui-org/spinner';
-import { Button, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
 import ReusableModal from '@/components/ReusableModal';
 import EditPlayerForm from '@/components/EditPlayerForm';
+import PlayersList from '@/components/PlayersList';
 
-interface Player {
+export interface Player {
   id: number;
   username: string;
 }
@@ -33,10 +33,10 @@ export default function PlayerManagementClient({
     setModalBody(<p>Are you sure you want to delete this player?</p>);
     setConfirmAction(() => async () => {
       setSubmitting(true);
-      const response = await deletePlayer(playerId); // Trigger server action
+      const response = await deletePlayer(playerId);
       if (response.success) {
         setModalBody(<p>Player deleted successfully!</p>);
-        window.location.reload(); // Refresh to get updated data from the server
+        window.location.reload();
       } else {
         setModalBody(<p className="text-red-500">{response.error}</p>);
       }
@@ -64,34 +64,11 @@ export default function PlayerManagementClient({
         </div>
       )}
 
-      <ul className="space-y-2">
-        {players.map((player: Player) => (
-          <Card key={player.id} className="max-w-md mx-auto mb-4">
-            <CardHeader className="flex justify-between items-center">
-              <span className="text-md">{player.username}</span>
-            </CardHeader>
-            <Divider />
-            <CardBody>
-              <div className="flex justify-end space-x-2">
-                <Button
-                  color="primary"
-                  onClick={() => handleEditPlayer(player)}
-                  className="text-sm px-2 py-1"
-                >
-                  Edit
-                </Button>
-                <Button
-                  color="danger"
-                  onClick={() => handleDeletePlayer(player.id)}
-                  className="text-sm px-2 py-1"
-                >
-                  Delete
-                </Button>
-              </div>
-            </CardBody>
-          </Card>
-        ))}
-      </ul>
+      <PlayersList
+        players={players}
+        onEdit={handleEditPlayer}
+        onDelete={handleDeletePlayer}
+      />
 
       <ReusableModal
         isOpen={isModalOpen}
