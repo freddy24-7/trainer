@@ -10,6 +10,8 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { ClerkProvider } from '@clerk/nextjs';
 import React from 'react';
 import Providers from '@/utils/Providers';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Defining metadata for the page, which includes the title and description
 export const metadata: Metadata = {
@@ -36,6 +38,12 @@ export default function RootLayout({ children }: Props) {
                 <NavBar />
                 {/* Main content area with container and padding styles applied */}
                 <main className="container mx-auto p-2">{children}</main>
+                {/* ToastContainer to display notifications */}
+                <ToastContainer
+                  position="top-right"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                />
               </Providers>
             </NextUIProvider>
           </NextThemesProvider>

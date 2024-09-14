@@ -6,7 +6,7 @@ import prisma from '@/lib/prisma';
 
 export async function getTeamsInPoule() {
   try {
-    const poule = await prisma.poule.findFirst({
+    const poules = await prisma.poule.findMany({
       include: {
         team: true,
         opponents: {
@@ -17,28 +17,27 @@ export async function getTeamsInPoule() {
       },
     });
 
-    if (!poule) {
+    if (poules.length === 0) {
       return {
         success: false,
-        error: 'No poule found. Please create a new poule.',
+        error: 'No poules found. Please create a new poule.',
       };
     }
 
-    const teams = [
-      poule.team,
-      ...poule.opponents.map((opponent) => opponent.team),
-    ];
+    const formattedPoules = poules.map((poule) => ({
+      pouleName: poule.name,
+      teams: [poule.team, ...poule.opponents.map((opponent) => opponent.team)],
+    }));
 
     return {
       success: true,
-      pouleName: poule.name,
-      teams,
+      poules: formattedPoules,
     };
   } catch (error) {
-    console.error('Error fetching teams in poule:', error);
+    console.error('Error fetching teams in poules:', error);
     return {
       success: false,
-      error: 'Failed to load teams in the poule.',
+      error: 'Failed to load teams in the poules.',
     };
   }
 }

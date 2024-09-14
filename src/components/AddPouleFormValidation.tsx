@@ -1,18 +1,19 @@
 // This component is a form that prepares the server action and validates the form fields.
-
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
 import type { ZodIssue } from 'zod';
+import { toast } from 'react-toastify';
 
 type Props = {
   action: (
     _prevState: any,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] } | void>;
+  onPouleAdded?: () => void;
 };
 
-function AddPouleFormValidation({ action }: Props) {
+function AddPouleFormValidation({ action, onPouleAdded }: Props) {
   const [formErrors, setFormErrors] = useState<ZodIssue[]>([]);
   const formRef = useRef<HTMLFormElement | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -30,8 +31,9 @@ function AddPouleFormValidation({ action }: Props) {
       formRef.current?.reset();
       setIsSubmitted(false);
       setOpponents([]);
+      if (onPouleAdded) onPouleAdded();
     }
-  }, [formErrors, isSubmitted]);
+  }, [formErrors, isSubmitted, onPouleAdded]);
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,12 +48,14 @@ function AddPouleFormValidation({ action }: Props) {
 
     console.log('FormData before submission:', Array.from(formData.entries()));
 
-    const result = await action(null, formData); // Corrected call
+    const result = await action(null, formData);
 
     if (isErrorResponse(result)) {
       setFormErrors(result.errors);
+      toast.error('Failed to add poule. Please check your inputs.');
       console.error('Submission errors:', result.errors);
     } else {
+      toast.success('Poule added successfully!');
       console.log('Redirect occurred, no errors returned.');
     }
   };
@@ -71,9 +75,14 @@ function AddPouleFormValidation({ action }: Props) {
     console.log('Removed opponent at index:', index);
   };
 
-  const pouleNameErrors = findErrors('pouleName', formErrors);
-  const mainTeamNameErrors = findErrors('mainTeamName', formErrors);
-  const opponentsErrors = findErrors('opponents', formErrors);
+  const findErrors = (fieldName: string) =>
+    formErrors
+      .filter((item) => item.path.includes(fieldName))
+      .map((item) => item.message);
+
+  const pouleNameErrors = findErrors('pouleName');
+  const mainTeamNameErrors = findErrors('mainTeamName');
+  const opponentsErrors = findErrors('opponents');
 
   return (
     <form
@@ -162,15 +171,7 @@ function AddPouleFormValidation({ action }: Props) {
 const ErrorMessages = ({ errors }: { errors: string[] }) => {
   if (errors.length === 0) return null;
 
-  const text = errors.join(', ');
-
-  return <div className="text-red-600 mt-2">{text}</div>;
+  return <div className="text-red-600 mt-2">{errors.join(', ')}</div>;
 };
 
-const findErrors = (fieldName: string, errors: ZodIssue[]) => {
-  return errors
-    .filter((item) => item.path.includes(fieldName))
-    .map((item) => item.message);
-};
-
-export { AddPouleFormValidation, ErrorMessages, findErrors };
+export { AddPouleFormValidation, ErrorMessages };

@@ -108,7 +108,7 @@ export default async function addPoule(
     };
   } finally {
     if (redirectPath) {
-      revalidatePath(redirectPath);
+      revalidatePath(redirectPath); // Revalidate the page to ensure it shows updated data
       redirect(redirectPath);
     }
   }
