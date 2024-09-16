@@ -12,19 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
-
-interface PlayerFormData {
-  username: string;
-  password: string;
-}
-
-interface PlayerFormProps {
-  initialData?: PlayerFormData;
-  onSubmit: (data: PlayerFormData) => Promise<void>;
-  onSubmissionStart: () => void;
-  onAbort: () => void;
-  submitButtonText: string;
-}
+import { PlayerFormData, PlayerFormProps } from '@/lib/types';
 
 export default function PlayerForm({
   initialData = { username: '', password: '' },

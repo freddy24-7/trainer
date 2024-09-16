@@ -9,13 +9,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  clerkId   String?  @unique
-  username  String?  @unique
-  role      Role     @default(TRAINER)
-  createdAt DateTime @default(now())
-  teamId    Int?
-  team      Team?    @relation(fields: [teamId], references: [id])
+  id          Int           @id @default(autoincrement())
+  clerkId     String?       @unique
+  username    String?       @unique
+  role        Role          @default(TRAINER)
+  createdAt   DateTime      @default(now())
+  teamId      Int?
+  team        Team?         @relation(fields: [teamId], references: [id])
+  MatchPlayer MatchPlayer[]
 }
 
 model Team {
@@ -36,11 +37,33 @@ model Poule {
 }
 
 model PouleOpponents {
-  id      Int   @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
   pouleId Int
   teamId  Int
-  poule   Poule @relation(fields: [pouleId], references: [id])
-  team    Team  @relation(fields: [teamId], references: [id])
+  poule   Poule   @relation(fields: [pouleId], references: [id])
+  team    Team    @relation(fields: [teamId], references: [id])
+  Match   Match[]
+}
+
+model Match {
+  id              Int            @id @default(autoincrement())
+  pouleOpponentId Int
+  pouleOpponent   PouleOpponents @relation(fields: [pouleOpponentId], references: [id])
+  date            DateTime
+  matchPlayers    MatchPlayer[]
+  createdAt       DateTime       @default(now())
+}
+
+model MatchPlayer {
+  id        Int     @id @default(autoincrement())
+  matchId   Int
+  userId    Int
+  minutes   Int
+  available Boolean
+  match     Match   @relation(fields: [matchId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+
+  @@unique([matchId, userId])
 }
 
 enum Role {

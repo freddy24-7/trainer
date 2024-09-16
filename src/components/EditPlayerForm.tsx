@@ -2,15 +2,7 @@
 
 import PlayerForm from './PlayerForm';
 import { editPlayer } from '@/app/actions/editPlayer';
-
-// Defining the props for EditPlayerForm
-interface EditPlayerFormProps {
-  playerId: number;
-  initialUsername: string;
-  onPlayerEdited: (updatedPlayer: { id: number; username: string }) => void;
-  onSubmissionStart: () => void;
-  onAbort: () => void;
-}
+import { EditPlayerFormProps } from '@/lib/types';
 
 export default function EditPlayerForm({
   playerId,

@@ -1,18 +1,10 @@
 // This component is responsible for rendering the dashboard for the client.
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { Spinner } from '@nextui-org/spinner';
-
-// Defining the type for signedInUser
-type SignedInUser = {
-  id: string;
-  username: string;
-};
-
-interface DashboardClientProps {
-  signedInUser: SignedInUser;
-}
+import { DashboardClientProps } from '@/lib/types';
 
 export default function DashboardClient({
   signedInUser,

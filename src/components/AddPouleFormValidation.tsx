@@ -1,177 +1,216 @@
-// This component is a form that prepares the server action and validates the form fields.
+// This component is used to add a new poule to the system.
+
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
-import type { ZodIssue } from 'zod';
+import React, { useState } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createPouleSchema } from '@/schemas/createPouleSchema';
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import type { ZodIssue } from 'zod';
+
+type FormValues = {
+  pouleName: string;
+  mainTeamName: string;
+  opponents: string[];
+  opponentName: string;
+};
 
 type Props = {
   action: (
     _prevState: any,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] } | void>;
-  onPouleAdded?: () => void;
 };
 
-function AddPouleFormValidation({ action, onPouleAdded }: Props) {
-  const [formErrors, setFormErrors] = useState<ZodIssue[]>([]);
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+function AddPouleFormValidation({ action }: Props) {
   const [opponents, setOpponents] = useState<string[]>([]);
-  const [opponentName, setOpponentName] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(createPouleSchema),
+    defaultValues: {
+      pouleName: '',
+      mainTeamName: '',
+      opponents: [],
+      opponentName: '',
+    },
+  });
 
-  function isErrorResponse(
-    result: void | { errors: ZodIssue[] }
-  ): result is { errors: ZodIssue[] } {
-    return result !== undefined && 'errors' in result;
-  }
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = methods;
 
-  useEffect(() => {
-    if (isSubmitted && formErrors.length === 0) {
-      formRef.current?.reset();
-      setIsSubmitted(false);
-      setOpponents([]);
-      if (onPouleAdded) onPouleAdded();
-    }
-  }, [formErrors, isSubmitted, onPouleAdded]);
-
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitted(true);
-    setFormErrors([]);
-
-    const formData = new FormData(event.currentTarget);
-
-    opponents.forEach((opponent) => {
-      formData.append('opponents', opponent);
-    });
-
-    console.log('FormData before submission:', Array.from(formData.entries()));
-
-    const result = await action(null, formData);
-
-    if (isErrorResponse(result)) {
-      setFormErrors(result.errors);
-      toast.error('Failed to add poule. Please check your inputs.');
-      console.error('Submission errors:', result.errors);
-    } else {
-      toast.success('Poule added successfully!');
-      console.log('Redirect occurred, no errors returned.');
-    }
-  };
+  const opponentName = watch('opponentName');
 
   const addOpponent = () => {
     if (opponentName.trim()) {
-      console.log('Adding opponent:', opponentName);
       setOpponents((prev) => [...prev, opponentName.trim()]);
-      setOpponentName('');
+      setValue('opponents', [...opponents, opponentName.trim()]);
+      setValue('opponentName', '');
     } else {
-      console.log('Attempted to add empty opponent name');
+      toast.error('Opponent name cannot be empty');
     }
   };
 
   const removeOpponent = (index: number) => {
-    setOpponents((prev) => prev.filter((_, i) => i !== index));
-    console.log('Removed opponent at index:', index);
+    const updatedOpponents = opponents.filter((_, i) => i !== index);
+    setOpponents(updatedOpponents);
+    setValue('opponents', updatedOpponents);
   };
 
-  const findErrors = (fieldName: string) =>
-    formErrors
-      .filter((item) => item.path.includes(fieldName))
-      .map((item) => item.message);
+  const onSubmit = async (data: FormValues) => {
+    const formData = new FormData();
+    formData.append('pouleName', data.pouleName);
+    formData.append('mainTeamName', data.mainTeamName);
+    data.opponents.forEach((opponent) => {
+      formData.append('opponents', opponent);
+    });
 
-  const pouleNameErrors = findErrors('pouleName');
-  const mainTeamNameErrors = findErrors('mainTeamName');
-  const opponentsErrors = findErrors('opponents');
+    try {
+      const result = await action(null, formData);
+      if (result && 'errors' in result) {
+        toast.error('Failed to add poule. Please check your inputs.');
+        console.error('Submission errors:', result.errors);
+      } else {
+        toast.success('Poule added successfully!');
+        reset();
+        setOpponents([]);
+        setShowForm(false);
+      }
+    } catch (error) {
+      console.error('Error during form submission:', error);
+      toast.error('An error occurred during submission.');
+    }
+  };
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleFormSubmit}
-      method="POST"
-      className="space-y-4 max-w-md mx-auto mt-10 p-6 bg-zinc-300 text-black shadow-md rounded dark:bg-black dark:text-white"
-    >
-      <h3 className="text-lg font-semibold mt-8 mb-4">Poule Management</h3>
-      <div>
-        <label className="block mb-2">
-          Poule Name:
-          <input
-            type="text"
-            name="pouleName"
-            required
-            className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
-          />
-        </label>
-        <ErrorMessages errors={pouleNameErrors} />
-      </div>
-      <div>
-        <label className="block mb-2">
-          Main Team Name:
-          <input
-            type="text"
-            name="mainTeamName"
-            required
-            className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
-          />
-        </label>
-        <ErrorMessages errors={mainTeamNameErrors} />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2">
-          Opponent Team Name:
-          <input
-            value={opponentName}
-            onChange={(e) => setOpponentName(e.target.value)}
-            placeholder="Enter opponent name"
-            className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                addOpponent();
-              }
-            }}
-          />
-        </label>
-        <button
-          type="button"
-          onClick={addOpponent}
-          className="mt-2 bg-blue-500 text-white p-1 rounded"
-        >
-          Add Opponent
-        </button>
-        <ul className="mt-4">
-          {opponents.map((opponent, index) => (
-            <li key={index} className="flex justify-between items-center">
-              <span>{opponent}</span>
-              <button
-                type="button"
-                onClick={() => removeOpponent(index)}
-                className="text-red-500 ml-2"
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
-        <ErrorMessages errors={opponentsErrors} />
-      </div>
-      <button
-        type="submit"
-        className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800 dark:bg-black dark:text-white"
+    <div className="mt-4">
+      <Button
+        onClick={() => setShowForm((prev) => !prev)}
+        className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
-        Add Poule
-      </button>
-      {isSubmitted && formErrors.length === 0 && (
-        <p className="text-green-600 mt-2">Poule added successfully!</p>
+        {showForm ? 'Cancel' : 'Add Another Poule'}
+      </Button>
+
+      {showForm && (
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4 max-w-md mx-auto mt-10 p-6 bg-zinc-300 text-black shadow-md rounded dark:bg-black dark:text-white"
+          >
+            <h3 className="text-lg font-semibold mt-8 mb-4">
+              Poule Management
+            </h3>
+
+            <FormItem>
+              <FormField
+                name="pouleName"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <FormControl>
+                      <input
+                        {...field}
+                        className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
+                        placeholder="Poule Name"
+                      />
+                    </FormControl>
+                    <FormMessage>{errors.pouleName?.message}</FormMessage>
+                  </>
+                )}
+              />
+            </FormItem>
+
+            <FormItem>
+              <FormField
+                name="mainTeamName"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <FormControl>
+                      <input
+                        {...field}
+                        className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
+                        placeholder="Main Team Name"
+                      />
+                    </FormControl>
+                    <FormMessage>{errors.mainTeamName?.message}</FormMessage>
+                  </>
+                )}
+              />
+            </FormItem>
+
+            <FormItem>
+              <FormField
+                name="opponentName"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <FormControl>
+                      <input
+                        {...field}
+                        placeholder="Enter opponent name"
+                        className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            addOpponent();
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage>{errors.opponents?.message}</FormMessage>
+                  </>
+                )}
+              />
+            </FormItem>
+
+            <Button
+              type="button"
+              onClick={addOpponent}
+              className="mt-2 bg-blue-500 text-white p-1 rounded"
+            >
+              Add Opponent
+            </Button>
+
+            <ul className="mt-4">
+              {opponents.map((opponent, index) => (
+                <li key={index} className="flex justify-between items-center">
+                  <span>{opponent}</span>
+                  <Button
+                    type="button"
+                    onClick={() => removeOpponent(index)}
+                    className="text-red-500 ml-2"
+                  >
+                    Remove
+                  </Button>
+                </li>
+              ))}
+            </ul>
+
+            <Button
+              type="submit"
+              className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800 dark:bg-black dark:text-white"
+            >
+              Add Poule
+            </Button>
+          </form>
+        </FormProvider>
       )}
-    </form>
+    </div>
   );
 }
 
-const ErrorMessages = ({ errors }: { errors: string[] }) => {
-  if (errors.length === 0) return null;
-
-  return <div className="text-red-600 mt-2">{errors.join(', ')}</div>;
-};
-
-export { AddPouleFormValidation, ErrorMessages };
+export { AddPouleFormValidation };

@@ -1,4 +1,5 @@
 // This component is used to enable user interaction with the application.
+
 'use client';
 
 import { Button, NavbarContent } from '@nextui-org/react';
@@ -12,7 +13,7 @@ import NavLink from '@/components/navigation/NavLink';
 
 type NavBarClientProps = {
   userId: string | null;
-  userRole: string | null; // Receive the user role as a prop
+  userRole: string | null;
 };
 
 export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
@@ -66,6 +67,12 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
                 Poule-Management
               </NavLink>
             )}
+            {/* Conditionally render the Matches link if the user has the TRAINER role */}
+            {userRole === 'TRAINER' && (
+              <NavLink href="/matches" className="text-white">
+                Matches
+              </NavLink>
+            )}
             <NavLink href="/dashboard" className="text-white">
               Dashboard
             </NavLink>
@@ -116,6 +123,12 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
                   className="text-white w-auto my-2"
                 >
                   Poule-Management
+                </Link>
+              )}
+              {/* Conditionally render the Matches link for TRAINER role */}
+              {userRole === 'TRAINER' && (
+                <Link href="/matches" className="text-white w-auto my-2">
+                  Matches
                 </Link>
               )}
               <Link href="/dashboard" className="text-white w-auto my-2">

@@ -1,8 +1,9 @@
-// This page component is responsible for rendering the dashboard page.
+// This server component is responsible for rendering the dashboard page.
+
 import { auth, currentUser } from '@clerk/nextjs';
 import LoginModal from '@/components/LoginModal';
 import DashboardClient from '@/components/DashboardClient';
-import { updateUsername } from '@/app/actions/updateUsername'; // Import the server action
+import { updateUsername } from '@/app/actions/updateUsername';
 
 // Tracking the last checked username globally within the session
 let lastCheckedUsername: string | null = null;

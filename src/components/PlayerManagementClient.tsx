@@ -8,15 +8,7 @@ import { Spinner } from '@nextui-org/spinner';
 import ReusableModal from '@/components/ReusableModal';
 import EditPlayerForm from '@/components/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
-
-export interface Player {
-  id: number;
-  username: string;
-}
-
-interface PlayerManagementClientProps {
-  players: Player[];
-}
+import { PlayerManagementClientProps, Player } from '@/lib/types';
 
 export default function PlayerManagementClient({
   players,
@@ -30,7 +22,12 @@ export default function PlayerManagementClient({
 
   const handleDeletePlayer = (playerId: number) => {
     setModalTitle('Confirm Deletion');
-    setModalBody(<p>Are you sure you want to delete this player?</p>);
+    setModalBody(
+      <p>
+        Are you sure you want to delete this player? Players with already
+        registered data (minutes played) cannot be deleted.
+      </p>
+    );
     setConfirmAction(() => async () => {
       setSubmitting(true);
       const response = await deletePlayer(playerId);
@@ -48,7 +45,9 @@ export default function PlayerManagementClient({
 
   const handleEditPlayer = (player: Player) => {
     setEditPlayerData(player);
-    setModalTitle('Edit Player');
+    setModalTitle(
+      'You can only edit players who does not yet have match data.'
+    );
     setIsModalOpen(true);
   };
 

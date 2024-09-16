@@ -1,14 +1,8 @@
 // This component displays a list of player data
 
 import React from 'react';
-import { Player } from '@/components/PlayerManagementClient';
 import { Button, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
-
-interface PlayersListProps {
-  players: Player[];
-  onEdit: (player: Player) => void;
-  onDelete: (playerId: number) => void;
-}
+import { PlayersListProps, Player } from '@/lib/types';
 
 export default function PlayersList({
   players,

@@ -2,7 +2,6 @@
 
 'use server';
 
-import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import { users } from '@clerk/clerk-sdk-node';
 import { revalidatePath } from 'next/cache';
@@ -12,15 +11,13 @@ import { createPlayerSchema } from '@/schemas/createPlayerSchema';
 export default async function addPlayer(
   _prevState: any,
   params: FormData
-): Promise<{ errors: ZodIssue[] }> {
-  // Validating the form data against the schema
+): Promise<{ errors: ZodIssue[]; success?: boolean }> {
   const validation = createPlayerSchema.safeParse({
     username: params.get('username'),
     password: params.get('password'),
   });
 
   if (!validation.success) {
-    // Returning validation errors if validation fails
     return {
       errors: validation.error.issues,
     };
@@ -35,7 +32,7 @@ export default async function addPlayer(
       password,
     });
 
-    // Saving the player to database with the Clerk ID using PrismaClient
+    // Saving the player to the database with the Clerk ID using PrismaClient
     await prisma.user.create({
       data: {
         clerkId: clerkUser.id,
@@ -44,10 +41,12 @@ export default async function addPlayer(
         createdAt: new Date(),
       },
     });
+
+    // Revalidate the player management page without redirecting
     revalidatePath('/player-management');
 
-    // Redirecting after successful addition
-    redirect('/player-management');
+    // Indicate a successful operation without redirecting
+    return { errors: [], success: true }; // Return success status
   } catch (error) {
     console.error('Error adding player:', error);
 

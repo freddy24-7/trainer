@@ -2,16 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-
-interface Team {
-  id: number;
-  name: string;
-}
-
-interface TeamsListProps {
-  teams: Team[];
-  pouleName: string;
-}
+import { TeamsListProps, Team } from '@/lib/types';
 
 export default function TeamsList({ teams, pouleName }: TeamsListProps) {
   useEffect(() => {

@@ -1,4 +1,4 @@
-// This server action is used to get the teams in a poule.
+// This server action fetches the teams in a poule.
 
 'use server';
 
@@ -15,6 +15,9 @@ export async function getTeamsInPoule() {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     if (poules.length === 0) {
@@ -25,13 +28,19 @@ export async function getTeamsInPoule() {
     }
 
     const formattedPoules = poules.map((poule) => ({
+      id: poule.id,
       pouleName: poule.name,
       teams: [poule.team, ...poule.opponents.map((opponent) => opponent.team)],
+      opponents: poule.opponents.map((opponent) => ({
+        id: opponent.id,
+        team: opponent.team,
+      })),
     }));
 
     return {
       success: true,
       poules: formattedPoules,
+      latestPoule: formattedPoules[0],
     };
   } catch (error) {
     console.error('Error fetching teams in poules:', error);

@@ -8,19 +8,8 @@ import {
   ModalFooter,
   Button,
 } from '@nextui-org/react';
-import { ReactNode, useCallback } from 'react';
-
-// Define the props for the reusable modal component
-interface ReusableModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  body: ReactNode;
-  confirmLabel?: string;
-  confirmAction?: () => void;
-  cancelLabel?: string;
-  cancelAction?: () => void;
-}
+import { useCallback } from 'react';
+import { ReusableModalProps } from '@/lib/types';
 
 export default function ReusableModal({
   isOpen,

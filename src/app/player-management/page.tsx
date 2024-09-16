@@ -5,11 +5,7 @@ import { getPlayers } from '@/app/actions/getPlayers';
 import addPlayer from '@/app/actions/addPlayer';
 import PlayerManagementClient from '@/components/PlayerManagementClient';
 import { AddPlayerFormValidation } from '@/components/AddPlayerFormValidation';
-
-interface Player {
-  id: number;
-  username: string;
-}
+import { Player } from '@/lib/types';
 
 export default async function ManagementPage() {
   const response = await getPlayers();
