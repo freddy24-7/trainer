@@ -1,4 +1,4 @@
-// Code for the 404 page
+// This component will be rendered when a page is not found (404 error)
 
 import Link from 'next/link';
 import { LuAngry } from 'react-icons/lu'; // Import the LuAngry icon
@@ -7,7 +7,6 @@ export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <LuAngry size={50} className="text-red-600" />{' '}
-      {/* Display the LuAngry icon */}
       <h1 className="text-6xl font-bold text-gray-800 mt-4">404</h1>
       <p className="text-xl text-gray-600 mt-2">... Page does not exist.</p>
       <Link

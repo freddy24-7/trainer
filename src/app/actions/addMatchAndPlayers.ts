@@ -1,4 +1,4 @@
-// This server action adds a match player to the database.
+// This server action adds a match to the database.
 
 'use server';
 
@@ -118,14 +118,20 @@ export default async function addMatchAndPlayers(
   for (const player of players) {
     const { id, minutes, available } = player;
 
-    const parsedMinutes = parseInt(minutes, 10);
-    if (isNaN(parsedMinutes)) {
-      playerErrors.push({
-        message: `Invalid minutes for player ${id}. Expected a number.`,
-        path: ['players', 'minutes'],
-        code: 'custom',
-      });
-      continue;
+    let parsedMinutes = 0;
+
+    if (available) {
+      parsedMinutes = parseInt(minutes, 10);
+      if (isNaN(parsedMinutes) || parsedMinutes <= 0) {
+        playerErrors.push({
+          message: `Invalid minutes for player ${id}. Expected a positive number.`,
+          path: ['players', 'minutes'],
+          code: 'custom',
+        });
+        continue;
+      }
+    } else {
+      parsedMinutes = 0;
     }
 
     try {

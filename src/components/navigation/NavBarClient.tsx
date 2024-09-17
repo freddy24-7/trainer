@@ -6,7 +6,7 @@ import { Button, NavbarContent } from '@nextui-org/react';
 import Link from 'next/link';
 import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { CiHome } from 'react-icons/ci';
 import NavLink from '@/components/navigation/NavLink';
@@ -17,16 +17,8 @@ type NavBarClientProps = {
 };
 
 export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
-  const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // State to control the mobile menu
   const { theme, setTheme } = useTheme();
-
-  // Boilerplate section used for theme change
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <>
@@ -59,6 +51,12 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
             {userRole === 'TRAINER' && (
               <NavLink href="/player-management" className="text-white">
                 Player-Management
+              </NavLink>
+            )}
+            {/* Conditionally render the Match-Stats link if the user has the TRAINER role */}
+            {userRole === 'TRAINER' && (
+              <NavLink href="/match-stats" className="text-white">
+                Match-Stats
               </NavLink>
             )}
             {/* Conditionally render the Poule-Management link if the user has the required role */}
@@ -114,6 +112,12 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
                   className="text-white w-auto my-2"
                 >
                   Player-Management
+                </Link>
+              )}
+              {/* Conditionally render the Match-Stats link for TRAINER role */}
+              {userRole === 'TRAINER' && (
+                <Link href="/match-stats" className="text-white w-auto my-2">
+                  Match-Stats
                 </Link>
               )}
               {/* Conditionally render the Poule-Management link for TRAINER role */}

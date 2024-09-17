@@ -10,7 +10,7 @@ const PouleSelector: React.FC<PouleSelectorProps> = ({
 }) => {
   return (
     <div>
-      <label className="block mb-2">
+      <label className="block mb-2 mx-auto text-center">
         Poule:
         <select
           value={selectedPoule?.id || ''}

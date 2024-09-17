@@ -1,9 +1,10 @@
-// //This component is responsible for rendering the navigation bar at the top of the page.
+// This component is responsible for rendering the navigation bar at the top of the page.
+
 import { Navbar, NavbarBrand } from '@nextui-org/react';
 import Link from 'next/link';
 import { IoFootball } from 'react-icons/io5';
 import { auth } from '@clerk/nextjs';
-import NavBarClient from './NavBarClient'; // Client Component
+import NavBarClient from './NavBarClient';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

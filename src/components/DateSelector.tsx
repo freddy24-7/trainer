@@ -10,7 +10,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 }) => {
   return (
     <div>
-      <label className="block mb-2">Match Date:</label>
+      <label className="block mb-2 mx-auto text-center">Match Date:</label>
       <DatePicker
         label="Select Match Date"
         className="max-w-[284px]"

@@ -11,7 +11,7 @@ export default function TeamsList({ teams, pouleName }: TeamsListProps) {
 
   return (
     <div className="space-y-2">
-      <h2 className="text-lg font-semibold text-center mb-4">
+      <h2 className="text-lg font-semibold text-center mb-4 text-black">
         Teams in the poule &quot;{pouleName}&quot;
       </h2>
 

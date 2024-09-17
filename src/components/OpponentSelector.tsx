@@ -10,7 +10,7 @@ export default function OpponentSelector({
 }: OpponentSelectorProps) {
   return (
     <div>
-      <label className="block mb-2">
+      <label className="block mb-2 mx-auto text-center">
         Opponent Team:
         <select
           value={selectedOpponent?.id || ''}

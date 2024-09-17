@@ -1,4 +1,4 @@
-// This component is used to add a new match to the system.
+// This component is used to add a match to the database.
 
 'use client';
 
@@ -20,6 +20,7 @@ import {
 import { Poule, Player, PouleOpponent } from '@/lib/types';
 import { CalendarDate } from '@nextui-org/react';
 import type { ZodIssue } from 'zod';
+import { Card, CardHeader, CardBody } from '@nextui-org/react';
 
 type FormValues = {
   poule: number | undefined;
@@ -54,7 +55,7 @@ function AddMatchForm({ action, poules, players }: Props) {
       players: players.map((player) => ({
         id: player.id,
         minutes: '',
-        available: false,
+        available: true,
       })),
     },
   });
@@ -82,12 +83,13 @@ function AddMatchForm({ action, poules, players }: Props) {
   const validatePlayers = () => {
     return playerValues.every(
       (player) =>
-        player.available ||
+        !player.available ||
         (typeof player.minutes === 'number' && player.minutes > 0)
     );
   };
 
   const onSubmit = async (data: FormValues) => {
+    console.log('Submitting data:', data.players);
     if (!validatePlayers()) {
       toast.error('Please enter valid minutes or mark as not available.');
       return;
@@ -118,113 +120,127 @@ function AddMatchForm({ action, poules, players }: Props) {
   };
 
   return (
-    <FormProvider {...methods}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 max-w-md mx-auto mt-10 p-6 bg-zinc-300 text-black shadow-md rounded"
-      >
-        <h3 className="text-lg font-semibold mt-8 mb-4">Add a New Match</h3>
+    <div className="w-full max-w-md mx-auto mt-10">
+      <Card>
+        <CardHeader>
+          <h3 className="text-lg font-semibold mx-auto text-center">
+            Add a New Match
+          </h3>
+        </CardHeader>
+        <CardBody>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <FormItem>
+                <FormField
+                  name="poule"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <FormControl>
+                        <PouleSelector
+                          poules={poules}
+                          selectedPoule={selectedPoule}
+                          onPouleChange={(pouleId) => field.onChange(pouleId)}
+                        />
+                      </FormControl>
+                      <FormMessage>{errors.poule?.message}</FormMessage>
+                    </>
+                  )}
+                />
+              </FormItem>
 
-        <FormItem>
-          <FormField
-            name="poule"
-            control={control}
-            render={({ field }) => (
-              <>
-                <FormControl>
-                  <PouleSelector
-                    poules={poules}
-                    selectedPoule={selectedPoule}
-                    onPouleChange={(pouleId) => field.onChange(pouleId)}
+              {selectedPoule && selectedPoule.opponents.length > 0 && (
+                <FormItem>
+                  <FormField
+                    name="opponent"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <FormControl>
+                          <OpponentSelector
+                            opponents={selectedPoule.opponents}
+                            selectedOpponent={selectedOpponent}
+                            onOpponentChange={(opponentId) =>
+                              field.onChange(opponentId)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage>{errors.opponent?.message}</FormMessage>
+                      </>
+                    )}
                   />
-                </FormControl>
-                <FormMessage>{errors.poule?.message}</FormMessage>
-              </>
-            )}
-          />
-        </FormItem>
-
-        {selectedPoule && selectedPoule.opponents.length > 0 && (
-          <FormItem>
-            <FormField
-              name="opponent"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <FormControl>
-                    <OpponentSelector
-                      opponents={selectedPoule.opponents}
-                      selectedOpponent={selectedOpponent}
-                      onOpponentChange={(opponentId) =>
-                        field.onChange(opponentId)
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage>{errors.opponent?.message}</FormMessage>
-                </>
+                </FormItem>
               )}
-            />
-          </FormItem>
-        )}
 
-        <FormItem>
-          <FormField
-            name="date"
-            control={control}
-            render={({ field }) => (
-              <>
-                <FormControl>
-                  <DateSelector
-                    matchDate={field.value}
-                    onDateChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage>{errors.date?.message}</FormMessage>
-              </>
-            )}
-          />
-        </FormItem>
+              <FormItem>
+                <FormField
+                  name="date"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <FormControl>
+                        <DateSelector
+                          matchDate={field.value}
+                          onDateChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage>{errors.date?.message}</FormMessage>
+                    </>
+                  )}
+                />
+              </FormItem>
 
-        {players.length > 0 && (
-          <PlayerList
-            players={players}
-            playerMinutes={playerValues.reduce(
-              (acc, player) => ({ ...acc, [player.id]: player.minutes }),
-              {}
-            )}
-            playerAvailability={playerValues.reduce(
-              (acc, player) => ({ ...acc, [player.id]: player.available }),
-              {}
-            )}
-            onMinutesChange={(playerId, minutes) =>
-              setValue(
-                'players',
-                playerValues.map((player) =>
-                  player.id === playerId
-                    ? { ...player, minutes: parseInt(minutes, 10) || '' }
-                    : player
-                )
-              )
-            }
-            onAvailabilityChange={(playerId, available) =>
-              setValue(
-                'players',
-                playerValues.map((player) =>
-                  player.id === playerId ? { ...player, available } : player
-                )
-              )
-            }
-          />
-        )}
+              {players.length > 0 && (
+                <PlayerList
+                  players={players}
+                  playerMinutes={playerValues.reduce(
+                    (acc, player) => ({ ...acc, [player.id]: player.minutes }),
+                    {}
+                  )}
+                  playerAvailability={playerValues.reduce(
+                    (acc, player) => ({
+                      ...acc,
+                      [player.id]: player.available,
+                    }),
+                    {}
+                  )}
+                  onMinutesChange={(playerId, minutes) =>
+                    setValue(
+                      'players',
+                      playerValues.map((player) =>
+                        player.id === playerId
+                          ? {
+                              ...player,
+                              minutes: parseInt(minutes, 10) || '',
+                            }
+                          : player
+                      )
+                    )
+                  }
+                  onAvailabilityChange={(playerId, available) =>
+                    setValue(
+                      'players',
+                      playerValues.map((player) =>
+                        player.id === playerId
+                          ? { ...player, available }
+                          : player
+                      )
+                    )
+                  }
+                />
+              )}
 
-        <Button
-          type="submit"
-          className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800"
-        >
-          Add Match
-        </Button>
-      </form>
-    </FormProvider>
+              <Button
+                type="submit"
+                className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800"
+              >
+                Add Match
+              </Button>
+            </form>
+          </FormProvider>
+        </CardBody>
+      </Card>
+    </div>
   );
 }
 

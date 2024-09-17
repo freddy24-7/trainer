@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 
-// Define the Props type for the NavLink component
+// Defining the Props type for the NavLink component
 type Props = {
   href: string; // The URL that the NavLink will navigate to
   label?: string; // Optional text label to display in the navigation bar

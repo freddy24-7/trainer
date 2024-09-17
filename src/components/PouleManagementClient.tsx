@@ -13,7 +13,7 @@ export default function PouleManagementClient({
     <div className="text-center">
       {poules.map((poule) => (
         <div key={poule.id} className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">
+          <h2 className="text-lg font-semibold mb-2 text-black">
             Poule: {poule.pouleName}
           </h2>
           <TeamsList teams={poule.teams} pouleName={poule.pouleName} />

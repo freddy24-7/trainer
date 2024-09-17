@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import type { ZodIssue } from 'zod';
+import { Card, CardHeader, CardBody } from '@nextui-org/react';
 
 type FormValues = {
   pouleName: string;
@@ -105,109 +106,119 @@ function AddPouleFormValidation({ action }: Props) {
       </Button>
 
       {showForm && (
-        <FormProvider {...methods}>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4 max-w-md mx-auto mt-10 p-6 bg-zinc-300 text-black shadow-md rounded dark:bg-black dark:text-white"
-          >
-            <h3 className="text-lg font-semibold mt-8 mb-4">
-              Poule Management
-            </h3>
+        <div className="space-y-4 max-w-md mx-auto mt-10">
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <h3 className="text-lg font-semibold">Poule Management</h3>
 
-            <FormItem>
-              <FormField
-                name="pouleName"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <FormControl>
-                      <input
-                        {...field}
-                        className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
-                        placeholder="Poule Name"
-                      />
-                    </FormControl>
-                    <FormMessage>{errors.pouleName?.message}</FormMessage>
-                  </>
-                )}
-              />
-            </FormItem>
+              <FormItem>
+                <FormField
+                  name="pouleName"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <FormControl>
+                        <input
+                          {...field}
+                          className="w-full p-2 border rounded mt-1 bg-white text-black"
+                          placeholder="Poule Name"
+                        />
+                      </FormControl>
+                      <FormMessage>{errors.pouleName?.message}</FormMessage>
+                    </>
+                  )}
+                />
+              </FormItem>
 
-            <FormItem>
-              <FormField
-                name="mainTeamName"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <FormControl>
-                      <input
-                        {...field}
-                        className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
-                        placeholder="Main Team Name"
-                      />
-                    </FormControl>
-                    <FormMessage>{errors.mainTeamName?.message}</FormMessage>
-                  </>
-                )}
-              />
-            </FormItem>
+              <FormItem>
+                <FormField
+                  name="mainTeamName"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <FormControl>
+                        <input
+                          {...field}
+                          className="w-full p-2 border rounded mt-1 bg-white text-black"
+                          placeholder="Main Team Name"
+                        />
+                      </FormControl>
+                      <FormMessage>{errors.mainTeamName?.message}</FormMessage>
+                    </>
+                  )}
+                />
+              </FormItem>
 
-            <FormItem>
-              <FormField
-                name="opponentName"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <FormControl>
-                      <input
-                        {...field}
-                        placeholder="Enter opponent name"
-                        className="input-class w-full p-2 border rounded mt-1 bg-white text-black dark:bg-white dark:text-black"
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault();
-                            addOpponent();
-                          }
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage>{errors.opponents?.message}</FormMessage>
-                  </>
-                )}
-              />
-            </FormItem>
+              <FormItem>
+                <FormField
+                  name="opponentName"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <FormControl>
+                        <input
+                          {...field}
+                          placeholder="Enter opponent name"
+                          className="w-full p-2 border rounded mt-1 bg-white text-black"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              addOpponent();
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage>{errors.opponents?.message}</FormMessage>
+                    </>
+                  )}
+                />
+              </FormItem>
 
-            <Button
-              type="button"
-              onClick={addOpponent}
-              className="mt-2 bg-blue-500 text-white p-1 rounded"
-            >
-              Add Opponent
-            </Button>
+              <Button
+                type="button"
+                onClick={addOpponent}
+                className="mt-2 bg-blue-500 text-white p-1 rounded"
+              >
+                Add Opponent
+              </Button>
+              {opponents.length > 0 && (
+                <Card className="mt-4">
+                  <CardHeader>
+                    <h4 className="text-md font-semibold">Opponents</h4>
+                  </CardHeader>
+                  <CardBody>
+                    <ul>
+                      {opponents.map((opponent, index) => (
+                        <li
+                          key={index}
+                          className="flex justify-between items-center py-2"
+                        >
+                          <span>{opponent}</span>
+                          <Button
+                            type="button"
+                            onClick={() => removeOpponent(index)}
+                            className="text-red-500 ml-2"
+                            variant="ghost"
+                            size="sm"
+                          >
+                            Remove
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardBody>
+                </Card>
+              )}
 
-            <ul className="mt-4">
-              {opponents.map((opponent, index) => (
-                <li key={index} className="flex justify-between items-center">
-                  <span>{opponent}</span>
-                  <Button
-                    type="button"
-                    onClick={() => removeOpponent(index)}
-                    className="text-red-500 ml-2"
-                  >
-                    Remove
-                  </Button>
-                </li>
-              ))}
-            </ul>
-
-            <Button
-              type="submit"
-              className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800 dark:bg-black dark:text-white"
-            >
-              Add Poule
-            </Button>
-          </form>
-        </FormProvider>
+              <Button
+                type="submit"
+                className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800"
+              >
+                Add Poule
+              </Button>
+            </form>
+          </FormProvider>
+        </div>
       )}
     </div>
   );

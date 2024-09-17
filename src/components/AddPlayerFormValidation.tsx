@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import type { ZodIssue } from 'zod';
 import PlayerForm from './PlayerForm';
+import { Card, CardHeader, CardBody } from '@nextui-org/react';
 
 type Props = {
   action: (
@@ -52,15 +53,21 @@ function AddPlayerFormValidation({ action }: Props) {
   };
 
   return (
-    <div className="space-y-4 max-w-md mx-auto mt-10 p-6 bg-zinc-300 text-black shadow-md rounded dark:bg-black dark:text-white">
-      <h3 className="text-lg font-semibold mt-8 mb-4">Player Management</h3>
-      <PlayerForm
-        initialData={{ username: '', password: '' }}
-        onSubmit={handleAddPlayer}
-        onSubmissionStart={handleSubmissionStart}
-        onAbort={handleAbort}
-        submitButtonText={isSubmitting ? 'Submitting...' : 'Add Player'}
-      />
+    <div className="max-w-md mx-auto mt-10">
+      <Card>
+        <CardHeader>
+          <h3 className="text-lg font-semibold">Player Management</h3>
+        </CardHeader>
+        <CardBody>
+          <PlayerForm
+            initialData={{ username: '', password: '' }}
+            onSubmit={handleAddPlayer}
+            onSubmissionStart={handleSubmissionStart}
+            onAbort={handleAbort}
+            submitButtonText={isSubmitting ? 'Submitting...' : 'Add Player'}
+          />
+        </CardBody>
+      </Card>
     </div>
   );
 }
