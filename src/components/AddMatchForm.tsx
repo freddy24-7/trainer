@@ -17,17 +17,9 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { Poule, Player, PouleOpponent } from '@/lib/types';
-import { CalendarDate } from '@nextui-org/react';
+import { Poule, Player, PouleOpponent, FormValues } from '@/lib/types';
 import type { ZodIssue } from 'zod';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-
-type FormValues = {
-  poule: number | undefined;
-  opponent: number | undefined;
-  date: CalendarDate | null;
-  players: { id: number; minutes: number | ''; available: boolean }[];
-};
 
 type Props = {
   poules: Poule[];

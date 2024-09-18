@@ -3,20 +3,9 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { GetPlayerMatchStatsResponse } from '@/lib/types';
 
-type PlayerStat = {
-  id: number;
-  username: string | null;
-  matchesPlayed: number;
-  averagePlayingTime: number;
-  absences: number;
-};
-
-type GetPlayerStatsResponse =
-  | { success: true; playerStats: PlayerStat[] }
-  | { success: false; error: string };
-
-export async function getPlayerStats(): Promise<GetPlayerStatsResponse> {
+export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
   try {
     const players = await prisma.user.findMany({
       where: {

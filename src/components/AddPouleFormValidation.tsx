@@ -16,13 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import type { ZodIssue } from 'zod';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-
-type FormValues = {
-  pouleName: string;
-  mainTeamName: string;
-  opponents: string[];
-  opponentName: string;
-};
+import { PouleFormValues } from '@/lib/types';
 
 type Props = {
   action: (
@@ -34,7 +28,7 @@ type Props = {
 function AddPouleFormValidation({ action }: Props) {
   const [opponents, setOpponents] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const methods = useForm<FormValues>({
+  const methods = useForm<PouleFormValues>({
     resolver: zodResolver(createPouleSchema),
     defaultValues: {
       pouleName: '',
@@ -71,7 +65,7 @@ function AddPouleFormValidation({ action }: Props) {
     setValue('opponents', updatedOpponents);
   };
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: PouleFormValues) => {
     const formData = new FormData();
     formData.append('pouleName', data.pouleName);
     formData.append('mainTeamName', data.mainTeamName);

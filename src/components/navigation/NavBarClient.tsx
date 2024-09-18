@@ -1,24 +1,36 @@
 // This component is used to enable user interaction with the application.
-
 'use client';
 
-import { Button, NavbarContent } from '@nextui-org/react';
+import {
+  Button,
+  NavbarContent,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from '@nextui-org/react';
 import Link from 'next/link';
 import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
 import { useTheme } from 'next-themes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { CiHome } from 'react-icons/ci';
 import NavLink from '@/components/navigation/NavLink';
-
-type NavBarClientProps = {
-  userId: string | null;
-  userRole: string | null;
-};
+import { NavBarClientProps } from '@/lib/types';
 
 export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
-  const [menuOpen, setMenuOpen] = useState(false); // State to control the mobile menu
+  const [mounted, setMounted] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+
+  // Boilerplate section used for theme change (Icon)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const dropdownTextColor = theme === 'light' ? 'text-black' : 'text-white';
 
   return (
     <>
@@ -47,29 +59,71 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
         </Button>
         {userId ? (
           <div className="flex gap-4 items-center">
-            {/* Conditionally render the Player-Management link if the user has the TRAINER role */}
+            {/* Management Dropdown for TRAINER role */}
             {userRole === 'TRAINER' && (
-              <NavLink href="/player-management" className="text-white">
-                Player-Management
-              </NavLink>
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    variant="bordered"
+                    className={`capitalize ${dropdownTextColor}`}
+                  >
+                    Management
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Management Options" variant="light">
+                  <DropdownItem key="player-management">
+                    <Link
+                      href="/player-management"
+                      className={dropdownTextColor}
+                    >
+                      Player-Management
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="poule-management">
+                    <Link
+                      href="/poule-management"
+                      className={dropdownTextColor}
+                    >
+                      Poule-Management
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="match-management">
+                    <Link href="/matches" className={dropdownTextColor}>
+                      Match-Management
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="training-management">
+                    <Link href="/trainings" className={dropdownTextColor}>
+                      Training-Management
+                    </Link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             )}
-            {/* Conditionally render the Match-Stats link if the user has the TRAINER role */}
+            {/* Stats Dropdown for TRAINER role */}
             {userRole === 'TRAINER' && (
-              <NavLink href="/match-stats" className="text-white">
-                Match-Stats
-              </NavLink>
-            )}
-            {/* Conditionally render the Poule-Management link if the user has the required role */}
-            {userRole === 'TRAINER' && (
-              <NavLink href="/poule-management" className="text-white">
-                Poule-Management
-              </NavLink>
-            )}
-            {/* Conditionally render the Matches link if the user has the TRAINER role */}
-            {userRole === 'TRAINER' && (
-              <NavLink href="/matches" className="text-white">
-                Matches
-              </NavLink>
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    variant="bordered"
+                    className={`capitalize ${dropdownTextColor}`}
+                  >
+                    Stats
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Stats Options" variant="light">
+                  <DropdownItem key="match-stats">
+                    <Link href="/match-stats" className={dropdownTextColor}>
+                      Match-Stats
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="training-stats">
+                    <Link href="/training-stats" className={dropdownTextColor}>
+                      Training-Stats
+                    </Link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             )}
             <NavLink href="/dashboard" className="text-white">
               Dashboard
@@ -105,35 +159,74 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
           </Button>
           {userId ? (
             <div className="flex flex-col items-center">
-              {/* Conditionally render the Player-Management link for TRAINER role */}
+              {/* Management Links for Mobile Menu */}
               {userRole === 'TRAINER' && (
-                <Link
-                  href="/player-management"
-                  className="text-white w-auto my-2"
-                >
-                  Player-Management
-                </Link>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button
+                      variant="bordered"
+                      className={`capitalize ${dropdownTextColor} w-auto my-2`}
+                    >
+                      Management
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Management Options" variant="light">
+                    <DropdownItem key="player-management">
+                      <Link
+                        href="/player-management"
+                        className={dropdownTextColor}
+                      >
+                        Player-Management
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="poule-management">
+                      <Link
+                        href="/poule-management"
+                        className={dropdownTextColor}
+                      >
+                        Poule-Management
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="match-management">
+                      <Link href="/matches" className={dropdownTextColor}>
+                        Match-Management
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="training-management">
+                      <Link href="/trainings" className={dropdownTextColor}>
+                        Match-Management
+                      </Link>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               )}
-              {/* Conditionally render the Match-Stats link for TRAINER role */}
+              {/* Stats Dropdown for Mobile Menu */}
               {userRole === 'TRAINER' && (
-                <Link href="/match-stats" className="text-white w-auto my-2">
-                  Match-Stats
-                </Link>
-              )}
-              {/* Conditionally render the Poule-Management link for TRAINER role */}
-              {userRole === 'TRAINER' && (
-                <Link
-                  href="/poule-management"
-                  className="text-white w-auto my-2"
-                >
-                  Poule-Management
-                </Link>
-              )}
-              {/* Conditionally render the Matches link for TRAINER role */}
-              {userRole === 'TRAINER' && (
-                <Link href="/matches" className="text-white w-auto my-2">
-                  Matches
-                </Link>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button
+                      variant="bordered"
+                      className={`capitalize ${dropdownTextColor} w-auto my-2`}
+                    >
+                      Stats
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Stats Options" variant="light">
+                    <DropdownItem key="match-stats">
+                      <Link href="/match-stats" className={dropdownTextColor}>
+                        Match-Stats
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="training-stats">
+                      <Link
+                        href="/training-stats"
+                        className={dropdownTextColor}
+                      >
+                        Training-Stats
+                      </Link>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               )}
               <Link href="/dashboard" className="text-white w-auto my-2">
                 Dashboard

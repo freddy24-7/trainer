@@ -3,17 +3,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-
-type MatchData = {
-  id: number;
-  date: Date;
-  opponentTeamName: string;
-  absentPlayers: string[];
-};
-
-type GetMatchDataResponse =
-  | { success: true; matchData: MatchData[] }
-  | { success: false; error: string };
+import { GetMatchDataResponse, MatchData } from '@/lib/types';
 
 export async function getMatchData(): Promise<GetMatchDataResponse> {
   try {
@@ -21,15 +11,15 @@ export async function getMatchData(): Promise<GetMatchDataResponse> {
       include: {
         pouleOpponent: {
           include: {
-            team: true, // Opponent team
+            team: true,
           },
         },
         matchPlayers: {
           where: {
-            available: false, // Absent players
+            available: false,
           },
           include: {
-            user: true, // Player details
+            user: true,
           },
         },
       },

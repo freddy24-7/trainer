@@ -9,14 +9,15 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  clerkId     String?       @unique
-  username    String?       @unique
-  role        Role          @default(TRAINER)
-  createdAt   DateTime      @default(now())
-  teamId      Int?
-  team        Team?         @relation(fields: [teamId], references: [id])
-  MatchPlayer MatchPlayer[]
+  id             Int              @id @default(autoincrement())
+  clerkId        String?          @unique
+  username       String?          @unique
+  role           Role             @default(TRAINER)
+  createdAt      DateTime         @default(now())
+  teamId         Int?
+  team           Team?            @relation(fields: [teamId], references: [id])
+  MatchPlayer    MatchPlayer[]
+  TrainingPlayer TrainingPlayer[] // Relation to track player's attendance in trainings
 }
 
 model Team {
@@ -64,6 +65,24 @@ model MatchPlayer {
   user      User    @relation(fields: [userId], references: [id])
 
   @@unique([matchId, userId])
+}
+
+model Training {
+  id              Int              @id @default(autoincrement())
+  date            DateTime
+  trainingPlayers TrainingPlayer[]
+  createdAt       DateTime         @default(now())
+}
+
+model TrainingPlayer {
+  id         Int      @id @default(autoincrement())
+  trainingId Int
+  userId     Int
+  absent     Boolean
+  training   Training @relation(fields: [trainingId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([trainingId, userId])
 }
 
 enum Role {

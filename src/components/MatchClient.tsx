@@ -4,18 +4,7 @@
 
 import React from 'react';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-
-type PlayerStat = {
-  id: number;
-  username: string | null;
-  matchesPlayed: number;
-  averagePlayingTime: number;
-  absences: number;
-};
-
-type MatchClientProps = {
-  playerStats: PlayerStat[];
-};
+import { MatchClientProps } from '@/lib/types';
 
 const MatchClient: React.FC<MatchClientProps> = ({ playerStats }) => {
   return (
