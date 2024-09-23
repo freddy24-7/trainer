@@ -13,7 +13,9 @@ const PlayerList: React.FC<PlayerListProps> = ({
 }) => {
   return (
     <div>
-      <h4 className="text-md font-semibold mt-6 mb-4 mx-auto text-center">Home Team Players</h4>
+      <h4 className="text-md font-semibold mt-6 mb-4 mx-auto text-center">
+        Home Team Players
+      </h4>
       {players.map((player) => (
         <PlayerInput
           key={player.id}

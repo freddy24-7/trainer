@@ -37,7 +37,6 @@ export default async function addTraining(params: FormData) {
 
     return { success: true, training };
   } catch (error) {
-    console.error('Error creating training:', error);
     return {
       errors: [
         {

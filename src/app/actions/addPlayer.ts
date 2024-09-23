@@ -42,15 +42,11 @@ export default async function addPlayer(
       },
     });
 
-    // Revalidate the player management page without redirecting
     revalidatePath('/player-management');
 
     // Indicate a successful operation without redirecting
     return { errors: [], success: true }; // Return success status
   } catch (error) {
-    console.error('Error adding player:', error);
-
-    // Return the error formatted as a ZodIssue to maintain type compatibility
     return {
       errors: [
         {

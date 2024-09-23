@@ -36,7 +36,6 @@ export default async function addMatchPlayer(data: {
       success: true,
     };
   } catch (error) {
-    console.error('Error adding match player:', error);
     return {
       success: false,
       error: 'Failed to add match player to the database.',

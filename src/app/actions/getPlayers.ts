@@ -24,7 +24,6 @@ export async function getPlayers() {
 
     return { success: true, players };
   } catch (error) {
-    console.error('Error fetching players:', error);
     return { success: false, error: 'Error fetching players.' };
   }
 }

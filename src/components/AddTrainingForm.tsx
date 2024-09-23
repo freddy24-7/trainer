@@ -69,10 +69,8 @@ const AddTrainingForm = ({ action, players }: Props) => {
         router.push('/');
       } else {
         toast.error('Error adding training.');
-        console.error('Error details:', response.errors);
       }
     } catch (error) {
-      console.error('Error during form submission:', error);
       toast.error('An error occurred during submission.');
     }
   };

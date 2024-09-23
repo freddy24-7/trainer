@@ -83,10 +83,6 @@ export default async function addPoule(
 
             console.log(`Successfully linked opponent: ${opponentName}`, link);
           } catch (opponentError) {
-            console.error(
-              `Error creating or linking opponent: ${opponentName}`,
-              opponentError
-            );
             throw new Error(`Failed to add opponent: ${opponentName}`);
           }
         })
@@ -95,8 +91,6 @@ export default async function addPoule(
 
     redirectPath = '/poule-management';
   } catch (error) {
-    console.error('Error creating poule:', error);
-
     return {
       errors: [
         {

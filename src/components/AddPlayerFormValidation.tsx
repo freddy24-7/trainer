@@ -33,11 +33,11 @@ function AddPlayerFormValidation({ action }: Props) {
       if (response.errors.length === 0) {
         toast.success('Player added successfully!');
       } else {
-        console.log('Validation errors:', response.errors);
+        const errorMessages = response.errors
+          .map((error) => error.message)
+          .join(', ');
+        toast.error(`Validation errors: ${errorMessages}`);
       }
-    } catch (error) {
-      console.error('Error adding player:', error);
-      toast.error('Failed to add player.');
     } finally {
       setIsSubmitting(false);
     }

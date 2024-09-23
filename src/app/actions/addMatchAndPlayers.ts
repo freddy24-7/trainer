@@ -77,7 +77,6 @@ export default async function addMatchAndPlayers(
       };
     }
   } catch (error) {
-    console.error('Error parsing players data:', error);
     const errorMessage =
       error instanceof Error
         ? error.message
