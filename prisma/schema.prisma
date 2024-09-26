@@ -12,12 +12,13 @@ model User {
   id             Int              @id @default(autoincrement())
   clerkId        String?          @unique
   username       String?          @unique
+  whatsappNumber String?
   role           Role             @default(TRAINER)
   createdAt      DateTime         @default(now())
   teamId         Int?
   team           Team?            @relation(fields: [teamId], references: [id])
   MatchPlayer    MatchPlayer[]
-  TrainingPlayer TrainingPlayer[] // Relation to track player's attendance in trainings
+  TrainingPlayer TrainingPlayer[]
 }
 
 model Team {
