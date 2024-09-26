@@ -1,5 +1,3 @@
-// __tests__/AddTrainingForm.test.tsx
-
 import React from 'react';
 import {
   render,
@@ -48,15 +46,15 @@ jest.mock('@/components/DateSelector', () => {
     );
   };
 
-  MockDateSelector.displayName = 'MockDateSelector'; // Add display name
+  MockDateSelector.displayName = 'MockDateSelector';
 
   return MockDateSelector;
 });
 
 const mockPlayers: Player[] = [
-  { id: 1, username: 'PlayerOne' },
-  { id: 2, username: 'PlayerTwo' },
-  { id: 3, username: 'PlayerThree' },
+  { id: 1, username: 'PlayerOne', whatsappNumber: '123456789' },
+  { id: 2, username: 'PlayerTwo', whatsappNumber: '123456789' },
+  { id: 3, username: 'PlayerThree', whatsappNumber: '123456789' },
 ];
 
 describe('AddTrainingForm', () => {

@@ -14,6 +14,7 @@ export async function getPlayers() {
       select: {
         id: true,
         username: true,
+        whatsappNumber: true, // Include whatsappNumber in the selection
       },
       orderBy: {
         createdAt: 'desc',

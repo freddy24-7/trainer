@@ -1,7 +1,7 @@
 // This component will be rendered when a page is not found (404 error)
 
 import Link from 'next/link';
-import { LuAngry } from 'react-icons/lu'; // Import the LuAngry icon
+import { LuAngry } from 'react-icons/lu';
 
 export default function NotFound() {
   return (
