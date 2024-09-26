@@ -10,11 +10,11 @@ import { Player } from '@/lib/types';
 export default async function ManagementPage() {
   const response = await getPlayers();
 
-  // Transforming players to ensure username is always a string
   const players: Player[] = response.success
     ? (response.players ?? []).map((player) => ({
         id: player.id,
         username: player.username ?? '',
+        whatsappNumber: player.whatsappNumber ?? '',
       }))
     : [];
 
@@ -25,7 +25,7 @@ export default async function ManagementPage() {
   return (
     <ProtectedLayout requiredRole="TRAINER">
       <div className="flex items-center justify-center min-h-screen p-6 bg-gray-100">
-        <div className="text-center">
+        <div className="text-center w-full max-w-3xl">
           <AddPlayerFormValidation action={addPlayer} />
           <PlayerManagementClient players={players} />
         </div>

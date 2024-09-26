@@ -23,6 +23,7 @@ export type Poule = {
 export type Player = {
   id: number;
   username: string;
+  whatsappNumber: string;
 };
 
 export type SignedInUser = {
@@ -39,13 +40,19 @@ export type DateSelectorProps = {
   onDateChange: (date: CalendarDate | null) => void;
 };
 
-export type EditPlayerFormProps = {
+export interface EditPlayerFormProps {
   playerId: number;
   initialUsername: string;
-  onPlayerEdited: (updatedPlayer: { id: number; username: string }) => void;
+  initialWhatsappNumber: string;
+  onPlayerEdited: (player: {
+    id: number;
+    username: string;
+    whatsappNumber: string;
+    whatsappLink?: string;
+  }) => void;
   onSubmissionStart: () => void;
   onAbort: () => void;
-};
+}
 
 export type OpponentSelectorProps = {
   opponents: PouleOpponent[];
@@ -56,6 +63,7 @@ export type OpponentSelectorProps = {
 export type PlayerFormData = {
   username: string;
   password: string;
+  whatsappNumber: string;
 };
 
 export type PlayerFormProps = {

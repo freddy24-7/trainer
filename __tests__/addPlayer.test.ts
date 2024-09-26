@@ -28,14 +28,20 @@ beforeEach(() => {
 });
 
 describe('addPlayer Functionality Tests', () => {
-  const formDataSetup = (username?: string, password?: string) => {
+  const formDataSetup = (
+    username?: string,
+    password?: string,
+    whatsappNumber?: string
+  ) => {
     const formData = new FormData();
     if (username) formData.append('username', username);
     if (password) formData.append('password', password);
+    if (whatsappNumber) formData.append('whatsappNumber', whatsappNumber);
     return formData;
   };
 
   it('should create a player successfully with valid input', async () => {
+    // Arrange
     const createUserMock = users.createUser as jest.Mock;
     const createUserInDBMock = prisma.user.create as jest.Mock;
     const revalidatePathMock = revalidatePath as jest.Mock;
@@ -45,14 +51,21 @@ describe('addPlayer Functionality Tests', () => {
       id: 1,
       username: 'testplayer',
       clerkId: 'clerk-123',
+      whatsappNumber: '+31612345678',
       role: 'PLAYER',
       createdAt: new Date(),
     });
 
-    const formData = formDataSetup('testplayer', 'SecurePassword@1');
+    const formData = formDataSetup(
+      'testplayer',
+      'SecurePassword@1',
+      '+31612345678'
+    );
 
+    // Act
     const result = await addPlayer({}, formData);
 
+    // Assert
     expect(result).toEqual({ errors: [], success: true });
     expect(createUserMock).toHaveBeenCalledWith({
       username: 'testplayer',
@@ -62,6 +75,7 @@ describe('addPlayer Functionality Tests', () => {
       data: {
         clerkId: 'clerk-123',
         username: 'testplayer',
+        whatsappNumber: '+31612345678',
         role: 'PLAYER',
         createdAt: expect.any(Date),
       },
@@ -69,24 +83,61 @@ describe('addPlayer Functionality Tests', () => {
     expect(revalidatePathMock).toHaveBeenCalledWith('/player-management');
   });
 
-  it('should return validation errors when username is missing', async () => {
-    const formData = formDataSetup(undefined, 'SecurePassword@1');
+  it('should return validation errors when whatsappNumber is invalid', async () => {
+    // Arrange
+    const formData = formDataSetup(
+      'testplayer',
+      'SecurePassword@1',
+      'invalidNumber'
+    );
 
+    // Act
     const result = await addPlayer({}, formData);
 
+    // Assert
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors.length).toBeGreaterThan(0);
-    expect(result.errors[0].message).toBe('Expected string, received null');
+    expect(result.errors[0].message).toBe(
+      'Please enter a valid WhatsApp number (including country code)'
+    );
+    expect(result.errors[0].path).toContain('whatsappNumber');
+  });
+
+  it('should return validation errors when username is missing', async () => {
+    // Arrange
+    const formData = formDataSetup(
+      undefined,
+      'SecurePassword@1',
+      '+31612345678'
+    );
+
+    // Act
+    const result = await addPlayer({}, formData);
+
+    // Assert
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0].message).toContain(
+      'Expected string, received null'
+    );
+    expect(result.errors[0].path).toContain('username');
   });
 
   it('should return an error when Clerk user creation fails', async () => {
+    // Arrange
     const createUserMock = users.createUser as jest.Mock;
     createUserMock.mockRejectedValue(new Error('Clerk error'));
 
-    const formData = formDataSetup('testplayer', 'SecurePassword@1');
+    const formData = formDataSetup(
+      'testplayer',
+      'SecurePassword@1',
+      '+31612345678'
+    );
 
+    // Act
     const result = await addPlayer({}, formData);
 
+    // Assert
     expect(result).toEqual({
       errors: [
         {

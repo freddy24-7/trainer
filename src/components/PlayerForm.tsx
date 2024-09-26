@@ -1,144 +1,82 @@
-// This component is a form editing a player.
+// This component is a form editing or adding a player.
 
-import { useForm, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createPlayerSchema } from '@/schemas/createPlayerSchema';
-import { useState } from 'react';
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { PlayerFormData, PlayerFormProps } from '@/lib/types';
+import React, { useState } from 'react';
+import { PlayerFormProps } from '@/lib/types';
 
-export default function PlayerForm({
-  initialData = { username: '', password: '' },
+function PlayerForm({
+  initialData,
   onSubmit,
   onSubmissionStart,
-  onAbort,
   submitButtonText,
 }: PlayerFormProps) {
-  const [submissionError, setSubmissionError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const formatToDisplay = (number: string) => {
+    if (number.startsWith('+316')) {
+      return number.replace('+316', '06');
+    }
+    return number;
+  };
 
-  const methods = useForm<PlayerFormData>({
-    resolver: zodResolver(createPlayerSchema),
-    defaultValues: initialData,
-  });
+  const [username, setUsername] = useState(initialData?.username || '');
+  const [password, setPassword] = useState(initialData?.password || '');
+  const [whatsappNumber, setWhatsappNumber] = useState(
+    formatToDisplay(initialData?.whatsappNumber || '')
+  );
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-    trigger,
-    reset,
-  } = methods;
-
-  const handleFormSubmit = async (data: PlayerFormData) => {
-    setSubmissionError(null);
-    setIsSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     onSubmissionStart();
 
     try {
-      await onSubmit(data);
-      reset();
+      await onSubmit({ username, password, whatsappNumber });
     } catch (error) {
-      setSubmissionError(
-        (error as Error).message || 'An error occurred during submission.'
-      );
-    } finally {
-      setIsSubmitting(false);
+      console.error('Error during submission:', error);
     }
-  };
-
-  const checkValidationBeforeSubmit = async () => {
-    const isValid = await trigger();
-    if (isValid) {
-      await handleSubmit(handleFormSubmit)();
-    } else {
-      console.log('Validation failed, please correct the errors.');
-      console.log(errors);
-    }
-  };
-
-  const handleAbort = () => {
-    setSubmissionError(null);
-    setIsSubmitting(false);
-    onAbort();
   };
 
   return (
-    <FormProvider {...methods}>
-      <form
-        onSubmit={(e) => e.preventDefault()}
-        className="space-y-4 max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded"
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-brandcolor">Username</label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-brandcolor">Password</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-brandcolor">WhatsApp Number</label>
+        <input
+          type="tel"
+          value={whatsappNumber}
+          onChange={(e) => setWhatsappNumber(e.target.value)}
+          required
+          placeholder="06XXXXXXXX"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring"
       >
-        <FormItem>
-          <FormField
-            name="username"
-            control={control}
-            render={({ field }) => (
-              <>
-                <FormLabel className="text-black">Username</FormLabel>
-                <FormControl>
-                  <input
-                    {...field}
-                    value={field.value || ''}
-                    placeholder="Enter a username"
-                    className="input-class w-full p-2 border rounded"
-                    autoComplete="username"
-                  />
-                </FormControl>
-                <FormMessage>{errors.username?.message}</FormMessage>
-              </>
-            )}
-          />
-        </FormItem>
-        <FormItem>
-          <FormField
-            name="password"
-            control={control}
-            render={({ field }) => (
-              <>
-                <FormLabel className="text-black">Password</FormLabel>
-                <FormControl>
-                  <input
-                    type="password"
-                    {...field}
-                    value={field.value || ''}
-                    placeholder="Enter a password"
-                    className="input-class w-full p-2 border rounded"
-                    autoComplete="current-password"
-                  />
-                </FormControl>
-                <FormMessage>{errors.password?.message}</FormMessage>
-              </>
-            )}
-          />
-        </FormItem>
-        {submissionError && (
-          <div className="text-red-500 mb-4">
-            {submissionError}
-            <Button
-              onClick={handleAbort}
-              className="ml-4"
-              variant="destructive"
-            >
-              Abort
-            </Button>
-          </div>
-        )}
-        <Button
-          type="button"
-          onClick={checkValidationBeforeSubmit}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Submitting...' : submitButtonText}
-        </Button>
-      </form>
-    </FormProvider>
+        {submitButtonText}
+      </button>
+    </form>
   );
 }
+
+export default PlayerForm;

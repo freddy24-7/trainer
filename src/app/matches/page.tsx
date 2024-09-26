@@ -15,6 +15,7 @@ export default async function MatchManagementPage() {
     ? (playerResponse.players ?? []).map((player) => ({
         id: player.id,
         username: player.username ?? '',
+        whatsappNumber: player.whatsappNumber ?? '',
       }))
     : [];
 

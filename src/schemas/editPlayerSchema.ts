@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-// Defining a schema specifically for player creation form validation
-export const createPlayerSchema = z.object({
+export const editPlayerSchema = z.object({
   username: z.string().min(4, 'Username must be at least 4 characters long'),
   password: z
     .string()

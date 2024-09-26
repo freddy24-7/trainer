@@ -15,6 +15,7 @@ export default async function addPlayer(
   const validation = createPlayerSchema.safeParse({
     username: params.get('username'),
     password: params.get('password'),
+    whatsappNumber: params.get('whatsappNumber'),
   });
 
   if (!validation.success) {
@@ -23,20 +24,19 @@ export default async function addPlayer(
     };
   }
 
-  const { username, password } = validation.data;
+  const { username, password, whatsappNumber } = validation.data;
 
   try {
-    // Registering the player in Clerk using the users object from Clerk SDK
     const clerkUser = await users.createUser({
       username,
       password,
     });
 
-    // Saving the player to the database with the Clerk ID using PrismaClient
     await prisma.user.create({
       data: {
         clerkId: clerkUser.id,
         username,
+        whatsappNumber,
         role: 'PLAYER',
         createdAt: new Date(),
       },
@@ -44,8 +44,7 @@ export default async function addPlayer(
 
     revalidatePath('/player-management');
 
-    // Indicate a successful operation without redirecting
-    return { errors: [], success: true }; // Return success status
+    return { errors: [], success: true };
   } catch (error) {
     return {
       errors: [
