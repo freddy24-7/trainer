@@ -6,12 +6,13 @@ import React, { useState } from 'react';
 import { deletePlayer } from '@/app/actions/deletePlayer';
 import { Spinner } from '@nextui-org/spinner';
 import ReusableModal from '@/components/ReusableModal';
-import EditPlayerForm from '@/components/EditPlayerForm';
+import { EditPlayerForm } from '@/components/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
+import editPlayer from '@/app/actions/editPlayer';
 import { PlayerManagementClientProps, Player } from '@/lib/types';
 
 export default function PlayerManagementClient({
-  players,
+  players: initialPlayers,
 }: PlayerManagementClientProps) {
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +20,8 @@ export default function PlayerManagementClient({
   const [modalBody, setModalBody] = useState<React.ReactNode>(null);
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
   const [editPlayerData, setEditPlayerData] = useState<Player | null>(null);
+
+  const [players, setPlayers] = useState<Player[]>(initialPlayers);
 
   const handleDeletePlayer = (playerId: number) => {
     setModalTitle('Confirm Deletion');
@@ -33,7 +36,9 @@ export default function PlayerManagementClient({
       const response = await deletePlayer(playerId);
       if (response.success) {
         setModalBody(<p>Player deleted successfully!</p>);
-        window.location.reload();
+        setPlayers((prevPlayers) =>
+          prevPlayers.filter((player) => player.id !== playerId)
+        );
       } else {
         setModalBody(<p className="text-red-500">{response.error}</p>);
       }
@@ -45,10 +50,22 @@ export default function PlayerManagementClient({
 
   const handleEditPlayer = (player: Player) => {
     setEditPlayerData(player);
-    setModalTitle(
-      'You can only edit players who does not yet have match data.'
-    );
+    setModalTitle('Edit Player');
     setIsModalOpen(true);
+  };
+
+  const handlePlayerEdited = (updatedPlayer: Player) => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) =>
+        player.id === updatedPlayer.id ? updatedPlayer : player
+      )
+    );
+    setSubmitting(false);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditPlayerData(null);
   };
 
   return (
@@ -71,19 +88,19 @@ export default function PlayerManagementClient({
 
       <ReusableModal
         isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditPlayerData(null);
-        }}
+        onClose={handleCloseModal}
         title={modalTitle}
         body={
           editPlayerData ? (
             <EditPlayerForm
               playerId={editPlayerData.id}
               initialUsername={editPlayerData.username}
-              onPlayerEdited={() => window.location.reload()}
+              initialWhatsappNumber={editPlayerData.whatsappNumber}
+              onPlayerEdited={handlePlayerEdited}
               onSubmissionStart={() => setSubmitting(true)}
               onAbort={() => setSubmitting(false)}
+              action={editPlayer}
+              onCloseModal={handleCloseModal}
             />
           ) : (
             modalBody
@@ -92,10 +109,7 @@ export default function PlayerManagementClient({
         confirmAction={editPlayerData ? undefined : confirmAction}
         confirmLabel="Confirm"
         cancelLabel="Cancel"
-        cancelAction={() => {
-          setIsModalOpen(false);
-          setEditPlayerData(null);
-        }}
+        cancelAction={handleCloseModal}
       />
     </div>
   );

@@ -18,7 +18,6 @@ jest.mock('next/navigation', () => ({
 describe('AddMatchForm', () => {
   const mockAction = jest.fn();
 
-  // Define mock data using the provided types
   const mockPoule: Poule = {
     id: 1,
     pouleName: 'Poule 1',
@@ -27,8 +26,8 @@ describe('AddMatchForm', () => {
   };
 
   const mockPlayers: Player[] = [
-    { id: 1, username: 'Player 1' },
-    { id: 2, username: 'Player 2' },
+    { id: 1, username: 'Player 1', whatsappNumber: '123456789}' },
+    { id: 2, username: 'Player 2', whatsappNumber: '123456789' },
   ];
 
   beforeEach(() => {

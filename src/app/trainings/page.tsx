@@ -3,8 +3,8 @@
 import ProtectedLayout from '@/app/protected-layout';
 import addTraining from '@/app/actions/addTraining';
 import AddTrainingForm from '@/components/AddTrainingForm';
-import { getPlayers } from '@/app/actions/getPlayers'; // Action to fetch players
-import { Player } from '@/lib/types'; // Import Player type definition
+import { getPlayers } from '@/app/actions/getPlayers';
+import { Player } from '@/lib/types';
 
 export default async function TrainingsPage() {
   const playerResponse = await getPlayers();
@@ -13,6 +13,7 @@ export default async function TrainingsPage() {
     ? (playerResponse.players ?? []).map((player) => ({
         id: player.id,
         username: player.username ?? '',
+        whatsappNumber: player.whatsappNumber ?? '',
       }))
     : [];
 
