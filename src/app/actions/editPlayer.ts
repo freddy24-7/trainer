@@ -71,7 +71,6 @@ export default async function editPlayer(
 
     return { errors: [], success: true };
   } catch (error) {
-    console.error('Error editing player:', error);
     return {
       errors: [
         {

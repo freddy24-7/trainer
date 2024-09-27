@@ -48,7 +48,6 @@ export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
 
     return { success: true, playerStats };
   } catch (error) {
-    console.error('Error fetching player stats:', error);
     return { success: false, error: 'Failed to fetch player stats.' };
   }
 }

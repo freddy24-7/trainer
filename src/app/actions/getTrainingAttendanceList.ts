@@ -29,7 +29,6 @@ export async function getTrainingAttendanceList(): Promise<GetTrainingAttendance
 
     return { success: true, attendanceList };
   } catch (error) {
-    console.error('Error fetching attendance data:', error);
     return { success: false, error: 'Failed to fetch attendance data.' };
   }
 }

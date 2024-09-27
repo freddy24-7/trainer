@@ -32,7 +32,6 @@ export async function updateUsername(clerkId: string, newUsername: string) {
       return { success: true };
     }
   } catch (error) {
-    console.error('Error updating username:', error);
     return { success: false, error: 'Error updating username' };
   }
 }

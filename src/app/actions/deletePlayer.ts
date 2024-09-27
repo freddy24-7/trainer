@@ -15,7 +15,6 @@ export async function deletePlayer(playerId: number) {
 
     // If the player or Clerk ID is missing, return a failure response
     if (!player || !player.clerkId) {
-      console.error('Player not found or Clerk ID is missing.');
       return {
         success: false,
         error: 'Player not found or Clerk ID is missing.',
@@ -32,7 +31,6 @@ export async function deletePlayer(playerId: number) {
 
     return { success: true };
   } catch (error) {
-    console.error('Error deleting player:', error);
     return { success: false, error: 'Error deleting the player.' };
   }
 }

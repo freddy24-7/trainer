@@ -43,7 +43,6 @@ export async function getTeamsInPoule() {
       latestPoule: formattedPoules[0],
     };
   } catch (error) {
-    console.error('Error fetching teams in poules:', error);
     return {
       success: false,
       error: 'Failed to load teams in the poules.',

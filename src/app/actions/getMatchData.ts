@@ -36,7 +36,6 @@ export async function getMatchData(): Promise<GetMatchDataResponse> {
 
     return { success: true, matchData };
   } catch (error) {
-    console.error('Error fetching match data:', error);
     return { success: false, error: 'Failed to fetch match data.' };
   }
 }

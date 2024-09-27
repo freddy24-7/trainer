@@ -30,7 +30,6 @@ export async function getTrainingData(): Promise<GetTrainingDataResponse> {
 
     return { success: true, trainingData };
   } catch (error) {
-    console.error('Error fetching training data:', error);
     return { success: false, error: 'Failed to fetch training data.' };
   }
 }
