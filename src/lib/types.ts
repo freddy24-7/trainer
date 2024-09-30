@@ -2,6 +2,7 @@
 
 import { CalendarDate } from '@nextui-org/react';
 import { ReactNode } from 'react';
+import { ZodIssue } from 'zod';
 
 export type Team = {
   id: number;
@@ -24,11 +25,6 @@ export type Player = {
   id: number;
   username: string;
   whatsappNumber: string;
-};
-
-export type SignedInUser = {
-  id: string;
-  username: string;
 };
 
 export type DashboardClientProps = {
@@ -225,3 +221,33 @@ export type GetPlayerMatchStatsResponse =
 export type GetMatchDataResponse =
   | { success: true; matchData: MatchData[] }
   | { success: false; error: string };
+
+export type Sender = {
+  id: number;
+  username: string;
+};
+
+export type Message = {
+  id: number;
+  content: string;
+  sender: Sender;
+  createdAt: Date;
+};
+
+export type PusherEventMessage = {
+  id: number;
+  content: string;
+  sender: Sender;
+  createdAt: string;
+};
+
+export type SignedInUser = {
+  id: string;
+  username: string;
+  role?: string;
+};
+
+export type ActionResponse = {
+  success: boolean;
+  errors?: ZodIssue[];
+};

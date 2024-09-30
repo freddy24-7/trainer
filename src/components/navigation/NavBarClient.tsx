@@ -1,4 +1,5 @@
 // This component is used to enable user interaction with the application.
+
 'use client';
 
 import {
@@ -128,6 +129,9 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
             <NavLink href="/dashboard" className="text-white">
               Dashboard
             </NavLink>
+            <NavLink href="/chat" className="text-white">
+              Chat
+            </NavLink>
             <UserButton afterSignOutUrl="/" />
           </div>
         ) : (
@@ -231,6 +235,9 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
               <Link href="/dashboard" className="text-white w-auto my-2">
                 Dashboard
               </Link>
+              <NavLink href="/chat" className="text-white">
+                Chat
+              </NavLink>
               <UserButton afterSignOutUrl="/" />
             </div>
           ) : (

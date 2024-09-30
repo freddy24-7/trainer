@@ -19,6 +19,7 @@ model User {
   team           Team?            @relation(fields: [teamId], references: [id])
   MatchPlayer    MatchPlayer[]
   TrainingPlayer TrainingPlayer[]
+  Message        Message[]
 }
 
 model Team {
@@ -84,6 +85,14 @@ model TrainingPlayer {
   user       User     @relation(fields: [userId], references: [id])
 
   @@unique([trainingId, userId])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  senderId  Int
+  sender    User     @relation(fields: [senderId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 enum Role {
