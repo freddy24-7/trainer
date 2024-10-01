@@ -7,7 +7,8 @@ export async function fetchAndCheckUser() {
   const { userId } = auth();
 
   if (!userId) {
-    throw new Error('User not authenticated');
+    console.log('User is not authenticated');
+    return null;
   }
 
   const prismaUser = await prisma.user.findUnique({
@@ -19,12 +20,10 @@ export async function fetchAndCheckUser() {
     return null;
   }
 
-  const userRole = prismaUser.role || null;
-
   const signedInUser = {
     id: prismaUser.id.toString(),
     username: prismaUser.username || 'Unknown',
-    role: userRole,
+    role: prismaUser.role || null,
   };
 
   console.log(

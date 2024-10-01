@@ -5,6 +5,10 @@ export default authMiddleware({
 });
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: [
+    '/((?!.*\\.(?:js|css|mjs|map|png|jpg|jpeg|gif|svg|ico|mp4|webm|woff|woff2|ttf|eot|otf)$|_next/static).*)',
+    '/',
+    '/(api|trpc)(.*)',
+  ],
   runtime: 'nodejs',
 };

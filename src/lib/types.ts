@@ -4,6 +4,12 @@ import { CalendarDate } from '@nextui-org/react';
 import { ReactNode } from 'react';
 import { ZodIssue } from 'zod';
 
+export type UserData = {
+  clerkId: string;
+  username: string;
+  role: string;
+};
+
 export type Team = {
   id: number;
   name: string;

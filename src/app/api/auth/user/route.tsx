@@ -1,41 +1,35 @@
 import { NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 import { UserSchema } from '@/schemas/userSchema';
+import { UserData } from '@/lib/types';
 
-const prisma = new PrismaClient();
+function redirectToSignIn(): NextResponse {
+  return NextResponse.redirect('/sign-in');
+}
 
-export async function GET() {
-  // Obtaining the user id from the auth object
+export async function GET(): Promise<NextResponse> {
   const { userId } = auth();
 
   if (!userId) {
-    return NextResponse.redirect('/sign-in');
+    return redirectToSignIn();
   }
 
-  // Obtaining the user object from the currentUser function in Clerk
   const user = await currentUser();
 
-  // Checking if the user is null before proceeding
   if (!user) {
-    return NextResponse.redirect('/sign-in');
+    return redirectToSignIn();
   }
 
-  // Preparing the user data for validation, now that user is confirmed to be not null
-  const userData = {
+  const userData: UserData = {
     clerkId: user.id,
-    username: user.username, // Ensure this value is always provided
-    role: 'TRAINER', // default role, can be adjusted as needed
+    username: user.username ?? 'unknown',
+    role: process.env.DEFAULT_USER_ROLE || 'TRAINER',
   };
 
-  console.log('Validating user data with Zod:', userData);
-
-  // Validating the user data with Zod before interacting with Prisma
   const parsedUser = UserSchema.safeParse(userData);
 
   if (!parsedUser.success) {
-    // Handle validation errors
-    console.error(parsedUser.error.format());
     return NextResponse.json(
       { error: 'Invalid user data', details: parsedUser.error.format() },
       { status: 400 }
@@ -43,28 +37,28 @@ export async function GET() {
   }
 
   try {
-    // Checking if the user already exists in the database
-    let alreadyExistingUser = await prisma.user.findUnique({
+    await prisma.user.upsert({
       where: { clerkId: parsedUser.data.clerkId },
+      update: {},
+      create: parsedUser.data,
     });
-
-    // Creating the user in the db if they do not already exist
-    if (!alreadyExistingUser) {
-      await prisma.user.create({
-        data: parsedUser.data,
-      });
-    }
   } catch (error) {
-    console.error('Error interacting with the database:', error);
-  } finally {
-    await prisma.$disconnect();
+    if (error instanceof Error) {
+      console.error('Error interacting with the database:', error.message);
+      return NextResponse.json(
+        { error: 'Internal server error', message: error.message },
+        { status: 500 }
+      );
+    } else {
+      console.error('Unexpected error', error);
+      return NextResponse.json(
+        { error: 'Unknown error occurred' },
+        { status: 500 }
+      );
+    }
   }
 
-  //Redirecting the user to the dashboard
-  return new NextResponse(null, {
-    status: 302,
-    headers: {
-      Location: 'http://localhost:3000/dashboard',
-    },
-  });
+  return NextResponse.redirect(
+    process.env.NEXT_PUBLIC_DASHBOARD_URL || 'http://localhost:3000/dashboard'
+  );
 }

@@ -1,5 +1,3 @@
-// This component is responsible for rendering the chat interface and handling the sending of messages.
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -19,12 +17,6 @@ type Props = {
   action: (_prevState: any, params: FormData) => Promise<ActionResponse>;
 };
 
-// Initializing Pusher (as per pusher documentation)
-const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
-  cluster: 'eu',
-});
-const channel = pusher.subscribe('chat');
-
 function ChatClient({
   signedInUser,
   messages: initialMessages,
@@ -35,6 +27,15 @@ function ChatClient({
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
+    Pusher.logToConsole = true;
+
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
+      cluster: 'eu',
+      forceTLS: true,
+    });
+
+    const channel = pusher.subscribe('chat');
+
     const handlePusherEvent = (data: PusherEventMessage) => {
       console.log('Pusher event received:', data);
       setMessages((prevMessages) => [
@@ -66,18 +67,6 @@ function ChatClient({
       toast.error('Message cannot be empty.');
       return;
     }
-
-    const tempMessage: Message = {
-      id: Date.now(),
-      content: newMessage,
-      sender: {
-        id: Number(signedInUser.id),
-        username: signedInUser.username,
-      },
-      createdAt: new Date(),
-    };
-
-    setMessages((prevMessages) => [...prevMessages, tempMessage]);
 
     try {
       const formData = new FormData();
