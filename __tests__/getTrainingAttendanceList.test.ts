@@ -13,7 +13,6 @@ describe('getTrainingAttendanceList', () => {
   });
 
   it('should return the training attendance list successfully', async () => {
-    // Arrange
     const mockPlayers = [
       {
         id: 1,
@@ -29,10 +28,8 @@ describe('getTrainingAttendanceList', () => {
 
     (prisma.user.findMany as jest.Mock).mockResolvedValue(mockPlayers);
 
-    // Act
     const result = await getTrainingAttendanceList();
 
-    // Assert
     expect(result).toEqual({
       success: true,
       attendanceList: [
@@ -51,13 +48,10 @@ describe('getTrainingAttendanceList', () => {
   });
 
   it('should return an empty attendance list if no players are found', async () => {
-    // Arrange
     (prisma.user.findMany as jest.Mock).mockResolvedValue([]);
 
-    // Act
     const result = await getTrainingAttendanceList();
 
-    // Assert
     expect(result).toEqual({
       success: true,
       attendanceList: [],
@@ -65,7 +59,6 @@ describe('getTrainingAttendanceList', () => {
   });
 
   it('should return correct data for a player with no absences', async () => {
-    // Arrange
     const mockPlayers = [
       {
         id: 3,
@@ -76,10 +69,8 @@ describe('getTrainingAttendanceList', () => {
 
     (prisma.user.findMany as jest.Mock).mockResolvedValue(mockPlayers);
 
-    // Act
     const result = await getTrainingAttendanceList();
 
-    // Assert
     expect(result).toEqual({
       success: true,
       attendanceList: [
@@ -93,15 +84,12 @@ describe('getTrainingAttendanceList', () => {
   });
 
   it('should handle errors when fetching attendance data', async () => {
-    // Arrange
     (prisma.user.findMany as jest.Mock).mockRejectedValue(
       new Error('Database error')
     );
 
-    // Act
     const result = await getTrainingAttendanceList();
 
-    // Assert
     expect(result).toEqual({
       success: false,
       error: 'Failed to fetch attendance data.',

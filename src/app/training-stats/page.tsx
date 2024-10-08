@@ -1,13 +1,12 @@
-// This component is displays the training stats page.
-
 import React from 'react';
-import { getTrainingData } from '@/app/actions/getTrainingData';
-import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
-import TrainingClient from '@/components/TrainingClient';
-import TrainingAttendanceClient from '@/components/TrainingAttendanceClient';
-import ProtectedLayout from '@/app/protected-layout';
 
-export default async function TrainingsPage() {
+import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
+import { getTrainingData } from '@/app/actions/getTrainingData';
+import ProtectedLayout from '@/app/protected-layout';
+import TrainingAttendanceClient from '@/components/trainings/TrainingAttendanceClient';
+import TrainingClient from '@/components/trainings/TrainingClient';
+
+export default async function TrainingsPage(): Promise<React.ReactElement> {
   const [trainingDataResponse, attendanceDataResponse] = await Promise.all([
     getTrainingData(),
     getTrainingAttendanceList(),

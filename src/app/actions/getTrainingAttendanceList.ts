@@ -1,12 +1,10 @@
-// This server action is used to fetch the training attendance list.
-
 'use server';
 
 import prisma from '@/lib/prisma';
 import {
   GetTrainingAttendanceListResponse,
   PlayerAttendance,
-} from '@/lib/types';
+} from '@/types/types';
 
 export async function getTrainingAttendanceList(): Promise<GetTrainingAttendanceListResponse> {
   try {
@@ -28,7 +26,7 @@ export async function getTrainingAttendanceList(): Promise<GetTrainingAttendance
     }));
 
     return { success: true, attendanceList };
-  } catch (error) {
+  } catch {
     return { success: false, error: 'Failed to fetch attendance data.' };
   }
 }

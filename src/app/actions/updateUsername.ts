@@ -1,10 +1,10 @@
-// This server action is used to update the username of a user (trainer) in the database.
-
 import prisma from '@/lib/prisma';
 
-export async function updateUsername(clerkId: string, newUsername: string) {
+export async function updateUsername(
+  clerkId: string,
+  newUsername: string
+): Promise<{ success: boolean; error?: string }> {
   try {
-    // Finding the user (trainer) in the database by Clerk ID
     const dbUser = await prisma.user.findUnique({
       where: { clerkId },
     });
@@ -14,7 +14,6 @@ export async function updateUsername(clerkId: string, newUsername: string) {
       return { success: false, error: 'User not found' };
     }
 
-    // Updating the username if it is different
     if (dbUser.username !== newUsername) {
       console.log(
         `Updating username from '${dbUser.username}' to '${newUsername}'`
@@ -31,7 +30,7 @@ export async function updateUsername(clerkId: string, newUsername: string) {
       console.log('Username is already up-to-date, no update needed.');
       return { success: true };
     }
-  } catch (error) {
+  } catch {
     return { success: false, error: 'Error updating username' };
   }
 }

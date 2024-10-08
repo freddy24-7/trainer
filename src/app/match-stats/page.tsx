@@ -1,13 +1,12 @@
-// This component is responsible for rendering the match statistics page.
-
 import React from 'react';
-import MatchClient from '@/components/MatchClient';
-import OpponentClient from '@/components/OpponentClient';
-import { getPlayerStats } from '@/app/actions/getPlayerStats';
-import { getMatchData } from '@/app/actions/getMatchData';
-import ProtectedLayout from '@/app/protected-layout';
 
-export default async function MatchStatsPage() {
+import { getMatchData } from '@/app/actions/getMatchData';
+import { getPlayerStats } from '@/app/actions/getPlayerStats';
+import ProtectedLayout from '@/app/protected-layout';
+import MatchClient from '@/components/matches/MatchClient';
+import OpponentClient from '@/components/matches/OpponentClient';
+
+export default async function MatchStatsPage(): Promise<React.ReactElement> {
   const [playerStatsResponse, matchDataResponse] = await Promise.all([
     getPlayerStats(),
     getMatchData(),

@@ -13,7 +13,6 @@ describe('getTeamsInPoule', () => {
   });
 
   it('should return teams in poules successfully', async () => {
-    // Arrange
     const mockPoules = [
       {
         id: 1,
@@ -36,10 +35,8 @@ describe('getTeamsInPoule', () => {
 
     (prisma.poule.findMany as jest.Mock).mockResolvedValue(mockPoules);
 
-    // Act
     const result = await getTeamsInPoule();
 
-    // Assert
     expect(result).toEqual({
       success: true,
       poules: [
@@ -83,13 +80,10 @@ describe('getTeamsInPoule', () => {
   });
 
   it('should return an error if no poules are found', async () => {
-    // Arrange
     (prisma.poule.findMany as jest.Mock).mockResolvedValue([]);
 
-    // Act
     const result = await getTeamsInPoule();
 
-    // Assert
     expect(result).toEqual({
       success: false,
       error: 'No poules found. Please create a new poule.',
@@ -97,15 +91,12 @@ describe('getTeamsInPoule', () => {
   });
 
   it('should handle errors when fetching teams in poules', async () => {
-    // Arrange
     (prisma.poule.findMany as jest.Mock).mockRejectedValue(
       new Error('Database error')
     );
 
-    // Act
     const result = await getTeamsInPoule();
 
-    // Assert
     expect(result).toEqual({
       success: false,
       error: 'Failed to load teams in the poules.',

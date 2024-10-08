@@ -1,14 +1,13 @@
-// This component is responsible for rendering the dashboard for the client.
-
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Spinner } from '@nextui-org/spinner';
-import { DashboardClientProps } from '@/lib/types';
+import React, { useEffect, useState } from 'react';
+
+import { DashboardClientProps } from '@/types/types';
 
 export default function DashboardClient({
   signedInUser,
-}: DashboardClientProps) {
+}: DashboardClientProps): React.ReactElement {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

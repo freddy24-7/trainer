@@ -1,19 +1,18 @@
-// This component is used to display navigation links.
-
 'use client';
 
 import { NavbarItem } from '@nextui-org/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NavLinkProps } from '@/lib/types';
+import React, { ReactElement } from 'react';
+
+import { NavLinkProps } from '@/types/types';
 
 export default function NavLink({
   href,
   label,
   children,
   className,
-}: NavLinkProps) {
-  // Getting the current path using the usePathname hook
+}: NavLinkProps): ReactElement {
   const pathname = usePathname();
 
   return (

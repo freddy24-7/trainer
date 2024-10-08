@@ -1,6 +1,7 @@
+import { users } from '@clerk/clerk-sdk-node';
+
 import editPlayer from '@/app/actions/editPlayer';
 import prisma from '@/lib/prisma';
-import { users } from '@clerk/clerk-sdk-node';
 import { editPlayerSchema } from '@/schemas/editPlayerSchema';
 
 jest.mock('@/lib/prisma', () => ({
@@ -33,7 +34,10 @@ describe('editPlayer', () => {
     jest.clearAllMocks();
   });
 
-  const createFormData = (username: string, whatsappNumber?: string) => {
+  const createFormData = (
+    username: string,
+    whatsappNumber?: string
+  ): FormData => {
     const formData = new FormData();
     formData.append('username', username);
     if (whatsappNumber) {
@@ -42,18 +46,15 @@ describe('editPlayer', () => {
     return formData;
   };
 
-  const mockPlayerData = (player: Player | null) => {
+  const mockPlayerData = (player: Player | null): void => {
     (prisma.user.findUnique as jest.Mock).mockResolvedValue(player);
   };
 
   it('should return an error if username or WhatsApp number is missing', async () => {
-    // Arrange
     const formData = createFormData('player1');
 
-    // Act
     const result = await editPlayer(1, formData);
 
-    // Assert
     expect(result).toEqual({
       errors: [
         {
@@ -66,18 +67,16 @@ describe('editPlayer', () => {
   });
 
   it('should return an error if the player is not found or has invalid data', async () => {
-    // Arrange
     mockPlayerData(null);
     const formData = createFormData('player1', '123456789');
 
-    // Act
     const result = await editPlayer(1, formData);
 
-    // Assert
     expect(result).toEqual({
       errors: [
         {
-          message: 'Player not found, Clerk ID missing, or username is null.',
+          message:
+            'Player not found, Clerk ID, username, or WhatsApp number is missing.',
           path: ['form'],
           code: 'custom',
         },
@@ -86,7 +85,6 @@ describe('editPlayer', () => {
   });
 
   it('should return validation errors if the schema validation fails', async () => {
-    // Arrange
     mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
     const formData = createFormData('invalidPlayer', 'invalidNumber');
 
@@ -106,17 +104,14 @@ describe('editPlayer', () => {
       mockValidationError
     );
 
-    // Act
     const result = await editPlayer(1, formData);
 
-    // Assert
     expect(result).toEqual({
       errors: mockValidationError.error.issues,
     });
   });
 
   it('should update the player successfully if all validation passes', async () => {
-    // Arrange
     mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
     const formData = createFormData('validPlayer', '123456789');
 
@@ -131,10 +126,8 @@ describe('editPlayer', () => {
       mockValidationSuccess
     );
 
-    // Act
     const result = await editPlayer(1, formData);
 
-    // Assert
     expect(users.updateUser).toHaveBeenCalledWith('clerkId123', {
       username: 'validPlayer',
       password: undefined,
@@ -155,7 +148,6 @@ describe('editPlayer', () => {
   });
 
   it('should handle errors during the update process', async () => {
-    // Arrange
     mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
     const formData = createFormData('validPlayer', '123456789');
 
@@ -174,10 +166,8 @@ describe('editPlayer', () => {
       new Error('User update failed')
     );
 
-    // Act
     const result = await editPlayer(1, formData);
 
-    // Assert
     expect(result).toEqual({
       errors: [
         {

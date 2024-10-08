@@ -1,11 +1,25 @@
-// This server action is used to add a new training to the database.
-
 'use server';
+import { Training } from '@prisma/client';
+import { ZodIssue } from 'zod';
 
 import prisma from '@/lib/prisma';
 import { addTrainingSchema } from '@/schemas/trainingSchema';
+import { TrainingActionError } from '@/types/types';
 
-export default async function addTraining(params: FormData) {
+function handleZodIssueToTrainingActionError(
+  zodIssues: ZodIssue[]
+): TrainingActionError[] {
+  return zodIssues.map((issue) => ({
+    message: issue.message,
+    path: Array.isArray(issue.path) ? issue.path.map(String) : [],
+  }));
+}
+
+export default async function createTraining(params: FormData): Promise<{
+  errors?: TrainingActionError[];
+  success?: boolean;
+  training?: Training;
+}> {
   const validation = addTrainingSchema.safeParse({
     date: params.get('date'),
     players: params.get('players')
@@ -15,7 +29,7 @@ export default async function addTraining(params: FormData) {
 
   if (!validation.success) {
     return {
-      errors: validation.error.issues,
+      errors: handleZodIssueToTrainingActionError(validation.error.issues),
     };
   }
 
@@ -36,13 +50,12 @@ export default async function addTraining(params: FormData) {
     });
 
     return { success: true, training };
-  } catch (error) {
+  } catch {
     return {
       errors: [
         {
           message: 'Failed to create training.',
           path: ['form'],
-          code: 'custom',
         },
       ],
     };

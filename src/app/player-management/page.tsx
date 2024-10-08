@@ -1,17 +1,17 @@
-// This is a protected page that can only be accessed by users with the TRAINER role.
+import React from 'react';
 
-import ProtectedLayout from '@/app/protected-layout';
-import { getPlayers } from '@/app/actions/getPlayers';
 import addPlayer from '@/app/actions/addPlayer';
-import PlayerManagementClient from '@/components/PlayerManagementClient';
-import { AddPlayerFormValidation } from '@/components/AddPlayerFormValidation';
-import { Player } from '@/lib/types';
+import { getPlayers } from '@/app/actions/getPlayers';
+import ProtectedLayout from '@/app/protected-layout';
+import { AddPlayerFormValidation } from '@/components/players/AddPlayerFormValidation';
+import PlayerManagementClient from '@/components/players/PlayerManagementClient';
+import { Player } from '@/types/types';
 
-export default async function ManagementPage() {
+export default async function ManagementPage(): Promise<React.ReactElement> {
   const response = await getPlayers();
 
   const players: Player[] = response.success
-    ? (response.players ?? []).map((player) => ({
+    ? (response.players ?? []).map((player: Player) => ({
         id: player.id,
         username: player.username ?? '',
         whatsappNumber: player.whatsappNumber ?? '',

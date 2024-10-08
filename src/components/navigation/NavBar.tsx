@@ -1,10 +1,13 @@
 import { Navbar, NavbarBrand } from '@nextui-org/react';
 import Link from 'next/link';
+import React, { ReactElement } from 'react';
 import { IoFootball } from 'react-icons/io5';
-import NavBarClient from './NavBarClient';
+
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 
-export default async function NavBar() {
+import NavBarClient from './NavBarClient';
+
+export default async function NavBar(): Promise<ReactElement> {
   const signedInUser = await fetchAndCheckUser();
 
   return (
@@ -15,7 +18,6 @@ export default async function NavBar() {
         item: ['text-xl', 'text-white', 'data-[active=true]:text-red-600'],
       }}
     >
-      {/* NavbarBrand represents the brand section of the Navbar */}
       <NavbarBrand as={Link} href="/">
         <IoFootball size={35} className="text-gray-700" />
         <div className="hidden lg:flex font-bold text-2xl">

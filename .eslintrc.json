@@ -1,10 +1,279 @@
 {
   "extends": [
     "next/core-web-vitals",
-    "plugin:prettier/recommended" // Integrates Prettier with ESLint
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
   ],
-  "plugins": ["prettier"],
+  "plugins": [
+    "prettier",
+    "clean-code",
+    "@typescript-eslint",
+    "sonarjs",
+    "immutable",
+    "import",
+    "jest"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./",
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": "./tsconfig.json"
+      }
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
-    "prettier/prettier": "error" // Shows Prettier formatting errors as ESLint errors
-  }
+    "prettier/prettier": "error",
+
+    /* Complexity & Code Quality */
+    "complexity": [
+      "warn",
+      {
+        "max": 8
+      }
+    ],
+    "max-lines": [
+      "warn",
+      {
+        "max": 250
+      }
+    ],
+    "max-lines-per-function": [
+      "warn",
+      {
+        "max": 50
+      }
+    ],
+    "max-params": [
+      "warn",
+      {
+        "max": 3
+      }
+    ],
+    "max-depth": [
+      "warn",
+      {
+        "max": 2
+      }
+    ],
+    "max-classes-per-file": ["warn", 1],
+
+    /* Cognitive Complexity & Duplication */
+    "sonarjs/cognitive-complexity": ["warn", 10],
+    "sonarjs/no-duplicate-string": [
+      "warn",
+      {
+        "threshold": 3
+      }
+    ],
+    "sonarjs/no-collapsible-if": "warn",
+    "sonarjs/no-identical-expressions": "warn",
+    "sonarjs/no-inverted-boolean-check": "warn",
+
+    /* Mutability */
+    "immutable/no-mutation": "error",
+
+    /* TypeScript */
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false
+      }
+    ],
+    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        "selector": "variableLike",
+        "format": ["camelCase", "PascalCase"],
+        "leadingUnderscore": "allow",
+        "trailingUnderscore": "allow"
+      },
+      {
+        "selector": "function",
+        "format": ["camelCase", "PascalCase"],
+        "leadingUnderscore": "allow",
+        "trailingUnderscore": "allow",
+        "prefix": [
+          "get",
+          "set",
+          "handle",
+          "fetch",
+          "create",
+          "update",
+          "delete",
+          "add",
+          "remove"
+        ]
+      },
+      {
+        "selector": "function",
+        "format": ["PascalCase"],
+        "filter": {
+          "regex": "^[A-Z]",
+          "match": true
+        },
+        "leadingUnderscore": "allow",
+        "trailingUnderscore": "allow"
+      },
+      {
+        "selector": "function",
+        "format": ["camelCase"],
+        "filter": {
+          "regex": "^use[A-Z]",
+          "match": true
+        },
+        "leadingUnderscore": "allow",
+        "trailingUnderscore": "allow"
+      }
+    ],
+    "@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
+    "@typescript-eslint/no-extraneous-class": "warn",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/explicit-function-return-type": [
+      "warn",
+      { "allowExpressions": true }
+    ],
+
+    /* Promote Dependency Injection via Function Parameters */
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "axios",
+            "message": "Use dependency injection for HTTP clients instead of importing axios directly."
+          }
+        ]
+      }
+    ],
+
+    /* Import Rules */
+    "import/order": [
+      "warn",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          {
+            "pattern": "services/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "components/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "hooks/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "utils/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "lib/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "app/**",
+            "group": "internal",
+            "position": "after"
+          }
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "import/no-cycle": [
+      "error",
+      {
+        "maxDepth": 1
+      }
+    ],
+    "import/no-unresolved": "error",
+
+    /* React-Specific Rules */
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-boolean-value": ["warn", "always"],
+    "react/jsx-no-bind": ["warn", { "allowArrowFunctions": true }],
+    "react/no-danger": "warn",
+
+    /* Jest Test Linting */
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error",
+
+    /* Comments and Warnings */
+    "no-warning-comments": [
+      "warn",
+      {
+        "terms": ["todo", "fixme"],
+        "location": "start"
+      }
+    ]
+  },
+  "ignorePatterns": [
+    "coverage/**",
+    "node_modules/**",
+    "jest.config.js",
+    "src/components/ui**",
+    "src/lib/prisma.ts",
+    "src/lib/utils.ts"
+  ],
+  "overrides": [
+    {
+      "files": ["tailwind.config.ts", "tailwind.config.js"],
+      "rules": {
+        "import/no-restricted-imports": "off"
+      }
+    },
+    {
+      "files": ["src/components/**"],
+      "rules": {
+        "import/no-restricted-imports": "off"
+      }
+    },
+    {
+      "files": ["src/lib/prisma.ts"],
+      "rules": {
+        "no-var": "off"
+      }
+    },
+    {
+      "files": ["src/lib/utils.ts"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off"
+      }
+    },
+    {
+      "files": ["__tests__/**/*.ts", "__tests__/**/*.tsx"],
+      "rules": {
+        "max-lines-per-function": "off",
+        "jest/no-disabled-tests": "off"
+      }
+    }
+  ]
 }

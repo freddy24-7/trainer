@@ -1,16 +1,16 @@
-// This component is displays the training management page.
+import React from 'react';
 
-import ProtectedLayout from '@/app/protected-layout';
 import addTraining from '@/app/actions/addTraining';
-import AddTrainingForm from '@/components/AddTrainingForm';
 import { getPlayers } from '@/app/actions/getPlayers';
-import { Player } from '@/lib/types';
+import ProtectedLayout from '@/app/protected-layout';
+import AddTrainingForm from '@/components/trainings/AddTrainingForm';
+import { Player } from '@/types/types';
 
-export default async function TrainingsPage() {
+export default async function TrainingsPage(): Promise<React.ReactElement> {
   const playerResponse = await getPlayers();
 
   const players: Player[] = playerResponse.success
-    ? (playerResponse.players ?? []).map((player) => ({
+    ? (playerResponse.players ?? []).map((player: Player) => ({
         id: player.id,
         username: player.username ?? '',
         whatsappNumber: player.whatsappNumber ?? '',

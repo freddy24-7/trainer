@@ -1,18 +1,18 @@
-// This server component fetches the teams in a poule and passes props to the form on the client.
+import React from 'react';
 
-import ProtectedLayout from '@/app/protected-layout';
-import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
-import { getPlayers } from '@/app/actions/getPlayers';
-import { AddMatchForm } from '@/components/AddMatchForm';
 import addMatchAndPlayers from '@/app/actions/addMatchAndPlayers';
-import { Player } from '@/lib/types';
+import { getPlayers } from '@/app/actions/getPlayers';
+import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
+import ProtectedLayout from '@/app/protected-layout';
+import { AddMatchForm } from '@/components/matches/AddMatchForm';
+import { Player } from '@/types/types';
 
-export default async function MatchManagementPage() {
+export default async function MatchManagementPage(): Promise<React.ReactElement> {
   const pouleResponse = await getTeamsInPoule();
   const playerResponse = await getPlayers();
 
   const players: Player[] = playerResponse.success
-    ? (playerResponse.players ?? []).map((player) => ({
+    ? (playerResponse.players ?? []).map((player: Player) => ({
         id: player.id,
         username: player.username ?? '',
         whatsappNumber: player.whatsappNumber ?? '',

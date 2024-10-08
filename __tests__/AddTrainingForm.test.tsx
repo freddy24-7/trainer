@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   render,
   screen,
@@ -6,9 +5,11 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import AddTrainingForm from '@/components/AddTrainingForm';
+import React from 'react';
 import { toast } from 'react-toastify';
-import { Player } from '@/lib/types';
+
+import AddTrainingForm from '@/components/trainings/AddTrainingForm';
+import { Player } from '@/types/types';
 
 jest.mock('react-toastify', () => ({
   toast: {
@@ -24,8 +25,13 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
+interface DateSelectorProps {
+  matchDate: { year: number; month: number; day: number } | null;
+  onDateChange: (date: { year: number; month: number; day: number }) => void;
+}
+
 jest.mock('@/components/DateSelector', () => {
-  const MockDateSelector = (props: any) => {
+  const MockDateSelector = (props: DateSelectorProps): React.ReactElement => {
     const { matchDate, onDateChange } = props;
     return (
       <input
@@ -46,7 +52,10 @@ jest.mock('@/components/DateSelector', () => {
     );
   };
 
-  MockDateSelector.displayName = 'MockDateSelector';
+  Object.defineProperty(MockDateSelector, 'displayName', {
+    value: 'MockDateSelector',
+    writable: false,
+  });
 
   return MockDateSelector;
 });
@@ -59,32 +68,36 @@ const mockPlayers: Player[] = [
 
 describe('AddTrainingForm', () => {
   const mockAction = jest.fn();
+  const mockDate = '2024-12-25';
 
-  beforeEach(() => {
+  const dateSelectorTestId = 'date-selector';
+
+  beforeEach((): void => {
     jest.clearAllMocks();
   });
 
-  const getCheckboxForPlayer = (playerName: string) => {
+  const playerOne = 'PlayerOne';
+  const playerThree = 'PlayerThree';
+
+  const getCheckboxForPlayer = (playerName: string): HTMLInputElement => {
     const playerLabel = screen.getByText(playerName);
     if (!playerLabel.parentElement) {
       throw new Error(`No parent element found for player: ${playerName}`);
     }
-    return within(playerLabel.parentElement).getByRole('checkbox');
+    return within(playerLabel.parentElement).getByRole(
+      'checkbox'
+    ) as HTMLInputElement;
   };
 
   it('renders the form with date selector and player checkboxes', () => {
-    // Arrange
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
 
-    // Assert
     expect(screen.getByText('Add a New Training Session')).toBeInTheDocument();
-    expect(screen.getByTestId('date-selector')).toBeInTheDocument();
+    expect(screen.getByTestId(dateSelectorTestId)).toBeInTheDocument();
     expect(screen.getByText('Absent Players')).toBeInTheDocument();
 
     mockPlayers.forEach((player) => {
-      const checkbox = getCheckboxForPlayer(
-        player.username
-      ) as HTMLInputElement;
+      const checkbox = getCheckboxForPlayer(player.username);
       expect(checkbox).toBeInTheDocument();
       expect(checkbox).not.toBeChecked();
     });
@@ -95,63 +108,49 @@ describe('AddTrainingForm', () => {
   });
 
   it("toggles a player's absence when checkbox is clicked", () => {
-    // Arrange
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
-    const playerCheckbox = getCheckboxForPlayer(
-      'PlayerOne'
-    ) as HTMLInputElement;
+    const playerCheckbox = getCheckboxForPlayer(playerOne);
     expect(playerCheckbox).not.toBeChecked();
 
-    // Act
     fireEvent.click(playerCheckbox);
-
-    // Assert
     expect(playerCheckbox).toBeChecked();
 
-    // Act
     fireEvent.click(playerCheckbox);
-
-    // Assert
     expect(playerCheckbox).not.toBeChecked();
   });
 
   it('allows selecting a date', () => {
-    // Arrange
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
-    const dateInput = screen.getByTestId('date-selector') as HTMLInputElement;
+    const dateInput = screen.getByTestId(
+      dateSelectorTestId
+    ) as HTMLInputElement;
     expect(dateInput.value).toBe('');
 
-    // Act
-    fireEvent.change(dateInput, { target: { value: '2024-12-25' } });
-
-    // Assert
-    expect(dateInput.value).toBe('2024-12-25');
+    fireEvent.change(dateInput, { target: { value: mockDate } });
+    expect(dateInput.value).toBe(mockDate);
   });
 
   it('shows error toast when action returns failure', async () => {
-    // Arrange
     mockAction.mockResolvedValue({
       success: false,
       errors: ['Failed to add training'],
     });
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
 
-    const dateInput = screen.getByTestId('date-selector') as HTMLInputElement;
-    fireEvent.change(dateInput, { target: { value: '2024-12-25' } });
-    expect(dateInput.value).toBe('2024-12-25');
-
-    const playerThreeCheckbox = getCheckboxForPlayer(
-      'PlayerThree'
+    const dateInput = screen.getByTestId(
+      dateSelectorTestId
     ) as HTMLInputElement;
+    fireEvent.change(dateInput, { target: { value: mockDate } });
+    expect(dateInput.value).toBe(mockDate);
+
+    const playerThreeCheckbox = getCheckboxForPlayer(playerThree);
     fireEvent.click(playerThreeCheckbox);
     expect(playerThreeCheckbox).toBeChecked();
 
     const submitButton = screen.getByRole('button', { name: /Add Training/i });
 
-    // Act
     fireEvent.click(submitButton);
 
-    // Assert
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledTimes(1);
       expect(toast.error).toHaveBeenCalledWith('Error adding training.');
@@ -160,26 +159,23 @@ describe('AddTrainingForm', () => {
   });
 
   it('shows error toast when action throws an exception', async () => {
-    // Arrange
     mockAction.mockRejectedValue(new Error('Network Error'));
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
 
-    const dateInput = screen.getByTestId('date-selector') as HTMLInputElement;
-    fireEvent.change(dateInput, { target: { value: '2024-12-25' } });
-    expect(dateInput.value).toBe('2024-12-25');
-
-    const playerOneCheckbox = getCheckboxForPlayer(
-      'PlayerOne'
+    const dateInput = screen.getByTestId(
+      dateSelectorTestId
     ) as HTMLInputElement;
+    fireEvent.change(dateInput, { target: { value: mockDate } });
+    expect(dateInput.value).toBe(mockDate);
+
+    const playerOneCheckbox = getCheckboxForPlayer(playerOne);
     fireEvent.click(playerOneCheckbox);
     expect(playerOneCheckbox).toBeChecked();
 
     const submitButton = screen.getByRole('button', { name: /Add Training/i });
 
-    // Act
     fireEvent.click(submitButton);
 
-    // Assert
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledTimes(1);
       expect(toast.error).toHaveBeenCalledWith(

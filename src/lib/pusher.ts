@@ -1,5 +1,3 @@
-// This is the Pusher configuration file.
-
 import Pusher from 'pusher';
 
 console.log('Initializing Pusher with the following credentials:');

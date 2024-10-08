@@ -1,13 +1,14 @@
-// This component is used to provide the React Query client to the application.
-
 'use client';
 
-import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
-export default function Providers({ children }: { children: ReactNode }) {
+export default function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): React.ReactElement {
   const [queryClient] = useState(() => new QueryClient());
 
   return (

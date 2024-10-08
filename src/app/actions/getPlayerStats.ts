@@ -1,9 +1,7 @@
-// This server action is used to get player statistics.
-
 'use server';
 
 import prisma from '@/lib/prisma';
-import { GetPlayerMatchStatsResponse } from '@/lib/types';
+import { GetPlayerMatchStatsResponse } from '@/types/types';
 
 export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
   try {
@@ -47,7 +45,7 @@ export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
     });
 
     return { success: true, playerStats };
-  } catch (error) {
+  } catch {
     return { success: false, error: 'Failed to fetch player stats.' };
   }
 }

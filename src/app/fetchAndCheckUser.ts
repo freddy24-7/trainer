@@ -1,9 +1,9 @@
-// This is a reusable function that fetches the current user's data
-
 import { auth } from '@clerk/nextjs';
-import prisma from '@/lib/prisma';
 
-export async function fetchAndCheckUser() {
+import prisma from '@/lib/prisma';
+import { SignedInUser } from '@/types/types';
+
+export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
   const { userId } = auth();
 
   if (!userId) {
@@ -20,7 +20,7 @@ export async function fetchAndCheckUser() {
     return null;
   }
 
-  const signedInUser = {
+  const signedInUser: SignedInUser = {
     id: prismaUser.id.toString(),
     username: prismaUser.username || 'Unknown',
     role: prismaUser.role || null,

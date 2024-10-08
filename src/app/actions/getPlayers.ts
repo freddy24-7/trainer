@@ -1,11 +1,15 @@
-// This server action is used to get all players from the database.
-
 'use server';
 
-import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
-export async function getPlayers() {
+import prisma from '@/lib/prisma';
+import { Player } from '@/types/types';
+
+export async function getPlayers(): Promise<{
+  success: boolean;
+  players?: Player[];
+  error?: string;
+}> {
   try {
     const players = await prisma.user.findMany({
       where: {
@@ -14,7 +18,7 @@ export async function getPlayers() {
       select: {
         id: true,
         username: true,
-        whatsappNumber: true, // Include whatsappNumber in the selection
+        whatsappNumber: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -24,7 +28,7 @@ export async function getPlayers() {
     revalidatePath('/player/management');
 
     return { success: true, players };
-  } catch (error) {
+  } catch {
     return { success: false, error: 'Error fetching players.' };
   }
 }

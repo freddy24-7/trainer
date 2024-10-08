@@ -1,8 +1,7 @@
-// This component is used to select a date for a match.
-
-import React from 'react';
 import { DatePicker, CalendarDate } from '@nextui-org/react';
-import { DateSelectorProps } from '@/lib/types';
+import React from 'react';
+
+import { DateSelectorProps } from '@/types/types';
 
 const DateSelector: React.FC<DateSelectorProps> = ({
   matchDate,

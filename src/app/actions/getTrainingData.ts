@@ -1,9 +1,7 @@
-// This server component fetches the training data and returns it to the client.
-
 'use server';
 
 import prisma from '@/lib/prisma';
-import { GetTrainingDataResponse, TrainingData } from '@/lib/types';
+import { GetTrainingDataResponse, TrainingData } from '@/types/types';
 
 export async function getTrainingData(): Promise<GetTrainingDataResponse> {
   try {
@@ -29,7 +27,7 @@ export async function getTrainingData(): Promise<GetTrainingDataResponse> {
     }));
 
     return { success: true, trainingData };
-  } catch (error) {
+  } catch {
     return { success: false, error: 'Failed to fetch training data.' };
   }
 }

@@ -1,29 +1,20 @@
-// This component performs RBAC (Role-Based Access Control) checks
-
 import { redirect } from 'next/navigation';
-import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
-import { ReactNode } from 'react';
+import React from 'react';
 
-interface ProtectedLayoutProps {
-  children: ReactNode;
-  requiredRole: string;
-}
+import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
+import { ProtectedLayoutProps } from '@/types/types';
 
 const ProtectedLayout = async ({
   children,
   requiredRole,
-}: ProtectedLayoutProps) => {
-  try {
-    const user = await fetchAndCheckUser();
+}: ProtectedLayoutProps): Promise<React.ReactElement> => {
+  const user = await fetchAndCheckUser();
 
-    if (!user || user.role !== requiredRole) {
-      redirect('/dashboard');
-    }
-
-    return <>{children}</>;
-  } catch (error) {
-    redirect('/sign-in');
+  if (!user || user.role !== requiredRole) {
+    redirect('/dashboard');
   }
+
+  return <>{children}</>;
 };
 
 export default ProtectedLayout;

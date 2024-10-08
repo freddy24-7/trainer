@@ -1,22 +1,64 @@
-// This server action is responsible for adding a new message to the database,
-// and triggering a Pusher event for real-time updates.
-
 'use server';
+
+import { ZodIssue } from 'zod';
 
 import prisma from '@/lib/prisma';
 import pusher from '@/lib/pusher';
 import { createMessageSchema } from '@/schemas/messageSchema';
-import { ZodIssue } from 'zod';
-import { ActionResponse } from '@/lib/types';
+import { ActionResponse } from '@/types/types';
 
-export default async function addMessage(
-  _prevState: any,
+function handleMessageValidation(
   params: FormData
-): Promise<ActionResponse> {
-  const validation = createMessageSchema.safeParse({
+): ReturnType<typeof createMessageSchema.safeParse> {
+  return createMessageSchema.safeParse({
     content: params.get('content'),
     senderId: Number(params.get('senderId')),
   });
+}
+
+async function createMessageAndTriggerPusher(
+  content: string,
+  senderId: number
+): Promise<ReturnType<typeof prisma.message.create>> {
+  const message = await prisma.message.create({
+    data: {
+      content,
+      senderId,
+      createdAt: new Date(),
+    },
+  });
+
+  console.log('Message successfully saved:', message);
+
+  const sender = await prisma.user.findUnique({
+    where: { id: message.senderId },
+  });
+
+  const pusherResponse = await pusher.trigger('chat', 'new-message', {
+    id: message.id,
+    content: message.content,
+    senderId: message.senderId,
+    createdAt: message.createdAt,
+    sender: {
+      id: message.senderId,
+      username: sender?.username,
+    },
+  });
+
+  console.log(
+    'Pusher event triggered for new message:',
+    message.id,
+    pusherResponse
+  );
+
+  return message;
+}
+
+export default async function createMessage(
+  _prevState: unknown,
+  params: FormData
+): Promise<ActionResponse> {
+  const validation = handleMessageValidation(params);
 
   if (!validation.success) {
     return {
@@ -28,37 +70,7 @@ export default async function addMessage(
   const { content, senderId } = validation.data;
 
   try {
-    const message = await prisma.message.create({
-      data: {
-        content,
-        senderId,
-        createdAt: new Date(),
-      },
-    });
-
-    console.log('Message successfully saved:', message);
-
-    const pusherResponse = await pusher.trigger('chat', 'new-message', {
-      id: message.id,
-      content: message.content,
-      senderId: message.senderId,
-      createdAt: message.createdAt,
-      sender: {
-        id: message.senderId,
-        username: (
-          await prisma.user.findUnique({
-            where: { id: message.senderId },
-          })
-        )?.username,
-      },
-    });
-
-    console.log(
-      'Pusher event triggered for new message:',
-      message.id,
-      pusherResponse
-    );
-
+    await createMessageAndTriggerPusher(content, senderId);
     return { success: true };
   } catch (error) {
     console.error('Error adding message:', error);

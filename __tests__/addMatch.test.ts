@@ -21,7 +21,6 @@ beforeEach(() => {
 
 describe('addMatch Functionality Tests', () => {
   it('should create a match successfully when valid input is provided and the opponent exists', async () => {
-    // Arrange
     const findUniqueMock = mockedPrisma.pouleOpponents.findUnique as jest.Mock;
     const createMock = mockedPrisma.match.create as jest.Mock;
 
@@ -36,10 +35,8 @@ describe('addMatch Functionality Tests', () => {
     formData.append('pouleOpponentId', '1');
     formData.append('date', new Date().toISOString());
 
-    // Act
     const result = await addMatch(undefined, formData);
 
-    // Assert
     expect(result).toEqual({ match: { id: 1 } });
     expect(findUniqueMock).toHaveBeenCalledWith({
       where: { id: 1 },
@@ -54,14 +51,11 @@ describe('addMatch Functionality Tests', () => {
   });
 
   it('should return validation errors when pouleOpponentId is missing', async () => {
-    // Arrange
     const formData = new FormData();
     formData.append('date', new Date().toISOString());
 
-    // Act
     const result = await addMatch(undefined, formData);
 
-    // Assert
     expect(result).toHaveProperty('errors');
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors?.length).toBeGreaterThan(0);
@@ -72,7 +66,6 @@ describe('addMatch Functionality Tests', () => {
   });
 
   it('should return an error when the opponent does not exist', async () => {
-    // Arrange
     const findUniqueMock = mockedPrisma.pouleOpponents.findUnique as jest.Mock;
     findUniqueMock.mockResolvedValue(null);
 
@@ -80,10 +73,8 @@ describe('addMatch Functionality Tests', () => {
     formData.append('pouleOpponentId', '999');
     formData.append('date', new Date().toISOString());
 
-    // Act
     const result = await addMatch(undefined, formData);
 
-    // Assert
     expect(result).toHaveProperty('errors');
     expect(result.errors).toContainEqual({
       message: 'Selected opponent does not exist.',

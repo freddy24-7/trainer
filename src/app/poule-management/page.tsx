@@ -1,13 +1,13 @@
-// This server component fetches the teams in a poule and renders the list of teams.
+import React from 'react';
 
-import ProtectedLayout from '@/app/protected-layout';
-import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
-import PouleManagementClient from '@/components/PouleManagementClient';
 import addPoule from '@/app/actions/addPoule';
-import { AddPouleFormValidation } from '@/components/AddPouleFormValidation';
-import { Poule } from '@/lib/types';
+import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
+import ProtectedLayout from '@/app/protected-layout';
+import { AddPouleFormValidation } from '@/components/poules/AddPouleFormValidation';
+import PouleManagementClient from '@/components/poules/PouleManagementClient';
+import { Poule } from '@/types/types';
 
-export default async function PouleManagementPage() {
+export default async function PouleManagementPage(): Promise<React.ReactElement> {
   const pouleResponse = await getTeamsInPoule();
 
   const poules: Poule[] = pouleResponse.poules || [];

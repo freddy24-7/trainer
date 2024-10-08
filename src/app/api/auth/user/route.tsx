@@ -1,24 +1,23 @@
-import { NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs';
-import prisma from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+
+import { handleUpsertUser } from '@/app/api/auth/user/helper/database';
 import { UserSchema } from '@/schemas/userSchema';
-import { UserData } from '@/lib/types';
+import { UserData } from '@/types/types';
 
-function redirectToSignIn(): NextResponse {
-  return NextResponse.redirect('/sign-in');
-}
-
-export async function GET(): Promise<NextResponse> {
+export async function createAuthenticatedUser(): Promise<
+  UserData | NextResponse
+> {
   const { userId } = auth();
 
   if (!userId) {
-    return redirectToSignIn();
+    return handleRedirectToSignIn();
   }
 
   const user = await currentUser();
 
   if (!user) {
-    return redirectToSignIn();
+    return handleRedirectToSignIn();
   }
 
   const userData: UserData = {
@@ -36,26 +35,23 @@ export async function GET(): Promise<NextResponse> {
     );
   }
 
-  try {
-    await prisma.user.upsert({
-      where: { clerkId: parsedUser.data.clerkId },
-      update: {},
-      create: parsedUser.data,
-    });
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error('Error interacting with the database:', error.message);
-      return NextResponse.json(
-        { error: 'Internal server error', message: error.message },
-        { status: 500 }
-      );
-    } else {
-      console.error('Unexpected error', error);
-      return NextResponse.json(
-        { error: 'Unknown error occurred' },
-        { status: 500 }
-      );
-    }
+  return parsedUser.data;
+}
+
+function handleRedirectToSignIn(): NextResponse {
+  return NextResponse.redirect('/sign-in');
+}
+
+export async function GET(): Promise<NextResponse> {
+  const authenticatedUser = await createAuthenticatedUser();
+
+  if (authenticatedUser instanceof NextResponse) {
+    return authenticatedUser;
+  }
+
+  const dbResponse = await handleUpsertUser(authenticatedUser);
+  if (dbResponse) {
+    return dbResponse;
   }
 
   return NextResponse.redirect(

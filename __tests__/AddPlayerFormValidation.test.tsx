@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { AddPlayerFormValidation } from '@/components/AddPlayerFormValidation';
+import React from 'react';
 import { toast } from 'react-toastify';
+
+import { AddPlayerFormValidation } from '@/components/players/AddPlayerFormValidation';
 
 jest.mock('react-toastify', () => ({
   toast: {
@@ -10,14 +11,30 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
-jest.mock('@/components/PlayerForm', () => {
-  const MockPlayerForm = (props: any) => {
+interface MockPlayerFormProps {
+  initialData: {
+    username: string;
+    password: string;
+    whatsappNumber: string;
+  };
+  onSubmit: (formData: {
+    username: string;
+    password: string;
+    whatsappNumber: string;
+  }) => void;
+  submitButtonText: string;
+}
+
+jest.mock('@/components/players/PlayerForm', () => {
+  const { useState } = require('react');
+
+  const MockPlayerForm = (props: MockPlayerFormProps): React.ReactElement => {
     const { initialData, onSubmit, submitButtonText } = props;
-    const [formData, setFormData] = React.useState(initialData);
+    const [formData, setFormData] = useState(initialData);
 
     return (
       <form
-        onSubmit={(e) => {
+        onSubmit={(e: React.FormEvent<HTMLFormElement>): void => {
           e.preventDefault();
           onSubmit(formData);
         }}
@@ -53,7 +70,11 @@ jest.mock('@/components/PlayerForm', () => {
     );
   };
 
-  MockPlayerForm.displayName = 'MockPlayerForm';
+  Object.defineProperty(MockPlayerForm, 'displayName', {
+    value: 'MockPlayerForm',
+    writable: false,
+  });
+
   return MockPlayerForm;
 });
 
@@ -68,7 +89,7 @@ describe('AddPlayerFormValidation', () => {
     username: string,
     password: string,
     whatsapp: string
-  ) => {
+  ): void => {
     fireEvent.change(screen.getByTestId('username-input'), {
       target: { value: username },
     });
@@ -80,7 +101,7 @@ describe('AddPlayerFormValidation', () => {
     });
   };
 
-  const submitForm = () => {
+  const submitForm = (): void => {
     fireEvent.click(screen.getByTestId('submit-button'));
   };
 
@@ -98,13 +119,10 @@ describe('AddPlayerFormValidation', () => {
     mockAction.mockResolvedValue({ errors: [] });
     render(<AddPlayerFormValidation action={mockAction} />);
 
-    // Arrange
     fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
 
-    // Act
     submitForm();
 
-    // Assert
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledWith({}, expect.any(FormData));
     });
@@ -119,13 +137,10 @@ describe('AddPlayerFormValidation', () => {
     mockAction.mockResolvedValue({ errors: [] });
     render(<AddPlayerFormValidation action={mockAction} />);
 
-    // Arrange
     fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
 
-    // Act
     submitForm();
 
-    // Assert
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledTimes(1);
       expect(toast.success).toHaveBeenCalledWith('Player added successfully!');
@@ -136,13 +151,10 @@ describe('AddPlayerFormValidation', () => {
     mockAction.mockResolvedValue({ errors: [] });
     render(<AddPlayerFormValidation action={mockAction} />);
 
-    // Arrange
     fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
 
-    // Act
     submitForm();
 
-    // Assert
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledTimes(1);
     });

@@ -1,10 +1,26 @@
-// This server action fetches the teams in a poule.
-
 'use server';
 
 import prisma from '@/lib/prisma';
+import { Team } from '@/types/types';
 
-export async function getTeamsInPoule() {
+interface GetTeamsInPouleResponse {
+  success: boolean;
+  poules?: Array<{
+    id: number;
+    pouleName: string;
+    teams: Team[];
+    opponents: Array<{ id: number; team: Team }>;
+  }>;
+  latestPoule?: {
+    id: number;
+    pouleName: string;
+    teams: Team[];
+    opponents: Array<{ id: number; team: Team }>;
+  };
+  error?: string;
+}
+
+export async function getTeamsInPoule(): Promise<GetTeamsInPouleResponse> {
   try {
     const poules = await prisma.poule.findMany({
       include: {
@@ -30,10 +46,13 @@ export async function getTeamsInPoule() {
     const formattedPoules = poules.map((poule) => ({
       id: poule.id,
       pouleName: poule.name,
-      teams: [poule.team, ...poule.opponents.map((opponent) => opponent.team)],
+      teams: [
+        poule.team as Team,
+        ...poule.opponents.map((opponent) => opponent.team as Team),
+      ],
       opponents: poule.opponents.map((opponent) => ({
         id: opponent.id,
-        team: opponent.team,
+        team: opponent.team as Team,
       })),
     }));
 
@@ -42,7 +61,7 @@ export async function getTeamsInPoule() {
       poules: formattedPoules,
       latestPoule: formattedPoules[0],
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: 'Failed to load teams in the poules.',

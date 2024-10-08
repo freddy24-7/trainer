@@ -17,8 +17,14 @@ beforeEach(() => {
 });
 
 describe('addMatchPlayer Functionality Tests', () => {
+  const validData = {
+    userId: 1,
+    matchId: 1,
+    minutes: 90,
+    available: true,
+  };
+
   it('should add a match player successfully when valid data is provided', async () => {
-    // Arrange
     const createMock = mockedPrisma.matchPlayer.create as jest.Mock;
     createMock.mockResolvedValue({
       id: 1,
@@ -28,17 +34,8 @@ describe('addMatchPlayer Functionality Tests', () => {
       available: true,
     });
 
-    const validData = {
-      userId: 1,
-      matchId: 1,
-      minutes: 90,
-      available: true,
-    };
-
-    // Act
     const result = await addMatchPlayer(validData);
 
-    // Assert
     expect(result).toEqual({ success: true });
     expect(createMock).toHaveBeenCalledWith({
       data: validData,
@@ -46,17 +43,19 @@ describe('addMatchPlayer Functionality Tests', () => {
   });
 
   it('should return validation errors when userId is missing', async () => {
-    // Arrange
-    const invalidData = {
+    const invalidData: Partial<typeof validData> = {
       matchId: 1,
       minutes: 90,
       available: true,
     };
 
-    // Act
-    const result = await addMatchPlayer(invalidData as any);
+    const result = await addMatchPlayer({
+      userId: invalidData.userId ?? 0,
+      matchId: invalidData.matchId!,
+      minutes: invalidData.minutes!,
+      available: invalidData.available!,
+    });
 
-    // Assert
     expect(result).toHaveProperty('errors');
     if (result.errors) {
       expect(Array.isArray(result.errors)).toBe(true);
@@ -68,21 +67,11 @@ describe('addMatchPlayer Functionality Tests', () => {
   });
 
   it('should return an error when there is a database error during match player creation', async () => {
-    // Arrange
     const createMock = mockedPrisma.matchPlayer.create as jest.Mock;
     createMock.mockRejectedValue(new Error('Database error'));
 
-    const validData = {
-      userId: 1,
-      matchId: 1,
-      minutes: 90,
-      available: true,
-    };
-
-    // Act
     const result = await addMatchPlayer(validData);
 
-    // Assert
     expect(result).toHaveProperty('error');
     expect(result.error).toBe('Failed to add match player to the database.');
 

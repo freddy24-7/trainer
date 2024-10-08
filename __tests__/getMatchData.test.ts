@@ -13,7 +13,6 @@ describe('getMatchData', () => {
   });
 
   it('should return match data successfully', async () => {
-    // Arrange
     const mockMatches = [
       {
         id: 1,
@@ -38,10 +37,8 @@ describe('getMatchData', () => {
 
     (prisma.match.findMany as jest.Mock).mockResolvedValue(mockMatches);
 
-    // Act
     const result = await getMatchData();
 
-    // Assert
     expect(result).toEqual({
       success: true,
       matchData: [
@@ -62,7 +59,6 @@ describe('getMatchData', () => {
   });
 
   it('should return match data with "Unknown Opponent" if opponent team is missing', async () => {
-    // Arrange
     const mockMatches = [
       {
         id: 3,
@@ -76,10 +72,8 @@ describe('getMatchData', () => {
 
     (prisma.match.findMany as jest.Mock).mockResolvedValue(mockMatches);
 
-    // Act
     const result = await getMatchData();
 
-    // Assert
     expect(result).toEqual({
       success: true,
       matchData: [
@@ -94,13 +88,10 @@ describe('getMatchData', () => {
   });
 
   it('should return an empty match data list if no matches are found', async () => {
-    // Arrange
     (prisma.match.findMany as jest.Mock).mockResolvedValue([]);
 
-    // Act
     const result = await getMatchData();
 
-    // Assert
     expect(result).toEqual({
       success: true,
       matchData: [],
@@ -108,15 +99,12 @@ describe('getMatchData', () => {
   });
 
   it('should handle errors when fetching match data', async () => {
-    // Arrange
     (prisma.match.findMany as jest.Mock).mockRejectedValue(
       new Error('Database error')
     );
 
-    // Act
     const result = await getMatchData();
 
-    // Assert
     expect(result).toEqual({
       success: false,
       error: 'Failed to fetch match data.',

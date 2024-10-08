@@ -1,15 +1,14 @@
-// This server action is used to add a player to the database.
-
 'use server';
 
-import prisma from '@/lib/prisma';
 import { users } from '@clerk/clerk-sdk-node';
 import { revalidatePath } from 'next/cache';
 import { ZodIssue } from 'zod';
+
+import prisma from '@/lib/prisma';
 import { createPlayerSchema } from '@/schemas/createPlayerSchema';
 
-export default async function addPlayer(
-  _prevState: any,
+export default async function createPlayer(
+  _prevState: unknown,
   params: FormData
 ): Promise<{ errors: ZodIssue[]; success?: boolean }> {
   const validation = createPlayerSchema.safeParse({
@@ -45,7 +44,7 @@ export default async function addPlayer(
     revalidatePath('/player-management');
 
     return { errors: [], success: true };
-  } catch (error) {
+  } catch {
     return {
       errors: [
         {

@@ -1,9 +1,7 @@
-// This server action is used to get match data from the database.
-
 'use server';
 
 import prisma from '@/lib/prisma';
-import { GetMatchDataResponse, MatchData } from '@/lib/types';
+import { GetMatchDataResponse, MatchData } from '@/types/types';
 
 export async function getMatchData(): Promise<GetMatchDataResponse> {
   try {
@@ -35,7 +33,7 @@ export async function getMatchData(): Promise<GetMatchDataResponse> {
     }));
 
     return { success: true, matchData };
-  } catch (error) {
+  } catch {
     return { success: false, error: 'Failed to fetch match data.' };
   }
 }

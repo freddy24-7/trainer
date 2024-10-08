@@ -1,12 +1,12 @@
-// This is the ChatPage component that will be rendered when the user navigates to /chat
+import React from 'react';
 
-import LoginModal from '@/components/LoginModal';
-import ChatClient from '@/components/ChatClient';
-import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
-import getMessages from '@/app/actions/getMessages';
 import addMessage from '@/app/actions/addMessage';
+import getMessages from '@/app/actions/getMessages';
+import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
+import ChatClient from '@/components/chat/ChatClient';
+import LoginModal from '@/components/LoginModal';
 
-export default async function ChatPage() {
+export default async function ChatPage(): Promise<React.ReactElement> {
   const signedInUser = await fetchAndCheckUser();
 
   if (!signedInUser) {

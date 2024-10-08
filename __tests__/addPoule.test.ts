@@ -1,4 +1,5 @@
 import { ZodIssue } from 'zod';
+
 import addPoule from '@/app/actions/addPoule';
 import prisma from '@/lib/prisma';
 
@@ -31,48 +32,52 @@ describe('addPoule', () => {
   const mockRedirect = require('next/navigation').redirect as jest.Mock;
   const mockRevalidatePath = require('next/cache').revalidatePath as jest.Mock;
 
+  const pouleName = 'Test Poule';
+  const mainTeamName = 'Main Team';
+  const opponent1 = 'Opponent 1';
+  const opponent2 = 'Opponent 2';
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('should create a poule and opponents successfully', async () => {
-    // Arrange
     mockFindUnique
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(null);
 
     mockCreateTeam
-      .mockResolvedValueOnce({ id: 1, name: 'Main Team' })
-      .mockResolvedValueOnce({ id: 2, name: 'Opponent 1' })
-      .mockResolvedValueOnce({ id: 3, name: 'Opponent 2' });
+      .mockResolvedValueOnce({ id: 1, name: mainTeamName })
+      .mockResolvedValueOnce({ id: 2, name: opponent1 })
+      .mockResolvedValueOnce({ id: 3, name: opponent2 });
 
-    mockCreatePoule.mockResolvedValueOnce({ id: 1, name: 'Test Poule' });
+    mockCreatePoule.mockResolvedValueOnce({ id: 1, name: pouleName });
+
     mockCreatePouleOpponents.mockResolvedValue({});
 
     const formData = new FormData();
-    formData.append('pouleName', 'Test Poule');
-    formData.append('mainTeamName', 'Main Team');
-    formData.append('opponents', 'Opponent 1');
-    formData.append('opponents', 'Opponent 2');
+    formData.append('pouleName', pouleName);
+    formData.append('mainTeamName', mainTeamName);
+    formData.append('opponents', opponent1);
+    formData.append('opponents', opponent2);
 
-    // Act
-    await addPoule(null, formData);
+    await addPoule(formData);
 
-    // Assert
     expect(mockCreatePoule).toHaveBeenCalledWith({
       data: {
-        name: 'Test Poule',
+        name: pouleName,
         team: { connect: { id: 1 } },
       },
     });
+
     expect(mockCreatePouleOpponents).toHaveBeenCalledTimes(2);
+
     expect(mockRevalidatePath).toHaveBeenCalledWith('/poule-management');
     expect(mockRedirect).toHaveBeenCalledWith('/poule-management');
   });
 
   it('should return validation errors', async () => {
-    // Arrange
     const mockValidationError: ZodIssue = {
       message: 'Invalid data',
       path: ['pouleName'],
@@ -92,44 +97,41 @@ describe('addPoule', () => {
       });
 
     const formData = new FormData();
-    formData.append('pouleName', 'Test Poule');
-    formData.append('mainTeamName', 'Main Team');
-    formData.append('opponents', 'Opponent 1');
+    formData.append('pouleName', '123');
+    formData.append('mainTeamName', mainTeamName);
+    formData.append('opponents', opponent1);
 
-    // Act
-    const result = await addPoule(null, formData);
+    const result = await addPoule(formData);
 
-    // Assert
     if (result && 'errors' in result) {
       expect(result.errors).toEqual([mockValidationError]);
     } else {
       throw new Error('Expected validation errors but got void.');
     }
+
     expect(mockCreatePoule).not.toHaveBeenCalled();
   });
 
   it('should handle opponent creation errors gracefully', async () => {
-    // Arrange
     mockFindUnique.mockResolvedValueOnce(null).mockResolvedValueOnce(null);
 
     mockCreateTeam
-      .mockResolvedValueOnce({ id: 1, name: 'Main Team' })
-      .mockResolvedValueOnce({ id: 2, name: 'Opponent 1' });
+      .mockResolvedValueOnce({ id: 1, name: mainTeamName })
+      .mockResolvedValueOnce({ id: 2, name: opponent1 });
 
-    mockCreatePoule.mockResolvedValueOnce({ id: 1, name: 'Test Poule' });
+    mockCreatePoule.mockResolvedValueOnce({ id: 1, name: pouleName });
+
     mockCreatePouleOpponents.mockRejectedValueOnce(
       new Error('Failed to create opponent')
     );
 
     const formData = new FormData();
-    formData.append('pouleName', 'Test Poule');
-    formData.append('mainTeamName', 'Main Team');
-    formData.append('opponents', 'Opponent 1');
+    formData.append('pouleName', pouleName);
+    formData.append('mainTeamName', mainTeamName);
+    formData.append('opponents', opponent1);
 
-    // Act
-    const result = await addPoule(null, formData);
+    const result = await addPoule(formData);
 
-    // Assert
     if (result && 'errors' in result) {
       expect(result.errors).toEqual([
         {

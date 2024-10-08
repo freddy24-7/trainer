@@ -1,11 +1,8 @@
-// This server action is responsible for fetching messages from the database.
-
-'use server';
-
 import prisma from '@/lib/prisma';
+import { Message } from '@/types/types';
 
 export default async function getMessages(): Promise<{
-  messages: any[];
+  messages: Message[];
   success: boolean;
   error?: string;
 }> {
@@ -19,7 +16,16 @@ export default async function getMessages(): Promise<{
       },
     });
 
-    return { messages, success: true };
+    const formattedMessages = messages.map((message) => ({
+      ...message,
+      id: message.id,
+      sender: {
+        ...message.sender,
+        id: message.sender.id,
+      },
+    }));
+
+    return { messages: formattedMessages, success: true };
   } catch (error) {
     console.error('Error fetching messages:', error);
     return { messages: [], success: false, error: 'Failed to load messages.' };
