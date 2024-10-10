@@ -9,7 +9,7 @@ import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/components/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
 import editPlayer from '@/app/actions/editPlayer';
-import { PlayerManagementClientProps, Player } from '@/lib/types';
+import { PlayerManagementClientProps, Player } from '@/types/types';
 
 export default function PlayerManagementClient({
   players: initialPlayers,

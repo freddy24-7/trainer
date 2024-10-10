@@ -5,7 +5,7 @@ import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import { getPlayers } from '@/app/actions/getPlayers';
 import { AddMatchForm } from '@/components/AddMatchForm';
 import addMatchAndPlayers from '@/app/actions/addMatchAndPlayers';
-import { Player } from '@/lib/types';
+import { Player } from '@/types/types';
 
 export default async function MatchManagementPage() {
   const pouleResponse = await getTeamsInPoule();

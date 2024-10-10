@@ -17,7 +17,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { Poule, Player, PouleOpponent, FormValues } from '@/lib/types';
+import { Poule, Player, PouleOpponent, FormValues } from '@/types/types';
 import type { ZodIssue } from 'zod';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PlayerInput from './PlayerInput';
-import { PlayerListProps } from '@/lib/types';
+import { PlayerListProps } from '@/types/types';
 
 const PlayerList: React.FC<PlayerListProps> = ({
   players,

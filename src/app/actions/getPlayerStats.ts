@@ -3,7 +3,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { GetPlayerMatchStatsResponse } from '@/lib/types';
+import { GetPlayerMatchStatsResponse } from '@/types/types';
 
 export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
   try {

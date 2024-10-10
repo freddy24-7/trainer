@@ -1,7 +1,7 @@
 // This component is used to select a poule from a list of poules.
 
 import React from 'react';
-import { PouleSelectorProps } from '@/lib/types';
+import { PouleSelectorProps } from '@/types/types';
 
 const PouleSelector: React.FC<PouleSelectorProps> = ({
   poules,

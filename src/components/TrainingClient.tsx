@@ -1,7 +1,7 @@
 // This component is responsible for displaying training sessions and their absent players.
 
 import React from 'react';
-import { TrainingClientProps } from '@/lib/types';
+import { TrainingClientProps } from '@/types/types';
 
 const TrainingClient: React.FC<TrainingClientProps> = ({ trainingData }) => {
   return (

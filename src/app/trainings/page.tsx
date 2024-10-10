@@ -4,7 +4,7 @@ import ProtectedLayout from '@/app/protected-layout';
 import addTraining from '@/app/actions/addTraining';
 import AddTrainingForm from '@/components/AddTrainingForm';
 import { getPlayers } from '@/app/actions/getPlayers';
-import { Player } from '@/lib/types';
+import { Player } from '@/types/types';
 
 export default async function TrainingsPage() {
   const playerResponse = await getPlayers();

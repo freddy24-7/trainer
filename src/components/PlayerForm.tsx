@@ -1,7 +1,7 @@
 // This component is a form editing or adding a player.
 
 import React, { useState } from 'react';
-import { PlayerFormProps } from '@/lib/types';
+import { PlayerFormProps } from '@/types/types';
 
 function PlayerForm({
   initialData,

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import TeamsList from '@/components/TeamsList';
-import { PouleManagementClientProps } from '@/lib/types';
+import { PouleManagementClientProps } from '@/types/types';
 
 export default function PouleManagementClient({
   poules,

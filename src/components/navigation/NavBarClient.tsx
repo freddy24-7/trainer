@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { CiHome } from 'react-icons/ci';
 import NavLink from '@/components/navigation/NavLink';
-import { NavBarClientProps } from '@/lib/types';
+import { NavBarClientProps } from '@/types/types';
 
 export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
   const [mounted, setMounted] = useState(false);

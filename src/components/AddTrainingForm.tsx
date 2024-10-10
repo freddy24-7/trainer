@@ -16,7 +16,7 @@ import {
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import DateSelector from './DateSelector';
 import { CalendarDate } from '@nextui-org/react';
-import { TrainingFormValues, Player } from '@/lib/types';
+import { TrainingFormValues, Player } from '@/types/types';
 
 type Props = {
   action: (params: FormData) => Promise<{ success?: boolean; errors?: any[] }>;

@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import PlayerForm from './PlayerForm';
 import { ZodIssue } from 'zod';
-import { EditPlayerFormProps } from '@/lib/types';
+import { EditPlayerFormProps } from '@/types/types';
 
 type Props = EditPlayerFormProps & {
   action: (

@@ -1,7 +1,7 @@
 // This component is used to select an opponent team from a list of opponents.
 
 import React from 'react';
-import { OpponentSelectorProps } from '@/lib/types';
+import { OpponentSelectorProps } from '@/types/types';
 
 export default function OpponentSelector({
   opponents,
