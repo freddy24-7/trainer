@@ -1,16 +1,16 @@
-import { revalidatePath } from 'next/cache';
-
 import { getPlayers } from '@/app/actions/getPlayers';
-import prisma from '@/lib/prisma';
+import { fetchPlayersFromDB } from '@/lib/services/prismaPlayerService';
+import { createSuccessResponse, handleError } from '@/utils/responseUtils';
 
-jest.mock('@/lib/prisma', () => ({
-  user: {
-    findMany: jest.fn(),
-  },
+const errorFetchingPlayers = 'Error fetching players.';
+
+jest.mock('@/lib/services/prismaPlayerService', () => ({
+  fetchPlayersFromDB: jest.fn(),
 }));
 
-jest.mock('next/cache', () => ({
-  revalidatePath: jest.fn(),
+jest.mock('@/utils/responseUtils', () => ({
+  createSuccessResponse: jest.fn(),
+  handleError: jest.fn(),
 }));
 
 describe('getPlayers', () => {
@@ -20,37 +20,53 @@ describe('getPlayers', () => {
 
   it('should return players successfully', async () => {
     const mockPlayers = [
-      { id: 1, username: 'player1' },
-      { id: 2, username: 'player2' },
+      { id: 1, username: 'player1', whatsappNumber: '1234567890' },
+      { id: 2, username: 'player2', whatsappNumber: '0987654321' },
     ];
-    (prisma.user.findMany as jest.Mock).mockResolvedValue(mockPlayers);
+
+    (fetchPlayersFromDB as jest.Mock).mockResolvedValue(mockPlayers);
+    (createSuccessResponse as jest.Mock).mockReturnValue({
+      success: true,
+      players: mockPlayers,
+    });
 
     const result = await getPlayers();
 
+    expect(fetchPlayersFromDB).toHaveBeenCalled();
+    expect(createSuccessResponse).toHaveBeenCalledWith(mockPlayers);
     expect(result).toEqual({ success: true, players: mockPlayers });
-    expect(revalidatePath).toHaveBeenCalledWith('/player/management');
   });
 
   it('should return an empty list if no players are found', async () => {
-    (prisma.user.findMany as jest.Mock).mockResolvedValue([]);
+    (fetchPlayersFromDB as jest.Mock).mockResolvedValue([]);
+    (createSuccessResponse as jest.Mock).mockReturnValue({
+      success: true,
+      players: [],
+    });
 
     const result = await getPlayers();
 
+    expect(fetchPlayersFromDB).toHaveBeenCalled();
+    expect(createSuccessResponse).toHaveBeenCalledWith([]);
     expect(result).toEqual({ success: true, players: [] });
-    expect(revalidatePath).toHaveBeenCalledWith('/player/management');
   });
 
   it('should handle errors when fetching players', async () => {
-    (prisma.user.findMany as jest.Mock).mockRejectedValue(
+    (fetchPlayersFromDB as jest.Mock).mockRejectedValue(
       new Error('Database error')
     );
+    (handleError as jest.Mock).mockReturnValue({
+      success: false,
+      error: errorFetchingPlayers,
+    });
 
     const result = await getPlayers();
 
+    expect(fetchPlayersFromDB).toHaveBeenCalled();
+    expect(handleError).toHaveBeenCalledWith(errorFetchingPlayers);
     expect(result).toEqual({
       success: false,
-      error: 'Error fetching players.',
+      error: errorFetchingPlayers,
     });
-    expect(revalidatePath).not.toHaveBeenCalled();
   });
 });

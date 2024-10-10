@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { deletePlayer } from '@/app/actions/deletePlayer';
-import { Player, PlayerManagementActions } from '@/types/types';
+import { Player, PlayerManagementActions } from '@/type-list/types';
 
 const confirmPlayerDeletion = (
   playerId: number,
@@ -25,7 +25,13 @@ const confirmPlayerDeletion = (
         prevPlayers.filter((player) => player.id !== playerId)
       );
     } else {
-      setModalBody(<p className="text-red-500">{response.error}</p>);
+      setModalBody(
+        <p className="text-red-500">
+          {response.errors
+            ? response.errors.join(', ')
+            : 'An unknown error occurred'}
+        </p>
+      );
     }
     setSubmitting(false);
     setIsModalOpen(false);

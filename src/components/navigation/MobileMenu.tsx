@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react';
 import { CiHome } from 'react-icons/ci';
 
 import NavLink from '@/components/navigation/NavLink';
-import { MobileMenuProps } from '@/types/types';
+import { MobileMenuProps } from '@/type-list/types';
 
 import ManagementDropdown from './ManagementDropdown';
 import StatsDropdown from './StatsDropdown';

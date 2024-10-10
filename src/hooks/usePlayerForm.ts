@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { PlayerFormProps, UsePlayerFormReturn } from '@/types/types';
+import { PlayerFormProps, UsePlayerFormReturn } from '@/type-list/types';
 import { formatToDisplay } from '@/utils/phoneNumberUtils';
 
 export const usePlayerForm = ({

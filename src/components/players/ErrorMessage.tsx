@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ErrorMessageProps } from '@/types/types';
+import { ErrorMessageProps } from '@/type-list/types';
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
   <div className="text-red-500">{message}</div>

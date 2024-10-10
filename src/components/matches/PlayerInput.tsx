@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { PlayerInputProps } from '@/types/types';
+import { PlayerInputProps } from '@/type-list/types';
 
 const PlayerInput: React.FC<PlayerInputProps> = ({
   player,

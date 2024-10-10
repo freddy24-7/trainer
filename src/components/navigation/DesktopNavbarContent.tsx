@@ -6,6 +6,7 @@ import { CiHome } from 'react-icons/ci';
 import ManagementDropdown from './ManagementDropdown';
 import NavLink from './NavLink';
 import StatsDropdown from './StatsDropdown';
+import ThemeToggleButton from './ThemeToggleButton';
 
 export default function DesktopNavbarContent({
   userId,
@@ -21,6 +22,10 @@ export default function DesktopNavbarContent({
       <NavLink href="/">
         <CiHome size={24} className="ml-2" />
       </NavLink>
+
+      {/* Integrate the ThemeToggleButton */}
+      <ThemeToggleButton />
+
       {userId ? (
         <div className="flex gap-4 items-center">
           {userRole === 'TRAINER' && (

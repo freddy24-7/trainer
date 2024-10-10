@@ -4,7 +4,7 @@ import { Spinner } from '@nextui-org/spinner';
 import React from 'react';
 
 import useChatMessages from '@/hooks/useChatMessages';
-import { SignedInUser, Message, ActionResponse } from '@/types/types';
+import { SignedInUser, Message, ActionResponse } from '@/type-list/types';
 
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';

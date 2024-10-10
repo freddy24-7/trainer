@@ -3,7 +3,7 @@
 import React from 'react';
 
 import TeamsList from '@/components/poules/TeamsList';
-import { PouleManagementClientProps } from '@/types/types';
+import { PouleManagementClientProps } from '@/type-list/types';
 
 export default function PouleManagementClient({
   poules,

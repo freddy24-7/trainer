@@ -30,7 +30,7 @@
     ".next/types/**/*.ts",
     "jest.setup.js",
     "tailwind.config.ts",
-    "src/types/**/*.ts",
+    "src/type-list/**/*.ts",
     "src/lib/utils.ts"
   ],
   "exclude": ["node_modules", "coverage", "jest.config.js"]

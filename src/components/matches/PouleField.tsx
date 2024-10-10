@@ -7,7 +7,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { PouleFieldProps } from '@/types/types';
+import { PouleFieldProps } from '@/type-list/types';
 
 const PouleField: React.FC<PouleFieldProps> = ({
   control,

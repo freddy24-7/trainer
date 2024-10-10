@@ -3,7 +3,7 @@ import React from 'react';
 
 import PlayerManagementModal from '@/components/players/PlayerManagementModal';
 import PlayersList from '@/components/players/PlayersList';
-import { Player, EditPlayerResponse } from '@/types/types';
+import { Player, EditPlayerResponse } from '@/type-list/types';
 
 export const RenderPlayersList = ({
   submitting,

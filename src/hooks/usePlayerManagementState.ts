@@ -1,6 +1,6 @@
 import { useState, ReactNode } from 'react';
 
-import { Player, PlayerManagementState } from '@/types/types';
+import { Player, PlayerManagementState } from '@/type-list/types';
 
 export const usePlayerManagementState = (
   initialPlayers: Player[]

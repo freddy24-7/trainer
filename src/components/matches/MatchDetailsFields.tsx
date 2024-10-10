@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { FormValues, MatchDetailsFieldsProps } from '@/types/types';
+import { FormValues, MatchDetailsFieldsProps } from '@/type-list/types';
 
 import OpponentField from './OpponentField';
 import PouleField from './PouleField';

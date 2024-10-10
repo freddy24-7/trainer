@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TrainingAttendanceClientProps } from '@/types/types';
+import { TrainingAttendanceClientProps } from '@/type-list/types';
 
 const TrainingAttendanceClient: React.FC<TrainingAttendanceClientProps> = ({
   attendanceList,

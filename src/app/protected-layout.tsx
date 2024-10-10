@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
-import { ProtectedLayoutProps } from '@/types/types';
+import { ProtectedLayoutProps } from '@/type-list/types';
 
 const ProtectedLayout = async ({
   children,

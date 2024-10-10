@@ -2,7 +2,7 @@ import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { format } from 'date-fns';
 import React from 'react';
 
-import { OpponentClientProps } from '@/types/types';
+import { OpponentClientProps } from '@/type-list/types';
 
 const OpponentClient: React.FC<OpponentClientProps> = ({ matchData }) => {
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { MessageInputProps } from '@/types/types';
+import { MessageInputProps } from '@/type-list/types';
 import { handleSendMessage } from '@/utils/sendMessageHelper';
 
 const MessageInput: React.FC<MessageInputProps> = ({

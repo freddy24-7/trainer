@@ -4,7 +4,7 @@ import { ZodIssue } from 'zod';
 
 import prisma from '@/lib/prisma';
 import { addTrainingSchema } from '@/schemas/trainingSchema';
-import { TrainingActionError } from '@/types/types';
+import { TrainingActionError } from '@/type-list/types';
 
 function handleZodIssueToTrainingActionError(
   zodIssues: ZodIssue[]

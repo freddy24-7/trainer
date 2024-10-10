@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { Message } from '@/types/types';
+import { Message } from '@/type-list/types';
 
 export default async function getMessages(): Promise<{
   messages: Message[];

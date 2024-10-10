@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { AddMatchForm } from '@/components/matches/AddMatchForm';
-import { Poule, Player } from '@/types/types';
+import { Poule, Player } from '@/type-list/types';
 
 jest.mock('react-toastify', () => ({
   toast: {

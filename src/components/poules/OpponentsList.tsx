@@ -2,7 +2,7 @@ import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
-import type { OpponentsListProps } from '@/types/types';
+import type { OpponentsListProps } from '@/type-list/types';
 
 function OpponentsList({
   opponents,

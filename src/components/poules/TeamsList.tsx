@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import React, { useEffect } from 'react';
 
-import { TeamsListProps, Team } from '@/types/types';
+import { TeamsListProps, Team } from '@/type-list/types';
 
 export default function TeamsList({
   teams,

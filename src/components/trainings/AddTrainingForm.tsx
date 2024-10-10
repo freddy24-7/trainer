@@ -6,7 +6,11 @@ import { useForm, FormProvider } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
 import { useAddTrainingForm } from '@/hooks/useAddTrainingForm';
-import { TrainingFormValues, Player, TrainingActionError } from '@/types/types';
+import {
+  TrainingFormValues,
+  Player,
+  TrainingActionError,
+} from '@/type-list/types';
 
 import AbsentPlayersList from './AbsentPlayersList';
 import DateField from './DateField';

@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import PlayerListWrapper from '@/components/matches/PlayerListWrapper';
-import { FormValues, AddMatchFormFieldsProps } from '@/types/types';
+import { FormValues, AddMatchFormFieldsProps } from '@/type-list/types';
 
 import MatchDetailsFields from './MatchDetailsFields';
 

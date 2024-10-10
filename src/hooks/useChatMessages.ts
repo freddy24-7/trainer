@@ -5,7 +5,7 @@ import {
   Message,
   PusherEventMessage,
   UseChatMessagesReturn,
-} from '@/types/types';
+} from '@/type-list/types';
 
 function useChatMessages(initialMessages: Message[]): UseChatMessagesReturn {
   const [loading, setLoading] = useState(true);

@@ -8,7 +8,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { PouleFormValues } from '@/types/types';
+import { PouleFormValues } from '@/type-list/types';
 
 interface OpponentInputProps {
   control: Control<PouleFormValues>;

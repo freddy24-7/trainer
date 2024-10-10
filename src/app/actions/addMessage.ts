@@ -5,7 +5,7 @@ import { ZodIssue } from 'zod';
 import prisma from '@/lib/prisma';
 import pusher from '@/lib/pusher';
 import { createMessageSchema } from '@/schemas/messageSchema';
-import { ActionResponse } from '@/types/types';
+import { ActionResponse } from '@/type-list/types';
 
 function handleMessageValidation(
   params: FormData

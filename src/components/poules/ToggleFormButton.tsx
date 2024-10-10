@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
-import { ToggleFormButtonProps } from '@/types/types';
+import { ToggleFormButtonProps } from '@/type-list/types';
 
 const ToggleFormButton: React.FC<ToggleFormButtonProps> = ({
   showForm,

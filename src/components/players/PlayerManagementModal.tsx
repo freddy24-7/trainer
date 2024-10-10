@@ -2,7 +2,7 @@ import React from 'react';
 
 import { EditPlayerForm } from '@/components/players/EditPlayerForm';
 import ReusableModal from '@/components/ReusableModal';
-import { EditPlayerResponse, Player } from '@/types/types';
+import { EditPlayerResponse, Player } from '@/type-list/types';
 
 interface PlayerManagementModalProps {
   isModalOpen: boolean;

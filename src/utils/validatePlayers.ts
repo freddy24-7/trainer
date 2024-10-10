@@ -1,4 +1,4 @@
-import { FormValues } from '@/types/types';
+import { FormValues } from '@/type-list/types';
 export function handleValidatePlayers(
   playerValues: FormValues['players']
 ): boolean {

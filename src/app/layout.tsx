@@ -6,7 +6,6 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import NavBar from '@/components/navigation/NavBar';
-import Providers from '@/utils/Providers';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
@@ -27,15 +26,13 @@ export default function RootLayout({ children }: Props): React.ReactElement {
         <body suppressHydrationWarning={true}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
             <NextUIProvider>
-              <Providers>
-                <NavBar />
-                <main className="container mx-auto p-2">{children}</main>
-                <ToastContainer
-                  position="top-right"
-                  autoClose={3000}
-                  hideProgressBar={false}
-                />
-              </Providers>
+              <NavBar />
+              <main className="container mx-auto p-2">{children}</main>
+              <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+              />
             </NextUIProvider>
           </NextThemesProvider>
         </body>

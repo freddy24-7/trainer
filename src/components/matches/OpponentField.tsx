@@ -7,7 +7,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { OpponentFieldProps } from '@/types/types';
+import { OpponentFieldProps } from '@/type-list/types';
 
 const OpponentField: React.FC<OpponentFieldProps> = ({
   control,

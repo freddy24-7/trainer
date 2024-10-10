@@ -7,7 +7,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { DateFieldProps } from '@/types/types';
+import { DateFieldProps } from '@/type-list/types';
 
 const DateField: React.FC<DateFieldProps> = ({ control, errors }) => {
   return (

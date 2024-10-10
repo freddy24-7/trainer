@@ -2,7 +2,7 @@ import { Button } from '@nextui-org/react';
 import React, { ReactElement } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 
-import { MobileMenuButtonProps } from '@/types/types';
+import { MobileMenuButtonProps } from '@/type-list/types';
 
 export default function MobileMenuButton({
   menuOpen,

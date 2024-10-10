@@ -3,7 +3,7 @@
 import { useTheme } from 'next-themes';
 import React, { useEffect, useState, ReactElement } from 'react';
 
-import { NavBarClientProps } from '@/types/types';
+import { NavBarClientProps } from '@/type-list/types';
 
 import DesktopNavbarContent from './DesktopNavbarContent';
 import MobileMenu from './MobileMenu';

@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-import { SendMessageParams } from '@/types/types';
+import { SendMessageParams } from '@/type-list/types';
 
 export async function handleSendMessage({
   action,

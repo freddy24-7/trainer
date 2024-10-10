@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import {
   GetTrainingAttendanceListResponse,
   PlayerAttendance,
-} from '@/types/types';
+} from '@/type-list/types';
 
 export async function getTrainingAttendanceList(): Promise<GetTrainingAttendanceListResponse> {
   try {

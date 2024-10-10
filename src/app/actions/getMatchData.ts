@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { GetMatchDataResponse, MatchData } from '@/types/types';
+import { GetMatchDataResponse, MatchData } from '@/type-list/types';
 
 export async function getMatchData(): Promise<GetMatchDataResponse> {
   try {

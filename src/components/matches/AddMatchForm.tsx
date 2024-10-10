@@ -7,7 +7,7 @@ import type { ZodIssue } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import useAddMatchForm from '@/hooks/useAddMatchForm';
-import { Poule, Player } from '@/types/types';
+import { Poule, Player } from '@/type-list/types';
 
 import AddMatchFormFields from './AddMatchFormFields';
 

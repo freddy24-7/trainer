@@ -6,7 +6,7 @@ import {
   TrainingFormValues,
   UseAddTrainingFormProps,
   UseAddTrainingFormReturn,
-} from '@/types/types';
+} from '@/type-list/types';
 import { convertCalendarDateToDate } from '@/utils/dateUtils';
 
 export const useAddTrainingForm = ({

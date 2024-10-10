@@ -7,7 +7,7 @@ import {
   UpdatedPlayer,
   UseEditPlayerProps,
   UseEditPlayerReturn,
-} from '@/types/types';
+} from '@/type-list/types';
 import { formatForSaving } from '@/utils/phoneNumberUtils';
 
 const createFormData = (

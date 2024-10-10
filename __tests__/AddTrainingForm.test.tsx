@@ -9,7 +9,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 
 import AddTrainingForm from '@/components/trainings/AddTrainingForm';
-import { Player } from '@/types/types';
+import { Player } from '@/type-list/types';
 
 jest.mock('react-toastify', () => ({
   toast: {

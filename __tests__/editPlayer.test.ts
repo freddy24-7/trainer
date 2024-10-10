@@ -1,13 +1,24 @@
-import { users } from '@clerk/clerk-sdk-node';
-
 import editPlayer from '@/app/actions/editPlayer';
-import prisma from '@/lib/prisma';
+import { handleRevalidatePlayerManagementCache } from '@/lib/cache/revalidation';
+import { updateClerkUser } from '@/lib/services/clerkEditPlayerService';
+import {
+  fetchPlayer,
+  updateDatabaseUser,
+} from '@/lib/services/prismaEditPlayerService';
 import { editPlayerSchema } from '@/schemas/editPlayerSchema';
+import { handleValidateParams } from '@/schemas/validation/playerEditValidation';
+
+jest.mock('@/schemas/validation/playerEditValidation', () => ({
+  handleValidateParams: jest.fn(),
+}));
 
 jest.mock('@/lib/prisma', () => ({
-  user: {
-    findUnique: jest.fn(),
-    update: jest.fn(),
+  __esModule: true,
+  default: {
+    user: {
+      findUnique: jest.fn(),
+      update: jest.fn(),
+    },
   },
 }));
 
@@ -18,16 +29,25 @@ jest.mock('@clerk/clerk-sdk-node', () => ({
 }));
 
 jest.mock('@/schemas/editPlayerSchema', () => ({
+  __esModule: true,
   editPlayerSchema: {
     safeParse: jest.fn(),
   },
 }));
 
-interface Player {
-  id: number;
-  clerkId: string;
-  username: string | null;
-}
+jest.mock('@/lib/services/prismaEditPlayerService', () => ({
+  fetchPlayer: jest.fn(),
+  updateDatabaseUser: jest.fn(),
+}));
+
+jest.mock('@/lib/services/clerkEditPlayerService', () => ({
+  updateClerkUser: jest.fn(),
+}));
+
+jest.mock('@/lib/cache/revalidation', () => ({
+  __esModule: true,
+  handleRevalidatePlayerManagementCache: jest.fn(),
+}));
 
 describe('editPlayer', () => {
   afterEach(() => {
@@ -46,16 +66,12 @@ describe('editPlayer', () => {
     return formData;
   };
 
-  const mockPlayerData = (player: Player | null): void => {
-    (prisma.user.findUnique as jest.Mock).mockResolvedValue(player);
+  const mockPlayerData = (player: unknown | null): void => {
+    (fetchPlayer as jest.Mock).mockResolvedValue({ player, errors: [] });
   };
 
   it('should return an error if username or WhatsApp number is missing', async () => {
-    const formData = createFormData('player1');
-
-    const result = await editPlayer(1, formData);
-
-    expect(result).toEqual({
+    (handleValidateParams as jest.Mock).mockReturnValue({
       errors: [
         {
           message: 'Username and WhatsApp number are required.',
@@ -64,10 +80,42 @@ describe('editPlayer', () => {
         },
       ],
     });
+
+    const formData = createFormData('player1');
+
+    const result = await editPlayer(1, formData);
+
+    expect(result).toEqual({
+      errors: [
+        {
+          message: 'Validation error.',
+          path: ['form'],
+          code: 'custom',
+        },
+      ],
+    });
   });
 
   it('should return an error if the player is not found or has invalid data', async () => {
-    mockPlayerData(null);
+    (handleValidateParams as jest.Mock).mockReturnValue({
+      errors: [],
+      data: {
+        username: 'player1',
+        whatsappNumber: '123456789',
+      },
+    });
+
+    (fetchPlayer as jest.Mock).mockResolvedValue({
+      errors: [
+        {
+          message:
+            'Player not found, Clerk ID, username, or WhatsApp number is missing.',
+          path: ['form'],
+          code: 'custom',
+        },
+      ],
+    });
+
     const formData = createFormData('player1', '123456789');
 
     const result = await editPlayer(1, formData);
@@ -85,61 +133,64 @@ describe('editPlayer', () => {
   });
 
   it('should return validation errors if the schema validation fails', async () => {
-    mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
-    const formData = createFormData('invalidPlayer', 'invalidNumber');
-
-    const mockValidationError = {
-      success: false,
-      error: {
-        issues: [
-          {
-            message: 'Invalid username',
-            path: ['username'],
-            code: 'invalid_type',
-          },
-        ],
+    const mockValidationErrorIssues = [
+      {
+        message: 'Invalid username',
+        path: ['username'],
+        code: 'invalid_type',
       },
-    };
-    (editPlayerSchema.safeParse as jest.Mock).mockReturnValue(
-      mockValidationError
-    );
+    ];
+
+    (handleValidateParams as jest.Mock).mockReturnValue({
+      errors: mockValidationErrorIssues,
+      data: undefined,
+    });
+
+    const formData = createFormData('invalidPlayer', 'invalidNumber');
 
     const result = await editPlayer(1, formData);
 
     expect(result).toEqual({
-      errors: mockValidationError.error.issues,
+      errors: [
+        {
+          message: 'Validation error.',
+          path: ['form'],
+          code: 'custom',
+        },
+      ],
     });
+
+    expect(handleRevalidatePlayerManagementCache).not.toHaveBeenCalled();
   });
 
   it('should update the player successfully if all validation passes', async () => {
-    mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
-    const formData = createFormData('validPlayer', '123456789');
-
-    const mockValidationSuccess = {
-      success: true,
+    (handleValidateParams as jest.Mock).mockReturnValue({
+      errors: [],
       data: {
         username: 'validPlayer',
         whatsappNumber: '123456789',
       },
-    };
-    (editPlayerSchema.safeParse as jest.Mock).mockReturnValue(
-      mockValidationSuccess
-    );
+    });
+
+    mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
+
+    const formData = createFormData('validPlayer', '123456789');
 
     const result = await editPlayer(1, formData);
 
-    expect(users.updateUser).toHaveBeenCalledWith('clerkId123', {
+    expect(updateClerkUser).toHaveBeenCalledWith(
+      'clerkId123',
+      expect.objectContaining({
+        username: 'validPlayer',
+      })
+    );
+
+    expect(updateDatabaseUser).toHaveBeenCalledWith(1, {
       username: 'validPlayer',
-      password: undefined,
+      whatsappNumber: '123456789',
     });
 
-    expect(prisma.user.update).toHaveBeenCalledWith({
-      where: { id: 1 },
-      data: {
-        username: 'validPlayer',
-        whatsappNumber: '123456789',
-      },
-    });
+    expect(handleRevalidatePlayerManagementCache).toHaveBeenCalled();
 
     expect(result).toEqual({
       errors: [],
@@ -162,7 +213,7 @@ describe('editPlayer', () => {
       mockValidationSuccess
     );
 
-    (users.updateUser as jest.Mock).mockRejectedValue(
+    (updateClerkUser as jest.Mock).mockRejectedValue(
       new Error('User update failed')
     );
 

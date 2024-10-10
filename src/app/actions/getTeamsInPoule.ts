@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { Team } from '@/types/types';
+import { Team } from '@/type-list/types';
 
 interface GetTeamsInPouleResponse {
   success: boolean;

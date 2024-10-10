@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 
-import { Poule, PouleOpponent, FormValues } from '@/types/types';
+import { Poule, PouleOpponent, FormValues } from '@/type-list/types';
 
 function usePouleSelection(
   poules: Poule[],

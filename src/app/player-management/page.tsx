@@ -5,7 +5,7 @@ import { getPlayers } from '@/app/actions/getPlayers';
 import ProtectedLayout from '@/app/protected-layout';
 import { AddPlayerFormValidation } from '@/components/players/AddPlayerFormValidation';
 import PlayerManagementClient from '@/components/players/PlayerManagementClient';
-import { Player } from '@/types/types';
+import { Player } from '@/type-list/types';
 
 export default async function ManagementPage(): Promise<React.ReactElement> {
   const response = await getPlayers();

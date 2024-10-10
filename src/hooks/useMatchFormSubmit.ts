@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import type { ZodIssue } from 'zod';
 
-import { FormValues } from '@/types/types';
+import { FormValues } from '@/type-list/types';
 import { convertCalendarDateToDate } from '@/utils/dateUtils';
 import { handleValidatePlayers } from '@/utils/validatePlayers';
 

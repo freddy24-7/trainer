@@ -7,7 +7,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { TrainingFormValues } from '@/types/types';
+import { TrainingFormValues } from '@/type-list/types';
 
 import DateSelector from '../DateSelector';
 

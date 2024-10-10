@@ -1,4 +1,4 @@
-import { FormValues, Poule, Player } from '@/types/types';
+import { FormValues, Poule, Player } from '@/type-list/types';
 
 export function getDefaultFormValues(
   poules: Poule[],

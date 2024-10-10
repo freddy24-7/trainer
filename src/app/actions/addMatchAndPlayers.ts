@@ -4,7 +4,7 @@ import { ZodIssue } from 'zod';
 
 import addMatch from '@/app/actions/addMatch';
 import addMatchPlayer from '@/app/actions/addMatchPlayer';
-import { MatchPlayer } from '@/types/types';
+import { MatchPlayer } from '@/type-list/types';
 
 function handleMatchValidation(params: FormData): ZodIssue[] | null {
   const errors: ZodIssue[] = [];

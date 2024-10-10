@@ -15,6 +15,15 @@ export interface UserData {
   role: string;
 }
 
+export interface ValidatePlayerDataResult {
+  errors: ZodIssue[];
+  data: {
+    username: string;
+    password: string;
+    whatsappNumber: string;
+  } | null;
+}
+
 export interface Team {
   id: number;
   name: string;
@@ -591,4 +600,14 @@ export interface ValidationResult {
     date: string;
   };
   errors?: ZodIssue[];
+}
+
+export interface CreateClerkUserResult {
+  clerkUser: { id: string } | null;
+  error: string | null;
+}
+
+export interface FetchPlayerResult {
+  errors?: ZodIssue[];
+  player?: Player;
 }

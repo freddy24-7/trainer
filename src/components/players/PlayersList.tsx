@@ -1,7 +1,7 @@
 import { Button, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
 import React from 'react';
 
-import { PlayersListProps, Player } from '@/types/types';
+import { PlayersListProps, Player } from '@/type-list/types';
 
 export default function PlayersList({
   players,

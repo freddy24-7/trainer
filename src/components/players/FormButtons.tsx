@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FormButtonsProps } from '@/types/types';
+import { FormButtonsProps } from '@/type-list/types';
 
 const FormButtons: React.FC<FormButtonsProps> = ({
   submitButtonText,

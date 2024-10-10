@@ -2,7 +2,7 @@ import React from 'react';
 import { ZodIssue } from 'zod';
 
 import { useEditPlayer } from '@/hooks/useEditPlayer';
-import { EditPlayerFormProps } from '@/types/types';
+import { EditPlayerFormProps } from '@/type-list/types';
 import { formatToDisplay } from '@/utils/phoneNumberUtils';
 
 import PlayerForm from './PlayerForm';

@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormContext, Control } from 'react-hook-form';
 
 import { FormField, FormItem, FormControl } from '@/components/ui/form';
-import { TrainingFormValues, AbsentPlayersListProps } from '@/types/types';
+import { TrainingFormValues, AbsentPlayersListProps } from '@/type-list/types';
 
 const AbsentPlayersList: React.FC<AbsentPlayersListProps> = ({
   players,

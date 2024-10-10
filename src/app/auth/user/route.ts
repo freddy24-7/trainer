@@ -1,9 +1,9 @@
 import { auth, currentUser } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
 
-import { handleUpsertUser } from '@/app/api/auth/user/helper/database';
+import { handleUpsertUser } from '@/app/userCreationHelper';
 import { UserSchema } from '@/schemas/userSchema';
-import { UserData } from '@/types/types';
+import { UserData } from '@/type-list/types';
 
 export async function createAuthenticatedUser(): Promise<
   UserData | NextResponse

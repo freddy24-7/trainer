@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PasswordInputProps } from '@/types/types';
+import { PasswordInputProps } from '@/type-list/types';
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
   password,

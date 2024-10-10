@@ -6,7 +6,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { PouleNameInputProps } from '@/types/types';
+import { PouleNameInputProps } from '@/type-list/types';
 
 function PouleNameInput({
   control,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { UsernameInputProps } from '@/types/types';
+import { UsernameInputProps } from '@/type-list/types';
 
 const UsernameInput: React.FC<UsernameInputProps> = ({
   username,

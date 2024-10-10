@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { WhatsappNumberInputProps } from '@/types/types';
+import { WhatsappNumberInputProps } from '@/type-list/types';
 
 const WhatsappNumberInput: React.FC<WhatsappNumberInputProps> = ({
   whatsappNumber,

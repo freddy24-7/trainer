@@ -2,8 +2,8 @@ import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-import { HandleFormSubmitOptions } from '@/types/types';
-import type { PouleFormValues } from '@/types/types';
+import { HandleFormSubmitOptions } from '@/type-list/types';
+import type { PouleFormValues } from '@/type-list/types';
 
 export const handleFormSubmit = async ({
   data,

@@ -1,9 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-
-import prisma from '@/lib/prisma';
-import { Player } from '@/types/types';
+import { fetchPlayersFromDB } from '@/lib/services/prismaPlayerService';
+import { Player } from '@/type-list/types';
+import { createSuccessResponse, handleError } from '@/utils/responseUtils';
 
 export async function getPlayers(): Promise<{
   success: boolean;
@@ -11,24 +10,9 @@ export async function getPlayers(): Promise<{
   error?: string;
 }> {
   try {
-    const players = await prisma.user.findMany({
-      where: {
-        role: 'PLAYER',
-      },
-      select: {
-        id: true,
-        username: true,
-        whatsappNumber: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    revalidatePath('/player/management');
-
-    return { success: true, players };
+    const players = await fetchPlayersFromDB();
+    return createSuccessResponse(players);
   } catch {
-    return { success: false, error: 'Error fetching players.' };
+    return handleError('Error fetching players.');
   }
 }

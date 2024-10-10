@@ -5,7 +5,7 @@ import {
   PlayerActionFunction,
   UseAddPlayerReturn,
   PlayerData,
-} from '@/types/types';
+} from '@/type-list/types';
 import { formatWhatsappNumber } from '@/utils/formatWhatsappNumber';
 
 export const useAddPlayer = (

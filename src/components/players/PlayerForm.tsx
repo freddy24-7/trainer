@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 import { usePlayerForm } from '@/hooks/usePlayerForm';
-import { PlayerFormProps } from '@/types/types';
+import { PlayerFormProps } from '@/type-list/types';
 
 import ErrorMessage from './ErrorMessage';
 import FormButtons from './FormButtons';

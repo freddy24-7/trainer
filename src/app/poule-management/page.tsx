@@ -5,7 +5,7 @@ import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import ProtectedLayout from '@/app/protected-layout';
 import { AddPouleFormValidation } from '@/components/poules/AddPouleFormValidation';
 import PouleManagementClient from '@/components/poules/PouleManagementClient';
-import { Poule } from '@/types/types';
+import { Poule } from '@/type-list/types';
 
 export default async function PouleManagementPage(): Promise<React.ReactElement> {
   const pouleResponse = await getTeamsInPoule();

@@ -4,7 +4,7 @@ import { ZodIssue } from 'zod';
 
 import prisma from '@/lib/prisma';
 import { createMatchSchema } from '@/schemas/matchSchema';
-import { ValidationResult } from '@/types/types';
+import { ValidationResult } from '@/type-list/types';
 
 function createMatchValidation(params: FormData): ValidationResult {
   const validation = createMatchSchema.safeParse({

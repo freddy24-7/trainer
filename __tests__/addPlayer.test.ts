@@ -115,9 +115,7 @@ describe('addPlayer Functionality Tests', () => {
 
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors.length).toBeGreaterThan(0);
-    expect(result.errors[0].message).toContain(
-      'Expected string, received null'
-    );
+    expect(result.errors[0].message).toContain('Required');
     expect(result.errors[0].path).toContain('username');
   });
 
@@ -136,8 +134,8 @@ describe('addPlayer Functionality Tests', () => {
     expect(result).toEqual({
       errors: [
         {
-          message: 'Error registering the player.',
-          path: ['form'],
+          message: 'Error creating user in Clerk: Clerk error',
+          path: ['clerk'],
           code: 'custom',
         },
       ],

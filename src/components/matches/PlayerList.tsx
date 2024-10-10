@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PlayerListProps } from '@/types/types';
+import { PlayerListProps } from '@/type-list/types';
 
 import PlayerInput from './PlayerInput';
 

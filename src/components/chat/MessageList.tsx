@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MessageListProps } from '@/types/types';
+import { MessageListProps } from '@/type-list/types';
 
 const MessageList: React.FC<MessageListProps> = ({
   messages,

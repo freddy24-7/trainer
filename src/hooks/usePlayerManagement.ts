@@ -4,7 +4,7 @@ import {
   Player,
   EditPlayerResponse,
   PlayerManagementReturn,
-} from '@/types/types';
+} from '@/type-list/types';
 import { editPlayerHelper } from '@/utils/editPlayerHelper';
 
 export const usePlayerManagement = (

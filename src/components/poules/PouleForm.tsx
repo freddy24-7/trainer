@@ -2,7 +2,7 @@ import React from 'react';
 import { FormProvider } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
-import type { PouleFormProps } from '@/types/types';
+import type { PouleFormProps } from '@/type-list/types';
 
 import MainTeamNameInput from './MainTeamNameInput';
 import OpponentInput from './OpponentInput';

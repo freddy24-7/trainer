@@ -2,7 +2,7 @@ import { Role } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
-import { UserData } from '@/types/types';
+import { UserData } from '@/type-list/types';
 
 export async function handleUpsertUser(
   userData: UserData

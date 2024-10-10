@@ -6,7 +6,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { MainTeamNameInputProps } from '@/types/types';
+import { MainTeamNameInputProps } from '@/type-list/types';
 
 function MainTeamNameInput({
   control,

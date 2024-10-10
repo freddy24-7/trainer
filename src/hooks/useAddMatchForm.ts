@@ -11,7 +11,7 @@ import type { ZodIssue } from 'zod';
 
 import useMatchFormSubmit from '@/hooks/useMatchFormSubmit';
 import usePouleSelection from '@/hooks/usePouleSelection';
-import { FormValues, Poule, Player, PouleOpponent } from '@/types/types';
+import { FormValues, Poule, Player, PouleOpponent } from '@/type-list/types';
 import { getDefaultFormValues } from '@/utils/getDefaultMatchFormValues';
 
 function useAddMatchForm(

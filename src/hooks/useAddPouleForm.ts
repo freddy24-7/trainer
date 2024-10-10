@@ -8,7 +8,7 @@ import {
   UseAddPouleFormProps,
   UseAddPouleFormReturn,
   PouleFormValues,
-} from '@/types/types';
+} from '@/type-list/types';
 import {
   addOpponent,
   removeOpponent,

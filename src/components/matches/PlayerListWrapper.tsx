@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PlayerList from '@/components/matches/PlayerList';
-import { PlayerListWrapperProps } from '@/types/types';
+import { PlayerListWrapperProps } from '@/type-list/types';
 
 const PlayerListWrapper: React.FC<PlayerListWrapperProps> = ({
   players,

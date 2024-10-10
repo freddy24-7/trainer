@@ -4,7 +4,7 @@ import addTraining from '@/app/actions/addTraining';
 import { getPlayers } from '@/app/actions/getPlayers';
 import ProtectedLayout from '@/app/protected-layout';
 import AddTrainingForm from '@/components/trainings/AddTrainingForm';
-import { Player } from '@/types/types';
+import { Player } from '@/type-list/types';
 
 export default async function TrainingsPage(): Promise<React.ReactElement> {
   const playerResponse = await getPlayers();

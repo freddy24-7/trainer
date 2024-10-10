@@ -1,58 +1,52 @@
 'use server';
 
-import { users } from '@clerk/clerk-sdk-node';
-import { revalidatePath } from 'next/cache';
 import { ZodIssue } from 'zod';
 
-import prisma from '@/lib/prisma';
-import { createPlayerSchema } from '@/schemas/createPlayerSchema';
+import { handleRevalidatePlayerManagementCache } from '@/lib/cache/revalidation';
+import { createClerkUser } from '@/lib/services/clerkCreatePlayerService';
+import { createPrismaUser } from '@/lib/services/prismaCreatePlayerService';
+import { handleValidatePlayerData } from '@/schemas/validation/playerCreationValidation';
+import {
+  ValidatePlayerDataResult,
+  CreateClerkUserResult,
+} from '@/type-list/types';
+import {
+  createValidationErrorResponse,
+  handleError,
+} from '@/utils/responseUtils';
 
 export default async function createPlayer(
   _prevState: unknown,
   params: FormData
-): Promise<{ errors: ZodIssue[]; success?: boolean }> {
-  const validation = createPlayerSchema.safeParse({
-    username: params.get('username'),
-    password: params.get('password'),
-    whatsappNumber: params.get('whatsappNumber'),
-  });
-
-  if (!validation.success) {
-    return {
-      errors: validation.error.issues,
-    };
-  }
-
-  const { username, password, whatsappNumber } = validation.data;
-
+): Promise<{ errors: ZodIssue[] | { message: string }[]; success?: boolean }> {
   try {
-    const clerkUser = await users.createUser({
-      username,
-      password,
-    });
+    // Step 1: Validate the input
+    const { errors: validationErrors, data }: ValidatePlayerDataResult =
+      handleValidatePlayerData(params);
 
-    await prisma.user.create({
-      data: {
-        clerkId: clerkUser.id,
-        username,
-        whatsappNumber,
-        role: 'PLAYER',
-        createdAt: new Date(),
-      },
-    });
+    if (validationErrors.length > 0 || !data) {
+      return createValidationErrorResponse('Validation error.', 'form');
+    }
 
-    revalidatePath('/player-management');
+    const { username, password, whatsappNumber } = data;
 
-    return { errors: [], success: true };
-  } catch {
-    return {
-      errors: [
-        {
-          message: 'Error registering the player.',
-          path: ['form'],
-          code: 'custom',
-        },
-      ],
-    };
+    // Step 2: Create user in Clerk system
+    const { clerkUser, error: clerkError }: CreateClerkUserResult =
+      await createClerkUser(username, password);
+
+    if (clerkError) {
+      return createValidationErrorResponse(clerkError, 'clerk');
+    }
+
+    // Step 3: Create user in Prisma database
+    await createPrismaUser(clerkUser!.id, username, whatsappNumber);
+
+    // Step 4: Revalidate the player management cache
+    handleRevalidatePlayerManagementCache();
+
+    return { errors: [], success: true }; // Success
+  } catch (error) {
+    console.error('Error creating player:', error);
+    return handleError('Error creating player.');
   }
 }

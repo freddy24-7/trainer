@@ -5,7 +5,7 @@ import { getPlayers } from '@/app/actions/getPlayers';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import ProtectedLayout from '@/app/protected-layout';
 import { AddMatchForm } from '@/components/matches/AddMatchForm';
-import { Player } from '@/types/types';
+import { Player } from '@/type-list/types';
 
 export default async function MatchManagementPage(): Promise<React.ReactElement> {
   const pouleResponse = await getTeamsInPoule();

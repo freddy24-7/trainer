@@ -7,7 +7,7 @@ import {
   RenderPlayerManagementModal,
 } from '@/components/players/PlayerManagementClientHelpers';
 import { usePlayerManagement } from '@/hooks/usePlayerManagement';
-import { PlayerManagementClientProps } from '@/types/types';
+import { PlayerManagementClientProps } from '@/type-list/types';
 
 export default function PlayerManagementClient({
   players: initialPlayers,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { WhatsappMessageLinkProps } from '@/types/types';
+import { WhatsappMessageLinkProps } from '@/type-list/types';
 
 const WhatsappMessageLink: React.FC<WhatsappMessageLinkProps> = ({
   whatsappNumber,

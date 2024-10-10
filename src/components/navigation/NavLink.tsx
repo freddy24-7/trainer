@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { ReactElement } from 'react';
 
-import { NavLinkProps } from '@/types/types';
+import { NavLinkProps } from '@/type-list/types';
 
 export default function NavLink({
   href,
