@@ -1,26 +1,19 @@
-// This server action is used to add a player to the database.
-
 'use server';
 
-import prisma from '@/lib/prisma';
 import { users } from '@clerk/clerk-sdk-node';
 import { revalidatePath } from 'next/cache';
-import { ZodIssue } from 'zod';
-import { createPlayerSchema } from '@/schemas/createPlayerSchema';
+import { validatePlayerData } from '@/schemas/validation/createPlayerValidation';
+import { createPlayerInDatabase } from '@/lib/services/createPlayerService';
+import { formatError } from '@/utils/errorUtils';
 
 export default async function addPlayer(
   _prevState: any,
   params: FormData
-): Promise<{ errors: ZodIssue[]; success?: boolean }> {
-  const validation = createPlayerSchema.safeParse({
-    username: params.get('username'),
-    password: params.get('password'),
-    whatsappNumber: params.get('whatsappNumber'),
-  });
-
+): Promise<{ errors: any[]; success?: boolean }> {
+  const validation = validatePlayerData(params);
   if (!validation.success) {
     return {
-      errors: validation.error.issues,
+      errors: validation.errors || [],
     };
   }
 
@@ -32,28 +25,16 @@ export default async function addPlayer(
       password,
     });
 
-    await prisma.user.create({
-      data: {
-        clerkId: clerkUser.id,
-        username,
-        whatsappNumber,
-        role: 'PLAYER',
-        createdAt: new Date(),
-      },
+    await createPlayerInDatabase({
+      clerkId: clerkUser.id,
+      username,
+      whatsappNumber,
     });
 
     revalidatePath('/player-management');
 
     return { errors: [], success: true };
   } catch (error) {
-    return {
-      errors: [
-        {
-          message: 'Error registering the player.',
-          path: ['form'],
-          code: 'custom',
-        },
-      ],
-    };
+    return formatError('Error registering the player.');
   }
 }

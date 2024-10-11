@@ -1,5 +1,3 @@
-// This component is used to add a new player to the team.
-
 'use client';
 
 import React, { useState } from 'react';

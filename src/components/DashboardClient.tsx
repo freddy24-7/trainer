@@ -1,5 +1,3 @@
-// This component is responsible for rendering the dashboard for the client.
-
 'use client';
 
 import { useEffect, useState } from 'react';

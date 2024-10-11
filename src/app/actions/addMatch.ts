@@ -1,5 +1,3 @@
-// This server action serves as a helper function.
-
 'use server';
 
 import prisma from '@/lib/prisma';

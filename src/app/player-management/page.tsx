@@ -1,26 +1,24 @@
-// This is a protected page that can only be accessed by users with the TRAINER role.
-
 import ProtectedLayout from '@/app/protected-layout';
-import { getPlayers } from '@/app/actions/getPlayers';
+import getPlayers from '@/app/actions/getPlayers';
 import addPlayer from '@/app/actions/addPlayer';
 import PlayerManagementClient from '@/components/PlayerManagementClient';
 import { AddPlayerFormValidation } from '@/components/AddPlayerFormValidation';
+import { validatePlayerResponse } from '@/utils/responseUtils';
+import { mapPlayers } from '@/utils/playerUtils';
+import { renderError } from '@/utils/errorUtils';
 import { Player } from '@/lib/types';
 
 export default async function ManagementPage() {
   const response = await getPlayers();
 
-  const players: Player[] = response.success
-    ? (response.players ?? []).map((player) => ({
-        id: player.id,
-        username: player.username ?? '',
-        whatsappNumber: player.whatsappNumber ?? '',
-      }))
-    : [];
+  const validatedResponse = validatePlayerResponse(response);
 
-  if (!response.success) {
-    return <div>Error loading players: {response.error}</div>;
+  const errorElement = renderError(validatedResponse);
+  if (errorElement) {
+    return errorElement;
   }
+
+  const players: Player[] = mapPlayers(validatedResponse);
 
   return (
     <ProtectedLayout requiredRole="TRAINER">

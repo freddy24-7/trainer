@@ -23,6 +23,18 @@ jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
 }));
 
+jest.mock('@/utils/errorUtils', () => ({
+  formatError: jest.fn().mockReturnValue({
+    errors: [
+      {
+        message: 'Error registering the player.',
+        path: ['form'],
+        code: 'custom',
+      },
+    ],
+  }),
+}));
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -41,7 +53,6 @@ describe('addPlayer Functionality Tests', () => {
   };
 
   it('should create a player successfully with valid input', async () => {
-    // Arrange
     const createUserMock = users.createUser as jest.Mock;
     const createUserInDBMock = prisma.user.create as jest.Mock;
     const revalidatePathMock = revalidatePath as jest.Mock;
@@ -62,10 +73,8 @@ describe('addPlayer Functionality Tests', () => {
       '+31612345678'
     );
 
-    // Act
     const result = await addPlayer({}, formData);
 
-    // Assert
     expect(result).toEqual({ errors: [], success: true });
     expect(createUserMock).toHaveBeenCalledWith({
       username: 'testplayer',
@@ -84,17 +93,14 @@ describe('addPlayer Functionality Tests', () => {
   });
 
   it('should return validation errors when whatsappNumber is invalid', async () => {
-    // Arrange
     const formData = formDataSetup(
       'testplayer',
       'SecurePassword@1',
       'invalidNumber'
     );
 
-    // Act
     const result = await addPlayer({}, formData);
 
-    // Assert
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors[0].message).toBe(
@@ -104,27 +110,23 @@ describe('addPlayer Functionality Tests', () => {
   });
 
   it('should return validation errors when username is missing', async () => {
-    // Arrange
     const formData = formDataSetup(
       undefined,
       'SecurePassword@1',
       '+31612345678'
     );
 
-    // Act
     const result = await addPlayer({}, formData);
 
-    // Assert
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors[0].message).toContain(
-      'Expected string, received null'
+      'Username, password, and WhatsApp number are required.'
     );
-    expect(result.errors[0].path).toContain('username');
+    expect(result.errors[0].path).toContain('form');
   });
 
   it('should return an error when Clerk user creation fails', async () => {
-    // Arrange
     const createUserMock = users.createUser as jest.Mock;
     createUserMock.mockRejectedValue(new Error('Clerk error'));
 
@@ -134,10 +136,8 @@ describe('addPlayer Functionality Tests', () => {
       '+31612345678'
     );
 
-    // Act
     const result = await addPlayer({}, formData);
 
-    // Assert
     expect(result).toEqual({
       errors: [
         {

@@ -1,5 +1,3 @@
-// This component is used to add a match to the database.
-
 'use client';
 
 import React, { useEffect, useState } from 'react';

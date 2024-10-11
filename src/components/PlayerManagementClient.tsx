@@ -1,9 +1,7 @@
-// This component is a client-side implementation of the Player Management feature.
-
 'use client';
 
 import React, { useState } from 'react';
-import { deletePlayer } from '@/app/actions/deletePlayer';
+import deletePlayer from '@/app/actions/deletePlayer';
 import { Spinner } from '@nextui-org/spinner';
 import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/components/EditPlayerForm';
@@ -40,7 +38,7 @@ export default function PlayerManagementClient({
           prevPlayers.filter((player) => player.id !== playerId)
         );
       } else {
-        setModalBody(<p className="text-red-500">{response.error}</p>);
+        setModalBody(<p className="text-red-500">{response.errors}</p>);
       }
       setSubmitting(false);
       setIsModalOpen(false);

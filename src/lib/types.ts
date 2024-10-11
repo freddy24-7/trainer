@@ -1,46 +1,44 @@
-// This file contains all the types and interfaces that are used in the application.
-
 import { CalendarDate } from '@nextui-org/react';
 import { ReactNode } from 'react';
 import { ZodIssue } from 'zod';
 
-export type UserData = {
+export interface UserData {
   clerkId: string;
   username: string;
   role: string;
-};
+}
 
-export type Team = {
+export interface Team {
   id: number;
   name: string;
-};
+}
 
-export type PouleOpponent = {
+export interface PouleOpponent {
   id: number;
   team: Team;
-};
+}
 
-export type Poule = {
+export interface Poule {
   id: number;
   pouleName: string;
   teams: Team[];
   opponents: PouleOpponent[];
-};
+}
 
-export type Player = {
+export interface Player {
   id: number;
   username: string;
   whatsappNumber: string;
-};
+}
 
-export type DashboardClientProps = {
+export interface DashboardClientProps {
   signedInUser: SignedInUser;
-};
+}
 
-export type DateSelectorProps = {
+export interface DateSelectorProps {
   matchDate: CalendarDate | null;
   onDateChange: (date: CalendarDate | null) => void;
-};
+}
 
 export interface EditPlayerFormProps {
   playerId: number;
@@ -56,65 +54,65 @@ export interface EditPlayerFormProps {
   onAbort: () => void;
 }
 
-export type OpponentSelectorProps = {
+export interface OpponentSelectorProps {
   opponents: PouleOpponent[];
   selectedOpponent: PouleOpponent | null;
   onOpponentChange: (opponentId: number) => void;
-};
+}
 
-export type PlayerFormData = {
+export interface PlayerFormData {
   username: string;
   password: string;
   whatsappNumber: string;
-};
+}
 
-export type PlayerFormProps = {
+export interface PlayerFormProps {
   initialData?: PlayerFormData;
   onSubmit: (data: PlayerFormData) => Promise<void>;
   onSubmissionStart: () => void;
   onAbort: () => void;
   submitButtonText: string;
-};
+}
 
-export type PlayerInputProps = {
+export interface PlayerInputProps {
   player: Player;
   minutes: number;
   available: boolean;
   onMinutesChange: (playerId: number, minutes: string) => void;
   onAvailabilityChange: (playerId: number, available: boolean) => void;
-};
+}
 
-export type PlayerListProps = {
+export interface PlayerListProps {
   players: Player[];
   playerMinutes: { [key: number]: number };
   playerAvailability: { [key: number]: boolean };
   onMinutesChange: (playerId: number, minutes: string) => void;
   onAvailabilityChange: (playerId: number, available: boolean) => void;
-};
+}
 
-export type PlayerManagementClientProps = {
+export interface PlayerManagementClientProps {
   players: Player[];
-};
+}
 
-export type PlayersListProps = {
+export interface PlayersListProps {
   players: Player[];
   onEdit: (player: Player) => void;
   onDelete: (playerId: number) => void;
-};
+}
 
-export type PouleManagementClientProps = {
+export interface PouleManagementClientProps {
   poules: Poule[];
   onToggleForm?: () => void;
   showAddPouleForm?: boolean;
-};
+}
 
-export type PouleSelectorProps = {
+export interface PouleSelectorProps {
   poules: Poule[];
   selectedPoule: Poule | null;
   onPouleChange: (pouleId: number) => void;
-};
+}
 
-export type ReusableModalProps = {
+export interface ReusableModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
@@ -123,86 +121,86 @@ export type ReusableModalProps = {
   confirmAction?: () => void;
   cancelLabel?: string;
   cancelAction?: () => void;
-};
+}
 
-export type TeamsListProps = {
+export interface TeamsListProps {
   teams: Team[];
   pouleName: string;
-};
+}
 
-export type FormValues = {
+export interface FormValues {
   poule: number | undefined;
   opponent: number | undefined;
   date: CalendarDate | null;
   players: { id: number; minutes: number | ''; available: boolean }[];
-};
+}
 
-export type PouleFormValues = {
+export interface PouleFormValues {
   pouleName: string;
   mainTeamName: string;
   opponents: string[];
   opponentName: string;
-};
+}
 
-export type PlayerStat = {
+export interface PlayerStat {
   id: number;
   username: string | null;
   matchesPlayed: number;
   averagePlayingTime: number;
   absences: number;
-};
+}
 
-export type MatchClientProps = {
+export interface MatchClientProps {
   playerStats: PlayerStat[];
-};
+}
 
-export type MatchData = {
+export interface MatchData {
   id: number;
   date: Date;
   opponentTeamName: string;
   absentPlayers: string[];
-};
+}
 
-export type OpponentClientProps = {
+export interface OpponentClientProps {
   matchData: MatchData[];
-};
+}
 
-export type NavLinkProps = {
+export interface NavLinkProps {
   href: string;
   label?: string;
   children?: ReactNode;
   className?: string;
-};
+}
 
-export type NavBarClientProps = {
+export interface NavBarClientProps {
   userId: string | null;
   userRole: string | null;
-};
+}
 
-export type TrainingFormValues = {
+export interface TrainingFormValues {
   date: CalendarDate | null;
   players: { userId: number; absent: boolean }[];
-};
+}
 
-export type PlayerAttendance = {
+export interface PlayerAttendance {
   playerId: number;
   username: string;
   absences: number;
-};
+}
 
-export type TrainingAttendanceClientProps = {
+export interface TrainingAttendanceClientProps {
   attendanceList: PlayerAttendance[];
-};
+}
 
-export type TrainingData = {
+export interface TrainingData {
   id: number;
   date: string;
   absentPlayers: string[];
-};
+}
 
-export type TrainingClientProps = {
+export interface TrainingClientProps {
   trainingData: TrainingData[];
-};
+}
 
 export type GetTrainingDataResponse =
   | { success: true; trainingData: TrainingData[] }
@@ -212,13 +210,13 @@ export type GetTrainingAttendanceListResponse =
   | { success: true; attendanceList: PlayerAttendance[] }
   | { success: false; error: string };
 
-export type PlayerMatchStat = {
+export interface PlayerMatchStat {
   id: number;
   username: string | null;
   matchesPlayed: number;
   averagePlayingTime: number;
   absences: number;
-};
+}
 
 export type GetPlayerMatchStatsResponse =
   | { success: true; playerStats: PlayerMatchStat[] }
@@ -228,32 +226,44 @@ export type GetMatchDataResponse =
   | { success: true; matchData: MatchData[] }
   | { success: false; error: string };
 
-export type Sender = {
+export interface Sender {
   id: number;
   username: string;
-};
+}
 
-export type Message = {
+export interface Message {
   id: number;
   content: string;
   sender: Sender;
   createdAt: Date;
-};
+}
 
-export type PusherEventMessage = {
+export interface PusherEventMessage {
   id: number;
   content: string;
   sender: Sender;
   createdAt: string;
-};
+}
 
-export type SignedInUser = {
+export interface SignedInUser {
   id: string;
   username: string;
   role?: string;
-};
+}
 
-export type ActionResponse = {
+export interface ActionResponse {
   success: boolean;
   errors?: ZodIssue[];
-};
+}
+
+export interface PlayerResponse {
+  id: string;
+  username?: string;
+  whatsappNumber?: string;
+}
+
+export interface PlayerResponseData {
+  success: boolean;
+  players?: PlayerResponse[];
+  errors?: any[];
+}

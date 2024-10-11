@@ -1,6 +1,7 @@
-import { getPlayers } from '@/app/actions/getPlayers';
+import getPlayers from '@/app/actions/getPlayers';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { formatError } from '@/utils/errorUtils';
 
 jest.mock('@/lib/prisma', () => ({
   user: {
@@ -12,53 +13,50 @@ jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
 }));
 
+jest.mock('@/utils/errorUtils', () => ({
+  formatError: jest.fn().mockReturnValue({
+    errors: [{ message: 'Error fetching players.' }],
+  }),
+}));
+
 describe('getPlayers', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('should return players successfully', async () => {
-    // Arrange
     const mockPlayers = [
-      { id: 1, username: 'player1' },
-      { id: 2, username: 'player2' },
+      { id: 1, username: 'player1', whatsappNumber: '1234567890' },
+      { id: 2, username: 'player2', whatsappNumber: '0987654321' },
     ];
     (prisma.user.findMany as jest.Mock).mockResolvedValue(mockPlayers);
 
-    // Act
     const result = await getPlayers();
 
-    // Assert
     expect(result).toEqual({ success: true, players: mockPlayers });
     expect(revalidatePath).toHaveBeenCalledWith('/player/management');
   });
 
   it('should return an empty list if no players are found', async () => {
-    // Arrange
     (prisma.user.findMany as jest.Mock).mockResolvedValue([]);
 
-    // Act
     const result = await getPlayers();
 
-    // Assert
     expect(result).toEqual({ success: true, players: [] });
     expect(revalidatePath).toHaveBeenCalledWith('/player/management');
   });
 
   it('should handle errors when fetching players', async () => {
-    // Arrange
     (prisma.user.findMany as jest.Mock).mockRejectedValue(
       new Error('Database error')
     );
 
-    // Act
     const result = await getPlayers();
 
-    // Assert
     expect(result).toEqual({
-      success: false,
-      error: 'Error fetching players.',
+      errors: [{ message: 'Error fetching players.' }],
     });
     expect(revalidatePath).not.toHaveBeenCalled();
+    expect(formatError).toHaveBeenCalledWith('Error fetching players.');
   });
 });
