@@ -33,8 +33,11 @@ function PlayerForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-brandcolor">Username</label>
+        <label htmlFor="username" className="block text-brandcolor">
+          Username
+        </label>
         <input
+          id="username"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -44,8 +47,11 @@ function PlayerForm({
       </div>
 
       <div>
-        <label className="block text-brandcolor">Password</label>
+        <label htmlFor="password" className="block text-brandcolor">
+          Password
+        </label>
         <input
+          id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -55,8 +61,11 @@ function PlayerForm({
       </div>
 
       <div>
-        <label className="block text-brandcolor">WhatsApp Number</label>
+        <label htmlFor="whatsappNumber" className="block text-brandcolor">
+          WhatsApp Number
+        </label>
         <input
+          id="whatsappNumber"
           type="tel"
           value={whatsappNumber}
           onChange={(e) => setWhatsappNumber(e.target.value)}
