@@ -8,6 +8,7 @@ import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 import { ZodIssue } from 'zod';
 import { PlayerFormData } from '@/lib/types';
 import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
+import { handleSubmissionState } from '@/utils/submissionUtils';
 
 function AddPlayerForm({
   action,
@@ -22,6 +23,12 @@ function AddPlayerForm({
   const [playerData, setPlayerData] = useState<PlayerFormData | null>(null);
 
   const handleAddPlayer = async (data: PlayerFormData) => {
+    const resetSubmission = handleSubmissionState(
+      setIsSubmitting,
+      () => console.log('Submission started...'),
+      () => setIsSubmitting(false)
+    );
+
     await handlePlayerFormSubmit({
       data,
       setIsSubmitting,
@@ -32,6 +39,8 @@ function AddPlayerForm({
         setFormKey((prevKey) => prevKey + 1);
       },
     });
+
+    resetSubmission();
   };
 
   return (

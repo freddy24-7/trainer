@@ -6,6 +6,9 @@ import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/components/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
 import { PlayerManagementClientProps, Player } from '@/lib/types';
+import { handleDeletePlayer } from '@/components/helpers/deletePlayer';
+import { setupModal } from '@/utils/modalUtils';
+import { handleSubmissionState } from '@/utils/submissionUtils';
 
 export default function PlayerManagementClient({
   players: initialPlayers,
@@ -21,38 +24,32 @@ export default function PlayerManagementClient({
   const [modalBody, setModalBody] = useState<React.ReactNode>(null);
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
   const [editPlayerData, setEditPlayerData] = useState<Player | null>(null);
-
   const [players, setPlayers] = useState<Player[]>(initialPlayers);
 
-  const handleDeletePlayer = (playerId: number) => {
-    setModalTitle('Confirm Deletion');
-    setModalBody(
-      <p>
-        Are you sure you want to delete this player? Players with already
-        registered data (minutes played) cannot be deleted.
-      </p>
-    );
-    setConfirmAction(() => async () => {
-      setSubmitting(true);
-      const response = await deletePlayerAction(playerId);
-      if (response.success) {
-        setModalBody(<p>Player deleted successfully!</p>);
-        setPlayers((prevPlayers) =>
-          prevPlayers.filter((player) => player.id !== playerId)
-        );
-      } else {
-        setModalBody(<p className="text-red-500">{response.errors}</p>);
-      }
-      setSubmitting(false);
-      setIsModalOpen(false);
+  const handleDeletePlayerClick = async (playerId: number) => {
+    await handleDeletePlayer({
+      playerId,
+      setModalTitle,
+      setModalBody,
+      setConfirmAction,
+      setSubmitting,
+      setPlayers,
+      deletePlayerAction,
+      setIsModalOpen,
     });
-    setIsModalOpen(true);
   };
 
-  const handleEditPlayer = (player: Player) => {
+  const handleEditPlayerClick = (player: Player) => {
     setEditPlayerData(player);
-    setModalTitle('Edit Player');
-    setIsModalOpen(true);
+    setupModal({
+      setModalTitle,
+      setModalBody,
+      setConfirmAction,
+      setIsModalOpen,
+      title: 'Edit Player',
+      body: null,
+      confirmAction: () => {},
+    });
   };
 
   const handlePlayerEdited = (updatedPlayer: Player) => {
@@ -83,8 +80,8 @@ export default function PlayerManagementClient({
 
       <PlayersList
         players={players}
-        onEdit={handleEditPlayer}
-        onDelete={handleDeletePlayer}
+        onEdit={handleEditPlayerClick}
+        onDelete={handleDeletePlayerClick}
       />
 
       <ReusableModal
@@ -98,8 +95,12 @@ export default function PlayerManagementClient({
               initialUsername={editPlayerData.username}
               initialWhatsappNumber={editPlayerData.whatsappNumber}
               onPlayerEdited={handlePlayerEdited}
-              onSubmissionStart={() => setSubmitting(true)}
-              onAbort={() => setSubmitting(false)}
+              onSubmissionStart={() => handleSubmissionState(setSubmitting)}
+              onAbort={() =>
+                handleSubmissionState(setSubmitting, undefined, () =>
+                  setSubmitting(false)
+                )
+              }
               action={editPlayerAction}
               onCloseModal={handleCloseModal}
             />
