@@ -6,12 +6,12 @@ import { Spinner } from '@nextui-org/spinner';
 import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/components/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
-import editPlayer from '@/app/actions/editPlayer';
 import { PlayerManagementClientProps, Player } from '@/lib/types';
 
 export default function PlayerManagementClient({
   players: initialPlayers,
-}: PlayerManagementClientProps) {
+  editPlayerAction,
+}: PlayerManagementClientProps & { editPlayerAction: any }) {
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -97,7 +97,7 @@ export default function PlayerManagementClient({
               onPlayerEdited={handlePlayerEdited}
               onSubmissionStart={() => setSubmitting(true)}
               onAbort={() => setSubmitting(false)}
-              action={editPlayer}
+              action={editPlayerAction}
               onCloseModal={handleCloseModal}
             />
           ) : (
