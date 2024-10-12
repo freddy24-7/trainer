@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import deletePlayer from '@/app/actions/deletePlayer';
 import { Spinner } from '@nextui-org/spinner';
 import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/components/EditPlayerForm';
@@ -11,7 +10,11 @@ import { PlayerManagementClientProps, Player } from '@/lib/types';
 export default function PlayerManagementClient({
   players: initialPlayers,
   editPlayerAction,
-}: PlayerManagementClientProps & { editPlayerAction: any }) {
+  deletePlayerAction,
+}: PlayerManagementClientProps & {
+  editPlayerAction: any;
+  deletePlayerAction: any;
+}) {
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -31,7 +34,7 @@ export default function PlayerManagementClient({
     );
     setConfirmAction(() => async () => {
       setSubmitting(true);
-      const response = await deletePlayer(playerId);
+      const response = await deletePlayerAction(playerId);
       if (response.success) {
         setModalBody(<p>Player deleted successfully!</p>);
         setPlayers((prevPlayers) =>
