@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { AddPlayerForm } from '@/components/AddPlayerForm';
+import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
 import { toast } from 'react-toastify';
 
 jest.mock('react-toastify', () => ({

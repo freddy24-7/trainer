@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import PlayerForm from './PlayerForm';
+import PlayerForm from '../../components/PlayerForm';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { validatePlayerData } from '@/schemas/validation/createPlayerValidation';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';

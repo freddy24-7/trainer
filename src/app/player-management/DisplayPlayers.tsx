@@ -3,14 +3,15 @@
 import React, { useState } from 'react';
 import { Spinner } from '@nextui-org/spinner';
 import ReusableModal from '@/components/ReusableModal';
-import { EditPlayerForm } from '@/components/EditPlayerForm';
+import { EditPlayerForm } from '@/app/player-management/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
 import { PlayerManagementClientProps, Player } from '@/lib/types';
 import { handleDeletePlayer } from '@/components/helpers/deletePlayer';
 import { setupModal } from '@/utils/modalUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
+import { updatePlayerList } from '@/utils/playerUtils';
 
-export default function PlayerManagementClient({
+export default function DisplayPlayers({
   players: initialPlayers,
   editPlayerAction,
   deletePlayerAction,
@@ -53,12 +54,7 @@ export default function PlayerManagementClient({
   };
 
   const handlePlayerEdited = (updatedPlayer: Player) => {
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((player) =>
-        player.id === updatedPlayer.id ? updatedPlayer : player
-      )
-    );
-    setSubmitting(false);
+    updatePlayerList(updatedPlayer, setPlayers, setSubmitting); // Use the outsourced function
   };
 
   const handleCloseModal = () => {
