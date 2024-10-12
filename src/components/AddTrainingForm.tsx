@@ -1,5 +1,3 @@
-// This component is responsible for adding a new training session and managing player attendance.
-
 'use client';
 
 import React from 'react';

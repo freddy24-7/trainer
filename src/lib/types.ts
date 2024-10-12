@@ -40,20 +40,6 @@ export interface DateSelectorProps {
   onDateChange: (date: CalendarDate | null) => void;
 }
 
-export interface EditPlayerFormProps {
-  playerId: number;
-  initialUsername: string;
-  initialWhatsappNumber: string;
-  onPlayerEdited: (player: {
-    id: number;
-    username: string;
-    whatsappNumber: string;
-    whatsappLink?: string;
-  }) => void;
-  onSubmissionStart: () => void;
-  onAbort: () => void;
-}
-
 export interface OpponentSelectorProps {
   opponents: PouleOpponent[];
   selectedOpponent: PouleOpponent | null;
@@ -266,4 +252,10 @@ export interface PlayerResponseData {
   success: boolean;
   players?: PlayerResponse[];
   errors?: any[];
+}
+
+export interface PlayerFormData {
+  username: string;
+  password: string;
+  whatsappNumber: string;
 }

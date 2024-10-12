@@ -1,5 +1,3 @@
-// This component displays a list of player data
-
 import React from 'react';
 import { Button, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
 import { PlayersListProps, Player } from '@/lib/types';

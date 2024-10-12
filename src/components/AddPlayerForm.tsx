@@ -1,80 +1,37 @@
 'use client';
 
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
 import PlayerForm from './PlayerForm';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { validatePlayerData } from '@/schemas/validation/createPlayerValidation';
-import { formatWhatsappNumber } from '@/utils/phoneNumberUtils';
+import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 import { ZodIssue } from 'zod';
-import { formatError } from '@/utils/errorUtils';
+import { PlayerFormData } from '@/lib/types';
 import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 
-type Props = {
+function AddPlayerForm({
+  action,
+}: {
   action: (
     _prevState: any,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
-};
-
-function AddPlayerForm({ action }: Props) {
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formKey, setFormKey] = useState(0);
-  const [playerData, setPlayerData] = useState<{
-    username: string;
-    password: string;
-    whatsappNumber: string;
-  } | null>(null);
+  const [playerData, setPlayerData] = useState<PlayerFormData | null>(null);
 
-  const handleAddPlayer = async (data: {
-    username: string;
-    password: string;
-    whatsappNumber: string;
-  }) => {
-    setIsSubmitting(true);
-
-    const formattedNumber = formatWhatsappNumber(data.whatsappNumber);
-    if (!formattedNumber) {
-      const error = formatError(
-        "WhatsApp number must start with '06' and be exactly 10 digits long."
-      );
-      toast.error(error.errors[0].message);
-      setIsSubmitting(false);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('username', data.username);
-    formData.append('password', data.password);
-    formData.append('whatsappNumber', formattedNumber);
-
-    const validation = validatePlayerData(formData);
-
-    if (!validation.success) {
-      const error = formatError(
-        validation.errors?.map((err) => err.message).join(', ') ||
-          'Invalid input.'
-      );
-      toast.error(error.errors[0].message);
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const response = await action({}, formData);
-      if (response.errors.length === 0) {
-        setPlayerData({ ...data, whatsappNumber: formattedNumber });
-        toast.success('Player added successfully!');
+  const handleAddPlayer = async (data: PlayerFormData) => {
+    await handlePlayerFormSubmit({
+      data,
+      setIsSubmitting,
+      validationFunction: validatePlayerData,
+      actionFunction: (formData) => action({}, formData),
+      onSuccess: (playerData) => {
+        setPlayerData(playerData);
         setFormKey((prevKey) => prevKey + 1);
-      } else {
-        const error = formatError(
-          response.errors.map((error) => error.message).join(', ')
-        );
-        toast.error(error.errors[0].message);
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
+      },
+    });
   };
 
   return (

@@ -1,124 +1,115 @@
-// This component is responsible for rendering a form to edit a player.
-
 'use client';
 
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import PlayerForm from './PlayerForm';
 import { ZodIssue } from 'zod';
-import { EditPlayerFormProps } from '@/lib/types';
+import { PlayerFormData } from '@/lib/types';
+import PlayerForm from './PlayerForm';
+import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import { validateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
+import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
+import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 
-type Props = EditPlayerFormProps & {
+interface EditPlayerFormProps {
+  playerId: number;
   action: (
     playerId: number,
     params: FormData
-  ) => Promise<{ errors: ZodIssue[]; success?: boolean }>;
+  ) => Promise<{ errors: ZodIssue[] }>;
+  initialUsername: string;
+  initialWhatsappNumber: string;
+  onPlayerEdited: (updatedPlayer: {
+    id: number;
+    username: string;
+    whatsappNumber: string;
+    whatsappLink: string;
+  }) => void;
+  onSubmissionStart?: () => void;
+  onAbort?: () => void;
   onCloseModal: () => void;
-};
+}
 
 function EditPlayerForm({
   playerId,
   initialUsername,
   initialWhatsappNumber,
+  action,
   onPlayerEdited,
   onSubmissionStart,
   onAbort,
-  action,
-}: Props) {
+}: EditPlayerFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [playerData, setPlayerData] = useState<{
-    username: string;
-    password: string;
-    whatsappNumber: string;
-  } | null>(null);
+  const [formKey, setFormKey] = useState(0);
+  const [playerData, setPlayerData] = useState<PlayerFormData | null>(null);
 
-  const formatToDisplay = (number: string) => {
-    if (number.startsWith('+316')) {
-      return number.replace('+316', '06');
+  const handleEditPlayer = async (data: PlayerFormData) => {
+    if (onSubmissionStart) {
+      onSubmissionStart();
     }
-    return number;
-  };
+    await handlePlayerFormSubmit({
+      data,
+      setIsSubmitting,
+      validationFunction: validateEditPlayerData,
+      actionFunction: (formData) => action(playerId, formData),
+      onSuccess: (playerData) => {
+        setPlayerData(playerData);
+        setFormKey((prevKey) => prevKey + 1);
 
-  const formatForSaving = (number: string) => {
-    if (number.startsWith('06')) {
-      return number.replace('06', '+316');
-    }
-    return number;
-  };
-
-  const handleEditPlayer = async (data: {
-    username: string;
-    password: string;
-    whatsappNumber: string;
-  }) => {
-    setIsSubmitting(true);
-    onSubmissionStart();
-
-    const formattedNumber = formatForSaving(data.whatsappNumber);
-
-    const formData = new FormData();
-    formData.append('username', data.username);
-    formData.append('password', data.password);
-    formData.append('whatsappNumber', formattedNumber);
-
-    try {
-      const response = await action(playerId, formData);
-      if (response.errors.length === 0) {
         const updatedPlayer = {
           id: playerId,
           username: data.username,
-          whatsappNumber: formattedNumber,
-          whatsappLink: `https://wa.me/${formattedNumber.replace(/\D/g, '')}`,
+          whatsappNumber: playerData.whatsappNumber,
+          whatsappLink: `https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}`,
         };
-        setPlayerData({ ...data, whatsappNumber: formattedNumber });
-
         onPlayerEdited(updatedPlayer);
-        toast.success('Player updated successfully!');
-      } else {
-        const errorMessages = response.errors
-          .map((error) => error.message)
-          .join(', ');
-        toast.error(`Validation errors: ${errorMessages}`);
-      }
-    } catch (error) {
-      toast.error('An unexpected error occurred.');
-    } finally {
-      setIsSubmitting(false);
-    }
+      },
+    });
   };
 
   return (
-    <div>
-      {!playerData ? (
-        <PlayerForm
-          initialData={{
-            username: initialUsername,
-            password: '',
-            whatsappNumber: formatToDisplay(initialWhatsappNumber),
-          }}
-          onSubmit={handleEditPlayer}
-          onSubmissionStart={onSubmissionStart}
-          onAbort={onAbort}
-          submitButtonText={isSubmitting ? 'Updating...' : 'Update Player'}
-        />
-      ) : (
-        <div>
-          <p className="text-green-600">Player updated successfully!</p>
-          <a
-            href={`https://wa.me/${playerData.whatsappNumber.replace(
-              /\D/g,
-              ''
-            )}/?text=${encodeURIComponent(
-              `Hello ${playerData.username}, your account has been updated. Username: ${playerData.username}, Password: ${playerData.password}. Please log in and change your password to your own.`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 bg-green-500 text-white p-2 rounded-lg inline-block"
-          >
-            Send WhatsApp Message to Player
-          </a>
-        </div>
-      )}
+    <div className="max-w-md mx-auto mt-10">
+      <Card>
+        <CardHeader>
+          <h3 className="text-lg font-semibold">Edit Player</h3>
+        </CardHeader>
+        <CardBody>
+          <PlayerForm
+            key={formKey}
+            initialData={{
+              username: initialUsername,
+              password: '',
+              whatsappNumber: initialWhatsappNumber,
+            }}
+            onSubmit={handleEditPlayer}
+            onSubmissionStart={() => {
+              setIsSubmitting(true);
+              if (onSubmissionStart) {
+                onSubmissionStart();
+              }
+            }}
+            onAbort={() => {
+              setIsSubmitting(false);
+              if (onAbort) {
+                onAbort();
+              }
+            }}
+            submitButtonText={isSubmitting ? 'Updating...' : 'Update Player'}
+          />
+          {/* Display WhatsApp button after successful submission */}
+          {playerData?.whatsappNumber && (
+            <a
+              href={`https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}/?text=${encodeURIComponent(
+                `Hello ${playerData.username}, your account has been updated. Username: ${playerData.username}, Password: ${playerData.password}. Please log in and change your password to your own.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 bg-green-500 text-white p-2 rounded-lg"
+              onClick={() => handleWhatsAppClick()}
+            >
+              Send WhatsApp Message to Player
+            </a>
+          )}
+        </CardBody>
+      </Card>
     </div>
   );
 }

@@ -1,5 +1,3 @@
-// This component is used to display match details.
-
 import React from 'react';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { format } from 'date-fns';
