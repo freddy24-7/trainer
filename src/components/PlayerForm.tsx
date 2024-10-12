@@ -1,7 +1,6 @@
-// This component is a form editing or adding a player.
-
-import React, { useState } from 'react';
+import React from 'react';
 import { PlayerFormProps } from '@/lib/types';
+import { usePlayerFormState } from '@/hooks/usePlayerFormState';
 
 function PlayerForm({
   initialData,
@@ -9,17 +8,15 @@ function PlayerForm({
   onSubmissionStart,
   submitButtonText,
 }: PlayerFormProps) {
-  const formatToDisplay = (number: string) => {
-    if (number.startsWith('+316')) {
-      return number.replace('+316', '06');
-    }
-    return number;
-  };
-
-  const [username, setUsername] = useState(initialData?.username || '');
-  const [password, setPassword] = useState(initialData?.password || '');
-  const [whatsappNumber, setWhatsappNumber] = useState(
-    formatToDisplay(initialData?.whatsappNumber || '')
+  const {
+    username,
+    setUsername,
+    password,
+    setPassword,
+    whatsappNumber,
+    setWhatsappNumber,
+  } = usePlayerFormState(
+    initialData ?? { username: '', password: '', whatsappNumber: '' }
   );
 
   const handleSubmit = async (e: React.FormEvent) => {

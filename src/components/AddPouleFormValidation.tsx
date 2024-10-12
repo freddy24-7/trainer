@@ -1,5 +1,3 @@
-// This component is used to add a new poule to the system.
-
 'use client';
 
 import React, { useState } from 'react';

@@ -4,7 +4,11 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import PlayerForm from './PlayerForm';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import { validatePlayerData } from '@/schemas/validation/createPlayerValidation';
+import { formatWhatsappNumber } from '@/utils/phoneNumberUtils';
 import { ZodIssue } from 'zod';
+import { formatError } from '@/utils/errorUtils';
+import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 
 type Props = {
   action: (
@@ -13,29 +17,14 @@ type Props = {
   ) => Promise<{ errors: ZodIssue[] }>;
 };
 
-function AddPlayerFormValidation({ action }: Props) {
+function AddPlayerForm({ action }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formKey, setFormKey] = useState(0);
   const [playerData, setPlayerData] = useState<{
     username: string;
     password: string;
     whatsappNumber: string;
-  }>({
-    username: '',
-    password: '',
-    whatsappNumber: '',
-  });
-  const [formKey, setFormKey] = useState(0);
-
-  const formatWhatsappNumber = (number: string) => {
-    const isValid = /^06\d{8}$/.test(number);
-    if (!isValid) {
-      toast.error(
-        "WhatsApp number must start with '06' and be exactly 10 digits long."
-      );
-      return null;
-    }
-    return number.replace(/^06/, '+316');
-  };
+  } | null>(null);
 
   const handleAddPlayer = async (data: {
     username: string;
@@ -46,6 +35,10 @@ function AddPlayerFormValidation({ action }: Props) {
 
     const formattedNumber = formatWhatsappNumber(data.whatsappNumber);
     if (!formattedNumber) {
+      const error = formatError(
+        "WhatsApp number must start with '06' and be exactly 10 digits long."
+      );
+      toast.error(error.errors[0].message);
       setIsSubmitting(false);
       return;
     }
@@ -55,6 +48,18 @@ function AddPlayerFormValidation({ action }: Props) {
     formData.append('password', data.password);
     formData.append('whatsappNumber', formattedNumber);
 
+    const validation = validatePlayerData(formData);
+
+    if (!validation.success) {
+      const error = formatError(
+        validation.errors?.map((err) => err.message).join(', ') ||
+          'Invalid input.'
+      );
+      toast.error(error.errors[0].message);
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await action({}, formData);
       if (response.errors.length === 0) {
@@ -62,20 +67,14 @@ function AddPlayerFormValidation({ action }: Props) {
         toast.success('Player added successfully!');
         setFormKey((prevKey) => prevKey + 1);
       } else {
-        const errorMessages = response.errors
-          .map((error) => error.message)
-          .join(', ');
-        toast.error(`Validation errors: ${errorMessages}`);
+        const error = formatError(
+          response.errors.map((error) => error.message).join(', ')
+        );
+        toast.error(error.errors[0].message);
       }
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleWhatsappClick = () => {
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
   };
 
   return (
@@ -93,18 +92,15 @@ function AddPlayerFormValidation({ action }: Props) {
             onAbort={() => setIsSubmitting(false)}
             submitButtonText={isSubmitting ? 'Submitting...' : 'Add Player'}
           />
-          {playerData.whatsappNumber && (
+          {playerData?.whatsappNumber && (
             <a
-              href={`https://wa.me/${playerData.whatsappNumber.replace(
-                /\D/g,
-                ''
-              )}/?text=${encodeURIComponent(
+              href={`https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}/?text=${encodeURIComponent(
                 `Hello ${playerData.username}, your account has been created. Username: ${playerData.username}, Password: ${playerData.password}. Please log in and change your password to your own.`
               )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 bg-green-500 text-white p-2 rounded-lg"
-              onClick={handleWhatsappClick}
+              onClick={() => handleWhatsAppClick()}
             >
               Send WhatsApp Message to Player
             </a>
@@ -115,4 +111,4 @@ function AddPlayerFormValidation({ action }: Props) {
   );
 }
 
-export { AddPlayerFormValidation };
+export { AddPlayerForm };

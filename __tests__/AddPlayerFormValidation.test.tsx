@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { AddPlayerFormValidation } from '@/components/AddPlayerFormValidation';
+import { AddPlayerForm } from '@/components/AddPlayerForm';
 import { toast } from 'react-toastify';
 
 jest.mock('react-toastify', () => ({
@@ -85,7 +85,7 @@ describe('AddPlayerFormValidation', () => {
   };
 
   it('renders the form with username, password, and WhatsApp inputs', () => {
-    render(<AddPlayerFormValidation action={mockAction} />);
+    render(<AddPlayerForm action={mockAction} />);
 
     expect(screen.getByText('Player Management')).toBeInTheDocument();
     expect(screen.getByTestId('username-input')).toBeInTheDocument();
@@ -96,7 +96,7 @@ describe('AddPlayerFormValidation', () => {
 
   it('calls action with correct data when form is submitted', async () => {
     mockAction.mockResolvedValue({ errors: [] });
-    render(<AddPlayerFormValidation action={mockAction} />);
+    render(<AddPlayerForm action={mockAction} />);
 
     // Arrange
     fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
@@ -117,7 +117,7 @@ describe('AddPlayerFormValidation', () => {
 
   it('shows success toast when player is added successfully', async () => {
     mockAction.mockResolvedValue({ errors: [] });
-    render(<AddPlayerFormValidation action={mockAction} />);
+    render(<AddPlayerForm action={mockAction} />);
 
     // Arrange
     fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
@@ -134,7 +134,7 @@ describe('AddPlayerFormValidation', () => {
 
   it('should format and display the WhatsApp link when valid data is submitted', async () => {
     mockAction.mockResolvedValue({ errors: [] });
-    render(<AddPlayerFormValidation action={mockAction} />);
+    render(<AddPlayerForm action={mockAction} />);
 
     // Arrange
     fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
