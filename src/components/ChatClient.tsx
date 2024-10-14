@@ -7,7 +7,7 @@ import {
   PusherEventMessage,
   SignedInUser,
   ActionResponse,
-} from '@/lib/types';
+} from '@/types/type-list';
 import { toast } from 'react-toastify';
 import Pusher from 'pusher-js';
 

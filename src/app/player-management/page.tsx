@@ -8,7 +8,7 @@ import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
 import { validatePlayerResponse } from '@/utils/responseUtils';
 import { mapPlayers } from '@/utils/playerUtils';
 import { renderError } from '@/components/helpers/RenderError';
-import { Player } from '@/lib/types';
+import { Player } from '@/types/type-list';
 
 export default async function ManagementPage() {
   const response = await getPlayers();

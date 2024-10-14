@@ -1,4 +1,4 @@
-import { PlayerResponseData } from '@/lib/types';
+import { PlayerResponseData } from '@/types/type-list';
 
 export function validatePlayerResponse(response: any): PlayerResponseData {
   return {

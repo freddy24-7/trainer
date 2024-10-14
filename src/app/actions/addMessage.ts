@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import pusher from '@/lib/pusher';
 import { createMessageSchema } from '@/schemas/messageSchema';
 import { ZodIssue } from 'zod';
-import { ActionResponse } from '@/lib/types';
+import { ActionResponse } from '@/types/type-list';
 
 export default async function addMessage(
   _prevState: any,

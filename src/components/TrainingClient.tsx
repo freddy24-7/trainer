@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrainingClientProps } from '@/lib/types';
+import { TrainingClientProps } from '@/types/type-list';
 
 const TrainingClient: React.FC<TrainingClientProps> = ({ trainingData }) => {
   return (

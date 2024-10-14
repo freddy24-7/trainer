@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import type { ZodIssue } from 'zod';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-import { PouleFormValues } from '@/lib/types';
+import { PouleFormValues } from '@/types/type-list';
 
 type Props = {
   action: (

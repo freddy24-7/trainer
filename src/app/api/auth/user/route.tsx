@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs';
 import prisma from '@/lib/prisma';
 import { UserSchema } from '@/schemas/userSchema';
-import { UserData } from '@/lib/types';
+import { UserData } from '@/types/type-list';
 
 function redirectToSignIn(): NextResponse {
   return NextResponse.redirect('/sign-in');

@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { GetTrainingDataResponse, TrainingData } from '@/lib/types';
+import { GetTrainingDataResponse, TrainingData } from '@/types/type-list';
 
 export async function getTrainingData(): Promise<GetTrainingDataResponse> {
   try {

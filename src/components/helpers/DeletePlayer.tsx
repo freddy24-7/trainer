@@ -1,5 +1,5 @@
 import React from 'react';
-import { Player } from '@/lib/types';
+import { Player } from '@/types/type-list';
 
 export const handleDeletePlayer = async ({
   playerId,

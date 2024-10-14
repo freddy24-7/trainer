@@ -5,7 +5,7 @@ import { FormProvider } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { Button } from '@/components/ui/button';
-import { Poule, Player, FormValues } from '@/lib/types';
+import { Poule, Player, FormValues } from '@/types/type-list';
 import { ZodIssue } from 'zod';
 import { usePouleState } from '@/hooks/usePouleState';
 import { submitMatchForm } from '@/utils/matchFormUtils';
@@ -20,7 +20,7 @@ import { useMatchFormConfig } from '@/hooks/useMatchFormConfig';
 import PouleField from '@/components/helpers/PouleField';
 import OpponentField from '@/components/helpers/OpponentField';
 import DateField from '@/components/helpers/DateField';
-import PlayersInTeamList from '@/components/PlayersInTeamList';
+import ListPlayersInTeam from '@/app/matches/ListPlayersInTeam';
 
 type Props = {
   poules: Poule[];
@@ -89,7 +89,7 @@ function AddMatchForm({ action, poules, players }: Props) {
               />
 
               {players.length > 0 && (
-                <PlayersInTeamList
+                <ListPlayersInTeam
                   players={players}
                   playerMinutes={getPlayerMinutes(playerValues)}
                   playerAvailability={getPlayerAvailability(playerValues)}

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ZodIssue } from 'zod';
-import { PlayerFormData } from '@/lib/types';
+import { PlayerFormData } from '@/types/type-list';
 import PlayerForm from '../../components/PlayerForm';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { validateEditPlayerData } from '@/schemas/validation/editPlayerValidation';

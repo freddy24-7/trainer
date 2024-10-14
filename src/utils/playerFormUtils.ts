@@ -1,20 +1,7 @@
-import React from 'react';
-import { ZodIssue } from 'zod';
 import { formatWhatsappNumber } from '@/utils/phoneNumberUtils';
 import { formatError } from '@/utils/errorUtils';
 import { toast } from 'react-toastify';
-import { PlayerFormData } from '@/lib/types';
-
-interface HandlePlayerFormSubmitParams {
-  data: PlayerFormData;
-  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
-  validationFunction: (formData: FormData) => {
-    success: boolean;
-    errors?: ZodIssue[];
-  };
-  actionFunction: (formData: FormData) => Promise<{ errors: ZodIssue[] }>;
-  onSuccess: (playerData: PlayerFormData) => void;
-}
+import { HandlePlayerFormSubmitParams } from '@/types/type-list';
 
 export async function handlePlayerFormSubmit({
   data,

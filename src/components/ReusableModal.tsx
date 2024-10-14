@@ -7,7 +7,7 @@ import {
   Button,
 } from '@nextui-org/react';
 import { useCallback } from 'react';
-import { ReusableModalProps } from '@/lib/types';
+import { ReusableModalProps } from '@/types/type-list';
 
 export default function ReusableModal({
   isOpen,

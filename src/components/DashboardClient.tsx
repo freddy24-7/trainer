@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Spinner } from '@nextui-org/spinner';
-import { DashboardClientProps } from '@/lib/types';
+import { DashboardClientProps } from '@/types/type-list';
 
 export default function DashboardClient({
   signedInUser,

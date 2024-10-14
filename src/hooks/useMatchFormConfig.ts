@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { FormValues, Player, Poule } from '@/lib/types';
+import { FormValues, Player, Poule } from '@/types/type-list';
 
 export const useMatchFormConfig = (poules: Poule[], players: Player[]) => {
   return useForm<FormValues>({

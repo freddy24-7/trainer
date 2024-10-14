@@ -1,8 +1,8 @@
 import React from 'react';
-import PlayerInput from './PlayerInput';
-import { PlayerListProps } from '@/lib/types';
+import PlayerInput from '../../components/PlayerInput';
+import { PlayerListProps } from '@/types/type-list';
 
-const PlayersInTeamList: React.FC<PlayerListProps> = ({
+const ListPlayersInTeam: React.FC<PlayerListProps> = ({
   players,
   playerMinutes,
   playerAvailability,
@@ -28,4 +28,4 @@ const PlayersInTeamList: React.FC<PlayerListProps> = ({
   );
 };
 
-export default PlayersInTeamList;
+export default ListPlayersInTeam;

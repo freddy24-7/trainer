@@ -5,7 +5,7 @@ import { Spinner } from '@nextui-org/spinner';
 import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/app/player-management/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
-import { PlayerManagementClientProps, Player } from '@/lib/types';
+import { PlayerManagementClientProps, Player } from '@/types/type-list';
 import { handleDeletePlayer } from '@/components/helpers/DeletePlayer';
 import { setupModal } from '@/utils/modalUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';

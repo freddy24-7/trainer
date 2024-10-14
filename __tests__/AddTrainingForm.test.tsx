@@ -8,7 +8,7 @@ import {
 } from '@testing-library/react';
 import AddTrainingForm from '@/components/AddTrainingForm';
 import { toast } from 'react-toastify';
-import { Player } from '@/lib/types';
+import { Player } from '@/types/type-list';
 
 jest.mock('react-toastify', () => ({
   toast: {

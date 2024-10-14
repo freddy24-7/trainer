@@ -3,7 +3,7 @@ import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import PouleManagementClient from '@/components/PouleManagementClient';
 import addPoule from '@/app/actions/addPoule';
 import { AddPouleFormValidation } from '@/components/AddPouleFormValidation';
-import { Poule } from '@/lib/types';
+import { Poule } from '@/types/type-list';
 
 export default async function PouleManagementPage() {
   const pouleResponse = await getTeamsInPoule();

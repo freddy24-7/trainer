@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-import { MatchClientProps } from '@/lib/types';
+import { MatchClientProps } from '@/types/type-list';
 
 const MatchClient: React.FC<MatchClientProps> = ({ playerStats }) => {
   return (

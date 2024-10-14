@@ -1,5 +1,5 @@
 import { CalendarDate } from '@nextui-org/react';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { ZodIssue } from 'zod';
 import { UseFormSetValue } from 'react-hook-form';
 
@@ -277,3 +277,25 @@ export type PlayersFieldProps = {
   playerValues: FormValues['players'];
   setValue: UseFormSetValue<FormValues>;
 };
+
+export interface MatchPlayerInfo {
+  minutes: number;
+  available: boolean;
+}
+
+export interface MatchPlayer {
+  id: number;
+  username: string;
+  MatchPlayer: MatchPlayerInfo[];
+}
+
+export interface HandlePlayerFormSubmitParams {
+  data: PlayerFormData;
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  validationFunction: (formData: FormData) => {
+    success: boolean;
+    errors?: ZodIssue[];
+  };
+  actionFunction: (formData: FormData) => Promise<{ errors: ZodIssue[] }>;
+  onSuccess: (playerData: PlayerFormData) => void;
+}

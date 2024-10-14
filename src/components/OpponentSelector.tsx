@@ -1,5 +1,5 @@
 import React from 'react';
-import { OpponentSelectorProps } from '@/lib/types';
+import { OpponentSelectorProps } from '@/types/type-list';
 
 export default function OpponentSelector({
   opponents,

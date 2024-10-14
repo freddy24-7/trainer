@@ -6,7 +6,7 @@ import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { validatePlayerData } from '@/schemas/validation/createPlayerValidation';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 import { ZodIssue } from 'zod';
-import { PlayerFormData } from '@/lib/types';
+import { PlayerFormData } from '@/types/type-list';
 import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 
