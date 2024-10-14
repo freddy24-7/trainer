@@ -299,3 +299,18 @@ export interface HandlePlayerFormSubmitParams {
   actionFunction: (formData: FormData) => Promise<{ errors: ZodIssue[] }>;
   onSuccess: (playerData: PlayerFormData) => void;
 }
+
+export interface MatchDataHelper {
+  id: number;
+  date: Date;
+  pouleOpponent: {
+    team: {
+      name: string | null;
+    } | null;
+  };
+  matchPlayers: {
+    user: {
+      username: string | null;
+    };
+  }[];
+}

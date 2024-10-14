@@ -4,6 +4,7 @@ import OpponentClient from '@/components/OpponentClient';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
 import { getMatchData } from '@/app/actions/getMatchData';
 import ProtectedLayout from '@/app/ProtectedLayout';
+import { formatError } from '@/utils/errorUtils';
 
 export default async function MatchStatsPage() {
   const [playerStatsResponse, matchDataResponse] = await Promise.all([
@@ -12,20 +13,28 @@ export default async function MatchStatsPage() {
   ]);
 
   if (!playerStatsResponse.success) {
+    const formattedError = formatError(
+      playerStatsResponse.error || 'Error loading player statistics',
+      ['getPlayerStats']
+    );
     return (
       <ProtectedLayout requiredRole="TRAINER">
         <div className="p-6 bg-red-100 text-red-800">
-          Error loading player statistics: {playerStatsResponse.error}
+          {formattedError.errors[0].message}
         </div>
       </ProtectedLayout>
     );
   }
 
   if (!matchDataResponse.success) {
+    const formattedError = formatError(
+      matchDataResponse.error || 'Error loading match data',
+      ['getMatchData']
+    );
     return (
       <ProtectedLayout requiredRole="TRAINER">
         <div className="p-6 bg-red-100 text-red-800">
-          Error loading match data: {matchDataResponse.error}
+          {formattedError.errors[0].message}
         </div>
       </ProtectedLayout>
     );
