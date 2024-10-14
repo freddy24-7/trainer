@@ -1,5 +1,3 @@
-// This server action is used to add a new training to the database.
-
 'use server';
 
 import prisma from '@/lib/prisma';

@@ -1,5 +1,3 @@
-//This component is a modal that displays a message to the user when they are not logged in.
-
 'use client';
 
 import { useRouter } from 'next/navigation';

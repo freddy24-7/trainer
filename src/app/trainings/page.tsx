@@ -1,9 +1,7 @@
-// This component is displays the training management page.
-
-import ProtectedLayout from '@/app/protected-layout';
+import ProtectedLayout from '@/app/ProtectedLayout';
 import addTraining from '@/app/actions/addTraining';
 import AddTrainingForm from '@/components/AddTrainingForm';
-import { getPlayers } from '@/app/actions/getPlayers';
+import getPlayers from '@/app/actions/getPlayers';
 import { Player } from '@/lib/types';
 
 export default async function TrainingsPage() {
@@ -18,7 +16,7 @@ export default async function TrainingsPage() {
     : [];
 
   if (!playerResponse.success) {
-    return <div>Error loading players: {playerResponse.error}</div>;
+    return <div>Error loading players: {playerResponse.errors}</div>;
   }
 
   return (

@@ -1,5 +1,3 @@
-// This component is used to enable user interaction with the application.
-
 'use client';
 
 import {
@@ -24,7 +22,6 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  // Boilerplate section used for theme change (Icon)
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -35,7 +32,6 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
 
   return (
     <>
-      {/* Mobile Menu Button - Visible on small screens */}
       <div className="md:hidden flex items-center w-min">
         <Button
           variant="bordered"
@@ -60,7 +56,6 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
         </Button>
         {userId ? (
           <div className="flex gap-4 items-center">
-            {/* Management Dropdown for TRAINER role */}
             {userRole === 'TRAINER' && (
               <Dropdown>
                 <DropdownTrigger>
@@ -101,7 +96,6 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
                 </DropdownMenu>
               </Dropdown>
             )}
-            {/* Stats Dropdown for TRAINER role */}
             {userRole === 'TRAINER' && (
               <Dropdown>
                 <DropdownTrigger>
@@ -146,7 +140,6 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
         )}
       </NavbarContent>
 
-      {/* Mobile Menu Dropdown - Visible when menuOpen is true */}
       {menuOpen && (
         <div className="flex flex-col items-center bg-brandcolor w-auto py-4 mt-12">
           <div className="h-72 mr-7"></div>
@@ -163,7 +156,6 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
           </Button>
           {userId ? (
             <div className="flex flex-col items-center">
-              {/* Management Links for Mobile Menu */}
               {userRole === 'TRAINER' && (
                 <Dropdown>
                   <DropdownTrigger>
@@ -204,7 +196,6 @@ export default function NavBarClient({ userId, userRole }: NavBarClientProps) {
                   </DropdownMenu>
                 </Dropdown>
               )}
-              {/* Stats Dropdown for Mobile Menu */}
               {userRole === 'TRAINER' && (
                 <Dropdown>
                   <DropdownTrigger>

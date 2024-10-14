@@ -15,7 +15,6 @@ export default async function NavBar() {
         item: ['text-xl', 'text-white', 'data-[active=true]:text-red-600'],
       }}
     >
-      {/* NavbarBrand represents the brand section of the Navbar */}
       <NavbarBrand as={Link} href="/">
         <IoFootball size={35} className="text-gray-700" />
         <div className="hidden lg:flex font-bold text-2xl">

@@ -1,5 +1,3 @@
-// This is the Prisma client configuration file.
-
 import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {

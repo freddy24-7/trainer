@@ -1,6 +1,7 @@
 import { CalendarDate } from '@nextui-org/react';
 import { ReactNode } from 'react';
 import { ZodIssue } from 'zod';
+import { UseFormSetValue } from 'react-hook-form';
 
 export interface UserData {
   clerkId: string;
@@ -259,3 +260,20 @@ export interface PlayerFormData {
   password: string;
   whatsappNumber: string;
 }
+
+export interface MatchFormValues {
+  poule: number | undefined;
+  opponent: number | undefined;
+  date: CalendarDate | null;
+  players: {
+    id: number;
+    minutes: number | '';
+    available: boolean;
+  }[];
+}
+
+export type PlayersFieldProps = {
+  players: Player[];
+  playerValues: FormValues['players'];
+  setValue: UseFormSetValue<FormValues>;
+};

@@ -1,5 +1,3 @@
-// This component is inputting player availability and mins played in a match.
-
 'use client';
 
 import React, { useState } from 'react';
@@ -16,7 +14,6 @@ const PlayerInput: React.FC<PlayerInputProps> = ({
 
   const handleMinutesChange = (value: string) => {
     onMinutesChange(player.id, value);
-    // Hiding the checkbox if the input value is not empty
     setShowCheckbox(value.trim() === '');
   };
 

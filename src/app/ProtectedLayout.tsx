@@ -1,5 +1,3 @@
-// This component performs RBAC (Role-Based Access Control) checks
-
 import { redirect } from 'next/navigation';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import { ReactNode } from 'react';

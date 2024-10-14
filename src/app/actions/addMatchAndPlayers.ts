@@ -1,136 +1,64 @@
-// This server action adds a match to the database.
-
 'use server';
+
+// Validation not done here as already done in addMatch and addMatchPlayer
 
 import { ZodIssue } from 'zod';
 import addMatch from '@/app/actions/addMatch';
 import addMatchPlayer from '@/app/actions/addMatchPlayer';
+import { formatError } from '@/utils/errorUtils';
 
 export default async function addMatchAndPlayers(
   _prevState: any,
   params: FormData
 ): Promise<{ errors: ZodIssue[] }> {
-  const pouleOpponentIdString = params.get('pouleOpponentId') as string | null;
-  if (!pouleOpponentIdString) {
-    return {
-      errors: [
-        {
-          message: 'Poule opponent ID is missing.',
-          path: ['pouleOpponentId'],
-          code: 'custom',
-        },
-      ],
-    };
-  }
-
-  const pouleOpponentId = parseInt(pouleOpponentIdString, 10);
-  if (isNaN(pouleOpponentId)) {
-    return {
-      errors: [
-        {
-          message: 'Invalid opponent ID. Expected a number.',
-          path: ['pouleOpponentId'],
-          code: 'custom',
-        },
-      ],
-    };
-  }
-
-  const date = params.get('date') as string | null;
-  if (!date) {
-    return {
-      errors: [
-        {
-          message: 'Date is required.',
-          path: ['date'],
-          code: 'custom',
-        },
-      ],
-    };
-  }
-
-  const playersString = params.get('players') as string | null;
-  if (!playersString) {
-    return {
-      errors: [
-        {
-          message: 'Players data is missing.',
-          path: ['players'],
-          code: 'custom',
-        },
-      ],
-    };
-  }
-
-  let players;
-  try {
-    players = JSON.parse(playersString);
-    if (!Array.isArray(players)) {
-      return {
-        errors: [
-          {
-            message: 'Players data is not an array.',
-            path: ['players'],
-            code: 'custom',
-          },
-        ],
-      };
-    }
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : 'Unknown error parsing players data';
-    return {
-      errors: [
-        {
-          message: `Invalid player data format: ${errorMessage}`,
-          path: ['players'],
-          code: 'custom',
-        },
-      ],
-    };
-  }
-
   const matchResponse = await addMatch(null, params);
 
   if (matchResponse.errors) {
-    return { errors: matchResponse.errors };
+    return formatError('Failed to create match.', ['form']);
   }
 
   const { match } = matchResponse;
   const createdMatchId = match?.id;
 
   if (!createdMatchId) {
-    return {
-      errors: [
-        {
-          message: 'Error: Match ID not found.',
-          path: ['form'],
-          code: 'custom',
-        },
-      ],
-    };
+    return formatError('Error: Match ID not found.', ['form']);
+  }
+
+  const playersString = params.get('players') as string | null;
+  if (!playersString) {
+    return formatError('Players data is missing.', ['players']);
+  }
+
+  let players;
+  try {
+    players = JSON.parse(playersString);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'Unknown error parsing players data';
+    return formatError(`Invalid player data format: ${errorMessage}`, [
+      'players',
+    ]);
+  }
+
+  if (!Array.isArray(players)) {
+    return formatError('Players data is not an array.', ['players']);
   }
 
   const playerErrors: ZodIssue[] = [];
   for (const player of players) {
     const { id, minutes, available } = player;
 
-    let parsedMinutes = 0;
-
-    if (available) {
-      parsedMinutes = parseInt(minutes, 10);
-      if (isNaN(parsedMinutes) || parsedMinutes <= 0) {
-        playerErrors.push({
-          message: `Invalid minutes for player ${id}. Expected a positive number.`,
-          path: ['players', 'minutes'],
-          code: 'custom',
-        });
-        continue;
-      }
-    } else {
-      parsedMinutes = 0;
+    let parsedMinutes = available ? parseInt(minutes, 10) : 0;
+    if (isNaN(parsedMinutes)) {
+      playerErrors.push(
+        ...formatError(`Invalid minutes for player ${id}. Expected a number.`, [
+          'players',
+          'minutes',
+        ]).errors
+      );
+      continue;
     }
 
     try {
@@ -143,22 +71,16 @@ export default async function addMatchAndPlayers(
 
       if (!response.success) {
         playerErrors.push(
-          ...(response.errors || [
-            {
-              message: `Error adding player ${id}.`,
-              path: ['form'],
-              code: 'custom',
-            },
-          ])
+          ...(response.errors ||
+            formatError(`Error adding player ${id}.`, ['form']).errors)
         );
       }
     } catch (error) {
       console.error(`Error adding player ${id}:`, error);
-      playerErrors.push({
-        message: `Unexpected error adding player ${id}.`,
-        path: ['players', id],
-        code: 'custom',
-      });
+      playerErrors.push(
+        ...formatError(`Unexpected error adding player ${id}.`, ['players', id])
+          .errors
+      );
     }
   }
 

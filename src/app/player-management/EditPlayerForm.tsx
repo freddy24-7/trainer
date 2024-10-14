@@ -94,7 +94,6 @@ function EditPlayerForm({
             }}
             submitButtonText={isSubmitting ? 'Updating...' : 'Update Player'}
           />
-          {/* Display WhatsApp button after successful submission */}
           {playerData?.whatsappNumber && (
             <a
               href={`https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}/?text=${encodeURIComponent(

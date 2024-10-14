@@ -1,5 +1,3 @@
-// This server action fetches the teams in a poule.
-
 'use server';
 
 import prisma from '@/lib/prisma';

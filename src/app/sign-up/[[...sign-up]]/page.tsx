@@ -1,5 +1,3 @@
-// This page is responsible for rendering the sign-up form
-
 import { SignUp } from '@clerk/nextjs';
 
 export default function SignUpPage() {

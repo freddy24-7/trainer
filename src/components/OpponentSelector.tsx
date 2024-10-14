@@ -1,5 +1,3 @@
-// This component is used to select an opponent team from a list of opponents.
-
 import React from 'react';
 import { OpponentSelectorProps } from '@/lib/types';
 

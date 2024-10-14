@@ -1,4 +1,4 @@
-import ProtectedLayout from '@/app/protected-layout';
+import ProtectedLayout from '@/app/ProtectedLayout';
 import getPlayers from '@/app/actions/getPlayers';
 import addPlayer from '@/app/actions/addPlayer';
 import editPlayer from '@/app/actions/editPlayer';
@@ -7,7 +7,7 @@ import DisplayPlayers from '@/app/player-management/DisplayPlayers';
 import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
 import { validatePlayerResponse } from '@/utils/responseUtils';
 import { mapPlayers } from '@/utils/playerUtils';
-import { renderError } from '@/components/helpers/renderError';
+import { renderError } from '@/components/helpers/RenderError';
 import { Player } from '@/lib/types';
 
 export default async function ManagementPage() {

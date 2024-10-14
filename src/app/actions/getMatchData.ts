@@ -1,5 +1,3 @@
-// This server action is used to get match data from the database.
-
 'use server';
 
 import prisma from '@/lib/prisma';

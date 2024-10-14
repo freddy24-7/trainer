@@ -1,5 +1,3 @@
-// This server component fetches the training data and returns it to the client.
-
 'use server';
 
 import prisma from '@/lib/prisma';

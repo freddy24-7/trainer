@@ -1,44 +1,31 @@
-// This server action serves as a helper function.
-
 'use server';
 
-import prisma from '@/lib/prisma';
-import { addMatchPlayerSchema } from '@/schemas/matchSchema';
+import { validateMatchPlayerData } from '@/schemas/validation/addMatchPlayerValidation';
+import { formatError } from '@/utils/errorUtils';
+import { ZodIssue } from 'zod';
+import { addMatchPlayerToDatabase } from '@/lib/services/createMatchPlayerService';
 
 export default async function addMatchPlayer(data: {
   userId: number;
   matchId: number;
   minutes: number;
   available: boolean;
-}) {
-  const validation = addMatchPlayerSchema.safeParse(data);
+}): Promise<{ success?: boolean; errors?: ZodIssue[] }> {
+  const validation = validateMatchPlayerData(data);
 
   if (!validation.success) {
-    return {
-      success: false,
-      errors: validation.error.issues,
-    };
+    return formatError('Validation failed.', ['form']);
   }
 
   const { userId, matchId, minutes, available } = validation.data;
 
   try {
-    await prisma.matchPlayer.create({
-      data: {
-        userId,
-        matchId,
-        minutes,
-        available,
-      },
-    });
+    await addMatchPlayerToDatabase({ userId, matchId, minutes, available });
 
     return {
       success: true,
     };
   } catch (error) {
-    return {
-      success: false,
-      error: 'Failed to add match player to the database.',
-    };
+    return formatError('Failed to add match player to the database.', ['form']);
   }
 }

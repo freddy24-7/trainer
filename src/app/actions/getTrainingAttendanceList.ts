@@ -1,5 +1,3 @@
-// This server action is used to fetch the training attendance list.
-
 'use server';
 
 import prisma from '@/lib/prisma';

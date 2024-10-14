@@ -1,5 +1,3 @@
-// This component is used to display a list of teams in a poule.
-
 import React, { useEffect } from 'react';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { TeamsListProps, Team } from '@/lib/types';

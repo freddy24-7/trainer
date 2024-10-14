@@ -1,5 +1,3 @@
-// This is the ChatPage component that will be rendered when the user navigates to /chat
-
 import LoginModal from '@/components/LoginModal';
 import ChatClient from '@/components/ChatClient';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';

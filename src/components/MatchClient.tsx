@@ -1,5 +1,3 @@
-// This component is used to display player statistics.
-
 'use client';
 
 import React from 'react';

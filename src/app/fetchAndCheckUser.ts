@@ -1,5 +1,3 @@
-// This is a reusable function that fetches the current user's data
-
 import { auth } from '@clerk/nextjs';
 import prisma from '@/lib/prisma';
 

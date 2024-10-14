@@ -1,6 +1,4 @@
-// This server component fetches the teams in a poule and renders the list of teams.
-
-import ProtectedLayout from '@/app/protected-layout';
+import ProtectedLayout from '@/app/ProtectedLayout';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import PouleManagementClient from '@/components/PouleManagementClient';
 import addPoule from '@/app/actions/addPoule';

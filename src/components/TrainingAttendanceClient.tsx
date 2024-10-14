@@ -1,5 +1,3 @@
-// This component displays a table of player attendance data, including player names and their absences.
-
 import React from 'react';
 import { TrainingAttendanceClientProps } from '@/lib/types';
 

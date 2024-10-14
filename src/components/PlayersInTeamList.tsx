@@ -1,10 +1,8 @@
-// This component is used to display the players of a team.
-
 import React from 'react';
 import PlayerInput from './PlayerInput';
 import { PlayerListProps } from '@/lib/types';
 
-const PlayerList: React.FC<PlayerListProps> = ({
+const PlayersInTeamList: React.FC<PlayerListProps> = ({
   players,
   playerMinutes,
   playerAvailability,
@@ -30,4 +28,4 @@ const PlayerList: React.FC<PlayerListProps> = ({
   );
 };
 
-export default PlayerList;
+export default PlayersInTeamList;

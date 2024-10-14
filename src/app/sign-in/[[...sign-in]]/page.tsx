@@ -1,5 +1,3 @@
-// This page is responsible for rendering the sign-in form
-
 import { SignIn } from '@clerk/nextjs';
 
 export default function Page() {

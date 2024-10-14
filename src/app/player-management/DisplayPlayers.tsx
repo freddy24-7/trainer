@@ -6,7 +6,7 @@ import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/app/player-management/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
 import { PlayerManagementClientProps, Player } from '@/lib/types';
-import { handleDeletePlayer } from '@/components/helpers/deletePlayer';
+import { handleDeletePlayer } from '@/components/helpers/DeletePlayer';
 import { setupModal } from '@/utils/modalUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 import { updatePlayerList } from '@/utils/playerUtils';
@@ -54,7 +54,7 @@ export default function DisplayPlayers({
   };
 
   const handlePlayerEdited = (updatedPlayer: Player) => {
-    updatePlayerList(updatedPlayer, setPlayers, setSubmitting); // Use the outsourced function
+    updatePlayerList(updatedPlayer, setPlayers, setSubmitting);
   };
 
   const handleCloseModal = () => {

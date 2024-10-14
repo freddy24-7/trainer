@@ -1,6 +1,3 @@
-// This server action is responsible for adding a new message to the database,
-// and triggering a Pusher event for real-time updates.
-
 'use server';
 
 import prisma from '@/lib/prisma';

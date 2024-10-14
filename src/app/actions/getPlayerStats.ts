@@ -1,5 +1,3 @@
-// This server action is used to get player statistics.
-
 'use server';
 
 import prisma from '@/lib/prisma';

@@ -1,5 +1,3 @@
-// This server action is responsible for fetching messages from the database.
-
 'use server';
 
 import prisma from '@/lib/prisma';

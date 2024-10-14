@@ -1,5 +1,3 @@
-// This component is a client-side implementation of the Player Management feature.
-
 'use client';
 
 import React from 'react';

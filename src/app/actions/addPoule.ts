@@ -1,5 +1,3 @@
-// This server action creates a new poule of teams
-
 'use server';
 
 import { redirect } from 'next/navigation';
@@ -102,7 +100,7 @@ export default async function addPoule(
     };
   } finally {
     if (redirectPath) {
-      revalidatePath(redirectPath); // Revalidate the page to ensure it shows updated data
+      revalidatePath(redirectPath);
       redirect(redirectPath);
     }
   }

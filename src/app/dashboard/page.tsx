@@ -1,5 +1,3 @@
-// This server component is responsible for rendering the dashboard page.
-
 import LoginModal from '@/components/LoginModal';
 import DashboardClient from '@/components/DashboardClient';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';

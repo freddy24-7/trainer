@@ -1,30 +1,24 @@
-// This server component fetches the teams in a poule and passes props to the form on the client.
-
-import ProtectedLayout from '@/app/protected-layout';
+import ProtectedLayout from '@/app/ProtectedLayout';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
-import { getPlayers } from '@/app/actions/getPlayers';
-import { AddMatchForm } from '@/components/AddMatchForm';
+import getPlayers from '@/app/actions/getPlayers';
+import { AddMatchForm } from '@/app/matches/AddMatchForm';
 import addMatchAndPlayers from '@/app/actions/addMatchAndPlayers';
-import { Player } from '@/lib/types';
+import { mapPlayers } from '@/utils/playerUtils';
+import { formatError } from '@/utils/errorUtils';
 
 export default async function MatchManagementPage() {
   const pouleResponse = await getTeamsInPoule();
   const playerResponse = await getPlayers();
 
-  const players: Player[] = playerResponse.success
-    ? (playerResponse.players ?? []).map((player) => ({
-        id: player.id,
-        username: player.username ?? '',
-        whatsappNumber: player.whatsappNumber ?? '',
-      }))
-    : [];
+  const players = mapPlayers(playerResponse);
 
   if (!pouleResponse.success || !playerResponse.success) {
-    return (
-      <div>
-        Error loading data: {pouleResponse.error || playerResponse.error}
-      </div>
-    );
+    const errorMessage = pouleResponse.error || playerResponse.errors;
+    const errorResponse = formatError(`Error loading data: ${errorMessage}`, [
+      'data',
+    ]);
+
+    return <div>Error loading data: {errorResponse.errors[0].message}</div>;
   }
 
   return (
