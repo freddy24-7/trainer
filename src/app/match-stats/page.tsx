@@ -1,6 +1,6 @@
 import React from 'react';
-import MatchClient from '@/components/MatchClient';
-import OpponentClient from '@/components/OpponentClient';
+import MatchStats from '@/app/match-stats/MatchStats';
+import MatchOpponents from '@/app/match-stats/MatchOpponents';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
 import { getMatchData } from '@/app/actions/getMatchData';
 import ProtectedLayout from '@/app/ProtectedLayout';
@@ -46,8 +46,8 @@ export default async function MatchStatsPage() {
   return (
     <ProtectedLayout requiredRole="TRAINER">
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
-        <MatchClient playerStats={playerStats} />
-        <OpponentClient matchData={matchData} />
+        <MatchStats playerStats={playerStats} />
+        <MatchOpponents matchData={matchData} />
       </div>
     </ProtectedLayout>
   );

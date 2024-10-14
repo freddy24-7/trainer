@@ -314,3 +314,7 @@ export interface MatchDataHelper {
     };
   }[];
 }
+
+export interface PlayerStatsTableProps {
+  playerStats: PlayerStat[];
+}

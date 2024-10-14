@@ -5,7 +5,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import OpponentSelector from '@/components/OpponentSelector';
+import OpponentSelector from '@/components/helpers/OpponentSelector';
 import { Poule, PouleOpponent } from '@/types/type-list';
 
 type Props = {
