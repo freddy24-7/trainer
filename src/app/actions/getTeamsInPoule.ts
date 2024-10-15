@@ -1,22 +1,10 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { getPoulesWithTeams } from '@/lib/services/getPouleService';
 
 export async function getTeamsInPoule() {
   try {
-    const poules = await prisma.poule.findMany({
-      include: {
-        team: true,
-        opponents: {
-          include: {
-            team: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    const poules = await getPoulesWithTeams();
 
     if (poules.length === 0) {
       return {

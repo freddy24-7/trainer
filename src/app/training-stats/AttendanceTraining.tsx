@@ -2,7 +2,7 @@ import React from 'react';
 import { TrainingAttendanceClientProps } from '@/types/type-list';
 import PlayerAttendanceTable from '@/components/helpers/TrainingAttendanceTable';
 
-const TrainingAttendanceClient: React.FC<TrainingAttendanceClientProps> = ({
+const AttendanceTraining: React.FC<TrainingAttendanceClientProps> = ({
   attendanceList,
 }) => {
   return (
@@ -12,4 +12,4 @@ const TrainingAttendanceClient: React.FC<TrainingAttendanceClientProps> = ({
   );
 };
 
-export default TrainingAttendanceClient;
+export default AttendanceTraining;
