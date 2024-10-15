@@ -349,3 +349,18 @@ export interface PlayerAttendanceTableProps {
 export interface TrainingSessionsListProps {
   trainingData: TrainingData[];
 }
+
+export interface GetTeamsInPouleSuccess {
+  success: true;
+  poules: Poule[];
+  latestPoule: Poule;
+}
+
+export interface GetTeamsInPouleError {
+  success: false;
+  errors: ZodIssue[];
+}
+
+export type GetTeamsInPouleResponse =
+  | GetTeamsInPouleSuccess
+  | GetTeamsInPouleError;
