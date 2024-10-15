@@ -4,6 +4,7 @@ import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceLi
 import TrainingClient from '@/components/TrainingClient';
 import TrainingAttendanceClient from '@/components/TrainingAttendanceClient';
 import ProtectedLayout from '@/app/ProtectedLayout';
+import { formatError } from '@/utils/errorUtils';
 
 export default async function TrainingsPage() {
   const [trainingDataResponse, attendanceDataResponse] = await Promise.all([
@@ -12,20 +13,28 @@ export default async function TrainingsPage() {
   ]);
 
   if (!trainingDataResponse.success) {
+    const formattedError = formatError(
+      trainingDataResponse.error || 'Error loading training data',
+      ['getTrainingData']
+    );
     return (
       <ProtectedLayout requiredRole="TRAINER">
         <div className="p-6 bg-red-100 text-red-800">
-          Error loading training data: {trainingDataResponse.error}
+          {formattedError.errors[0].message}
         </div>
       </ProtectedLayout>
     );
   }
 
   if (!attendanceDataResponse.success) {
+    const formattedError = formatError(
+      attendanceDataResponse.error || 'Error loading attendance data',
+      ['getTrainingAttendanceList']
+    );
     return (
       <ProtectedLayout requiredRole="TRAINER">
         <div className="p-6 bg-red-100 text-red-800">
-          Error loading attendance data: {attendanceDataResponse.error}
+          {formattedError.errors[0].message}
         </div>
       </ProtectedLayout>
     );

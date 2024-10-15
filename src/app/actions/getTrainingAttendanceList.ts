@@ -1,32 +1,20 @@
 'use server';
 
-import prisma from '@/lib/prisma';
-import {
-  GetTrainingAttendanceListResponse,
-  PlayerAttendance,
-} from '@/types/type-list';
+import { getTrainingAttendanceFromDB } from '@/lib/services/getTrainingAttendanceService';
+import { mapTrainingAttendance } from '@/utils/mapTrainingAttendanceUtility';
+import { formatError } from '@/utils/errorUtils';
+import { GetTrainingAttendanceListResponse } from '@/types/type-list';
 
 export async function getTrainingAttendanceList(): Promise<GetTrainingAttendanceListResponse> {
   try {
-    const players = await prisma.user.findMany({
-      where: {
-        role: 'PLAYER',
-      },
-      include: {
-        TrainingPlayer: {
-          where: { absent: true },
-        },
-      },
-    });
-
-    const attendanceList: PlayerAttendance[] = players.map((player) => ({
-      playerId: player.id,
-      username: player.username ?? 'Unknown Player',
-      absences: player.TrainingPlayer.length,
-    }));
+    const players = await getTrainingAttendanceFromDB();
+    const attendanceList = mapTrainingAttendance(players);
 
     return { success: true, attendanceList };
   } catch (error) {
-    return { success: false, error: 'Failed to fetch attendance data.' };
+    const formattedError = formatError('Failed to fetch attendance data.', [
+      'getTrainingAttendanceList',
+    ]);
+    return { success: false, error: formattedError.errors[0].message };
   }
 }

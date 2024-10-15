@@ -1,33 +1,23 @@
 'use server';
 
-import prisma from '@/lib/prisma';
-import { GetTrainingDataResponse, TrainingData } from '@/types/type-list';
+import { fetchTrainingData } from '@/lib/services/getTrainingDataService';
+import { mapTrainingData } from '@/utils/mapTrainingData';
+import { formatError } from '@/utils/errorUtils';
+import { GetTrainingDataResponse } from '@/types/type-list';
 
 export async function getTrainingData(): Promise<GetTrainingDataResponse> {
   try {
-    const trainings = await prisma.training.findMany({
-      include: {
-        trainingPlayers: {
-          where: {
-            absent: true,
-          },
-          include: {
-            user: true,
-          },
-        },
-      },
-    });
-
-    const trainingData: TrainingData[] = trainings.map((training) => ({
-      id: training.id,
-      date: training.date.toISOString(),
-      absentPlayers: training.trainingPlayers.map(
-        (tp) => tp.user.username ?? 'Unknown Player'
-      ),
-    }));
+    const trainings = await fetchTrainingData();
+    const trainingData = mapTrainingData(trainings);
 
     return { success: true, trainingData };
   } catch (error) {
-    return { success: false, error: 'Failed to fetch training data.' };
+    const formattedError = formatError(
+      'Failed to fetch training data.',
+      ['getTrainingData'],
+      'custom',
+      true
+    );
+    return { success: false, error: formattedError.errors[0].message };
   }
 }

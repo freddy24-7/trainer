@@ -329,3 +329,23 @@ export interface TrainingPlayersFieldProps {
   playerValues: { userId: number; absent: boolean }[];
   setValue: UseFormSetValue<TrainingFormValues>;
 }
+
+export interface TrainingPlayer {
+  user: {
+    username: string | null;
+  };
+}
+
+export interface TrainingProps {
+  id: number;
+  date: Date;
+  trainingPlayers: TrainingPlayer[];
+}
+
+export interface PlayerAttendanceTableProps {
+  attendanceList: PlayerAttendance[];
+}
+
+export interface TrainingSessionsListProps {
+  trainingData: TrainingData[];
+}

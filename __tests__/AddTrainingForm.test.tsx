@@ -6,7 +6,7 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import AddTrainingForm from '@/components/AddTrainingForm';
+import AddTrainingForm from '@/app/trainings/AddTrainingForm';
 import { toast } from 'react-toastify';
 import { Player } from '@/types/type-list';
 

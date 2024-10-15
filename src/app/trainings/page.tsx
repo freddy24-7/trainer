@@ -1,6 +1,6 @@
 import ProtectedLayout from '@/app/ProtectedLayout';
 import addTraining from '@/app/actions/addTraining';
-import AddTrainingForm from '@/components/AddTrainingForm';
+import AddTrainingForm from '@/app/trainings/AddTrainingForm';
 import getPlayers from '@/app/actions/getPlayers';
 import { validatePlayerResponse } from '@/utils/responseUtils';
 import { mapPlayers } from '@/utils/playerUtils';
