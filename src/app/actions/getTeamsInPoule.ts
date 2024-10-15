@@ -1,6 +1,8 @@
 'use server';
 
 import { getPoulesWithTeams } from '@/lib/services/getPouleService';
+import { formatPoules } from '@/utils/pouleUtils';
+import { Poule } from '@/types/type-list';
 
 export async function getTeamsInPoule() {
   try {
@@ -13,15 +15,7 @@ export async function getTeamsInPoule() {
       };
     }
 
-    const formattedPoules = poules.map((poule) => ({
-      id: poule.id,
-      pouleName: poule.name,
-      teams: [poule.team, ...poule.opponents.map((opponent) => opponent.team)],
-      opponents: poule.opponents.map((opponent) => ({
-        id: opponent.id,
-        team: opponent.team,
-      })),
-    }));
+    const formattedPoules: Poule[] = formatPoules(poules);
 
     return {
       success: true,
@@ -29,6 +23,7 @@ export async function getTeamsInPoule() {
       latestPoule: formattedPoules[0],
     };
   } catch (error) {
+    console.error('Error fetching poules:', error);
     return {
       success: false,
       error: 'Failed to load teams in the poules.',
