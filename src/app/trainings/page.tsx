@@ -2,22 +2,22 @@ import ProtectedLayout from '@/app/ProtectedLayout';
 import addTraining from '@/app/actions/addTraining';
 import AddTrainingForm from '@/components/AddTrainingForm';
 import getPlayers from '@/app/actions/getPlayers';
+import { validatePlayerResponse } from '@/utils/responseUtils';
+import { mapPlayers } from '@/utils/playerUtils';
+import { renderError } from '@/components/helpers/RenderError';
 import { Player } from '@/types/type-list';
 
 export default async function TrainingsPage() {
-  const playerResponse = await getPlayers();
+  const response = await getPlayers();
 
-  const players: Player[] = playerResponse.success
-    ? (playerResponse.players ?? []).map((player) => ({
-        id: player.id,
-        username: player.username ?? '',
-        whatsappNumber: player.whatsappNumber ?? '',
-      }))
-    : [];
+  const validatedResponse = validatePlayerResponse(response);
 
-  if (!playerResponse.success) {
-    return <div>Error loading players: {playerResponse.errors}</div>;
+  const errorElement = renderError(validatedResponse);
+  if (errorElement) {
+    return errorElement;
   }
+
+  const players: Player[] = mapPlayers(validatedResponse);
 
   return (
     <ProtectedLayout requiredRole="TRAINER">

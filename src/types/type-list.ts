@@ -318,3 +318,14 @@ export interface MatchDataHelper {
 export interface PlayerStatsTableProps {
   playerStats: PlayerStat[];
 }
+
+export interface PlayerAtTraining {
+  userId: number;
+  absent: boolean;
+}
+
+export interface TrainingPlayersFieldProps {
+  players: Player[];
+  playerValues: { userId: number; absent: boolean }[];
+  setValue: UseFormSetValue<TrainingFormValues>;
+}
