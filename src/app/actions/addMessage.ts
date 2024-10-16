@@ -4,7 +4,7 @@ import { createMessage, getSenderById } from '@/lib/services/createChatService';
 import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
 import { ActionResponse } from '@/types/type-list';
 import { formatError } from '@/utils/errorUtils';
-import { triggerNewMessageEvent } from '@/utils/pusherUtil';
+import { triggerNewMessageEvent } from '@/utils/pusherUtils';
 
 export default async function addMessage(
   _prevState: any,

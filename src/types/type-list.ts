@@ -364,3 +364,8 @@ export interface GetTeamsInPouleError {
 export type GetTeamsInPouleResponse =
   | GetTeamsInPouleSuccess
   | GetTeamsInPouleError;
+
+export type MessageListProps = {
+  messages: Message[];
+  signedInUser: SignedInUser;
+};

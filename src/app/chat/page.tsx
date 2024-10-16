@@ -1,5 +1,5 @@
 import LoginModal from '@/components/LoginModal';
-import ChatClient from '@/components/ChatClient';
+import ChatClient from '@/app/chat/ChatClient';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import getMessages from '@/app/actions/getMessages';
 import addMessage from '@/app/actions/addMessage';
