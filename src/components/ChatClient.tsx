@@ -9,7 +9,7 @@ import {
   ActionResponse,
 } from '@/types/type-list';
 import { toast } from 'react-toastify';
-import Pusher from 'pusher-js';
+import { initializePusher } from '@/utils/pusherUtil';
 
 type Props = {
   signedInUser: SignedInUser;
@@ -27,15 +27,6 @@ function ChatClient({
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
-    Pusher.logToConsole = true;
-
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
-      cluster: 'eu',
-      forceTLS: true,
-    });
-
-    const channel = pusher.subscribe('chat');
-
     const handlePusherEvent = (data: PusherEventMessage) => {
       console.log('Pusher event received:', data);
       setMessages((prevMessages) => [
@@ -49,15 +40,11 @@ function ChatClient({
       ]);
     };
 
-    channel.bind('new-message', handlePusherEvent);
+    const cleanup = initializePusher(handlePusherEvent);
 
     setLoading(false);
 
-    return () => {
-      channel.unbind('new-message', handlePusherEvent);
-      pusher.unsubscribe('chat');
-      pusher.disconnect();
-    };
+    return cleanup;
   }, []);
 
   const handleSendMessage = async (e: React.FormEvent) => {
