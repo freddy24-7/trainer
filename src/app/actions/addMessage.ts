@@ -1,19 +1,16 @@
 'use server';
 
-import prisma from '@/lib/prisma';
-import pusher from '@/lib/pusher';
-import { createMessageSchema } from '@/schemas/messageSchema';
-import { ZodIssue } from 'zod';
+import { createMessage, getSenderById } from '@/lib/services/createChatService';
+import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
 import { ActionResponse } from '@/types/type-list';
+import { formatError } from '@/utils/errorUtils';
+import { triggerNewMessageEvent } from '@/utils/pusherUtil';
 
 export default async function addMessage(
   _prevState: any,
   params: FormData
 ): Promise<ActionResponse> {
-  const validation = createMessageSchema.safeParse({
-    content: params.get('content'),
-    senderId: Number(params.get('senderId')),
-  });
+  const validation = validateMessageInput(params);
 
   if (!validation.success) {
     return {
@@ -25,50 +22,25 @@ export default async function addMessage(
   const { content, senderId } = validation.data;
 
   try {
-    const message = await prisma.message.create({
-      data: {
-        content,
-        senderId,
-        createdAt: new Date(),
-      },
-    });
+    const message = await createMessage(content, senderId);
 
     console.log('Message successfully saved:', message);
 
-    const pusherResponse = await pusher.trigger('chat', 'new-message', {
-      id: message.id,
-      content: message.content,
-      senderId: message.senderId,
-      createdAt: message.createdAt,
-      sender: {
-        id: message.senderId,
-        username: (
-          await prisma.user.findUnique({
-            where: { id: message.senderId },
-          })
-        )?.username,
-      },
-    });
+    const sender = await getSenderById(message.senderId);
 
-    console.log(
-      'Pusher event triggered for new message:',
-      message.id,
-      pusherResponse
-    );
+    await triggerNewMessageEvent(message, sender);
 
     return { success: true };
   } catch (error) {
     console.error('Error adding message:', error);
 
-    return {
-      success: false,
-      errors: [
-        {
-          message: 'Error sending the message.',
-          path: ['form'],
-          code: 'custom',
-        },
-      ] as ZodIssue[],
-    };
+    const errorResponse = formatError(
+      'Error sending the message.',
+      ['form'],
+      'custom',
+      true
+    );
+
+    return errorResponse as ActionResponse;
   }
 }
