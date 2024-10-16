@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Spinner } from '@nextui-org/spinner';
 import { DashboardClientProps } from '@/types/type-list';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
-export default function DashboardClient({
-  signedInUser,
-}: DashboardClientProps) {
+export default function Dashboard({ signedInUser }: DashboardClientProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,9 +17,7 @@ export default function DashboardClient({
 
   if (loading) {
     return (
-      <div className="flex justify-center mt-10">
-        <Spinner label="Success" color="success" labelColor="success" />
-      </div>
+      <LoadingSpinner label="Success" color="success" labelColor="success" />
     );
   }
 

@@ -1,5 +1,5 @@
 import LoginModal from '@/components/LoginModal';
-import DashboardClient from '@/app/dashboard/DashboardClient';
+import Dashboard from '@/app/dashboard/Dashboard';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 
 export default async function DashboardPage() {
@@ -11,7 +11,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <DashboardClient signedInUser={signedInUser} />
+      <Dashboard signedInUser={signedInUser} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Spinner } from '@nextui-org/spinner';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/app/player-management/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
@@ -69,9 +69,11 @@ export default function DisplayPlayers({
       </h3>
 
       {submitting && (
-        <div className="flex justify-center my-4">
-          <Spinner size="lg" color="success" />
-        </div>
+        <LoadingSpinner
+          label="Submitting..."
+          color="success"
+          labelColor="success"
+        />
       )}
 
       <PlayersList
