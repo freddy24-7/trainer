@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect } from 'react';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { TeamsListProps, Team } from '@/types/type-list';

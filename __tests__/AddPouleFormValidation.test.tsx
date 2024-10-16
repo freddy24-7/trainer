@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { AddPouleFormValidation } from '@/components/AddPouleFormValidation';
+import { AddPouleForm } from '@/app/poule-management/AddPouleForm';
 
 jest.mock('react-toastify', () => ({
   toast: {
@@ -17,7 +17,7 @@ describe('AddPouleFormValidation', () => {
 
   it('should show form when Add Another Poule button is clicked', () => {
     // Arrange
-    render(<AddPouleFormValidation action={mockAction} />);
+    render(<AddPouleForm action={mockAction} />);
 
     // Act
     const button = screen.getByText('Add Another Poule');
@@ -30,7 +30,7 @@ describe('AddPouleFormValidation', () => {
 
   it('should add an opponent when Enter is pressed', () => {
     // Arrange
-    render(<AddPouleFormValidation action={mockAction} />);
+    render(<AddPouleForm action={mockAction} />);
     fireEvent.click(screen.getByText('Add Another Poule'));
 
     // Act
@@ -45,7 +45,7 @@ describe('AddPouleFormValidation', () => {
 
   it('should call action on form submission after adding opponent', async () => {
     // Arrange
-    render(<AddPouleFormValidation action={mockAction} />);
+    render(<AddPouleForm action={mockAction} />);
 
     // Act
     fireEvent.click(screen.getByText('Add Another Poule'));

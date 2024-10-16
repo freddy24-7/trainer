@@ -1,9 +1,9 @@
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import { GetTeamsInPouleResponse, Poule } from '@/types/type-list';
-import PouleManagementClient from '@/components/PouleManagementClient';
+import Mapper from '@/app/poule-management/Mapper';
 import addPoule from '@/app/actions/addPoule';
-import { AddPouleFormValidation } from '@/components/AddPouleFormValidation';
+import { AddPouleForm } from '@/app/poule-management/AddPouleForm';
 
 export default async function PouleManagementPage() {
   const pouleResponse: GetTeamsInPouleResponse = await getTeamsInPoule();
@@ -20,9 +20,9 @@ export default async function PouleManagementPage() {
             </p>
           )}
 
-          {poules.length > 0 && <PouleManagementClient poules={poules} />}
+          {poules.length > 0 && <Mapper poules={poules} />}
 
-          <AddPouleFormValidation action={addPoule} />
+          <AddPouleForm action={addPoule} />
         </div>
       </div>
     </ProtectedLayout>
