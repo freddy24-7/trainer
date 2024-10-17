@@ -48,5 +48,3 @@ export interface MatchPlayerInfo {
   minutes: number;
   available: boolean;
 }
-
-

@@ -7,10 +7,10 @@ export interface Message {
   createdAt: Date;
 }
 
-export type MessageListProps = {
+export interface MessageListProps {
   messages: Message[];
   signedInUser: SignedInUser;
-};
+}
 
 export interface PusherEventMessage {
   id: number;

@@ -88,11 +88,11 @@ export interface SignedInUser {
   role?: string;
 }
 
-export type PlayersFieldProps = {
+export interface PlayersFieldProps {
   players: Player[];
   playerValues: FormValues['players'];
   setValue: UseFormSetValue<FormValues>;
-};
+}
 
 export interface UserData {
   clerkId: string;

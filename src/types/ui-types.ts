@@ -1,8 +1,5 @@
 import { CalendarDate } from '@nextui-org/react';
 import { ReactNode } from 'react';
-import { PouleOpponent } from './poule-types';
-import { SignedInUser } from './user-types';
-import { PlayerFormData } from './user-types';
 
 export interface DateSelectorProps {
   matchDate: CalendarDate | null;
@@ -19,20 +16,6 @@ export interface NavLinkProps {
   label?: string;
   children?: ReactNode;
   className?: string;
-}
-
-export interface OpponentSelectorProps {
-  opponents: PouleOpponent[];
-  selectedOpponent: PouleOpponent | null;
-  onOpponentChange: (opponentId: number) => void;
-}
-
-export interface PlayerFormProps {
-  initialData?: PlayerFormData;
-  onSubmit: (data: PlayerFormData) => Promise<void>;
-  onSubmissionStart: () => void;
-  onAbort: () => void;
-  submitButtonText: string;
 }
 
 export interface ReusableModalProps {
