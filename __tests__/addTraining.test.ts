@@ -16,7 +16,6 @@ beforeEach(() => {
 
 describe('addTraining Functionality Tests', () => {
   it('should create a training successfully when players array is empty', async () => {
-    // Arrange
     const createMock = prisma.training.create as jest.Mock;
     createMock.mockResolvedValue({
       id: 1,
@@ -29,10 +28,8 @@ describe('addTraining Functionality Tests', () => {
     formData.append('date', new Date().toISOString());
     formData.append('players', JSON.stringify([]));
 
-    // Act
     const result = await addTraining(formData);
 
-    // Assert
     expect(result).toEqual({
       success: true,
       training: {
@@ -46,7 +43,6 @@ describe('addTraining Functionality Tests', () => {
   });
 
   it('should create a training successfully when players array is missing', async () => {
-    // Arrange
     const createMock = prisma.training.create as jest.Mock;
     createMock.mockResolvedValue({
       id: 1,
@@ -58,10 +54,8 @@ describe('addTraining Functionality Tests', () => {
     const formData = new FormData();
     formData.append('date', new Date().toISOString());
 
-    // Act
     const result = await addTraining(formData);
 
-    // Assert
     expect(result).toEqual({
       success: true,
       training: {
@@ -75,23 +69,22 @@ describe('addTraining Functionality Tests', () => {
   });
 
   it('should return validation errors when date is missing in the input', async () => {
-    // Arrange
     const createMock = prisma.training.create as jest.Mock;
     const formData = new FormData();
     formData.append('players', JSON.stringify([{ userId: 1, absent: false }]));
 
-    // Act
     const result = await addTraining(formData);
 
-    // Assert
-    expect(result).toHaveProperty('errors');
-    expect(result.errors).toBeInstanceOf(Array);
-    expect(result.errors?.length).toBeGreaterThan(0);
+    if ('errors' in result) {
+      expect(result.errors).toBeInstanceOf(Array);
+      expect(result.errors.length).toBeGreaterThan(0);
+    } else {
+      throw new Error('Expected errors but got a success response.');
+    }
     expect(createMock).not.toHaveBeenCalled();
   });
 
   it('should return an error when the database operation fails', async () => {
-    // Arrange
     const createMock = prisma.training.create as jest.Mock;
     createMock.mockRejectedValue(new Error('Database error'));
 
@@ -99,15 +92,13 @@ describe('addTraining Functionality Tests', () => {
     formData.append('date', new Date().toISOString());
     formData.append('players', JSON.stringify([{ userId: 1, absent: false }]));
 
-    // Act
     const result = await addTraining(formData);
 
-    // Assert
     expect(result).toEqual({
       errors: [
         {
           message: 'Failed to create training.',
-          path: ['form'],
+          path: ['addTraining'],
           code: 'custom',
         },
       ],

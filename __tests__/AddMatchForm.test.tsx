@@ -35,7 +35,6 @@ describe('AddMatchForm', () => {
   });
 
   it('should render the form and the default poule and opponent', () => {
-    // Arrange
     render(
       <AddMatchForm
         action={mockAction}
@@ -44,17 +43,14 @@ describe('AddMatchForm', () => {
       />
     );
 
-    // Act
     const pouleSelector = screen.getByText('Poule 1');
     const opponentSelector = screen.getByText('Opponent 1');
 
-    // Assert
     expect(pouleSelector).toBeInTheDocument();
     expect(opponentSelector).toBeInTheDocument();
   });
 
   it('should change selected poule and opponent', () => {
-    // Arrange
     render(
       <AddMatchForm
         action={mockAction}
@@ -63,14 +59,12 @@ describe('AddMatchForm', () => {
       />
     );
 
-    // Act
     const pouleSelector = screen.getByText('Poule 1');
     fireEvent.click(pouleSelector);
 
     const opponentSelector = screen.getByText('Opponent 1');
     fireEvent.click(opponentSelector);
 
-    // Assert
     expect(pouleSelector).toBeInTheDocument();
     expect(opponentSelector).toBeInTheDocument();
   });

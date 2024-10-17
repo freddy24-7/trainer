@@ -36,7 +36,6 @@ describe('addPoule', () => {
   });
 
   it('should create a poule and opponents successfully', async () => {
-    // Arrange
     mockFindUnique
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(null)
@@ -56,10 +55,8 @@ describe('addPoule', () => {
     formData.append('opponents', 'Opponent 1');
     formData.append('opponents', 'Opponent 2');
 
-    // Act
     await addPoule(null, formData);
 
-    // Assert
     expect(mockCreatePoule).toHaveBeenCalledWith({
       data: {
         name: 'Test Poule',
@@ -72,7 +69,6 @@ describe('addPoule', () => {
   });
 
   it('should return validation errors', async () => {
-    // Arrange
     const mockValidationError: ZodIssue = {
       message: 'Invalid data',
       path: ['pouleName'],
@@ -96,12 +92,16 @@ describe('addPoule', () => {
     formData.append('mainTeamName', 'Main Team');
     formData.append('opponents', 'Opponent 1');
 
-    // Act
     const result = await addPoule(null, formData);
 
-    // Assert
     if (result && 'errors' in result) {
-      expect(result.errors).toEqual([mockValidationError]);
+      expect(result.errors).toEqual([
+        {
+          message: 'Validation failed.',
+          path: ['addPoule'],
+          code: 'custom',
+        },
+      ]);
     } else {
       throw new Error('Expected validation errors but got void.');
     }
@@ -109,7 +109,6 @@ describe('addPoule', () => {
   });
 
   it('should handle opponent creation errors gracefully', async () => {
-    // Arrange
     mockFindUnique.mockResolvedValueOnce(null).mockResolvedValueOnce(null);
 
     mockCreateTeam
@@ -126,10 +125,8 @@ describe('addPoule', () => {
     formData.append('mainTeamName', 'Main Team');
     formData.append('opponents', 'Opponent 1');
 
-    // Act
     const result = await addPoule(null, formData);
 
-    // Assert
     if (result && 'errors' in result) {
       expect(result.errors).toEqual([
         {

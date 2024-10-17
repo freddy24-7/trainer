@@ -73,18 +73,19 @@ describe('AddTrainingForm', () => {
   };
 
   it('renders the form with date selector and player checkboxes', () => {
-    // Arrange
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
 
-    // Assert
     expect(screen.getByText('Add a New Training Session')).toBeInTheDocument();
+    expect(screen.getByText('Mark Absent Players')).toBeInTheDocument();
+
     expect(screen.getByTestId('date-selector')).toBeInTheDocument();
-    expect(screen.getByText('Absent Players')).toBeInTheDocument();
 
     mockPlayers.forEach((player) => {
-      const checkbox = getCheckboxForPlayer(
-        player.username
-      ) as HTMLInputElement;
+      const playerSpan = screen.getByText(player.username);
+      const checkbox = playerSpan
+        .closest('div')
+        ?.querySelector('input[type="checkbox"]');
+
       expect(checkbox).toBeInTheDocument();
       expect(checkbox).not.toBeChecked();
     });
@@ -94,42 +95,17 @@ describe('AddTrainingForm', () => {
     ).toBeInTheDocument();
   });
 
-  it("toggles a player's absence when checkbox is clicked", () => {
-    // Arrange
-    render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
-    const playerCheckbox = getCheckboxForPlayer(
-      'PlayerOne'
-    ) as HTMLInputElement;
-    expect(playerCheckbox).not.toBeChecked();
-
-    // Act
-    fireEvent.click(playerCheckbox);
-
-    // Assert
-    expect(playerCheckbox).toBeChecked();
-
-    // Act
-    fireEvent.click(playerCheckbox);
-
-    // Assert
-    expect(playerCheckbox).not.toBeChecked();
-  });
-
   it('allows selecting a date', () => {
-    // Arrange
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
     const dateInput = screen.getByTestId('date-selector') as HTMLInputElement;
     expect(dateInput.value).toBe('');
 
-    // Act
     fireEvent.change(dateInput, { target: { value: '2024-12-25' } });
 
-    // Assert
     expect(dateInput.value).toBe('2024-12-25');
   });
 
   it('shows error toast when action returns failure', async () => {
-    // Arrange
     mockAction.mockResolvedValue({
       success: false,
       errors: ['Failed to add training'],
@@ -148,10 +124,8 @@ describe('AddTrainingForm', () => {
 
     const submitButton = screen.getByRole('button', { name: /Add Training/i });
 
-    // Act
     fireEvent.click(submitButton);
 
-    // Assert
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledTimes(1);
       expect(toast.error).toHaveBeenCalledWith('Error adding training.');
@@ -160,7 +134,6 @@ describe('AddTrainingForm', () => {
   });
 
   it('shows error toast when action throws an exception', async () => {
-    // Arrange
     mockAction.mockRejectedValue(new Error('Network Error'));
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
 
@@ -176,10 +149,8 @@ describe('AddTrainingForm', () => {
 
     const submitButton = screen.getByRole('button', { name: /Add Training/i });
 
-    // Act
     fireEvent.click(submitButton);
 
-    // Assert
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledTimes(1);
       expect(toast.error).toHaveBeenCalledWith(

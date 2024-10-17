@@ -7,13 +7,19 @@ jest.mock('@/lib/prisma', () => ({
   },
 }));
 
+jest.mock('@/utils/errorUtils', () => ({
+  formatError: jest.fn((message, path, code, includeSuccess) => ({
+    success: includeSuccess ? false : undefined,
+    errors: [{ message, path, code }],
+  })),
+}));
+
 describe('getTeamsInPoule', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('should return teams in poules successfully', async () => {
-    // Arrange
     const mockPoules = [
       {
         id: 1,
@@ -36,10 +42,8 @@ describe('getTeamsInPoule', () => {
 
     (prisma.poule.findMany as jest.Mock).mockResolvedValue(mockPoules);
 
-    // Act
     const result = await getTeamsInPoule();
 
-    // Assert
     expect(result).toEqual({
       success: true,
       poules: [
@@ -83,32 +87,38 @@ describe('getTeamsInPoule', () => {
   });
 
   it('should return an error if no poules are found', async () => {
-    // Arrange
     (prisma.poule.findMany as jest.Mock).mockResolvedValue([]);
 
-    // Act
     const result = await getTeamsInPoule();
 
-    // Assert
     expect(result).toEqual({
       success: false,
-      error: 'No poules found. Please create a new poule.',
+      errors: [
+        {
+          message: 'No poules found. Please create a new poule.',
+          path: ['poules'],
+          code: 'custom',
+        },
+      ],
     });
   });
 
   it('should handle errors when fetching teams in poules', async () => {
-    // Arrange
     (prisma.poule.findMany as jest.Mock).mockRejectedValue(
       new Error('Database error')
     );
 
-    // Act
     const result = await getTeamsInPoule();
 
-    // Assert
     expect(result).toEqual({
       success: false,
-      error: 'Failed to load teams in the poules.',
+      errors: [
+        {
+          message: 'Failed to load teams in the poules.',
+          path: ['poules'],
+          code: 'custom',
+        },
+      ],
     });
   });
 });

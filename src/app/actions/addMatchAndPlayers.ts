@@ -78,8 +78,10 @@ export default async function addMatchAndPlayers(
     } catch (error) {
       console.error(`Error adding player ${id}:`, error);
       playerErrors.push(
-        ...formatError(`Unexpected error adding player ${id}.`, ['players', id])
-          .errors
+        ...formatError(`Unexpected error adding player ${id}.`, [
+          'players',
+          String(id),
+        ]).errors
       );
     }
   }

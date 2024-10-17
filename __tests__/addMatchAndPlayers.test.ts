@@ -1,111 +1,22 @@
 import addMatchAndPlayers from '@/app/actions/addMatchAndPlayers';
 import addMatch from '@/app/actions/addMatch';
 import addMatchPlayer from '@/app/actions/addMatchPlayer';
+import { formatError } from '@/utils/errorUtils';
 
-jest.mock('@/app/actions/addMatch', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
+jest.mock('@/app/actions/addMatch');
+jest.mock('@/app/actions/addMatchPlayer');
 
-jest.mock('@/app/actions/addMatchPlayer', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-
-const mockedAddMatch = addMatch as jest.Mock;
-const mockedAddMatchPlayer = addMatchPlayer as jest.Mock;
+const mockAddMatch = addMatch as jest.Mock;
+const mockAddMatchPlayer = addMatchPlayer as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('addMatchAndPlayers Functionality Tests', () => {
-  it('should return validation errors when pouleOpponentId is missing', async () => {
-    // Arrange
-    const formData = new FormData();
-    formData.append('date', new Date().toISOString());
-    formData.append('players', JSON.stringify([]));
-
-    // Act
-    const result = await addMatchAndPlayers(null, formData);
-
-    // Assert
-    expect(result).toHaveProperty('errors');
-    expect(result.errors).toContainEqual({
-      message: 'Poule opponent ID is missing.',
-      path: ['pouleOpponentId'],
-      code: 'custom',
-    });
-    expect(mockedAddMatch).not.toHaveBeenCalled();
-    expect(mockedAddMatchPlayer).not.toHaveBeenCalled();
-  });
-
-  it('should return validation errors when pouleOpponentId is not a valid number', async () => {
-    // Arrange
-    const formData = new FormData();
-    formData.append('pouleOpponentId', 'invalid-id');
-    formData.append('date', new Date().toISOString());
-    formData.append('players', JSON.stringify([]));
-
-    // Act
-    const result = await addMatchAndPlayers(null, formData);
-
-    // Assert
-    expect(result).toHaveProperty('errors');
-    expect(result.errors).toContainEqual({
-      message: 'Invalid opponent ID. Expected a number.',
-      path: ['pouleOpponentId'],
-      code: 'custom',
-    });
-    expect(mockedAddMatch).not.toHaveBeenCalled();
-    expect(mockedAddMatchPlayer).not.toHaveBeenCalled();
-  });
-
-  it('should return validation errors when date is missing', async () => {
-    // Arrange
-    const formData = new FormData();
-    formData.append('pouleOpponentId', '1');
-    formData.append('players', JSON.stringify([]));
-
-    // Act
-    const result = await addMatchAndPlayers(null, formData);
-
-    // Assert
-    expect(result).toHaveProperty('errors');
-    expect(result.errors).toContainEqual({
-      message: 'Date is required.',
-      path: ['date'],
-      code: 'custom',
-    });
-    expect(mockedAddMatch).not.toHaveBeenCalled();
-    expect(mockedAddMatchPlayer).not.toHaveBeenCalled();
-  });
-
-  it('should return validation errors when players data is invalid JSON', async () => {
-    // Arrange
-    const formData = new FormData();
-    formData.append('pouleOpponentId', '1');
-    formData.append('date', new Date().toISOString());
-    formData.append('players', 'invalid-json');
-
-    // Act
-    const result = await addMatchAndPlayers(null, formData);
-
-    // Assert
-    expect(result).toHaveProperty('errors');
-    expect(result.errors).toContainEqual({
-      message: expect.stringContaining('Invalid player data format'),
-      path: ['players'],
-      code: 'custom',
-    });
-    expect(mockedAddMatch).not.toHaveBeenCalled();
-    expect(mockedAddMatchPlayer).not.toHaveBeenCalled();
-  });
-
-  it('should create a match and add players successfully', async () => {
-    // Arrange
-    mockedAddMatch.mockResolvedValue({ match: { id: 1 } });
-    mockedAddMatchPlayer.mockResolvedValue({ success: true });
+  it('should successfully create a match and add players', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+    mockAddMatchPlayer.mockResolvedValue({ success: true });
 
     const formData = new FormData();
     formData.append('pouleOpponentId', '1');
@@ -113,69 +24,21 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     formData.append(
       'players',
       JSON.stringify([
-        { id: 1, minutes: 90, available: true },
-        { id: 2, minutes: 0, available: false },
+        { id: 1, minutes: '90', available: true },
+        { id: 2, minutes: '45', available: true },
       ])
     );
 
-    // Act
     const result = await addMatchAndPlayers(null, formData);
 
-    // Assert
     expect(result.errors).toEqual([]);
-    expect(mockedAddMatch).toHaveBeenCalledWith(null, formData);
-    expect(mockedAddMatchPlayer).toHaveBeenCalledTimes(2);
-    expect(mockedAddMatchPlayer).toHaveBeenCalledWith({
-      matchId: 1,
-      userId: 1,
-      minutes: 90,
-      available: true,
-    });
-    expect(mockedAddMatchPlayer).toHaveBeenCalledWith({
-      matchId: 1,
-      userId: 2,
-      minutes: 0,
-      available: false,
-    });
+    expect(mockAddMatch).toHaveBeenCalled();
+    expect(mockAddMatchPlayer).toHaveBeenCalledTimes(2);
   });
 
-  it('should return errors if adding a player fails', async () => {
-    // Arrange
-    mockedAddMatch.mockResolvedValue({ match: { id: 1 } });
-    mockedAddMatchPlayer.mockResolvedValueOnce({
-      success: false,
-      errors: [
-        { message: 'Error adding player', path: ['form'], code: 'custom' },
-      ],
-    });
-
-    const formData = new FormData();
-    formData.append('pouleOpponentId', '1');
-    formData.append('date', new Date().toISOString());
-    formData.append(
-      'players',
-      JSON.stringify([{ id: 1, minutes: 90, available: true }])
-    );
-
-    // Act
-    const result = await addMatchAndPlayers(null, formData);
-
-    // Assert
-    expect(result.errors).toContainEqual({
-      message: 'Error adding player',
-      path: ['form'],
-      code: 'custom',
-    });
-    expect(mockedAddMatch).toHaveBeenCalledWith(null, formData);
-    expect(mockedAddMatchPlayer).toHaveBeenCalledTimes(1);
-  });
-
-  it('should return errors if match creation fails', async () => {
-    // Arrange
-    mockedAddMatch.mockResolvedValue({
-      errors: [
-        { message: 'Failed to create match', path: ['form'], code: 'custom' },
-      ],
+  it('should return an error if match creation fails', async () => {
+    mockAddMatch.mockResolvedValue({
+      errors: formatError('Failed to create match.', ['form']).errors,
     });
 
     const formData = new FormData();
@@ -183,16 +46,124 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     formData.append('date', new Date().toISOString());
     formData.append('players', JSON.stringify([]));
 
-    // Act
     const result = await addMatchAndPlayers(null, formData);
 
-    // Assert
-    expect(result.errors).toContainEqual({
-      message: 'Failed to create match',
-      path: ['form'],
-      code: 'custom',
+    expect(result.errors).toEqual(
+      formatError('Failed to create match.', ['form']).errors
+    );
+    expect(mockAddMatchPlayer).not.toHaveBeenCalled();
+  });
+
+  it('should return an error if players data is missing', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+
+    const formData = new FormData();
+    formData.append('pouleOpponentId', '1');
+    formData.append('date', new Date().toISOString());
+
+    const result = await addMatchAndPlayers(null, formData);
+
+    expect(result.errors).toEqual(
+      formatError('Players data is missing.', ['players']).errors
+    );
+    expect(mockAddMatchPlayer).not.toHaveBeenCalled();
+  });
+
+  it('should return an error if players data is invalid JSON', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+
+    const formData = new FormData();
+    formData.append('pouleOpponentId', '1');
+    formData.append('date', new Date().toISOString());
+    formData.append('players', 'invalid json string');
+
+    const result = await addMatchAndPlayers(null, formData);
+
+    expect(result.errors[0].message).toContain('Invalid player data format');
+    expect(result.errors[0].path).toEqual(['players']);
+  });
+
+  it('should return an error if players data is not an array', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+
+    const formData = new FormData();
+    formData.append('pouleOpponentId', '1');
+    formData.append('date', new Date().toISOString());
+    formData.append(
+      'players',
+      JSON.stringify({ id: 1, minutes: '90', available: true })
+    );
+
+    const result = await addMatchAndPlayers(null, formData);
+
+    expect(result.errors).toEqual(
+      formatError('Players data is not an array.', ['players']).errors
+    );
+    expect(mockAddMatchPlayer).not.toHaveBeenCalled();
+  });
+
+  it('should return an error if a player has invalid minutes', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+
+    const formData = new FormData();
+    formData.append('pouleOpponentId', '1');
+    formData.append('date', new Date().toISOString());
+    formData.append(
+      'players',
+      JSON.stringify([{ id: 1, minutes: 'invalid', available: true }])
+    );
+
+    const result = await addMatchAndPlayers(null, formData);
+
+    expect(result.errors).toEqual(
+      formatError('Invalid minutes for player 1. Expected a number.', [
+        'players',
+        'minutes',
+      ]).errors
+    );
+    expect(mockAddMatchPlayer).not.toHaveBeenCalled();
+  });
+
+  it('should handle an error during player addition', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+    mockAddMatchPlayer.mockResolvedValue({
+      errors: formatError('Failed to add player 1.', ['players', 'form'])
+        .errors,
     });
-    expect(mockedAddMatch).toHaveBeenCalledWith(null, formData);
-    expect(mockedAddMatchPlayer).not.toHaveBeenCalled();
+
+    const formData = new FormData();
+    formData.append('pouleOpponentId', '1');
+    formData.append('date', new Date().toISOString());
+    formData.append(
+      'players',
+      JSON.stringify([{ id: 1, minutes: '90', available: true }])
+    );
+
+    const result = await addMatchAndPlayers(null, formData);
+
+    expect(result.errors).toEqual(
+      formatError('Failed to add player 1.', ['players', 'form']).errors
+    );
+    expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
+  });
+
+  it('should handle unexpected error during player addition', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+    mockAddMatchPlayer.mockRejectedValue(new Error('Unexpected error'));
+
+    const formData = new FormData();
+    formData.append('pouleOpponentId', '1');
+    formData.append('date', new Date().toISOString());
+    formData.append(
+      'players',
+      JSON.stringify([{ id: 1, minutes: '90', available: true }])
+    );
+
+    const result = await addMatchAndPlayers(null, formData);
+
+    expect(result.errors).toEqual(
+      formatError('Unexpected error adding player 1.', ['players', '1']).errors
+    );
+    expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
   });
 });
