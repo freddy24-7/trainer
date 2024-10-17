@@ -1,7 +1,8 @@
 import React from 'react';
-import { Player, PlayerResponse, PlayerResponseData } from '@/types/type-list';
+import { Player, PlayerResponse, PlayerResponseData } from '@/types/user-types';
+import { MatchFormValues } from '@/types/match-types';
+
 import { validateMatchPlayerData } from '@/schemas/validation/addMatchPlayerValidation';
-import { MatchFormValues } from '@/types/type-list';
 
 export function mapPlayers(response: Partial<PlayerResponseData>): Player[] {
   if (!response.success) {

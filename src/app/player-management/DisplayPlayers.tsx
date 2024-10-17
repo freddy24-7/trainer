@@ -5,7 +5,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import ReusableModal from '@/components/ReusableModal';
 import { EditPlayerForm } from '@/app/player-management/EditPlayerForm';
 import PlayersList from '@/components/PlayersList';
-import { PlayerManagementClientProps, Player } from '@/types/type-list';
+import { PlayerManagementClientProps, Player } from '@/types/user-types';
 import { handleDeletePlayer } from '@/components/helpers/DeletePlayer';
 import { setupModal } from '@/utils/modalUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';

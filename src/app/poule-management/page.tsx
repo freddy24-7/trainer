@@ -1,6 +1,7 @@
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
-import { GetTeamsInPouleResponse, Poule } from '@/types/type-list';
+import { Poule } from '@/types/poule-types';
+import { GetTeamsInPouleResponse } from '@/types/response-types';
 import Mapper from '@/app/poule-management/Mapper';
 import addPoule from '@/app/actions/addPoule';
 import { AddPouleForm } from '@/app/poule-management/AddPouleForm';

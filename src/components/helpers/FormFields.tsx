@@ -6,7 +6,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { FieldErrors } from 'react-hook-form';
-import { PouleFormValues } from '@/types/type-list';
+import { PouleFormValues } from '@/types/poule-types';
 
 interface InputFieldProps {
   name: keyof PouleFormValues;

@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import { TrainingFormValues } from '@/types/type-list';
+import { TrainingFormValues } from '@/types/training-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 import { convertCalendarDateToDate } from '@/utils/trainingPlayerUtils';

@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { PlayerAtTraining } from '@/types/type-list';
+import { PlayerAtTraining } from '@/types/user-types';
 
 export async function createTraining(
   date: string,

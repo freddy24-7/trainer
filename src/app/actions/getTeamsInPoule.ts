@@ -1,12 +1,11 @@
 'use server';
-
 import { getPoulesWithTeams } from '@/lib/services/getPouleService';
 import { formatPoules } from '@/utils/pouleUtils';
+import { Poule } from '@/types/poule-types';
 import {
-  Poule,
-  GetTeamsInPouleError,
   GetTeamsInPouleResponse,
-} from '@/types/type-list';
+  GetTeamsInPouleError,
+} from '@/types/response-types';
 import { formatError } from '@/utils/errorUtils';
 
 export async function getTeamsInPoule(): Promise<GetTeamsInPouleResponse> {

@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import PlayerForm from '../../components/PlayerForm';
+import PlayerForm from '@/components/PlayerForm';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { validatePlayerData } from '@/schemas/validation/createPlayerValidation';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 import { ZodIssue } from 'zod';
-import { PlayerFormData } from '@/types/type-list';
+import { PlayerFormData } from '@/types/user-types';
 import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 

@@ -1,4 +1,4 @@
-import { MatchPlayerInfo, MatchPlayer } from '@/types/type-list';
+import { MatchPlayerInfo, MatchPlayer } from '@/types/match-types';
 
 export const calculateMatchesPlayed = (matchPlayers: MatchPlayerInfo[] = []) =>
   matchPlayers.filter((mp) => mp.available).length;

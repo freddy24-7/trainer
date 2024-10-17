@@ -3,7 +3,7 @@
 import { getTrainingAttendanceFromDB } from '@/lib/services/getTrainingAttendanceService';
 import { mapTrainingAttendance } from '@/utils/mapTrainingAttendanceUtility';
 import { formatError } from '@/utils/errorUtils';
-import { GetTrainingAttendanceListResponse } from '@/types/type-list';
+import { GetTrainingAttendanceListResponse } from '@/types/response-types';
 
 export async function getTrainingAttendanceList(): Promise<GetTrainingAttendanceListResponse> {
   try {

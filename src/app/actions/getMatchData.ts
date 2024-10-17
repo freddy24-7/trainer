@@ -1,7 +1,7 @@
 'use server';
 
 import { getMatchDataService } from '@/lib/services/getMatchDataService';
-import { GetMatchDataResponse } from '@/types/type-list';
+import { GetMatchDataResponse } from '@/types/response-types';
 import { mapMatchData } from '@/utils/matchDataUtils';
 import { formatError } from '@/utils/errorUtils';
 

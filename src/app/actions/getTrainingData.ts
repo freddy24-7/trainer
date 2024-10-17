@@ -3,7 +3,7 @@
 import { fetchTrainingData } from '@/lib/services/getTrainingDataService';
 import { mapTrainingData } from '@/utils/mapTrainingData';
 import { formatError } from '@/utils/errorUtils';
-import { GetTrainingDataResponse } from '@/types/type-list';
+import { GetTrainingDataResponse } from '@/types/response-types';
 
 export async function getTrainingData(): Promise<GetTrainingDataResponse> {
   try {

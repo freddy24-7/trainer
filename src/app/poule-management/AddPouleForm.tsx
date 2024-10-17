@@ -8,7 +8,7 @@ import { ZodIssue } from 'zod';
 import { InputField } from '@/components/helpers/FormFields';
 import { OpponentsList } from '@/components/helpers/OpponentsList';
 import { Button } from '@/components/ui/button';
-import { PouleFormValues } from '@/types/type-list';
+import { PouleFormValues } from '@/types/poule-types';
 import { submitPouleForm } from '@/utils/pouleUtils';
 import { addOpponent, removeOpponent } from '@/utils/pouleFormUtils';
 

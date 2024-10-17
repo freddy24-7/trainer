@@ -1,7 +1,7 @@
 import { formatWhatsappNumber } from '@/utils/phoneNumberUtils';
 import { formatError } from '@/utils/errorUtils';
 import { toast } from 'react-toastify';
-import { HandlePlayerFormSubmitParams } from '@/types/type-list';
+import { HandlePlayerFormSubmitParams } from '@/types/form-types';
 
 export async function handlePlayerFormSubmit({
   data,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrainingAttendanceClientProps } from '@/types/type-list';
+import { TrainingAttendanceClientProps } from '@/types/training-types';
 import PlayerAttendanceTable from '@/components/helpers/TrainingAttendanceTable';
 
 const AttendanceTraining: React.FC<TrainingAttendanceClientProps> = ({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PouleSelectorProps } from '@/types/type-list';
+import { PouleSelectorProps } from '@/types/poule-types';
 
 const PouleSelector: React.FC<PouleSelectorProps> = ({
   poules,

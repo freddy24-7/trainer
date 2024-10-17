@@ -1,7 +1,7 @@
-import { Poule } from '@/types/type-list';
 import { toast } from 'react-toastify';
 import type { ZodIssue } from 'zod';
-import { PouleFormValues } from '@/types/type-list';
+import { Poule } from '@/types/poule-types';
+import { PouleFormValues } from '@/types/poule-types';
 
 export function formatPoules(poules: any[]): Poule[] {
   return poules.map((poule) => ({

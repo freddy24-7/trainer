@@ -2,7 +2,7 @@
 
 import { createMessage, getSenderById } from '@/lib/services/createChatService';
 import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
-import { ActionResponse } from '@/types/type-list';
+import { ActionResponse } from '@/types/response-types';
 import { formatError } from '@/utils/errorUtils';
 import { triggerNewMessageEvent } from '@/utils/pusherUtils';
 

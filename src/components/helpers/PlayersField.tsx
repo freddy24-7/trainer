@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlayersFieldProps } from '@/types/type-list';
+import { PlayersFieldProps } from '@/types/user-types';
 
 const PlayersField: React.FC<PlayersFieldProps> = ({
   players,

@@ -1,8 +1,10 @@
 import React from 'react';
-import { TrainingClientProps } from '@/types/type-list';
+import { TrainingClientProps } from '@/types/training-types';
 import TrainingSessionsList from '@/components/helpers/TrainingSessionsList';
 
-const DataTrainingClient: React.FC<TrainingClientProps> = ({ trainingData }) => {
+const DataTrainingClient: React.FC<TrainingClientProps> = ({
+  trainingData,
+}) => {
   return (
     <div className="max-w-3xl mx-auto space-y-4">
       <TrainingSessionsList trainingData={trainingData} />{' '}

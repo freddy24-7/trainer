@@ -1,7 +1,7 @@
 'use server';
 
 import { fetchPlayers } from '@/lib/services/getPlayersService';
-import { GetPlayerMatchStatsResponse } from '@/types/type-list';
+import { GetPlayerMatchStatsResponse } from '@/types/response-types';
 import { formatError } from '@/utils/errorUtils';
 import { mapPlayerStats, getValidPlayers } from '@/utils/matchPlayerUtils';
 

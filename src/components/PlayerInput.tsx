@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PlayerInputProps } from '@/types/type-list';
+import { PlayerInputProps } from '@/types/user-types';
 
 const PlayerInput: React.FC<PlayerInputProps> = ({
   player,

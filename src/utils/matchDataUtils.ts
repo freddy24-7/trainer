@@ -1,4 +1,4 @@
-import { MatchData, MatchDataHelper } from '@/types/type-list';
+import { MatchData, MatchDataHelper } from '@/types/match-types';
 
 export function mapMatchData(matches: MatchDataHelper[]): MatchData[] {
   return matches.map((match) => ({

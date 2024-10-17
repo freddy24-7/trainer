@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlayerAttendanceTableProps } from '@/types/type-list';
+import { PlayerAttendanceTableProps } from '@/types/training-types';
 
 const PlayerAttendanceTable: React.FC<PlayerAttendanceTableProps> = ({
   attendanceList,

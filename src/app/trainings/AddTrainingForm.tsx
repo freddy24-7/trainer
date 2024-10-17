@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import DateField from '@/components/helpers/DateField';
 import TrainingPlayersField from '@/components/helpers/TrainingPlayersField';
-import { TrainingFormValues, Player } from '@/types/type-list';
+import { Player } from '@/types/user-types';
+import { TrainingFormValues } from '@/types/training-types';
 import { submitTrainingForm } from '@/utils/trainingFormUtils';
 
 type Props = {

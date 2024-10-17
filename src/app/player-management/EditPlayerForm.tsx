@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { ZodIssue } from 'zod';
-import { PlayerFormData } from '@/types/type-list';
-import PlayerForm from '../../components/PlayerForm';
+import { PlayerFormData } from '@/types/user-types';
+import PlayerForm from '@/components/PlayerForm';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { validateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';

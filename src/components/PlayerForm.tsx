@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlayerFormProps } from '@/types/type-list';
+import { PlayerFormProps } from '@/types/user-types';
 import { usePlayerFormState } from '@/hooks/usePlayerFormState';
 
 function PlayerForm({

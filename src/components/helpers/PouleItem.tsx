@@ -1,6 +1,6 @@
 import React from 'react';
 import TeamsList from '@/components/TeamsList';
-import { Poule } from '@/types/type-list';
+import { Poule } from '@/types/poule-types';
 
 interface PouleItemProps {
   poule: Poule;

@@ -1,14 +1,4 @@
-import { PlayerAttendance } from '@/types/type-list';
-
-interface AbsentTrainingPlayer {
-  absent: boolean;
-}
-
-interface PlayerAbsence {
-  id: number;
-  username: string | null;
-  TrainingPlayer: AbsentTrainingPlayer[];
-}
+import { PlayerAttendance, PlayerAbsence } from '@/types/training-types';
 
 export function mapTrainingAttendance(
   players: PlayerAbsence[]

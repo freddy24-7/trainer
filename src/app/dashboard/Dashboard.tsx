@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DashboardClientProps } from '@/types/type-list';
+import { DashboardClientProps } from '@/types/user-types';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function Dashboard({ signedInUser }: DashboardClientProps) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-import { MatchClientProps } from '@/types/type-list';
+import { MatchClientProps } from '@/types/match-types';
 import PlayerStatsTable from '@/components/helpers/PlayerStatsTable';
 
 const MatchStats: React.FC<MatchClientProps> = ({ playerStats }) => {

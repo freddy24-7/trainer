@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ActionResponse, Message, SignedInUser } from '@/types/type-list';
+import { Message } from '@/types/message-types';
+import { SignedInUser } from '@/types/user-types';
+import { ActionResponse } from '@/types/response-types';
 import {
   handleSendMessageUtil,
   subscribeToPusherEvents,

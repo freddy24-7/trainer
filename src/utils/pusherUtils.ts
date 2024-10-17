@@ -1,7 +1,7 @@
 import pusher from '@/lib/pusher';
 
 import Pusher, { Channel } from 'pusher-js';
-import { PusherEventMessage } from '@/types/type-list';
+import { PusherEventMessage } from '@/types/message-types';
 
 export async function triggerNewMessageEvent(message: any, sender: any) {
   try {

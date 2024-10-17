@@ -1,6 +1,6 @@
 import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
-import { PouleFormValues } from '@/types/type-list';
+import { PouleFormValues } from '@/types/poule-types';
 import { toast } from 'react-toastify';
 
 export const addOpponent = (

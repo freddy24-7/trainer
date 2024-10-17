@@ -1,4 +1,8 @@
-import { TrainingData, TrainingPlayer, TrainingProps } from '@/types/type-list';
+import {
+  TrainingData,
+  TrainingPlayer,
+  TrainingProps,
+} from '@/types/training-types';
 
 export function mapTrainingData(trainings: TrainingProps[]): TrainingData[] {
   return trainings.map((training) => ({

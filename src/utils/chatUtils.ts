@@ -1,12 +1,9 @@
 import React from 'react';
-import { Message } from '@/types/type-list';
+import { Message, PusherEventMessage } from '@/types/message-types';
 import { initializePusher } from '@/utils/pusherUtils';
 import { toast } from 'react-toastify';
-import {
-  ActionResponse,
-  SignedInUser,
-  PusherEventMessage,
-} from '@/types/type-list';
+import { ActionResponse } from '@/types/response-types';
+import { SignedInUser } from '@/types/user-types';
 
 export const subscribeToPusherEvents = (
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>,

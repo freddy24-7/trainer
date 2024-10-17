@@ -1,6 +1,6 @@
 import React from 'react';
 import PlayerInput from '../../components/PlayerInput';
-import { PlayerListProps } from '@/types/type-list';
+import { PlayerListProps } from '@/types/user-types';
 
 const ListPlayersInTeam: React.FC<PlayerListProps> = ({
   players,

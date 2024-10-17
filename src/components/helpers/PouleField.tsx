@@ -6,7 +6,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import PouleSelector from '@/components/helpers/PouleSelector';
-import { Poule } from '@/types/type-list';
+import { Poule } from '@/types/poule-types';
 
 type Props = {
   poules: Poule[];
