@@ -1,5 +1,5 @@
 import { Team } from './team-types';
-import { MatchData } from '@/types/type-list';
+import { MatchData } from '@/types/match-types';
 
 export interface Poule {
   id: number;
