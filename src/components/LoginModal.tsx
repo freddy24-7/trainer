@@ -1,15 +1,18 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useDisclosure } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+
 import ReusableModal from '@/components/ReusableModal';
 
-export default function LoginModal() {
+export default function LoginModal(): React.ReactElement {
   const { isOpen, onOpenChange } = useDisclosure({ defaultOpen: true });
   const router = useRouter();
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     router.push('/');
+    return; // Optional, not required but added for clarity
   };
 
   return (

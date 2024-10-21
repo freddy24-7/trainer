@@ -1,11 +1,11 @@
 import { updateUsername } from '@/app/actions/updateUsername';
 import {
-  findUserByClerkId,
+  handleFindUserByClerkId,
   updateUserUsername,
 } from '@/lib/services/updateUserService';
 
 jest.mock('@/lib/services/updateUserService', () => ({
-  findUserByClerkId: jest.fn(),
+  handleFindUserByClerkId: jest.fn(),
   updateUserUsername: jest.fn(),
 }));
 
@@ -22,7 +22,7 @@ describe('updateUsername', () => {
   });
 
   it('should return an error if the user is not found', async () => {
-    (findUserByClerkId as jest.Mock).mockResolvedValue(null);
+    (handleFindUserByClerkId as jest.Mock).mockResolvedValue(null);
 
     const result = await updateUsername('clerkId123', 'newUsername');
 
@@ -44,7 +44,7 @@ describe('updateUsername', () => {
       clerkId: 'clerkId123',
       username: 'oldUsername',
     };
-    (findUserByClerkId as jest.Mock).mockResolvedValue(mockUser);
+    (handleFindUserByClerkId as jest.Mock).mockResolvedValue(mockUser);
 
     const result = await updateUsername('clerkId123', 'newUsername');
 
@@ -62,7 +62,7 @@ describe('updateUsername', () => {
       clerkId: 'clerkId123',
       username: 'sameUsername',
     };
-    (findUserByClerkId as jest.Mock).mockResolvedValue(mockUser);
+    (handleFindUserByClerkId as jest.Mock).mockResolvedValue(mockUser);
 
     const result = await updateUsername('clerkId123', 'sameUsername');
 
@@ -77,7 +77,7 @@ describe('updateUsername', () => {
       clerkId: 'clerkId123',
       username: 'oldUsername',
     };
-    (findUserByClerkId as jest.Mock).mockResolvedValue(mockUser);
+    (handleFindUserByClerkId as jest.Mock).mockResolvedValue(mockUser);
 
     (updateUserUsername as jest.Mock).mockRejectedValue(
       new Error('Database update error')

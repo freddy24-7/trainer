@@ -1,45 +1,35 @@
-'use client';
-
-import React, { useState } from 'react';
-import { FormProvider } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-import { Button } from '@/components/ui/button';
-import { Poule } from '@/types/poule-types';
-import { Player } from '@/types/user-types';
-import { FormValues } from '@/types/form-types';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { ZodIssue } from 'zod';
-import { usePouleState } from '@/hooks/usePouleState';
-import { submitMatchForm } from '@/utils/matchFormUtils';
-import {
-  validateAllPlayers,
-  updatePlayerMinutes,
-  updatePlayerAvailability,
-  getPlayerMinutes,
-  getPlayerAvailability,
-} from '@/utils/playerUtils';
-import { useMatchFormConfig } from '@/hooks/useMatchFormConfig';
-import PouleField from '@/components/helpers/PouleField';
-import OpponentField from '@/components/helpers/OpponentField';
-import DateField from '@/components/helpers/DateField';
-import ListPlayersInTeam from '@/app/matches/ListPlayersInTeam';
 
-type Props = {
+import MatchForm from '@/components/helpers/matchFormFieldHelpers';
+import { useMatchFormConfig } from '@/hooks/useMatchFormConfig';
+import { usePouleState } from '@/hooks/usePouleState';
+import { Poule } from '@/types/poule-types';
+import { Player, FormValues } from '@/types/user-types';
+import { submitMatchForm } from '@/utils/matchFormUtils';
+import { validateAllPlayers } from '@/utils/playerUtils';
+
+interface Props {
   poules: Poule[];
   players: Player[];
   action: (
-    _prevState: any,
+    _prevState: unknown,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
-};
+}
 
-function AddMatchForm({ action, poules, players }: Props) {
-  const [_, setSubmitting] = useState(false);
+function AddMatchForm({ action, poules, players }: Props): React.ReactElement {
+  const [, setSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
-  const methods = useMatchFormConfig(poules, players);
+  const methods: UseFormReturn<FormValues> = useMatchFormConfig(
+    poules,
+    players
+  );
   const {
-    handleSubmit,
     watch,
     setValue,
     formState: { errors },
@@ -54,12 +44,20 @@ function AddMatchForm({ action, poules, players }: Props) {
     setValue
   );
 
-  const validatePlayers = () => {
+  const validatePlayers = (): boolean => {
     return validateAllPlayers(playerValues, selectedPouleId);
   };
 
-  const onSubmit = async (data: FormValues) => {
-    await submitMatchForm(data, validatePlayers, setSubmitting, action, router);
+  const onSubmit = async (data: FormValues): Promise<void> => {
+    const success = await submitMatchForm(data, {
+      validatePlayers,
+      setSubmitting,
+      action,
+    });
+
+    if (success) {
+      router.push('/');
+    }
   };
 
   return (
@@ -71,57 +69,17 @@ function AddMatchForm({ action, poules, players }: Props) {
           </h3>
         </CardHeader>
         <CardBody>
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <PouleField
-                poules={poules}
-                selectedPoule={selectedPoule}
-                errors={errors}
-                onChange={(pouleId) => setValue('poule', pouleId)}
-              />
-              <OpponentField
-                selectedPoule={selectedPoule}
-                selectedOpponent={selectedOpponent}
-                errors={errors}
-                onChange={(opponentId) => setValue('opponent', opponentId)}
-              />
-              <DateField
-                errors={errors}
-                onChange={(date) => setValue('date', date)}
-              />
-
-              {players.length > 0 && (
-                <ListPlayersInTeam
-                  players={players}
-                  playerMinutes={getPlayerMinutes(playerValues)}
-                  playerAvailability={getPlayerAvailability(playerValues)}
-                  onMinutesChange={(playerId, minutes) =>
-                    setValue(
-                      'players',
-                      updatePlayerMinutes(playerValues, playerId, minutes)
-                    )
-                  }
-                  onAvailabilityChange={(playerId, available) =>
-                    setValue(
-                      'players',
-                      updatePlayerAvailability(
-                        playerValues,
-                        playerId,
-                        available
-                      )
-                    )
-                  }
-                />
-              )}
-
-              <Button
-                type="submit"
-                className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800"
-              >
-                Add Match
-              </Button>
-            </form>
-          </FormProvider>
+          <MatchForm
+            methods={methods}
+            poules={poules}
+            players={players}
+            selectedPoule={selectedPoule}
+            selectedOpponent={selectedOpponent}
+            playerValues={playerValues}
+            errors={errors}
+            onSubmit={onSubmit}
+            setValue={setValue}
+          />
         </CardBody>
       </Card>
     </div>

@@ -1,3 +1,5 @@
+import { User } from '@prisma/client';
+
 import prisma from '@/lib/prisma';
 
 export async function createPlayerInDatabase({
@@ -8,7 +10,7 @@ export async function createPlayerInDatabase({
   clerkId: string;
   username: string;
   whatsappNumber: string;
-}) {
+}): Promise<User> {
   return prisma.user.create({
     data: {
       clerkId,

@@ -1,6 +1,6 @@
 import { MatchData, MatchDataHelper } from '@/types/match-types';
 
-export function mapMatchData(matches: MatchDataHelper[]): MatchData[] {
+export function handleMapMatchData(matches: MatchDataHelper[]): MatchData[] {
   return matches.map((match) => ({
     id: match.id,
     date: match.date,

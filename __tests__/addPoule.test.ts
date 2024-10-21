@@ -1,4 +1,5 @@
 import { ZodIssue } from 'zod';
+
 import addPoule from '@/app/actions/addPoule';
 import prisma from '@/lib/prisma';
 
@@ -23,6 +24,10 @@ jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
 }));
 
+const pouleName = 'Test Poule';
+const opponentName1 = 'Opponent 1';
+const opponentName2 = 'Opponent 2';
+
 describe('addPoule', () => {
   const mockFindUnique = prisma.team.findUnique as jest.Mock;
   const mockCreateTeam = prisma.team.create as jest.Mock;
@@ -43,23 +48,23 @@ describe('addPoule', () => {
 
     mockCreateTeam
       .mockResolvedValueOnce({ id: 1, name: 'Main Team' })
-      .mockResolvedValueOnce({ id: 2, name: 'Opponent 1' })
-      .mockResolvedValueOnce({ id: 3, name: 'Opponent 2' });
+      .mockResolvedValueOnce({ id: 2, name: opponentName1 })
+      .mockResolvedValueOnce({ id: 3, name: opponentName2 });
 
-    mockCreatePoule.mockResolvedValueOnce({ id: 1, name: 'Test Poule' });
+    mockCreatePoule.mockResolvedValueOnce({ id: 1, name: pouleName });
     mockCreatePouleOpponents.mockResolvedValue({});
 
     const formData = new FormData();
-    formData.append('pouleName', 'Test Poule');
+    formData.append('pouleName', pouleName);
     formData.append('mainTeamName', 'Main Team');
-    formData.append('opponents', 'Opponent 1');
-    formData.append('opponents', 'Opponent 2');
+    formData.append('opponents', opponentName1);
+    formData.append('opponents', opponentName2);
 
     await addPoule(null, formData);
 
     expect(mockCreatePoule).toHaveBeenCalledWith({
       data: {
-        name: 'Test Poule',
+        name: pouleName,
         team: { connect: { id: 1 } },
       },
     });
@@ -88,9 +93,9 @@ describe('addPoule', () => {
       });
 
     const formData = new FormData();
-    formData.append('pouleName', 'Test Poule');
+    formData.append('pouleName', pouleName);
     formData.append('mainTeamName', 'Main Team');
-    formData.append('opponents', 'Opponent 1');
+    formData.append('opponents', opponentName1);
 
     const result = await addPoule(null, formData);
 
@@ -113,15 +118,15 @@ describe('addPoule', () => {
 
     mockCreateTeam
       .mockResolvedValueOnce({ id: 1, name: 'Main Team' })
-      .mockResolvedValueOnce({ id: 2, name: 'Opponent 1' });
+      .mockResolvedValueOnce({ id: 2, name: opponentName1 });
 
-    mockCreatePoule.mockResolvedValueOnce({ id: 1, name: 'Test Poule' });
+    mockCreatePoule.mockResolvedValueOnce({ id: 1, name: pouleName });
     mockCreatePouleOpponents.mockRejectedValueOnce(
       new Error('Failed to create opponent')
     );
 
     const formData = new FormData();
-    formData.append('pouleName', 'Test Poule');
+    formData.append('pouleName', pouleName);
     formData.append('mainTeamName', 'Main Team');
     formData.append('opponents', 'Opponent 1');
 

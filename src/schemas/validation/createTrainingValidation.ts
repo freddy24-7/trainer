@@ -1,9 +1,11 @@
-import { addTrainingSchema } from '@/schemas/trainingSchema';
 import { ZodIssue } from 'zod';
 
-export function validateTrainingData(params: FormData): {
+import { addTrainingSchema } from '@/schemas/trainingSchema';
+import { TrainingFormData } from '@/types/training-types';
+
+export function handleValidateTrainingData(params: FormData): {
   success: boolean;
-  data?: any;
+  data?: TrainingFormData;
   errors?: ZodIssue[];
 } {
   const validation = addTrainingSchema.safeParse({
@@ -22,6 +24,6 @@ export function validateTrainingData(params: FormData): {
 
   return {
     success: true,
-    data: validation.data,
+    data: validation.data as TrainingFormData,
   };
 }

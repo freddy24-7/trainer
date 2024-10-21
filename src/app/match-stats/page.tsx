@@ -1,12 +1,13 @@
 import React from 'react';
-import MatchStats from '@/app/match-stats/MatchStats';
-import MatchOpponents from '@/app/match-stats/MatchOpponents';
-import { getPlayerStats } from '@/app/actions/getPlayerStats';
+
 import { getMatchData } from '@/app/actions/getMatchData';
+import { getPlayerStats } from '@/app/actions/getPlayerStats';
+import MatchOpponents from '@/app/match-stats/MatchOpponents';
+import MatchStats from '@/app/match-stats/MatchStats';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { formatError } from '@/utils/errorUtils';
 
-export default async function MatchStatsPage() {
+export default async function MatchStatsPage(): Promise<React.ReactElement> {
   const [playerStatsResponse, matchDataResponse] = await Promise.all([
     getPlayerStats(),
     getMatchData(),

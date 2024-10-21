@@ -1,16 +1,18 @@
 import React from 'react';
-import { Player, PlayerResponse, PlayerResponseData } from '@/types/user-types';
+
+import { handleValidateMatchPlayerData } from '@/schemas/validation/addMatchPlayerValidation';
 import { MatchFormValues } from '@/types/match-types';
+import { Player, PlayerResponseData } from '@/types/user-types';
 
-import { validateMatchPlayerData } from '@/schemas/validation/addMatchPlayerValidation';
-
-export function mapPlayers(response: Partial<PlayerResponseData>): Player[] {
-  if (!response.success) {
+export function handleMapPlayers(
+  response: Partial<PlayerResponseData>
+): Player[] {
+  if (!response.success || !Array.isArray(response.players)) {
     return [];
   }
 
-  return (response.players ?? []).map((player: PlayerResponse) => ({
-    id: Number(player.id),
+  return response.players.map((player) => ({
+    id: player.id,
     username: player.username ?? '',
     whatsappNumber: player.whatsappNumber ?? '',
   }));
@@ -20,7 +22,7 @@ export const updatePlayerList = (
   updatedPlayer: Player,
   setPlayers: React.Dispatch<React.SetStateAction<Player[]>>,
   setSubmitting: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+): void => {
   setPlayers((prevPlayers) =>
     prevPlayers.map((player) =>
       player.id === updatedPlayer.id ? updatedPlayer : player
@@ -30,12 +32,12 @@ export const updatePlayerList = (
 };
 
 export const validateAllPlayers = (
-  players: any[],
+  players: MatchFormValues['players'],
   selectedPouleId: number | undefined
-) => {
+): boolean => {
   return players.every(
     (player) =>
-      validateMatchPlayerData({
+      handleValidateMatchPlayerData({
         userId: player.id,
         matchId: selectedPouleId ?? 0,
         minutes: typeof player.minutes === 'number' ? player.minutes : 0,
@@ -44,17 +46,23 @@ export const validateAllPlayers = (
   );
 };
 
-export const getPlayerMinutes = (players: MatchFormValues['players']) =>
-  players.reduce(
+export const getPlayerMinutes = (
+  players: MatchFormValues['players']
+): Record<number, number | ''> => {
+  return players.reduce(
     (acc, player) => ({ ...acc, [player.id]: player.minutes }),
-    {}
+    {} as Record<number, number | ''>
   );
+};
 
-export const getPlayerAvailability = (players: MatchFormValues['players']) =>
-  players.reduce(
+export const getPlayerAvailability = (
+  players: MatchFormValues['players']
+): Record<number, boolean> => {
+  return players.reduce(
     (acc, player) => ({ ...acc, [player.id]: player.available }),
-    {}
+    {} as Record<number, boolean>
   );
+};
 
 export const updatePlayerMinutes = (
   players: MatchFormValues['players'],

@@ -1,12 +1,13 @@
 import React from 'react';
-import { getTrainingData } from '@/app/actions/getTrainingData';
+
 import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
-import DataTrainingClient from '@/app/training-stats/DataTrainingClient';
-import AttendanceTraining from '@/app/training-stats/AttendanceTraining';
+import { getTrainingData } from '@/app/actions/getTrainingData';
 import ProtectedLayout from '@/app/ProtectedLayout';
+import AttendanceTraining from '@/app/training-stats/AttendanceTraining';
+import DataTrainingClient from '@/app/training-stats/DataTrainingClient';
 import { formatError } from '@/utils/errorUtils';
 
-export default async function TrainingsPage() {
+export default async function TrainingsPage(): Promise<React.ReactElement> {
   const [trainingDataResponse, attendanceDataResponse] = await Promise.all([
     getTrainingData(),
     getTrainingAttendanceList(),

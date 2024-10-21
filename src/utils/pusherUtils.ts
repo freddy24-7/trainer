@@ -1,19 +1,23 @@
-import pusher from '@/lib/pusher';
-
 import Pusher, { Channel } from 'pusher-js';
-import { PusherEventMessage } from '@/types/message-types';
 
-export async function triggerNewMessageEvent(message: any, sender: any) {
+import pusher from '@/lib/pusher';
+import { PusherEventMessage, Message, Sender } from '@/types/message-types';
+
+const newMessage = 'new-message';
+
+export async function handleTriggerNewMessageEvent(
+  message: Message,
+  sender: Sender
+): Promise<unknown> {
   try {
-    const pusherResponse = await pusher.trigger('chat', 'new-message', {
+    const pusherResponse = await pusher.trigger('chat', newMessage, {
       id: message.id,
       content: message.content,
-      senderId: message.senderId,
-      createdAt: message.createdAt,
       sender: {
-        id: message.senderId,
-        username: sender?.username,
+        id: sender.id,
+        username: sender.username,
       },
+      createdAt: message.createdAt,
     });
 
     console.log(
@@ -29,7 +33,7 @@ export async function triggerNewMessageEvent(message: any, sender: any) {
   }
 }
 
-export function initializePusher(
+export function handleInitializePusher(
   onMessageReceived: (data: PusherEventMessage) => void
 ): () => void {
   Pusher.logToConsole = true;
@@ -41,10 +45,10 @@ export function initializePusher(
 
   const channel: Channel = pusher.subscribe('chat');
 
-  channel.bind('new-message', onMessageReceived);
+  channel.bind(newMessage, onMessageReceived);
 
   return () => {
-    channel.unbind('new-message', onMessageReceived);
+    channel.unbind(newMessage, onMessageReceived);
     pusher.unsubscribe('chat');
     pusher.disconnect();
   };

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { PlayerStatsTableProps } from '@/types/user-types';
 
 const PlayerStatsTable: React.FC<PlayerStatsTableProps> = ({ playerStats }) => {

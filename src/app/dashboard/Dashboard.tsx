@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { DashboardClientProps } from '@/types/user-types';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import React, { useEffect, useState } from 'react';
 
-export default function Dashboard({ signedInUser }: DashboardClientProps) {
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { DashboardClientProps } from '@/types/user-types';
+
+export default function Dashboard({
+  signedInUser,
+}: DashboardClientProps): React.ReactElement {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -1,9 +1,11 @@
-import { createPouleSchema } from '@/schemas/createPouleSchema';
 import { ZodIssue } from 'zod';
 
-export function validatePouleData(params: FormData): {
+import { createPouleSchema } from '@/schemas/createPouleSchema';
+import { PouleFormData } from '@/types/poule-types';
+
+export function handleValidatePouleData(params: FormData): {
   success: boolean;
-  data?: any;
+  data?: PouleFormData;
   errors?: ZodIssue[];
 } {
   const validation = createPouleSchema.safeParse({
@@ -21,6 +23,6 @@ export function validatePouleData(params: FormData): {
 
   return {
     success: true,
-    data: validation.data,
+    data: validation.data as PouleFormData,
   };
 }

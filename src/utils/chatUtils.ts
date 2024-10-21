@@ -1,15 +1,16 @@
 import React from 'react';
-import { Message, PusherEventMessage } from '@/types/message-types';
-import { initializePusher } from '@/utils/pusherUtils';
 import { toast } from 'react-toastify';
+
+import { Message, PusherEventMessage } from '@/types/message-types';
 import { ActionResponse } from '@/types/response-types';
 import { SignedInUser } from '@/types/user-types';
+import { handleInitializePusher } from '@/utils/pusherUtils';
 
 export const subscribeToPusherEvents = (
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
-) => {
-  const handlePusherEvent = (data: PusherEventMessage) => {
+): (() => void) => {
+  const handlePusherEvent = (data: PusherEventMessage): void => {
     console.log('Pusher event received:', data);
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -22,19 +23,23 @@ export const subscribeToPusherEvents = (
     ]);
   };
 
-  const cleanup = initializePusher(handlePusherEvent);
+  const cleanup = handleInitializePusher(handlePusherEvent);
   setLoading(false);
 
   return cleanup;
 };
 
+interface SendMessageOptions {
+  newMessage: string;
+  signedInUser: SignedInUser;
+  action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
+}
+
 export const handleSendMessageUtil = async (
   e: React.FormEvent,
-  newMessage: string,
-  signedInUser: SignedInUser,
-  action: (_prevState: any, params: FormData) => Promise<ActionResponse>,
+  { newMessage, signedInUser, action }: SendMessageOptions,
   setNewMessage: React.Dispatch<React.SetStateAction<string>>
-) => {
+): Promise<void> => {
   e.preventDefault();
 
   if (!newMessage.trim()) {

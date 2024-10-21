@@ -1,19 +1,25 @@
-import prisma from '@/lib/prisma';
 import { users } from '@clerk/clerk-sdk-node';
+import { User } from '@prisma/client';
 
-export async function findPlayerById(playerId: number) {
+import prisma from '@/lib/prisma';
+
+export async function handleFindPlayerById(
+  playerId: number
+): Promise<Pick<User, 'clerkId'> | null> {
   return prisma.user.findUnique({
     where: { id: playerId },
     select: { clerkId: true },
   });
 }
 
-export async function deletePlayerFromDatabase(playerId: number) {
+export async function deletePlayerFromDatabase(
+  playerId: number
+): Promise<User> {
   return prisma.user.delete({
     where: { id: playerId },
   });
 }
 
-export async function deleteClerkUser(clerkId: string) {
-  return users.deleteUser(clerkId);
+export async function deleteClerkUser(clerkId: string): Promise<void> {
+  await users.deleteUser(clerkId);
 }

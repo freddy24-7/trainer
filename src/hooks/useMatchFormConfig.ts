@@ -1,9 +1,12 @@
-import { useForm } from 'react-hook-form';
-import { FormValues } from '@/types/form-types';
-import { Player } from '@/types/user-types';
-import { Poule } from '@/types/poule-types';
+import { useForm, UseFormReturn } from 'react-hook-form';
 
-export const useMatchFormConfig = (poules: Poule[], players: Player[]) => {
+import { Poule } from '@/types/poule-types';
+import { Player, FormValues } from '@/types/user-types';
+
+export const useMatchFormConfig = (
+  poules: Poule[],
+  players: Player[]
+): UseFormReturn<FormValues> => {
   return useForm<FormValues>({
     defaultValues: {
       poule: poules.length > 0 ? poules[0].id : undefined,

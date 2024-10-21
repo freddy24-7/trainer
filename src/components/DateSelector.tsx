@@ -1,5 +1,6 @@
-import React from 'react';
 import { DatePicker, CalendarDate } from '@nextui-org/react';
+import React from 'react';
+
 import { DateSelectorProps } from '@/types/ui-types';
 
 const DateSelector: React.FC<DateSelectorProps> = ({

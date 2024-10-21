@@ -1,26 +1,28 @@
-import ProtectedLayout from '@/app/ProtectedLayout';
-import getPlayers from '@/app/actions/getPlayers';
-import addPlayer from '@/app/actions/addPlayer';
-import editPlayer from '@/app/actions/editPlayer';
-import deletePlayer from '@/app/actions/deletePlayer';
-import DisplayPlayers from '@/app/player-management/DisplayPlayers';
-import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
-import { validatePlayerResponse } from '@/utils/responseUtils';
-import { mapPlayers } from '@/utils/playerUtils';
-import { renderError } from '@/components/helpers/RenderError';
-import { Player } from '@/types/user-types';
+import React from 'react';
 
-export default async function ManagementPage() {
+import addPlayer from '@/app/actions/addPlayer';
+import deletePlayer from '@/app/actions/deletePlayer';
+import editPlayer from '@/app/actions/editPlayer';
+import getPlayers from '@/app/actions/getPlayers';
+import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
+import DisplayPlayers from '@/app/player-management/DisplayPlayers';
+import ProtectedLayout from '@/app/ProtectedLayout';
+import { handleRenderError } from '@/components/helpers/RenderError';
+import { Player } from '@/types/user-types';
+import { handleMapPlayers } from '@/utils/playerUtils';
+import { handlePlayerResponse } from '@/utils/responseUtils';
+
+export default async function ManagementPage(): Promise<React.ReactElement> {
   const response = await getPlayers();
 
-  const validatedResponse = validatePlayerResponse(response);
+  const validatedResponse = handlePlayerResponse(response);
 
-  const errorElement = renderError(validatedResponse);
+  const errorElement = handleRenderError(validatedResponse);
   if (errorElement) {
     return errorElement;
   }
 
-  const players: Player[] = mapPlayers(validatedResponse);
+  const players: Player[] = handleMapPlayers(validatedResponse);
 
   return (
     <ProtectedLayout requiredRole="TRAINER">

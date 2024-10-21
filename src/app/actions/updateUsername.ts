@@ -1,12 +1,12 @@
 import {
-  findUserByClerkId,
+  handleFindUserByClerkId,
   updateUserUsername,
 } from '@/lib/services/updateUserService';
 import { formatError } from '@/utils/errorUtils';
 
 export async function updateUsername(clerkId: string, newUsername: string) {
   try {
-    const dbUser = await findUserByClerkId(clerkId);
+    const dbUser = await handleFindUserByClerkId(clerkId);
 
     if (!dbUser) {
       console.log(`User with Clerk ID ${clerkId} not found in the database.`);

@@ -1,9 +1,11 @@
-import { createPlayerSchema } from '@/schemas/createPlayerSchema';
 import { ZodIssue } from 'zod';
 
-export function validatePlayerData(params: FormData): {
+import { createPlayerSchema } from '@/schemas/createPlayerSchema';
+import { PlayerFormData } from '@/types/user-types';
+
+export function handleValidatePlayerData(params: FormData): {
   success: boolean;
-  data?: any;
+  data?: PlayerFormData;
   errors?: ZodIssue[];
 } {
   const username = params.get('username');
@@ -36,5 +38,5 @@ export function validatePlayerData(params: FormData): {
     };
   }
 
-  return { success: true, data: validation.data, errors: [] };
+  return { success: true, data: validation.data as PlayerFormData, errors: [] };
 }

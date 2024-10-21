@@ -1,7 +1,10 @@
+import { revalidatePath } from 'next/cache';
+
 import getPlayers from '@/app/actions/getPlayers';
 import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
 import { formatError } from '@/utils/errorUtils';
+
+const errorMessage = 'Error fetching players.';
 
 jest.mock('@/lib/prisma', () => ({
   user: {
@@ -14,9 +17,9 @@ jest.mock('next/cache', () => ({
 }));
 
 jest.mock('@/utils/errorUtils', () => ({
-  formatError: jest.fn().mockReturnValue({
-    errors: [{ message: 'Error fetching players.' }],
-  }),
+  formatError: jest.fn().mockImplementation(() => ({
+    errors: [{ message: errorMessage }],
+  })),
 }));
 
 describe('getPlayers', () => {
@@ -54,9 +57,9 @@ describe('getPlayers', () => {
     const result = await getPlayers();
 
     expect(result).toEqual({
-      errors: [{ message: 'Error fetching players.' }],
+      errors: [{ message: errorMessage }], // Use the constant here
     });
     expect(revalidatePath).not.toHaveBeenCalled();
-    expect(formatError).toHaveBeenCalledWith('Error fetching players.');
+    expect(formatError).toHaveBeenCalledWith(errorMessage); // Use the constant here
   });
 });

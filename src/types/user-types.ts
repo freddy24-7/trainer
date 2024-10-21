@@ -1,5 +1,16 @@
+import { CalendarDate } from '@nextui-org/react';
+import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
-import { FormValues } from './form-types';
+import { ZodIssue } from 'zod';
+
+import { ResponseError } from '@/types/response-types';
+
+export interface FormValues {
+  poule: number | undefined;
+  opponent: number | undefined;
+  date: CalendarDate | null;
+  players: { id: number; minutes: number | ''; available: boolean }[];
+}
 
 export interface DashboardClientProps {
   signedInUser: SignedInUser;
@@ -59,15 +70,9 @@ export interface PlayerMatchStat {
 }
 
 export interface PlayerResponse {
-  id: string;
+  id: number;
   username?: string;
   whatsappNumber?: string;
-}
-
-export interface PlayerResponseData {
-  success: boolean;
-  players?: PlayerResponse[];
-  errors?: any[];
 }
 
 export interface PlayerStat {
@@ -104,4 +109,27 @@ export interface PlayersListProps {
   players: Player[];
   onEdit: (player: Player) => void;
   onDelete: (playerId: number) => void;
+}
+
+export interface HandlePlayerFormSubmitParams {
+  data: PlayerFormData;
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  validationFunction: (formData: FormData) => {
+    success: boolean;
+    errors?: ZodIssue[];
+  };
+  actionFunction: (formData: FormData) => Promise<{ errors: ZodIssue[] }>;
+  onSuccess: (playerData: PlayerFormData) => void;
+}
+
+export interface EditPlayerFormData {
+  username: string;
+  password?: string;
+  whatsappNumber: string;
+}
+
+export interface PlayerResponseData {
+  success: boolean;
+  players?: PlayerResponse[];
+  errors?: (ResponseError | ZodIssue)[];
 }

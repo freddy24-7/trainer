@@ -1,12 +1,14 @@
-import ProtectedLayout from '@/app/ProtectedLayout';
+import React from 'react';
+
+import addPoule from '@/app/actions/addPoule';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
+import { AddPouleForm } from '@/app/poule-management/AddPouleForm';
+import Mapper from '@/app/poule-management/Mapper';
+import ProtectedLayout from '@/app/ProtectedLayout';
 import { Poule } from '@/types/poule-types';
 import { GetTeamsInPouleResponse } from '@/types/response-types';
-import Mapper from '@/app/poule-management/Mapper';
-import addPoule from '@/app/actions/addPoule';
-import { AddPouleForm } from '@/app/poule-management/AddPouleForm';
 
-export default async function PouleManagementPage() {
+export default async function PouleManagementPage(): Promise<React.ReactElement> {
   const pouleResponse: GetTeamsInPouleResponse = await getTeamsInPoule();
 
   const poules: Poule[] = pouleResponse.success ? pouleResponse.poules : [];

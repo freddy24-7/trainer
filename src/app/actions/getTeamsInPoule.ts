@@ -1,12 +1,12 @@
-'use server';
 import { getPoulesWithTeams } from '@/lib/services/getPouleService';
-import { formatPoules } from '@/utils/pouleUtils';
 import { Poule } from '@/types/poule-types';
 import {
   GetTeamsInPouleResponse,
   GetTeamsInPouleError,
 } from '@/types/response-types';
+import { Team } from '@/types/team-types';
 import { formatError } from '@/utils/errorUtils';
+import { handleFormatPoules } from '@/utils/pouleUtils';
 
 export async function getTeamsInPoule(): Promise<GetTeamsInPouleResponse> {
   try {
@@ -21,7 +21,16 @@ export async function getTeamsInPoule(): Promise<GetTeamsInPouleResponse> {
       ) as GetTeamsInPouleError;
     }
 
-    const formattedPoules: Poule[] = formatPoules(poules);
+    const formattedPoules: Poule[] = handleFormatPoules(
+      poules.map((poule) => ({
+        ...poule,
+        team: poule.team as Team,
+        opponents: poule.opponents.map((opponent, index) => ({
+          id: (opponent as { id?: number }).id ?? index,
+          team: opponent.team as Team,
+        })),
+      }))
+    );
 
     return {
       success: true,

@@ -1,9 +1,8 @@
 import prisma from '@/lib/prisma';
-
 import { formatError } from '@/utils/errorUtils';
 
 export async function fetchMessages(): Promise<{
-  messages: any[];
+  messages: unknown[];
   success: boolean;
   error?: string;
 }> {

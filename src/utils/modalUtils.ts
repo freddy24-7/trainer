@@ -16,7 +16,7 @@ export const setupModal = ({
   title: string;
   body: React.ReactNode;
   confirmAction: () => void;
-}) => {
+}): void => {
   setModalTitle(title);
   setModalBody(body);
   setConfirmAction(() => confirmAction);

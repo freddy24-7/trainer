@@ -1,7 +1,7 @@
 'use server';
 
 import {
-  findPlayerById,
+  handleFindPlayerById,
   deletePlayerFromDatabase,
   deleteClerkUser,
 } from '@/lib/services/deletePlayerService';
@@ -9,9 +9,9 @@ import { formatError } from '@/utils/errorUtils';
 
 export default async function deletePlayer(
   playerId: number
-): Promise<{ errors: any[]; success?: boolean }> {
+): Promise<{ errors: unknown[]; success?: boolean }> {
   try {
-    const player = await findPlayerById(playerId);
+    const player = await handleFindPlayerById(playerId);
     if (!player || !player.clerkId) {
       return formatError('Player not found or Clerk ID is missing.');
     }
@@ -21,6 +21,7 @@ export default async function deletePlayer(
 
     return { errors: [], success: true };
   } catch (error) {
+    console.error(error);
     return formatError('Error deleting the player.');
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { TrainingSessionsListProps } from '@/types/training-types';
 
 const TrainingSessionsList: React.FC<TrainingSessionsListProps> = ({

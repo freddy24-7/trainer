@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import React, { useEffect } from 'react';
+
 import { TeamsListProps, Team } from '@/types/team-types';
 
-export default function TeamsList({ teams, pouleName }: TeamsListProps) {
+export default function TeamsList({
+  teams,
+  pouleName,
+}: TeamsListProps): React.ReactElement {
   useEffect(() => {
     console.log('TeamsList Props:', { teams, pouleName });
   }, [teams, pouleName]);

@@ -15,6 +15,7 @@ export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
 
     return { success: true, playerStats };
   } catch (error) {
+    console.error('Error fetching player stats:', error);
     const formattedError = formatError('Failed to fetch player stats.', [
       'getPlayerStats',
     ]);

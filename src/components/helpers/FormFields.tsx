@@ -1,16 +1,17 @@
 import React from 'react';
+import { Control, FieldErrors } from 'react-hook-form';
+
 import {
   FormField,
   FormItem,
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { FieldErrors } from 'react-hook-form';
 import { PouleFormValues } from '@/types/poule-types';
 
 interface InputFieldProps {
   name: keyof PouleFormValues;
-  control: any;
+  control: Control<PouleFormValues>;
   placeholder: string;
   errors: FieldErrors<PouleFormValues>;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -37,7 +38,7 @@ export const InputField: React.FC<InputFieldProps> = ({
               onKeyDown={onKeyDown}
             />
           </FormControl>
-          <FormMessage>{errors[name]?.message}</FormMessage>
+          <FormMessage>{errors[name]?.message}</FormMessage>{' '}
         </>
       )}
     />

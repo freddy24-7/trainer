@@ -1,6 +1,7 @@
 import React from 'react';
-import { TrainingClientProps } from '@/types/training-types';
+
 import TrainingSessionsList from '@/components/helpers/TrainingSessionsList';
+import { TrainingClientProps } from '@/types/training-types';
 
 const DataTrainingClient: React.FC<TrainingClientProps> = ({
   trainingData,

@@ -1,7 +1,8 @@
-import addPlayer from '@/app/actions/addPlayer';
-import prisma from '@/lib/prisma';
 import { users } from '@clerk/clerk-sdk-node';
 import { revalidatePath } from 'next/cache';
+
+import addPlayer from '@/app/actions/addPlayer';
+import prisma from '@/lib/prisma';
 
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
@@ -44,13 +45,18 @@ describe('addPlayer Functionality Tests', () => {
     username?: string,
     password?: string,
     whatsappNumber?: string
-  ) => {
+  ): FormData => {
     const formData = new FormData();
     if (username) formData.append('username', username);
     if (password) formData.append('password', password);
     if (whatsappNumber) formData.append('whatsappNumber', whatsappNumber);
     return formData;
   };
+
+  const validWhatsappNumber = '+31612345678';
+  const validPassword = 'SecurePassword@1';
+  const invalidWhatsappNumber = 'invalidNumber';
+  const validUsername = 'testplayer';
 
   it('should create a player successfully with valid input', async () => {
     const createUserMock = users.createUser as jest.Mock;
@@ -60,31 +66,31 @@ describe('addPlayer Functionality Tests', () => {
     createUserMock.mockResolvedValue({ id: 'clerk-123' });
     createUserInDBMock.mockResolvedValue({
       id: 1,
-      username: 'testplayer',
+      username: validUsername,
       clerkId: 'clerk-123',
-      whatsappNumber: '+31612345678',
+      whatsappNumber: validWhatsappNumber,
       role: 'PLAYER',
       createdAt: new Date(),
     });
 
     const formData = formDataSetup(
-      'testplayer',
-      'SecurePassword@1',
-      '+31612345678'
+      validUsername,
+      validPassword,
+      validWhatsappNumber
     );
 
     const result = await addPlayer({}, formData);
 
     expect(result).toEqual({ errors: [], success: true });
     expect(createUserMock).toHaveBeenCalledWith({
-      username: 'testplayer',
-      password: 'SecurePassword@1',
+      username: validUsername,
+      password: validPassword,
     });
     expect(createUserInDBMock).toHaveBeenCalledWith({
       data: {
         clerkId: 'clerk-123',
-        username: 'testplayer',
-        whatsappNumber: '+31612345678',
+        username: validUsername,
+        whatsappNumber: validWhatsappNumber,
         role: 'PLAYER',
         createdAt: expect.any(Date),
       },
@@ -94,9 +100,9 @@ describe('addPlayer Functionality Tests', () => {
 
   it('should return validation errors when whatsappNumber is invalid', async () => {
     const formData = formDataSetup(
-      'testplayer',
-      'SecurePassword@1',
-      'invalidNumber'
+      validUsername,
+      validPassword,
+      invalidWhatsappNumber
     );
 
     const result = await addPlayer({}, formData);
@@ -112,8 +118,8 @@ describe('addPlayer Functionality Tests', () => {
   it('should return validation errors when username is missing', async () => {
     const formData = formDataSetup(
       undefined,
-      'SecurePassword@1',
-      '+31612345678'
+      validPassword,
+      validWhatsappNumber
     );
 
     const result = await addPlayer({}, formData);
@@ -131,9 +137,9 @@ describe('addPlayer Functionality Tests', () => {
     createUserMock.mockRejectedValue(new Error('Clerk error'));
 
     const formData = formDataSetup(
-      'testplayer',
-      'SecurePassword@1',
-      '+31612345678'
+      validUsername,
+      validPassword,
+      validWhatsappNumber
     );
 
     const result = await addPlayer({}, formData);

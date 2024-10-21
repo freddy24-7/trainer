@@ -1,4 +1,5 @@
 import { CalendarDate } from '@nextui-org/react';
+
 import { PlayerStat } from './user-types';
 
 export interface MatchClientProps {
@@ -46,5 +47,11 @@ export interface MatchPlayer {
 
 export interface MatchPlayerInfo {
   minutes: number;
+  available: boolean;
+}
+
+export interface PlayerInMatch {
+  id: number;
+  minutes: string;
   available: boolean;
 }

@@ -49,7 +49,8 @@ describe('addMatchPlayer Functionality Tests', () => {
       available: true,
     };
 
-    const result = await addMatchPlayer(invalidData as any);
+    // @ts-expect-error We are intentionally passing invalid data to test validation
+    const result = await addMatchPlayer(invalidData);
 
     expect(result).toHaveProperty('errors');
     if (result.errors) {

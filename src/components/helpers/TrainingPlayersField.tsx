@@ -1,12 +1,13 @@
 import React from 'react';
+
 import { TrainingPlayersFieldProps } from '@/types/training-types';
 
-const TrainingPlayersField: React.FC<TrainingPlayersFieldProps> = ({
+const TrainingPlayersField = ({
   players,
   playerValues,
   setValue,
-}) => {
-  const toggleAbsence = (index: number) => {
+}: TrainingPlayersFieldProps): React.ReactElement => {
+  const toggleAbsence = (index: number): void => {
     setValue(`players.${index}.absent`, !playerValues[index].absent);
   };
 

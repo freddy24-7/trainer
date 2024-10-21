@@ -2,17 +2,18 @@
 
 import { getMatchDataService } from '@/lib/services/getMatchDataService';
 import { GetMatchDataResponse } from '@/types/response-types';
-import { mapMatchData } from '@/utils/matchDataUtils';
 import { formatError } from '@/utils/errorUtils';
+import { handleMapMatchData } from '@/utils/matchDataUtils';
 
 export async function getMatchData(): Promise<GetMatchDataResponse> {
   try {
     const matches = await getMatchDataService();
 
-    const matchData = mapMatchData(matches);
+    const matchData = handleMapMatchData(matches);
 
     return { success: true, matchData };
   } catch (error) {
+    console.error('Error fetching match data:', error);
     const formattedError = formatError('Failed to fetch match data.', [
       'getMatchData',
     ]);

@@ -3,6 +3,8 @@
 import { NavbarItem } from '@nextui-org/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import React from 'react';
+
 import { NavLinkProps } from '@/types/ui-types';
 
 export default function NavLink({
@@ -10,7 +12,7 @@ export default function NavLink({
   label,
   children,
   className,
-}: NavLinkProps) {
+}: NavLinkProps): React.ReactElement {
   const pathname = usePathname();
 
   return (

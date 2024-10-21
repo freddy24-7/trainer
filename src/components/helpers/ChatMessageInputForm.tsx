@@ -1,10 +1,6 @@
 import React from 'react';
 
-type MessageInputFormProps = {
-  newMessage: string;
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
-  handleSendMessage: (e: React.FormEvent) => void;
-};
+import { MessageInputFormProps } from '@/types/message-types';
 
 const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
   newMessage,

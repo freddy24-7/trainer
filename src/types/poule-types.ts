@@ -1,5 +1,6 @@
-import { Team } from './team-types';
 import { MatchData } from '@/types/match-types';
+
+import { Team } from './team-types';
 
 export interface Poule {
   id: number;
@@ -40,4 +41,10 @@ export interface OpponentSelectorProps {
   opponents: PouleOpponent[];
   selectedOpponent: PouleOpponent | null;
   onOpponentChange: (opponentId: number) => void;
+}
+
+export interface PouleFormData {
+  pouleName: string;
+  mainTeamName: string;
+  opponents: string[];
 }

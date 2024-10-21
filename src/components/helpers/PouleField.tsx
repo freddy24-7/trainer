@@ -1,21 +1,31 @@
 import React from 'react';
+
+import PouleSelector from '@/components/helpers/PouleSelector';
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import PouleSelector from '@/components/helpers/PouleSelector';
 import { Poule } from '@/types/poule-types';
 
-type Props = {
+interface FieldError {
+  message?: string;
+}
+
+interface Props {
   poules: Poule[];
   selectedPoule: Poule | null;
-  errors: any;
+  errors: { poule?: FieldError };
   onChange: (pouleId: number) => void;
-};
+}
 
-const PouleField = ({ poules, selectedPoule, errors, onChange }: Props) => (
+const PouleField = ({
+  poules,
+  selectedPoule,
+  errors,
+  onChange,
+}: Props): React.ReactElement => (
   <FormItem>
     <FormField
       name="poule"
@@ -28,7 +38,7 @@ const PouleField = ({ poules, selectedPoule, errors, onChange }: Props) => (
               onPouleChange={onChange}
             />
           </FormControl>
-          <FormMessage>{errors.poule?.message}</FormMessage>
+          <FormMessage>{errors.poule?.message}</FormMessage>{' '}
         </>
       )}
     />

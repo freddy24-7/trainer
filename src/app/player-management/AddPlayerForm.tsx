@@ -1,28 +1,29 @@
 'use client';
 
-import React, { useState } from 'react';
-import PlayerForm from '@/components/PlayerForm';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
-import { validatePlayerData } from '@/schemas/validation/createPlayerValidation';
-import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
+import React, { useState } from 'react';
 import { ZodIssue } from 'zod';
+
+import PlayerForm from '@/components/PlayerForm';
+import { handleValidatePlayerData } from '@/schemas/validation/createPlayerValidation';
 import { PlayerFormData } from '@/types/user-types';
 import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
+import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 
 function AddPlayerForm({
   action,
 }: {
   action: (
-    _prevState: any,
+    _prevState: unknown,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
-}) {
+}): React.ReactElement {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formKey, setFormKey] = useState(0);
   const [playerData, setPlayerData] = useState<PlayerFormData | null>(null);
 
-  const handleAddPlayer = async (data: PlayerFormData) => {
+  const handleAddPlayer = async (data: PlayerFormData): Promise<void> => {
     const resetSubmission = handleSubmissionState(
       setIsSubmitting,
       () => console.log('Submission started...'),
@@ -32,7 +33,7 @@ function AddPlayerForm({
     await handlePlayerFormSubmit({
       data,
       setIsSubmitting,
-      validationFunction: validatePlayerData,
+      validationFunction: handleValidatePlayerData,
       actionFunction: (formData) => action({}, formData),
       onSuccess: (playerData) => {
         setPlayerData(playerData);

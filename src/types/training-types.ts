@@ -1,5 +1,8 @@
 import { CalendarDate } from '@nextui-org/react';
 import { UseFormSetValue } from 'react-hook-form';
+
+import { formatError } from '@/utils/errorUtils';
+
 import { Player } from './user-types';
 
 export interface TrainingAttendanceClientProps {
@@ -61,4 +64,22 @@ export interface PlayerAttendance {
 
 export interface PlayerAttendanceTableProps {
   attendanceList: PlayerAttendance[];
+}
+
+export interface AddTrainingSuccess {
+  success: true;
+  training: unknown;
+}
+
+export type AddTrainingFailure = ReturnType<typeof formatError>;
+
+export interface Training {
+  id: number;
+  date: Date;
+  trainingPlayers: TrainingPlayer[];
+}
+
+export interface TrainingFormData {
+  date: string | null;
+  players: { userId: number; absent: boolean }[];
 }

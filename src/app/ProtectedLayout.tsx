@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
+import React, { ReactNode } from 'react';
+
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
-import { ReactNode } from 'react';
 
 interface ProtectedLayoutProps {
   children: ReactNode;
@@ -10,7 +11,7 @@ interface ProtectedLayoutProps {
 const ProtectedLayout = async ({
   children,
   requiredRole,
-}: ProtectedLayoutProps) => {
+}: ProtectedLayoutProps): Promise<React.ReactElement> => {
   try {
     const user = await fetchAndCheckUser();
 
@@ -20,6 +21,7 @@ const ProtectedLayout = async ({
 
     return <>{children}</>;
   } catch (error) {
+    console.error(error);
     redirect('/sign-in');
   }
 };

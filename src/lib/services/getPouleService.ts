@@ -1,6 +1,15 @@
+import { Poule } from '@prisma/client';
+
 import prisma from '@/lib/prisma';
 
-export async function getPoulesWithTeams() {
+export async function getPoulesWithTeams(): Promise<
+  (Poule & {
+    team: unknown;
+    opponents: {
+      team: unknown;
+    }[];
+  })[]
+> {
   try {
     return await prisma.poule.findMany({
       include: {
@@ -16,6 +25,7 @@ export async function getPoulesWithTeams() {
       },
     });
   } catch (error) {
+    console.error(error);
     throw new Error('Failed to load poules');
   }
 }

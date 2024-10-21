@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Player } from '@/types/user-types';
 
 export const handleDeletePlayer = async ({
@@ -21,7 +22,7 @@ export const handleDeletePlayer = async ({
     playerId: number
   ) => Promise<{ success: boolean; errors?: string }>;
   setIsModalOpen: (isOpen: boolean) => void;
-}) => {
+}): Promise<void> => {
   setModalTitle('Confirm Deletion');
   setModalBody(
     <p>

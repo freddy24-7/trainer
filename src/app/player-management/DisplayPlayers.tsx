@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import ReusableModal from '@/components/ReusableModal';
+
 import { EditPlayerForm } from '@/app/player-management/EditPlayerForm';
-import PlayersList from '@/components/PlayersList';
-import { PlayerManagementClientProps, Player } from '@/types/user-types';
 import { handleDeletePlayer } from '@/components/helpers/DeletePlayer';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import PlayersList from '@/components/PlayersList';
+import ReusableModal from '@/components/ReusableModal';
+import { PlayerManagementClientProps, Player } from '@/types/user-types';
 import { setupModal } from '@/utils/modalUtils';
-import { handleSubmissionState } from '@/utils/submissionUtils';
 import { updatePlayerList } from '@/utils/playerUtils';
+import { handleSubmissionState } from '@/utils/submissionUtils';
 
 export default function DisplayPlayers({
   players: initialPlayers,

@@ -1,9 +1,9 @@
 import { ZodIssue } from 'zod';
+
 import { MatchData } from './match-types';
-import { PlayerMatchStat } from './user-types';
-import { PlayerAttendance } from './training-types';
 import { Poule } from './poule-types';
-import { TrainingData } from './training-types';
+import { PlayerAttendance, TrainingData } from './training-types';
+import { PlayerMatchStat } from './user-types';
 
 export type GetMatchDataResponse =
   | { success: true; matchData: MatchData[] }
@@ -39,4 +39,8 @@ export interface GetTeamsInPouleSuccess {
 export interface ActionResponse {
   success: boolean;
   errors?: ZodIssue[];
+}
+
+export interface ResponseError {
+  message?: string;
 }

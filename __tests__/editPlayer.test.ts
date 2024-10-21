@@ -1,7 +1,8 @@
+import { users } from '@clerk/clerk-sdk-node';
+
 import editPlayer from '@/app/actions/editPlayer';
 import prisma from '@/lib/prisma';
-import { users } from '@clerk/clerk-sdk-node';
-import { validateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
+import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
 
 jest.mock('@/lib/prisma', () => ({
   user: {
@@ -17,7 +18,7 @@ jest.mock('@clerk/clerk-sdk-node', () => ({
 }));
 
 jest.mock('@/schemas/validation/editPlayerValidation', () => ({
-  validateEditPlayerData: jest.fn(),
+  handleValidateEditPlayerData: jest.fn(),
 }));
 
 jest.mock('@/utils/errorUtils', () => ({
@@ -37,7 +38,10 @@ describe('editPlayer', () => {
     jest.clearAllMocks();
   });
 
-  const createFormData = (username: string, whatsappNumber?: string) => {
+  const createFormData = (
+    username: string,
+    whatsappNumber?: string
+  ): FormData => {
     const formData = new FormData();
     formData.append('username', username);
     if (whatsappNumber) {
@@ -46,14 +50,14 @@ describe('editPlayer', () => {
     return formData;
   };
 
-  const mockPlayerData = (player: Player | null) => {
+  const mockPlayerData = (player: Player | null): void => {
     (prisma.user.findUnique as jest.Mock).mockResolvedValue(player);
   };
 
   it('should return an error if username or WhatsApp number is missing', async () => {
     const formData = createFormData('player1');
 
-    (validateEditPlayerData as jest.Mock).mockReturnValue({
+    (handleValidateEditPlayerData as jest.Mock).mockReturnValue({
       success: false,
       errors: [
         {
@@ -81,7 +85,7 @@ describe('editPlayer', () => {
     mockPlayerData(null);
     const formData = createFormData('player1', '123456789');
 
-    (validateEditPlayerData as jest.Mock).mockReturnValue({
+    (handleValidateEditPlayerData as jest.Mock).mockReturnValue({
       success: true,
       data: {
         username: 'player1',
@@ -107,7 +111,7 @@ describe('editPlayer', () => {
     mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
     const formData = createFormData('invalidPlayer', 'invalidNumber');
 
-    (validateEditPlayerData as jest.Mock).mockReturnValue({
+    (handleValidateEditPlayerData as jest.Mock).mockReturnValue({
       success: false,
       errors: [
         {
@@ -135,7 +139,7 @@ describe('editPlayer', () => {
     mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
     const formData = createFormData('validPlayer', '123456789');
 
-    (validateEditPlayerData as jest.Mock).mockReturnValue({
+    (handleValidateEditPlayerData as jest.Mock).mockReturnValue({
       success: true,
       data: {
         username: 'validPlayer',
@@ -168,7 +172,7 @@ describe('editPlayer', () => {
     mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
     const formData = createFormData('validPlayer', '123456789');
 
-    (validateEditPlayerData as jest.Mock).mockReturnValue({
+    (handleValidateEditPlayerData as jest.Mock).mockReturnValue({
       success: true,
       data: {
         username: 'validPlayer',

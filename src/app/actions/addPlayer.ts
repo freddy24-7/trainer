@@ -2,16 +2,19 @@
 
 import { users } from '@clerk/clerk-sdk-node';
 import { revalidatePath } from 'next/cache';
-import { validatePlayerData } from '@/schemas/validation/createPlayerValidation';
+import { ZodIssue } from 'zod';
+
 import { createPlayerInDatabase } from '@/lib/services/createPlayerService';
+import { handleValidatePlayerData } from '@/schemas/validation/createPlayerValidation';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function addPlayer(
-  _prevState: any,
+  _prevState: unknown,
   params: FormData
-): Promise<{ errors: any[]; success?: boolean }> {
-  const validation = validatePlayerData(params);
-  if (!validation.success) {
+): Promise<{ errors: ZodIssue[]; success?: boolean }> {
+  const validation = handleValidatePlayerData(params);
+
+  if (!validation.success || !validation.data) {
     return {
       errors: validation.errors || [],
     };
@@ -35,6 +38,7 @@ export default async function addPlayer(
 
     return { errors: [], success: true };
   } catch (error) {
+    console.error(error);
     return formatError('Error registering the player.');
   }
 }

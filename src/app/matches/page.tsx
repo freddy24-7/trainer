@@ -1,33 +1,84 @@
-import ProtectedLayout from '@/app/ProtectedLayout';
-import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
-import getPlayers from '@/app/actions/getPlayers';
-import { AddMatchForm } from '@/app/matches/AddMatchForm';
-import addMatchAndPlayers from '@/app/actions/addMatchAndPlayers';
-import { mapPlayers } from '@/utils/playerUtils';
-import { formatError } from '@/utils/errorUtils'; // Import formatError
+import React from 'react';
+import { ZodIssue } from 'zod';
 
-export default async function MatchManagementPage() {
+import addMatchAndPlayers from '@/app/actions/addMatchAndPlayers';
+import getPlayers from '@/app/actions/getPlayers';
+import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
+import { AddMatchForm } from '@/app/matches/AddMatchForm';
+import ProtectedLayout from '@/app/ProtectedLayout';
+import {
+  GetTeamsInPouleResponse,
+  GetTeamsInPouleError,
+  ResponseError,
+} from '@/types/response-types';
+import { PlayerResponseData } from '@/types/user-types';
+import { formatError } from '@/utils/errorUtils';
+import { handleMapPlayers } from '@/utils/playerUtils';
+
+function handleIsResponseErrorOrZodIssue(
+  error: unknown
+): error is ZodIssue | ResponseError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    ('message' in error || 'path' in error)
+  );
+}
+
+function handleMessage(error: unknown): error is { message: string } {
+  return typeof error === 'object' && error !== null && 'message' in error;
+}
+
+function getErrorMessage(
+  pouleResponse: GetTeamsInPouleResponse,
+  playerResponse: PlayerResponseData
+): string {
+  if (
+    !pouleResponse.success &&
+    (pouleResponse as GetTeamsInPouleError).errors?.[0] &&
+    handleMessage((pouleResponse as GetTeamsInPouleError).errors[0])
+  ) {
+    return formatError(
+      (pouleResponse as GetTeamsInPouleError).errors[0].message,
+      ['poules'],
+      'custom',
+      true
+    ).errors[0].message;
+  } else if (
+    playerResponse.errors?.[0] &&
+    handleMessage(playerResponse.errors[0])
+  ) {
+    return formatError(
+      playerResponse.errors[0].message,
+      ['players'],
+      'custom',
+      true
+    ).errors[0].message;
+  } else {
+    return 'Unknown error';
+  }
+}
+
+export default async function MatchManagementPage(): Promise<React.ReactElement> {
   const pouleResponse = await getTeamsInPoule();
   const playerResponse = await getPlayers();
 
-  const players = mapPlayers(playerResponse);
+  const playerResponseWithValidatedErrors: PlayerResponseData = {
+    ...playerResponse,
+    success: playerResponse.success ?? false,
+    errors: Array.isArray(playerResponse.errors)
+      ? playerResponse.errors.filter(handleIsResponseErrorOrZodIssue)
+      : undefined,
+  };
 
-  if (!pouleResponse.success || !playerResponse.success) {
-    const errorMessage = !pouleResponse.success
-      ? formatError(
-          pouleResponse.errors?.[0].message,
-          ['poules'],
-          'custom',
-          true
-        )
-      : formatError(
-          playerResponse.errors?.[0].message,
-          ['players'],
-          'custom',
-          true
-        );
+  const players = handleMapPlayers(playerResponseWithValidatedErrors);
 
-    return <div>Error loading data: {errorMessage.errors[0].message}</div>;
+  if (!pouleResponse.success || !playerResponseWithValidatedErrors.success) {
+    const errorMessage = getErrorMessage(
+      pouleResponse,
+      playerResponseWithValidatedErrors
+    );
+    return <div>Error loading data: {errorMessage}</div>;
   }
 
   return (

@@ -1,6 +1,10 @@
+import { User } from '@prisma/client';
+
 import prisma from '@/lib/prisma';
 
-export async function findUserByClerkId(clerkId: string) {
+export async function handleFindUserByClerkId(
+  clerkId: string
+): Promise<User | null> {
   try {
     return await prisma.user.findUnique({
       where: { clerkId },
@@ -11,7 +15,10 @@ export async function findUserByClerkId(clerkId: string) {
   }
 }
 
-export async function updateUserUsername(clerkId: string, newUsername: string) {
+export async function updateUserUsername(
+  clerkId: string,
+  newUsername: string
+): Promise<User> {
   try {
     return await prisma.user.update({
       where: { clerkId },

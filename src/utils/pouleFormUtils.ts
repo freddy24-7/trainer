@@ -1,14 +1,15 @@
 import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
-import { PouleFormValues } from '@/types/poule-types';
 import { toast } from 'react-toastify';
+
+import { PouleFormValues } from '@/types/poule-types';
 
 export const addOpponent = (
   opponentName: string,
   opponents: string[],
   setOpponents: React.Dispatch<React.SetStateAction<string[]>>,
   setValue: UseFormSetValue<PouleFormValues>
-) => {
+): void => {
   if (opponentName.trim()) {
     const trimmedName = opponentName.trim();
     const updatedOpponents = [...opponents, trimmedName];
@@ -25,7 +26,7 @@ export const removeOpponent = (
   opponents: string[],
   setOpponents: React.Dispatch<React.SetStateAction<string[]>>,
   setValue: UseFormSetValue<PouleFormValues>
-) => {
+): void => {
   const updatedOpponents = opponents.filter((_, i) => i !== index);
   setOpponents(updatedOpponents);
   setValue('opponents', updatedOpponents);

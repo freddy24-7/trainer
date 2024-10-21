@@ -1,6 +1,7 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import React from 'react';
+
+import { Button } from '@/components/ui/button';
 
 interface OpponentsListProps {
   opponents: string[];

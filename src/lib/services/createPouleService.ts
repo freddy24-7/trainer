@@ -1,22 +1,25 @@
+import { Team, Poule } from '@prisma/client';
+
 import prisma from '@/lib/prisma';
 
-export async function createMainTeam(mainTeamName: string) {
-  let mainTeam = await prisma.team.findUnique({
+export async function createMainTeam(
+  mainTeamName: string
+): Promise<Team | null> {
+  const mainTeam = await prisma.team.findUnique({
     where: { name: mainTeamName },
   });
 
-  if (!mainTeam) {
-    mainTeam = await prisma.team.create({
-      data: {
-        name: mainTeamName,
-      },
-    });
-  }
+  if (mainTeam) return mainTeam;
 
-  return mainTeam;
+  return prisma.team.create({
+    data: { name: mainTeamName },
+  });
 }
 
-export async function createPoule(pouleName: string, mainTeamId: number) {
+export async function createPoule(
+  pouleName: string,
+  mainTeamId: number
+): Promise<Poule> {
   return prisma.poule.create({
     data: {
       name: pouleName,
@@ -27,26 +30,32 @@ export async function createPoule(pouleName: string, mainTeamId: number) {
   });
 }
 
+async function handleFindOrCreateTeam(opponentName: string): Promise<Team> {
+  let opponentTeam = await prisma.team.findUnique({
+    where: { name: opponentName },
+  });
+
+  if (!opponentTeam) {
+    opponentTeam = await prisma.team.create({
+      data: { name: opponentName },
+    });
+    console.log('Opponent team created:', opponentTeam);
+  } else {
+    console.log('Opponent team already exists:', opponentTeam);
+  }
+
+  return opponentTeam;
+}
+
 export async function addOpponentsToPoule(
   pouleId: number,
   opponents: string[]
-) {
+): Promise<void> {
   for (const opponentName of opponents) {
     try {
       console.log('Processing opponent:', opponentName);
 
-      let opponentTeam = await prisma.team.findUnique({
-        where: { name: opponentName },
-      });
-
-      if (!opponentTeam) {
-        opponentTeam = await prisma.team.create({
-          data: { name: opponentName },
-        });
-        console.log('Opponent team created:', opponentTeam);
-      } else {
-        console.log('Opponent team already exists:', opponentTeam);
-      }
+      const opponentTeam = await handleFindOrCreateTeam(opponentName);
 
       const link = await prisma.pouleOpponents.create({
         data: {
@@ -57,6 +66,7 @@ export async function addOpponentsToPoule(
 
       console.log(`Successfully linked opponent: ${opponentName}`, link);
     } catch (error) {
+      console.error(`Failed to add opponent: ${opponentName}`, error);
       throw new Error(`Failed to add opponent: ${opponentName}`);
     }
   }

@@ -1,7 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+
 import { AddMatchForm } from '@/app/matches/AddMatchForm';
-import { Player } from '@/types/user-types';
 import { Poule } from '@/types/poule-types';
+import { Player } from '@/types/user-types';
 
 jest.mock('react-toastify', () => ({
   toast: {
@@ -16,19 +18,26 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
+const pouleName = 'Poule 1';
+const teamName = 'Team 1';
+const opponentName = 'Opponent 1';
+const player1Name = 'Player 1';
+const player2Name = 'Player 2';
+const whatsappNumber = '123456789';
+
 describe('AddMatchForm', () => {
   const mockAction = jest.fn();
 
   const mockPoule: Poule = {
     id: 1,
-    pouleName: 'Poule 1',
-    teams: [{ id: 1, name: 'Team 1' }],
-    opponents: [{ id: 1, team: { id: 1, name: 'Opponent 1' } }],
+    pouleName: pouleName,
+    teams: [{ id: 1, name: teamName }],
+    opponents: [{ id: 1, team: { id: 1, name: opponentName } }],
   };
 
   const mockPlayers: Player[] = [
-    { id: 1, username: 'Player 1', whatsappNumber: '123456789}' },
-    { id: 2, username: 'Player 2', whatsappNumber: '123456789' },
+    { id: 1, username: player1Name, whatsappNumber: whatsappNumber },
+    { id: 2, username: player2Name, whatsappNumber: whatsappNumber },
   ];
 
   beforeEach(() => {
@@ -44,8 +53,8 @@ describe('AddMatchForm', () => {
       />
     );
 
-    const pouleSelector = screen.getByText('Poule 1');
-    const opponentSelector = screen.getByText('Opponent 1');
+    const pouleSelector = screen.getByText(pouleName);
+    const opponentSelector = screen.getByText(opponentName);
 
     expect(pouleSelector).toBeInTheDocument();
     expect(opponentSelector).toBeInTheDocument();
@@ -60,10 +69,10 @@ describe('AddMatchForm', () => {
       />
     );
 
-    const pouleSelector = screen.getByText('Poule 1');
+    const pouleSelector = screen.getByText(pouleName);
     fireEvent.click(pouleSelector);
 
-    const opponentSelector = screen.getByText('Opponent 1');
+    const opponentSelector = screen.getByText(opponentName);
     fireEvent.click(opponentSelector);
 
     expect(pouleSelector).toBeInTheDocument();

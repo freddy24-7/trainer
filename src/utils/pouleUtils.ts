@@ -1,33 +1,44 @@
 import { toast } from 'react-toastify';
 import type { ZodIssue } from 'zod';
-import { Poule } from '@/types/poule-types';
-import { PouleFormValues } from '@/types/poule-types';
 
-export function formatPoules(poules: any[]): Poule[] {
+import { Poule, PouleFormValues } from '@/types/poule-types';
+import { Team } from '@/types/team-types';
+
+interface FormControls {
+  reset: () => void;
+  setOpponents: (opponents: string[]) => void;
+  setShowForm: (show: boolean) => void;
+}
+
+export function handleFormatPoules(
+  poules: {
+    id: number;
+    name: string;
+    team: Team;
+    opponents: { id: number; team: Team }[];
+  }[]
+): Poule[] {
   return poules.map((poule) => ({
     id: poule.id,
     pouleName: poule.name,
-    teams: [
-      poule.team,
-      ...poule.opponents.map((opponent: any) => opponent.team),
-    ],
-    opponents: poule.opponents.map((opponent: any) => ({
+    teams: [poule.team, ...poule.opponents.map((opponent) => opponent.team)],
+    opponents: poule.opponents.map((opponent) => ({
       id: opponent.id,
       team: opponent.team,
     })),
   }));
 }
 
-export async function submitPouleForm(
+export async function handleSubmitPouleForm(
   data: PouleFormValues,
   action: (
-    _prevState: any,
+    _prevState: unknown,
     params: FormData
-  ) => Promise<{ errors: ZodIssue[] } | void>,
-  reset: () => void,
-  setOpponents: (opponents: string[]) => void,
-  setShowForm: (show: boolean) => void
-) {
+  ) => Promise<{ errors?: ZodIssue[] } | void>,
+  formControls: FormControls
+): Promise<void> {
+  const { reset, setOpponents, setShowForm } = formControls;
+
   const formData = new FormData();
   formData.append('pouleName', data.pouleName);
   formData.append('mainTeamName', data.mainTeamName);
@@ -37,7 +48,8 @@ export async function submitPouleForm(
 
   try {
     const result = await action(null, formData);
-    if (result && 'errors' in result) {
+
+    if (result?.errors?.length) {
       toast.error('Failed to add poule. Please check your inputs.');
       console.error('Submission errors:', result.errors);
     } else {

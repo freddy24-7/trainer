@@ -1,7 +1,8 @@
-import { formatWhatsappNumber } from '@/utils/phoneNumberUtils';
-import { formatError } from '@/utils/errorUtils';
 import { toast } from 'react-toastify';
-import { HandlePlayerFormSubmitParams } from '@/types/form-types';
+
+import { HandlePlayerFormSubmitParams } from '@/types/user-types';
+import { formatError } from '@/utils/errorUtils';
+import { handleFormatWhatsappNumber } from '@/utils/phoneNumberUtils';
 
 export async function handlePlayerFormSubmit({
   data,
@@ -12,7 +13,7 @@ export async function handlePlayerFormSubmit({
 }: HandlePlayerFormSubmitParams): Promise<void> {
   setIsSubmitting(true);
 
-  const formattedNumber = formatWhatsappNumber(data.whatsappNumber);
+  const formattedNumber = handleFormatWhatsappNumber(data.whatsappNumber);
   if (!formattedNumber) {
     const errorMessage =
       "WhatsApp number must start with '06' and be exactly 10 digits long.";

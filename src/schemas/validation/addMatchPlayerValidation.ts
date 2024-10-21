@@ -1,12 +1,19 @@
-import { addMatchPlayerSchema } from '@/schemas/matchSchema';
 import { ZodIssue } from 'zod';
 
-export function validateMatchPlayerData(data: {
+import { addMatchPlayerSchema } from '@/schemas/matchSchema';
+
+export interface MatchPlayerData {
   userId: number;
   matchId: number;
   minutes: number;
   available: boolean;
-}): { success: boolean; data?: any; errors?: ZodIssue[] } {
+}
+
+export function handleValidateMatchPlayerData(data: MatchPlayerData): {
+  success: boolean;
+  data?: MatchPlayerData;
+  errors?: ZodIssue[];
+} {
   const validation = addMatchPlayerSchema.safeParse(data);
 
   if (!validation.success) {
@@ -18,6 +25,6 @@ export function validateMatchPlayerData(data: {
 
   return {
     success: true,
-    data: validation.data,
+    data: validation.data as MatchPlayerData,
   };
 }

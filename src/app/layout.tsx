@@ -1,11 +1,12 @@
-import type { Metadata } from 'next';
 import './globals.css';
-import NavBar from '@/components/navigation/NavBar';
-import { NextUIProvider } from '@nextui-org/react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { ClerkProvider } from '@clerk/nextjs';
+import { NextUIProvider } from '@nextui-org/react';
+import type { Metadata } from 'next';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
+
+import NavBar from '@/components/navigation/NavBar';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata: Metadata = {
@@ -13,11 +14,11 @@ export const metadata: Metadata = {
   description: 'Trainers app for player feedback',
 };
 
-type Props = {
+interface Props {
   children: React.ReactNode;
-};
+}
 
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: Props): React.ReactElement {
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning={true}>

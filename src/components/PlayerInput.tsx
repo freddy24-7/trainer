@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import { PlayerInputProps } from '@/types/user-types';
 
 const PlayerInput: React.FC<PlayerInputProps> = ({
@@ -12,7 +13,7 @@ const PlayerInput: React.FC<PlayerInputProps> = ({
 }) => {
   const [showCheckbox, setShowCheckbox] = useState(true);
 
-  const handleMinutesChange = (value: string) => {
+  const handleMinutesChange = (value: string): void => {
     onMinutesChange(player.id, value);
     setShowCheckbox(value.trim() === '');
   };

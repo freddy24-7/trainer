@@ -1,14 +1,20 @@
-import { createMatchSchema } from '@/schemas/matchSchema';
 import { ZodIssue } from 'zod';
 
-export function validateMatchData(params: FormData): {
+import { createMatchSchema } from '@/schemas/matchSchema';
+
+interface MatchFormData {
+  pouleOpponentId: number;
+  date: string | null;
+}
+
+export function handleValidateMatchData(params: FormData): {
   success: boolean;
-  data?: any;
+  data?: MatchFormData;
   errors?: ZodIssue[];
 } {
   const validation = createMatchSchema.safeParse({
-    pouleOpponentId: parseInt(params.get('pouleOpponentId') as string),
-    date: params.get('date'),
+    pouleOpponentId: parseInt(params.get('pouleOpponentId') as string, 10),
+    date: params.get('date') as string | null,
   });
 
   if (!validation.success) {
@@ -20,6 +26,6 @@ export function validateMatchData(params: FormData): {
 
   return {
     success: true,
-    data: validation.data,
+    data: validation.data as MatchFormData,
   };
 }

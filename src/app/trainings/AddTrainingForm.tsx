@@ -1,22 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
+
 import DateField from '@/components/helpers/DateField';
 import TrainingPlayersField from '@/components/helpers/TrainingPlayersField';
-import { Player } from '@/types/user-types';
+import { Button } from '@/components/ui/button';
 import { TrainingFormValues } from '@/types/training-types';
+import { Player } from '@/types/user-types';
 import { submitTrainingForm } from '@/utils/trainingFormUtils';
 
-type Props = {
-  action: (params: FormData) => Promise<{ success?: boolean; errors?: any[] }>;
-  players: Player[];
-};
+interface ActionResponse {
+  success?: boolean;
+  errors?: { message: string }[];
+}
 
-const AddTrainingForm = ({ action, players }: Props) => {
+interface Props {
+  action: (params: FormData) => Promise<ActionResponse>;
+  players: Player[];
+}
+
+const AddTrainingForm = ({ action, players }: Props): React.ReactElement => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -36,7 +42,7 @@ const AddTrainingForm = ({ action, players }: Props) => {
 
   const playerData = watch('players');
 
-  const onSubmit = async (data: TrainingFormValues) => {
+  const onSubmit = async (data: TrainingFormValues): Promise<void> => {
     setIsSubmitting(true);
     await submitTrainingForm(data, action, setIsSubmitting, router);
   };
@@ -56,7 +62,7 @@ const AddTrainingForm = ({ action, players }: Props) => {
               className="space-y-4 text-center"
             >
               <DateField
-                errors={errors}
+                errors={errors as FieldErrors<TrainingFormValues>}
                 onChange={(date) => setValue('date', date)}
               />
 

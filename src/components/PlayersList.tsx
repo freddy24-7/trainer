@@ -1,12 +1,13 @@
-import React from 'react';
 import { Button, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
+import React from 'react';
+
 import { Player, PlayersListProps } from '@/types/user-types';
 
 export default function PlayersList({
   players,
   onEdit,
   onDelete,
-}: PlayersListProps) {
+}: PlayersListProps): React.ReactElement {
   return (
     <ul className="space-y-2">
       {players.map((player: Player) => (

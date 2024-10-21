@@ -1,4 +1,6 @@
-export default function Home() {
+import React from 'react';
+
+export default function Home(): React.ReactElement {
   return (
     <div
       style={{
@@ -10,11 +12,11 @@ export default function Home() {
         alignItems: 'center',
       }}
     >
-      <video //displays a video from the public folder. Will be moved to cloudinary for performance improvement at a later stage
+      <video
         src="/HomePage_Video.mp4"
-        autoPlay
-        loop
-        muted
+        autoPlay={true}
+        loop={true}
+        muted={true}
         style={{
           width: '100%',
           height: '100%',

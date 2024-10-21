@@ -1,35 +1,21 @@
 'use server';
 
-// Validation not done here as already done in addMatch and addMatchPlayer
-
 import { ZodIssue } from 'zod';
+
 import addMatch from '@/app/actions/addMatch';
 import addMatchPlayer from '@/app/actions/addMatchPlayer';
+import { PlayerInMatch } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 
-export default async function addMatchAndPlayers(
-  _prevState: any,
-  params: FormData
-): Promise<{ errors: ZodIssue[] }> {
-  const matchResponse = await addMatch(null, params);
-
-  if (matchResponse.errors) {
-    return formatError('Failed to create match.', ['form']);
-  }
-
-  const { match } = matchResponse;
-  const createdMatchId = match?.id;
-
-  if (!createdMatchId) {
-    return formatError('Error: Match ID not found.', ['form']);
-  }
-
-  const playersString = params.get('players') as string | null;
+function handleParsePlayersData(playersString: string | null): {
+  players?: PlayerInMatch[];
+  errors?: ZodIssue[];
+} {
   if (!playersString) {
     return formatError('Players data is missing.', ['players']);
   }
 
-  let players;
+  let players: PlayerInMatch[];
   try {
     players = JSON.parse(playersString);
   } catch (error) {
@@ -46,43 +32,78 @@ export default async function addMatchAndPlayers(
     return formatError('Players data is not an array.', ['players']);
   }
 
+  return { players };
+}
+
+async function handleProcessPlayer(
+  player: PlayerInMatch,
+  matchId: number
+): Promise<ZodIssue[]> {
+  const { id, minutes, available } = player;
   const playerErrors: ZodIssue[] = [];
-  for (const player of players) {
-    const { id, minutes, available } = player;
+  const parsedMinutes = available ? parseInt(minutes, 10) : 0;
 
-    let parsedMinutes = available ? parseInt(minutes, 10) : 0;
-    if (isNaN(parsedMinutes)) {
+  if (isNaN(parsedMinutes)) {
+    return formatError(`Invalid minutes for player ${id}. Expected a number.`, [
+      'players',
+      'minutes',
+    ]).errors;
+  }
+
+  try {
+    const response = await addMatchPlayer({
+      matchId,
+      userId: id,
+      minutes: parsedMinutes,
+      available,
+    });
+
+    if (!response.success) {
       playerErrors.push(
-        ...formatError(`Invalid minutes for player ${id}. Expected a number.`, [
-          'players',
-          'minutes',
-        ]).errors
+        ...(response.errors ||
+          formatError(`Error adding player ${id}.`, ['form']).errors)
       );
-      continue;
     }
+  } catch (error) {
+    console.error(`Error adding player ${id}:`, error);
+    playerErrors.push(
+      ...formatError(`Unexpected error adding player ${id}.`, [
+        'players',
+        String(id),
+      ]).errors
+    );
+  }
 
-    try {
-      const response = await addMatchPlayer({
-        matchId: createdMatchId,
-        userId: id,
-        minutes: parsedMinutes,
-        available,
-      });
+  return playerErrors;
+}
 
-      if (!response.success) {
-        playerErrors.push(
-          ...(response.errors ||
-            formatError(`Error adding player ${id}.`, ['form']).errors)
-        );
-      }
-    } catch (error) {
-      console.error(`Error adding player ${id}:`, error);
-      playerErrors.push(
-        ...formatError(`Unexpected error adding player ${id}.`, [
-          'players',
-          String(id),
-        ]).errors
-      );
+export default async function addMatchAndPlayers(
+  _prevState: unknown,
+  params: FormData
+): Promise<{ errors: ZodIssue[] }> {
+  const matchResponse = await addMatch(null, params);
+
+  if (matchResponse.errors) {
+    return formatError('Failed to create match.', ['form']);
+  }
+
+  const createdMatchId = matchResponse.match?.id;
+  if (!createdMatchId) {
+    return formatError('Error: Match ID not found.', ['form']);
+  }
+
+  const playersString = params.get('players') as string | null;
+  const { players, errors: parsingErrors } =
+    handleParsePlayersData(playersString);
+  if (parsingErrors) {
+    return { errors: parsingErrors };
+  }
+
+  const playerErrors: ZodIssue[] = [];
+  if (players) {
+    for (const player of players) {
+      const errors = await handleProcessPlayer(player, createdMatchId);
+      playerErrors.push(...errors);
     }
   }
 

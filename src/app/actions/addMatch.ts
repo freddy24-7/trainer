@@ -1,27 +1,28 @@
 'use server';
 
-import { validateMatchData } from '@/schemas/validation/createMatchValidation';
-import { formatError } from '@/utils/errorUtils';
 import { ZodIssue } from 'zod';
+
 import {
-  findOpponentById,
+  handleFindOpponentById,
   createMatch,
 } from '@/lib/services/createMatchService';
+import { handleValidateMatchData } from '@/schemas/validation/createMatchValidation';
+import { formatError } from '@/utils/errorUtils';
 
 export default async function addMatch(
-  _prevState: any,
+  _prevState: unknown,
   params: FormData
 ): Promise<{ match?: { id: number }; errors?: ZodIssue[] }> {
-  const validation = validateMatchData(params);
+  const validation = handleValidateMatchData(params);
 
-  if (!validation.success) {
+  if (!validation.success || !validation.data) {
     return formatError('Validation failed.', ['form']);
   }
 
   const { pouleOpponentId, date } = validation.data;
 
   try {
-    const opponentExists = await findOpponentById(pouleOpponentId);
+    const opponentExists = await handleFindOpponentById(pouleOpponentId);
 
     if (!opponentExists) {
       return formatError('Selected opponent does not exist.', [
@@ -29,10 +30,10 @@ export default async function addMatch(
       ]);
     }
 
-    const match = await createMatch(pouleOpponentId, date);
+    const match = await createMatch(pouleOpponentId, date ?? '');
 
     return { match: { id: match.id } };
-  } catch (error) {
+  } catch {
     return formatError('Failed to create match.', ['form']);
   }
 }

@@ -1,9 +1,11 @@
-import { editPlayerSchema } from '@/schemas/editPlayerSchema';
 import { ZodIssue } from 'zod';
 
-export function validateEditPlayerData(params: FormData): {
+import { editPlayerSchema } from '@/schemas/editPlayerSchema';
+import { EditPlayerFormData } from '@/types/user-types';
+
+export function handleValidateEditPlayerData(params: FormData): {
   success: boolean;
-  data?: any;
+  data?: EditPlayerFormData;
   errors: ZodIssue[];
 } {
   const username = params.get('username');

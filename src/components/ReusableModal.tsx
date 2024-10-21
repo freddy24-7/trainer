@@ -6,7 +6,8 @@ import {
   ModalFooter,
   Button,
 } from '@nextui-org/react';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
+
 import { ReusableModalProps } from '@/types/ui-types';
 
 export default function ReusableModal({
@@ -18,7 +19,7 @@ export default function ReusableModal({
   confirmAction,
   cancelLabel = 'Cancel',
   cancelAction,
-}: ReusableModalProps) {
+}: ReusableModalProps): React.ReactElement {
   const handleClose = useCallback(() => {
     if (cancelAction) cancelAction();
     onClose();
@@ -35,7 +36,6 @@ export default function ReusableModal({
         <>
           <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
           <ModalBody>{body}</ModalBody>
-          {/* Conditionally rendering footer buttons only if confirmAction is provided */}
           {confirmAction && (
             <ModalFooter>
               <Button color="secondary" variant="light" onPress={handleClose}>

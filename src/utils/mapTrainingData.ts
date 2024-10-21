@@ -4,7 +4,9 @@ import {
   TrainingProps,
 } from '@/types/training-types';
 
-export function mapTrainingData(trainings: TrainingProps[]): TrainingData[] {
+export function handleMapTrainingData(
+  trainings: TrainingProps[]
+): TrainingData[] {
   return trainings.map((training) => ({
     id: training.id,
     date: training.date.toISOString(),

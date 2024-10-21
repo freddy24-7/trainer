@@ -1,13 +1,20 @@
 import React from 'react';
-import { formatError } from '@/utils/errorUtils';
 import { ZodIssue } from 'zod';
 
-export function renderError(response: {
-  errors?: any[];
+import { ResponseError } from '@/types/response-types';
+import { formatError } from '@/utils/errorUtils';
+
+export function handleRenderError(response: {
+  errors?: (ResponseError | ZodIssue)[];
 }): React.ReactElement | null {
   if (response.errors && response.errors.length > 0) {
     const errorMessage = response.errors
-      .map((error: any) => error.message || error)
+      .map(
+        (error) =>
+          (error as ResponseError).message ||
+          (error as ZodIssue).message ||
+          'Unknown error'
+      )
       .join(', ');
     return <div>Error loading players: {errorMessage}</div>;
   }

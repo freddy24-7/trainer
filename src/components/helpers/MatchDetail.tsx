@@ -1,5 +1,6 @@
-import React from 'react';
 import { format } from 'date-fns';
+import React from 'react';
+
 import { MatchData } from '@/types/match-types';
 
 interface MatchDetailProps {

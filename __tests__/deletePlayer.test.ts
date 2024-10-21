@@ -1,6 +1,7 @@
+import { users } from '@clerk/clerk-sdk-node';
+
 import deletePlayer from '@/app/actions/deletePlayer';
 import prisma from '@/lib/prisma';
-import { users } from '@clerk/clerk-sdk-node';
 
 jest.mock('@/lib/prisma', () => ({
   user: {
