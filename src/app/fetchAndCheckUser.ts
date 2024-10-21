@@ -1,12 +1,7 @@
 import { auth } from '@clerk/nextjs';
 
 import prisma from '@/lib/prisma';
-
-interface SignedInUser {
-  id: string;
-  username: string;
-  role: string | null;
-}
+import { SignedInUser } from '@/types/user-types';
 
 export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
   const { userId } = auth();

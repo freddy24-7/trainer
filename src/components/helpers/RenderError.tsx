@@ -1,7 +1,7 @@
 import React from 'react';
 import { ZodIssue } from 'zod';
 
-import { ResponseError } from '@/types/response-types';
+import { ResponseError } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
 
 export function handleRenderError(response: {

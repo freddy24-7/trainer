@@ -9,8 +9,8 @@ import ProtectedLayout from '@/app/ProtectedLayout';
 import {
   GetTeamsInPouleResponse,
   GetTeamsInPouleError,
-  ResponseError,
 } from '@/types/response-types';
+import { ResponseError } from '@/types/shared-types';
 import { PlayerResponseData } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleMapPlayers } from '@/utils/playerUtils';

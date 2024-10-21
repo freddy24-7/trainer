@@ -3,7 +3,7 @@ import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
-import { ResponseError } from '@/types/response-types';
+import { ResponseError } from './shared-types';
 
 export interface FormValues {
   poule: number | undefined;
@@ -133,3 +133,7 @@ export interface PlayerResponseData {
   players?: PlayerResponse[];
   errors?: (ResponseError | ZodIssue)[];
 }
+
+export type GetPlayerMatchStatsResponse =
+  | { success: true; playerStats: PlayerMatchStat[] }
+  | { success: false; error: string };

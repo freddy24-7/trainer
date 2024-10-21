@@ -2,7 +2,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 
 import { Message, PusherEventMessage } from '@/types/message-types';
-import { ActionResponse } from '@/types/response-types';
+import { ActionResponse } from '@/types/shared-types';
 import { SignedInUser } from '@/types/user-types';
 import { handleInitializePusher } from '@/utils/pusherUtils';
 

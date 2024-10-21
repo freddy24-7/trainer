@@ -6,7 +6,7 @@ import MessageInputForm from '@/components/helpers/ChatMessageInputForm';
 import MessageList from '@/components/helpers/ChatMessageList';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Message } from '@/types/message-types';
-import { ActionResponse } from '@/types/response-types';
+import { ActionResponse } from '@/types/shared-types';
 import { SignedInUser } from '@/types/user-types';
 import {
   handleSendMessageUtil,
@@ -35,9 +35,7 @@ function ChatClient({
   const handleSendMessage = async (e: React.FormEvent): Promise<void> => {
     await handleSendMessageUtil(
       e,
-      newMessage,
-      signedInUser,
-      action,
+      { newMessage, signedInUser, action },
       setNewMessage
     );
   };

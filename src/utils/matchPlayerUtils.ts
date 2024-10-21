@@ -51,7 +51,7 @@ export const getValidPlayers = (
     id: number;
     username: string | null;
     whatsappNumber: string | null;
-    MatchPlayer: {
+    MatchPlayer?: {
       id: number;
       matchId: number;
       userId: number;
@@ -65,6 +65,6 @@ export const getValidPlayers = (
     .map((player) => ({
       id: player.id,
       username: player.username as string,
-      MatchPlayer: player.MatchPlayer,
+      MatchPlayer: player.MatchPlayer ?? [],
     }));
 };
