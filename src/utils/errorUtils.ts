@@ -25,3 +25,13 @@ export function formatError(
 
   return errorObject;
 }
+
+export function formatStringError(message: string): {
+  success: boolean;
+  errors: string;
+} {
+  return {
+    success: false,
+    errors: message || 'An error occurred',
+  };
+}

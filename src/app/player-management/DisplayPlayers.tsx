@@ -1,25 +1,32 @@
-'use client';
-
 import React, { useState } from 'react';
+import { ZodIssue } from 'zod';
 
-import { EditPlayerForm } from '@/app/player-management/EditPlayerForm';
-import { handleDeletePlayer } from '@/components/helpers/DeletePlayer';
+import {
+  handleEditPlayer,
+  handleDeletePlayer,
+} from '@/components/helpers/playerManagementHelper';
+import PlayerModal from '@/components/helpers/PlayerModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import PlayersList from '@/components/PlayersList';
-import ReusableModal from '@/components/ReusableModal';
 import { PlayerManagementClientProps, Player } from '@/types/user-types';
 import { setupModal } from '@/utils/modalUtils';
 import { updatePlayerList } from '@/utils/playerUtils';
-import { handleSubmissionState } from '@/utils/submissionUtils';
+
+interface DisplayPlayersProps extends PlayerManagementClientProps {
+  editPlayerAction: (
+    playerId: number,
+    params: FormData
+  ) => Promise<{ errors: ZodIssue[] }>;
+  deletePlayerAction: (
+    playerId: number
+  ) => Promise<{ success: boolean; errors?: string }>;
+}
 
 export default function DisplayPlayers({
   players: initialPlayers,
   editPlayerAction,
   deletePlayerAction,
-}: PlayerManagementClientProps & {
-  editPlayerAction: any;
-  deletePlayerAction: any;
-}) {
+}: DisplayPlayersProps): React.ReactElement {
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -28,37 +35,32 @@ export default function DisplayPlayers({
   const [editPlayerData, setEditPlayerData] = useState<Player | null>(null);
   const [players, setPlayers] = useState<Player[]>(initialPlayers);
 
-  const handleDeletePlayerClick = async (playerId: number) => {
-    await handleDeletePlayer({
+  const modalSetters = {
+    setModalTitle,
+    setModalBody,
+    setConfirmAction,
+    setIsModalOpen,
+  };
+
+  const handleDeletePlayerClick = async (playerId: number): Promise<void> => {
+    await handleDeletePlayer(
       playerId,
-      setModalTitle,
-      setModalBody,
-      setConfirmAction,
-      setSubmitting,
-      setPlayers,
       deletePlayerAction,
-      setIsModalOpen,
-    });
+      setPlayers,
+      modalSetters
+    );
   };
 
-  const handleEditPlayerClick = (player: Player) => {
+  const handleEditPlayerClick = (player: Player): void => {
     setEditPlayerData(player);
-    setupModal({
-      setModalTitle,
-      setModalBody,
-      setConfirmAction,
-      setIsModalOpen,
-      title: 'Edit Player',
-      body: null,
-      confirmAction: () => {},
-    });
+    handleEditPlayer(setupModal, modalSetters);
   };
 
-  const handlePlayerEdited = (updatedPlayer: Player) => {
+  const handlePlayerEdited = (updatedPlayer: Player): void => {
     updatePlayerList(updatedPlayer, setPlayers, setSubmitting);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (): void => {
     setIsModalOpen(false);
     setEditPlayerData(null);
   };
@@ -83,34 +85,16 @@ export default function DisplayPlayers({
         onDelete={handleDeletePlayerClick}
       />
 
-      <ReusableModal
+      <PlayerModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title={modalTitle}
-        body={
-          editPlayerData ? (
-            <EditPlayerForm
-              playerId={editPlayerData.id}
-              initialUsername={editPlayerData.username}
-              initialWhatsappNumber={editPlayerData.whatsappNumber}
-              onPlayerEdited={handlePlayerEdited}
-              onSubmissionStart={() => handleSubmissionState(setSubmitting)}
-              onAbort={() =>
-                handleSubmissionState(setSubmitting, undefined, () =>
-                  setSubmitting(false)
-                )
-              }
-              action={editPlayerAction}
-              onCloseModal={handleCloseModal}
-            />
-          ) : (
-            modalBody
-          )
-        }
-        confirmAction={editPlayerData ? undefined : confirmAction}
-        confirmLabel="Confirm"
-        cancelLabel="Cancel"
-        cancelAction={handleCloseModal}
+        modalTitle={modalTitle}
+        modalBody={modalBody}
+        editPlayerData={editPlayerData}
+        setSubmitting={setSubmitting}
+        handlePlayerEdited={handlePlayerEdited}
+        editPlayerAction={editPlayerAction}
+        confirmAction={confirmAction}
       />
     </div>
   );

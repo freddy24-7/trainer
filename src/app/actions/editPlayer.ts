@@ -1,5 +1,7 @@
 'use server';
 
+import { ZodIssue } from 'zod';
+
 import {
   handleFindPlayerById,
   updatePlayerInDatabase,
@@ -12,10 +14,10 @@ import { formatError } from '@/utils/errorUtils';
 export default async function handleEditPlayer(
   playerId: number,
   params: FormData
-): Promise<{ errors: unknown[]; success?: boolean }> {
+): Promise<{ errors: ZodIssue[]; success?: boolean }> {
   const validation = handleValidateEditPlayerData(params);
   if (!validation.success) {
-    return { errors: validation.errors || [] };
+    return { errors: validation.errors || [], success: false };
   }
 
   const { username, password, whatsappNumber } =
@@ -30,7 +32,6 @@ export default async function handleEditPlayer(
     }
 
     await updateClerkUser(player.clerkId, { username, password });
-
     await updatePlayerInDatabase(playerId, { username, whatsappNumber });
 
     return { errors: [], success: true };

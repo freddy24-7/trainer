@@ -1,13 +1,10 @@
-'use client';
-
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { ZodIssue } from 'zod';
 
-import PlayerForm from '@/components/PlayerForm';
+import { renderPlayerFormWithWhatsAppLink } from '@/components/helpers/renderPlayerFormWithWhatsAppLink';
 import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
 import { PlayerFormData } from '@/types/user-types';
-import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 
 interface EditPlayerFormProps {
@@ -73,41 +70,16 @@ function EditPlayerForm({
           <h3 className="text-lg font-semibold">Edit Player</h3>
         </CardHeader>
         <CardBody>
-          <PlayerForm
-            key={formKey}
-            initialData={{
-              username: initialUsername,
-              password: '',
-              whatsappNumber: initialWhatsappNumber,
-            }}
-            onSubmit={handleEditPlayer}
-            onSubmissionStart={() => {
-              setIsSubmitting(true);
-              if (onSubmissionStart) {
-                onSubmissionStart();
-              }
-            }}
-            onAbort={() => {
-              setIsSubmitting(false);
-              if (onAbort) {
-                onAbort();
-              }
-            }}
-            submitButtonText={isSubmitting ? 'Updating...' : 'Update Player'}
-          />
-          {playerData?.whatsappNumber && (
-            <a
-              href={`https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}/?text=${encodeURIComponent(
-                `Hello ${playerData.username}, your account has been updated. Username: ${playerData.username}, Password: ${playerData.password}. Please log in and change your password to your own.`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 bg-green-500 text-white p-2 rounded-lg"
-              onClick={() => handleWhatsAppClick()}
-            >
-              Send WhatsApp Message to Player
-            </a>
-          )}
+          {renderPlayerFormWithWhatsAppLink({
+            formKey,
+            initialUsername,
+            initialWhatsappNumber,
+            isSubmitting,
+            playerData,
+            handleEditPlayer,
+            onSubmissionStart,
+            onAbort,
+          })}
         </CardBody>
       </Card>
     </div>

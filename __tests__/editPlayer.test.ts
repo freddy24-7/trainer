@@ -24,6 +24,7 @@ jest.mock('@/schemas/validation/editPlayerValidation', () => ({
 jest.mock('@/utils/errorUtils', () => ({
   formatError: jest.fn((message) => ({
     errors: [{ message, path: ['form'], code: 'custom' }],
+    success: false,
   })),
 }));
 
@@ -78,6 +79,7 @@ describe('editPlayer', () => {
           code: 'custom',
         },
       ],
+      success: false,
     });
   });
 
@@ -104,6 +106,7 @@ describe('editPlayer', () => {
           code: 'custom',
         },
       ],
+      success: false,
     });
   });
 
@@ -132,6 +135,7 @@ describe('editPlayer', () => {
           code: 'invalid_type',
         },
       ],
+      success: false,
     });
   });
 
@@ -194,6 +198,7 @@ describe('editPlayer', () => {
           code: 'custom',
         },
       ],
+      success: false,
     });
   });
 });

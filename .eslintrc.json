@@ -49,7 +49,7 @@
     "max-lines-per-function": [
       "warn",
       {
-        "max": 70
+        "max": 80
       }
     ],
     "max-params": [
@@ -222,9 +222,11 @@
     "coverage/**",
     "node_modules/**",
     "jest.config.js",
+    "jest.setup.js",
     "src/components/ui**",
     "src/lib/prisma.ts",
-    "src/lib/utils.ts"
+    "src/lib/utils.ts",
+    "src/app/not-found.js"
   ],
   "overrides": [
     {

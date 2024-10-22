@@ -1,3 +1,5 @@
+'use client';
+
 import { NavbarContent } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
 import React, { useState, useEffect, ReactElement } from 'react';

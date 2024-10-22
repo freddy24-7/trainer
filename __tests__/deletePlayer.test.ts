@@ -17,8 +17,9 @@ jest.mock('@clerk/clerk-sdk-node', () => ({
 }));
 
 jest.mock('@/utils/errorUtils', () => ({
-  formatError: jest.fn((message) => ({
-    errors: [{ message, path: ['form'], code: 'custom' }],
+  formatStringError: jest.fn((message) => ({
+    success: false,
+    errors: message,
   })),
 }));
 
@@ -33,13 +34,8 @@ describe('deletePlayer', () => {
     const result = await deletePlayer(1);
 
     expect(result).toEqual({
-      errors: [
-        {
-          message: 'Player not found or Clerk ID is missing.',
-          path: ['form'],
-          code: 'custom',
-        },
-      ],
+      success: false,
+      errors: 'Player not found or Clerk ID is missing.',
     });
     expect(users.deleteUser).not.toHaveBeenCalled();
     expect(prisma.user.delete).not.toHaveBeenCalled();
@@ -59,8 +55,8 @@ describe('deletePlayer', () => {
     });
 
     expect(result).toEqual({
-      errors: [],
       success: true,
+      errors: undefined,
     });
   });
 
@@ -79,13 +75,8 @@ describe('deletePlayer', () => {
     expect(prisma.user.delete).not.toHaveBeenCalled();
 
     expect(result).toEqual({
-      errors: [
-        {
-          message: 'Error deleting the player.',
-          path: ['form'],
-          code: 'custom',
-        },
-      ],
+      success: false,
+      errors: 'Error deleting the player.',
     });
   });
 
@@ -107,13 +98,8 @@ describe('deletePlayer', () => {
     });
 
     expect(result).toEqual({
-      errors: [
-        {
-          message: 'Error deleting the player.',
-          path: ['form'],
-          code: 'custom',
-        },
-      ],
+      success: false,
+      errors: 'Error deleting the player.',
     });
   });
 });
