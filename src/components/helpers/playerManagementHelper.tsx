@@ -51,20 +51,40 @@ export const handleDeletePlayer = async (
   setPlayers: React.Dispatch<React.SetStateAction<Player[]>>,
   modalSetters: ModalSetupParams
 ): Promise<void> => {
-  const { setModalTitle, setModalBody, setIsModalOpen } = modalSetters;
+  const { setModalTitle, setModalBody, setConfirmAction, setIsModalOpen } =
+    modalSetters;
 
-  const result = await deletePlayerAction(playerId);
-  if (result.success) {
-    setPlayers((prevPlayers) =>
-      prevPlayers.filter((player) => player.id !== playerId)
-    );
-    setModalTitle('Player Deleted');
-    setModalBody(<p>The player was successfully deleted.</p>);
-  } else {
-    setModalTitle('Error');
-    setModalBody(
-      <p>{result.errors || 'An error occurred while deleting the player.'}</p>
-    );
-  }
+  setModalTitle('Confirm Deletion');
+  setModalBody(
+    <p>
+      Are you sure you want to delete this player? Players with already
+      registered data (minutes played) cannot be deleted.
+    </p>
+  );
+
+  setConfirmAction(() => async () => {
+    const result = await deletePlayerAction(playerId);
+
+    if (result.success) {
+      setPlayers((prevPlayers) =>
+        prevPlayers.filter((player) => player.id !== playerId)
+      );
+      setModalTitle('Player Deleted');
+      setModalBody(<p>The player was successfully deleted.</p>);
+
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 2000);
+    } else {
+      setModalTitle('Error');
+      setModalBody(
+        <p>{result.errors || 'An error occurred while deleting the player.'}</p>
+      );
+    }
+
+    setConfirmAction(() => {});
+    setIsModalOpen(true);
+  });
+
   setIsModalOpen(true);
 };
