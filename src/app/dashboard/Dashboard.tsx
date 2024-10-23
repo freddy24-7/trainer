@@ -9,13 +9,21 @@ export default function Dashboard({
   signedInUser,
 }: DashboardClientProps): React.ReactElement {
   const [loading, setLoading] = useState(true);
+  const [showMessage, setShowMessage] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const loadingTimer = setTimeout(() => {
       setLoading(false);
     }, 500);
 
-    return () => clearTimeout(timer);
+    const messageTimer = setTimeout(() => {
+      setShowMessage(false);
+    }, 2500);
+
+    return () => {
+      clearTimeout(loadingTimer);
+      clearTimeout(messageTimer);
+    };
   }, []);
 
   if (loading) {
@@ -26,7 +34,10 @@ export default function Dashboard({
 
   return (
     <div className="mt-5 text-center max-w-xl mx-auto bg-brandcolor p-6 rounded">
-      <h1 className="text-3xl font-bold">Hoi {signedInUser.username}!</h1>
+      {showMessage && (
+        <h1 className="text-3xl font-bold">Hoi {signedInUser.username}!</h1>
+      )}
+      <p className="text-lg">Welcome to this app</p>
     </div>
   );
 }

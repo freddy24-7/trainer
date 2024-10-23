@@ -137,3 +137,8 @@ export interface PlayerResponseData {
 export type GetPlayerMatchStatsResponse =
   | { success: true; playerStats: PlayerMatchStat[] }
   | { success: false; error: string };
+
+export interface ClerkUser {
+  id: string;
+  username: string | null;
+}
