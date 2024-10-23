@@ -1,3 +1,5 @@
+'use client';
+
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
