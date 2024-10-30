@@ -8,7 +8,12 @@ import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import NavBarClient from './NavBarClient';
 
 export default async function NavBar(): Promise<React.ReactElement> {
-  const signedInUser = await fetchAndCheckUser();
+  const user = await fetchAndCheckUser();
+
+  const { id: userId, role: userRole = null } = user || {
+    id: null,
+    role: null,
+  };
 
   return (
     <Navbar
@@ -26,10 +31,18 @@ export default async function NavBar(): Promise<React.ReactElement> {
         </div>
       </NavbarBrand>
 
-      <NavBarClient
-        userId={signedInUser?.id || null}
-        userRole={signedInUser?.role || null}
-      />
+      {userId ? (
+        <NavBarClient userId={userId} userRole={userRole} />
+      ) : (
+        <div className="flex items-center space-x-4">
+          <Link href="/sign-up" className="text-white text-xl">
+            Sign Up
+          </Link>
+          <Link href="/sign-in" className="text-white text-xl">
+            Sign In
+          </Link>
+        </div>
+      )}
     </Navbar>
   );
 }

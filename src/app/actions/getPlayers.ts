@@ -12,7 +12,7 @@ export default async function getPlayers(): Promise<{
   try {
     const players = await fetchPlayers();
 
-    revalidatePath('/player/management');
+    revalidatePath('/player-management');
 
     return { success: true, players: players as PlayerResponse[] };
   } catch (error) {

@@ -12,7 +12,7 @@ export default function LoginModal(): React.ReactElement {
 
   const handleClose = (): void => {
     router.push('/');
-    return; // Optional, not required but added for clarity
+    return;
   };
 
   return (
