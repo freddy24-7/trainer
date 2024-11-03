@@ -18,7 +18,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
       />
       <button
         type="submit"
-        className="p-2 bg-blue-500 text-white rounded-r"
+        className="p-2 bg-zinc-600 text-white rounded-r"
         disabled={!newMessage.trim()}
       >
         Send

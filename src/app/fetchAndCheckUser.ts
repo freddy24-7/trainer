@@ -21,7 +21,7 @@ export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
   }
 
   const signedInUser: SignedInUser = {
-    id: prismaUser.id.toString(),
+    id: prismaUser.id,
     username: prismaUser.username || 'Unknown',
     role: prismaUser.role || null,
   };

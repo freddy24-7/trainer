@@ -7,6 +7,7 @@ export interface Message {
   content: string;
   sender: Sender;
   createdAt: Date;
+  recipientId?: number | null;
 }
 
 export interface MessageListProps {

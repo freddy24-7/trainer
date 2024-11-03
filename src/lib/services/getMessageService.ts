@@ -1,18 +1,28 @@
 import prisma from '@/lib/prisma';
 import { formatError } from '@/utils/errorUtils';
 
-export async function fetchMessages(): Promise<{
+export async function fetchMessages(
+  signedInUserId: number,
+  recipientId?: number
+): Promise<{
   messages: unknown[];
   success: boolean;
   error?: string;
 }> {
   try {
     const messages = await prisma.message.findMany({
+      where: recipientId
+        ? {
+            OR: [
+              { senderId: signedInUserId, recipientId },
+              { senderId: recipientId, recipientId: signedInUserId },
+            ],
+          }
+        : { recipientId: null }, // Only group messages if no recipientId
       orderBy: { createdAt: 'asc' },
       include: {
-        sender: {
-          select: { id: true, username: true },
-        },
+        sender: { select: { id: true, username: true } },
+        recipient: { select: { id: true, username: true } },
       },
     });
 

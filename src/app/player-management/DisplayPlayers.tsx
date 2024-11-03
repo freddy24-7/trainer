@@ -24,7 +24,7 @@ interface DisplayPlayersProps extends PlayerManagementClientProps {
   ) => Promise<{ success: boolean; errors?: string }>;
 }
 
-export default function DisplayPlayers({
+function DisplayPlayers({
   players: initialPlayers,
   editPlayerAction,
   deletePlayerAction,
@@ -84,6 +84,7 @@ export default function DisplayPlayers({
       <PlayersList
         players={players}
         onEdit={handleEditPlayerClick}
+        showGroupChatOption={false}
         onDelete={handleDeletePlayerClick}
       />
 
@@ -101,3 +102,5 @@ export default function DisplayPlayers({
     </div>
   );
 }
+
+export { DisplayPlayers };

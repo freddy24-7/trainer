@@ -7,7 +7,7 @@ export interface DateSelectorProps {
 }
 
 export interface NavBarClientProps {
-  userId: string | null;
+  userId: number | null;
   userRole: string | null;
 }
 

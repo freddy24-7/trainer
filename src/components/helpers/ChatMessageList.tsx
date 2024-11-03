@@ -20,7 +20,7 @@ const MessageList: React.FC<MessageListProps> = ({
           <div
             className={`p-3 rounded-lg shadow-md max-w-xs break-words ${
               Number(msg.sender.id) === Number(signedInUser.id)
-                ? 'bg-blue-500 text-white self-end'
+                ? 'bg-zinc-500 text-white self-end'
                 : 'bg-gray-200 text-gray-900 self-start'
             }`}
           >

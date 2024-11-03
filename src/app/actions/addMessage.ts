@@ -20,10 +20,14 @@ export default async function addMessage(
     };
   }
 
-  const { content, senderId } = validation.data;
+  const { content, senderId, recipientId } = validation.data;
 
   try {
-    const messageFromCreate = await createMessage(content, senderId);
+    const messageFromCreate = await createMessage(
+      content,
+      senderId,
+      recipientId
+    );
 
     console.log('Message successfully saved:', messageFromCreate);
 
@@ -56,10 +60,10 @@ export default async function addMessage(
 
     const completeMessage: Message = {
       ...messageFromCreate,
-      sender, // Add the sender property
+      sender,
     };
 
-    await handleTriggerNewMessageEvent(completeMessage, sender);
+    await handleTriggerNewMessageEvent(completeMessage, sender, recipientId);
 
     return { success: true };
   } catch (error) {

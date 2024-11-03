@@ -9,7 +9,7 @@ import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
 
 interface MobileMenuProps {
-  userId: string | null;
+  userId: number | null;
   userRole: string | null;
   dropdownTextColor: string;
 }

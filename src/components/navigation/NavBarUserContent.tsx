@@ -6,7 +6,7 @@ import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
 
 interface NavBarUserContentProps {
-  userId: string | null;
+  userId: number | null;
   userRole: string | null;
   dropdownTextColor: string;
 }

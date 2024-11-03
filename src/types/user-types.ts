@@ -88,7 +88,7 @@ export interface PlayerStatsTableProps {
 }
 
 export interface SignedInUser {
-  id: string;
+  id: number;
   username: string;
   role?: string;
 }
@@ -103,12 +103,6 @@ export interface UserData {
   clerkId: string;
   username: string;
   role: string;
-}
-
-export interface PlayersListProps {
-  players: Player[];
-  onEdit: (player: Player) => void;
-  onDelete: (playerId: number) => void;
 }
 
 export interface HandlePlayerFormSubmitParams {

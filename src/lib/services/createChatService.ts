@@ -4,12 +4,14 @@ import prisma from '@/lib/prisma';
 
 export const createMessage = async (
   content: string,
-  senderId: number
+  senderId: number,
+  recipientId?: number // Optional recipientId for private messages
 ): Promise<Message> => {
   return prisma.message.create({
     data: {
       content,
       senderId,
+      recipientId: recipientId || null, // Set recipientId if provided, otherwise null for group messages
       createdAt: new Date(),
     },
   });

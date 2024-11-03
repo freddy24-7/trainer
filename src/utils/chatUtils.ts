@@ -8,7 +8,8 @@ import { handleInitializePusher } from '@/utils/pusherUtils';
 
 export const subscribeToPusherEvents = (
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  userId?: number
 ): (() => void) => {
   const handlePusherEvent = (data: PusherEventMessage): void => {
     console.log('Pusher event received:', data);
@@ -23,7 +24,7 @@ export const subscribeToPusherEvents = (
     ]);
   };
 
-  const cleanup = handleInitializePusher(handlePusherEvent);
+  const cleanup = handleInitializePusher(handlePusherEvent, userId || 0);
   setLoading(false);
 
   return cleanup;
@@ -33,11 +34,12 @@ interface SendMessageOptions {
   newMessage: string;
   signedInUser: SignedInUser;
   action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
+  recipientId?: number | null;
 }
 
 export const handleSendMessageUtil = async (
   e: React.FormEvent,
-  { newMessage, signedInUser, action }: SendMessageOptions,
+  { newMessage, signedInUser, action, recipientId }: SendMessageOptions,
   setNewMessage: React.Dispatch<React.SetStateAction<string>>
 ): Promise<void> => {
   e.preventDefault();
@@ -51,6 +53,10 @@ export const handleSendMessageUtil = async (
     const formData = new FormData();
     formData.append('content', newMessage);
     formData.append('senderId', signedInUser.id.toString());
+
+    if (recipientId) {
+      formData.append('recipientId', recipientId.toString());
+    }
 
     const response = await action({}, formData);
 

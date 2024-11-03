@@ -9,17 +9,18 @@ datasource db {
 }
 
 model User {
-  id             Int              @id @default(autoincrement())
-  clerkId        String?          @unique
-  username       String?          @unique
-  whatsappNumber String?
-  role           Role             @default(TRAINER)
-  createdAt      DateTime         @default(now())
-  teamId         Int?
-  team           Team?            @relation(fields: [teamId], references: [id])
-  MatchPlayer    MatchPlayer[]
-  TrainingPlayer TrainingPlayer[]
-  Message        Message[]
+  id               Int              @id @default(autoincrement())
+  clerkId          String?          @unique
+  username         String?          @unique
+  whatsappNumber   String?
+  role             Role             @default(TRAINER)
+  createdAt        DateTime         @default(now())
+  teamId           Int?
+  team             Team?            @relation(fields: [teamId], references: [id])
+  MatchPlayer      MatchPlayer[]
+  TrainingPlayer   TrainingPlayer[]
+  messagesSent     Message[]        @relation("Sender")
+  messagesReceived Message[]        @relation("Recipient")
 }
 
 model Team {
@@ -88,11 +89,13 @@ model TrainingPlayer {
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
-  content   String
-  senderId  Int
-  sender    User     @relation(fields: [senderId], references: [id])
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  content     String
+  senderId    Int
+  sender      User     @relation("Sender", fields: [senderId], references: [id])
+  recipientId Int?
+  recipient   User?    @relation("Recipient", fields: [recipientId], references: [id])
+  createdAt   DateTime @default(now())
 }
 
 enum Role {

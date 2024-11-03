@@ -7,10 +7,12 @@ const newMessage = 'new-message';
 
 export async function handleTriggerNewMessageEvent(
   message: Message,
-  sender: Sender
+  sender: Sender,
+  recipientId?: number
 ): Promise<unknown> {
   try {
-    const pusherResponse = await pusher.trigger('chat', newMessage, {
+    const channel = recipientId ? `private-chat-${recipientId}` : 'chat';
+    const pusherResponse = await pusher.trigger(channel, newMessage, {
       id: message.id,
       content: message.content,
       sender: {
@@ -21,7 +23,7 @@ export async function handleTriggerNewMessageEvent(
     });
 
     console.log(
-      'Pusher event triggered for new message:',
+      `Pusher event triggered for ${recipientId ? 'private' : 'group'} message:`,
       message.id,
       pusherResponse
     );
@@ -34,7 +36,8 @@ export async function handleTriggerNewMessageEvent(
 }
 
 export function handleInitializePusher(
-  onMessageReceived: (data: PusherEventMessage) => void
+  onMessageReceived: (data: PusherEventMessage) => void,
+  userId?: number
 ): () => void {
   Pusher.logToConsole = true;
 
@@ -43,13 +46,23 @@ export function handleInitializePusher(
     forceTLS: true,
   });
 
-  const channel: Channel = pusher.subscribe('chat');
+  const groupChannel: Channel = pusher.subscribe('chat');
+  groupChannel.bind(newMessage, onMessageReceived);
 
-  channel.bind(newMessage, onMessageReceived);
+  const privateChannel = userId
+    ? pusher.subscribe(`private-chat-${userId}`)
+    : null;
+  if (privateChannel) {
+    privateChannel.bind(newMessage, onMessageReceived);
+  }
 
   return () => {
-    channel.unbind(newMessage, onMessageReceived);
+    groupChannel.unbind(newMessage, onMessageReceived);
     pusher.unsubscribe('chat');
+    if (privateChannel) {
+      privateChannel.unbind(newMessage, onMessageReceived);
+      pusher.unsubscribe(`private-chat-${userId}`);
+    }
     pusher.disconnect();
   };
 }
