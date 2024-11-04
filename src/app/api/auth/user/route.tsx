@@ -52,6 +52,7 @@ export async function createAuthenticatedUser(): Promise<
   }
 
   if (!handleUsernameCheck(user.username || '')) {
+    console.log('Unauthorized username detected. Returning HTML error page.');
     return new NextResponse(handleUnauthorizedHtml(), {
       status: 403,
       headers: { 'Content-Type': 'text/html' },
