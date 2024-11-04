@@ -34,9 +34,6 @@ export function NavBarUserContent({
     </div>
   ) : (
     <div className="flex gap-4 items-center">
-      <NavLink href="/sign-up" className="text-gray-700">
-        Sign up
-      </NavLink>
       <NavLink href="/sign-in" className="text-gray-700">
         Sign In
       </NavLink>

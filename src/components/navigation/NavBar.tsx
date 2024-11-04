@@ -35,9 +35,6 @@ export default async function NavBar(): Promise<React.ReactElement> {
         <NavBarClient userId={userId} userRole={userRole} />
       ) : (
         <div className="flex items-center space-x-4">
-          <Link href="/sign-up" className="text-white text-xl">
-            Sign Up
-          </Link>
           <Link href="/sign-in" className="text-white text-xl">
             Sign In
           </Link>
