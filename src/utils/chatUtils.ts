@@ -13,6 +13,11 @@ export const subscribeToPusherEvents = (
 ): (() => void) => {
   const handlePusherEvent = (data: PusherEventMessage): void => {
     console.log('Pusher event received:', data);
+
+    if (data.sender.id === userId) {
+      return;
+    }
+
     setMessages((prevMessages) => [
       ...prevMessages,
       {

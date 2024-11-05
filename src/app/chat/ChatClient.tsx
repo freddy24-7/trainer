@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import getMessages from '@/app/actions/getMessages';
 import MessageInputForm from '@/components/helpers/ChatMessageInputForm';
 import MessageList from '@/components/helpers/ChatMessageList';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { Message } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
 import { SignedInUser, ChatUser } from '@/types/user-types';
@@ -25,7 +26,7 @@ function ChatClient({
   action,
   recipientId = null,
 }: Props): React.ReactElement {
-  const [, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState('');
   const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(
@@ -73,6 +74,15 @@ function ChatClient({
 
     const response = await action({}, formData);
     if (response.success) {
+      const newMessageData: Message = {
+        id: Date.now(),
+        content: newMessage,
+        sender: { id: signedInUser.id, username: signedInUser.username },
+        createdAt: new Date(),
+        recipientId: selectedRecipientId ?? null,
+      };
+
+      setMessages((prevMessages) => [...prevMessages, newMessageData]);
       setNewMessage('');
     } else if (response.errors) {
       const errorMessages = response.errors
@@ -83,6 +93,10 @@ function ChatClient({
       console.error('Failed to send message due to unknown reasons.');
     }
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="mt-5 max-w-xl mx-auto bg-brandcolor p-6 rounded">
