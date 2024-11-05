@@ -76,15 +76,20 @@ function ChatClient({
     if (response.success) {
       setNewMessage('');
 
-      const newMessageData: Message = {
-        id: Date.now(),
-        content: newMessage,
-        sender: { id: signedInUser.id, username: signedInUser.username },
-        createdAt: new Date(),
-        recipientId: selectedRecipientId ?? null,
-      };
+      // Check if we are in group chat mode (selectedRecipientId is null).
+      if (selectedRecipientId !== null) {
+        // In individual chat, we add the message directly.
+        const newMessageData: Message = {
+          id: Date.now(),
+          content: newMessage,
+          sender: { id: signedInUser.id, username: signedInUser.username },
+          createdAt: new Date(),
+          recipientId: selectedRecipientId ?? null,
+        };
 
-      setMessages((prevMessages) => [...prevMessages, newMessageData]);
+        setMessages((prevMessages) => [...prevMessages, newMessageData]);
+      }
+      // In group chat, rely on the subscription to add the message.
     } else if (response.errors) {
       const errorMessages = response.errors
         .map((error) => error.message)
