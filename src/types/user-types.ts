@@ -22,6 +22,12 @@ export interface Player {
   whatsappNumber: string;
 }
 
+export interface ChatUser {
+  id: number;
+  username: string;
+  whatsappNumber?: string;
+}
+
 export interface PlayerAtTraining {
   userId: number;
   absent: boolean;
@@ -75,6 +81,12 @@ export interface PlayerResponse {
   whatsappNumber?: string;
 }
 
+export interface UserResponse {
+  id: number;
+  username?: string;
+  whatsappNumber?: string;
+}
+
 export interface PlayerStat {
   id: number;
   username: string | null;
@@ -97,12 +109,6 @@ export interface PlayersFieldProps {
   players: Player[];
   playerValues: FormValues['players'];
   setValue: UseFormSetValue<FormValues>;
-}
-
-export interface UserData {
-  clerkId: string;
-  username: string;
-  role: string;
 }
 
 export interface HandlePlayerFormSubmitParams {

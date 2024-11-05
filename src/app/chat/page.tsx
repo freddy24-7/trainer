@@ -2,13 +2,13 @@ import React from 'react';
 
 import addMessage from '@/app/actions/addMessage';
 import getMessages from '@/app/actions/getMessages';
-import getPlayers from '@/app/actions/getPlayers';
+import getUsers from '@/app/actions/getUsers';
 import ChatClient from '@/app/chat/ChatClient';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import { handleChatErrorResponse } from '@/components/helpers/RenderError';
 import LoginModal from '@/components/LoginModal';
 import { Message } from '@/types/message-types';
-import { Player } from '@/types/user-types';
+import { ChatUser } from '@/types/user-types';
 
 export default async function ChatPage({
   searchParams,
@@ -34,12 +34,12 @@ export default async function ChatPage({
     ]);
   }
 
-  const playersResponse = await getPlayers();
-  const players: Player[] = playersResponse.success
-    ? (playersResponse.players?.map((player) => ({
-        ...player,
-        username: player.username || 'Unknown',
-        whatsappNumber: player.whatsappNumber || '',
+  const usersResponse = await getUsers();
+  const users: ChatUser[] = usersResponse.success
+    ? (usersResponse.users?.map((user) => ({
+        ...user,
+        username: user.username || 'Unknown',
+        whatsappNumber: user.whatsappNumber || '',
       })) ?? [])
     : [];
 
@@ -51,7 +51,7 @@ export default async function ChatPage({
       messages={messages}
       action={addMessage}
       recipientId={recipientId}
-      players={players}
+      users={users}
     />
   );
 }

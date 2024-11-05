@@ -8,13 +8,13 @@ import MessageList from '@/components/helpers/ChatMessageList';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Message } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
-import { SignedInUser, Player } from '@/types/user-types';
+import { SignedInUser, ChatUser } from '@/types/user-types';
 import { subscribeToPusherEvents } from '@/utils/chatUtils';
 
 interface Props {
   signedInUser: SignedInUser;
   messages: Message[];
-  players: Player[];
+  users: ChatUser[];
   action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
   recipientId?: number | null;
 }
@@ -22,7 +22,7 @@ interface Props {
 function ChatClient({
   signedInUser,
   messages: initialMessages,
-  players,
+  users,
   action,
   recipientId = null,
 }: Props): React.ReactElement {
@@ -74,19 +74,16 @@ function ChatClient({
 
     const response = await action({}, formData);
     if (response.success) {
+      const newMessageData: Message = {
+        id: Date.now(),
+        content: newMessage,
+        sender: { id: signedInUser.id, username: signedInUser.username },
+        createdAt: new Date(),
+        recipientId: selectedRecipientId ?? null,
+      };
+
+      setMessages((prevMessages) => [...prevMessages, newMessageData]);
       setNewMessage('');
-
-      if (selectedRecipientId !== null) {
-        const newMessageData: Message = {
-          id: Date.now(),
-          content: newMessage,
-          sender: { id: signedInUser.id, username: signedInUser.username },
-          createdAt: new Date(),
-          recipientId: selectedRecipientId ?? null,
-        };
-
-        setMessages((prevMessages) => [...prevMessages, newMessageData]);
-      }
     } else if (response.errors) {
       const errorMessages = response.errors
         .map((error) => error.message)
@@ -115,9 +112,9 @@ function ChatClient({
           onChange={handleRecipientChange}
         >
           <option value="group">Group Chat</option>
-          {players.map((player) => (
-            <option key={player.id} value={player.id}>
-              Chat with {player.username}
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              Chat with {user.username}
             </option>
           ))}
         </select>
