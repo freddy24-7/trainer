@@ -41,9 +41,53 @@ export function handleInitializePusher(
 ): () => void {
   Pusher.logToConsole = true;
 
+  const newMessage = 'new-message';
+
   const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
     cluster: 'eu',
     forceTLS: true,
+    authEndpoint: '/api/pusher/auth',
+    auth: {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+    authorizer: (channel, options) => {
+      return {
+        authorize: (
+          socketId: string,
+          callback: (error: any, authData: any) => void
+        ) => {
+          fetch('/api/pusher/auth', {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify({
+              socket_id: socketId,
+              channel_name: channel.name,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => {
+              if (response.status === 200) {
+                return response.json();
+              } else {
+                throw new Error(
+                  `Failed to authenticate Pusher channel: ${response.statusText}`
+                );
+              }
+            })
+            .then((data) => {
+              callback(null, data);
+            })
+            .catch((err) => {
+              console.error('Error in Pusher authorization:', err);
+              callback(err, null);
+            });
+        },
+      };
+    },
   });
 
   const groupChannel: Channel = pusher.subscribe('chat');
@@ -52,6 +96,7 @@ export function handleInitializePusher(
   const privateChannel = userId
     ? pusher.subscribe(`private-chat-${userId}`)
     : null;
+
   if (privateChannel) {
     privateChannel.bind(newMessage, onMessageReceived);
   }

@@ -18,7 +18,7 @@ export async function fetchMessages(
               { senderId: recipientId, recipientId: signedInUserId },
             ],
           }
-        : { recipientId: null }, // Only group messages if no recipientId
+        : { recipientId: null },
       orderBy: { createdAt: 'asc' },
       include: {
         sender: { select: { id: true, username: true } },
