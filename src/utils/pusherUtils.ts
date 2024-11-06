@@ -52,7 +52,7 @@ export function handleInitializePusher(
         'Content-Type': 'application/json',
       },
     },
-    authorizer: (channel, options) => {
+    authorizer: (channel) => {
       return {
         authorize: (
           socketId: string,
