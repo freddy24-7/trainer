@@ -37,7 +37,7 @@ describe('getPlayers', () => {
     const result = await getPlayers();
 
     expect(result).toEqual({ success: true, players: mockPlayers });
-    expect(revalidatePath).toHaveBeenCalledWith('/player/management');
+    expect(revalidatePath).toHaveBeenCalledWith('/player-management');
   });
 
   it('should return an empty list if no players are found', async () => {
@@ -46,7 +46,7 @@ describe('getPlayers', () => {
     const result = await getPlayers();
 
     expect(result).toEqual({ success: true, players: [] });
-    expect(revalidatePath).toHaveBeenCalledWith('/player/management');
+    expect(revalidatePath).toHaveBeenCalledWith('/player-management');
   });
 
   it('should handle errors when fetching players', async () => {
