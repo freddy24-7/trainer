@@ -2,20 +2,21 @@ import { Message, User } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
 
-export const createMessage = async (
+export async function createMessage(
   content: string,
   senderId: number,
-  recipientId?: number // Optional recipientId for private messages
-): Promise<Message> => {
+  recipientId: number | undefined,
+  videoUrl: string | null = null
+): Promise<Message> {
   return prisma.message.create({
     data: {
       content,
       senderId,
-      recipientId: recipientId || null, // Set recipientId if provided, otherwise null for group messages
-      createdAt: new Date(),
+      recipientId,
+      videoUrl,
     },
   });
-};
+}
 
 export const getSenderById = async (senderId: number): Promise<User | null> => {
   return prisma.user.findUnique({

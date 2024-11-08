@@ -6,6 +6,7 @@ export interface Message {
   id: number;
   content: string;
   sender: Sender;
+  videoUrl?: string | null;
   createdAt: Date;
   recipientId?: number | null;
 }

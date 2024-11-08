@@ -29,7 +29,23 @@ const MessageList: React.FC<MessageListProps> = ({
                 ? 'You'
                 : msg.sender.username}
             </div>
-            <div className="text-sm">{msg.content}</div>
+
+            {/* Display message content if available */}
+            {msg.content && <div className="text-sm">{msg.content}</div>}
+
+            {/* Display video if videoUrl is present */}
+            {msg.videoUrl && (
+              <div className="mt-2">
+                <video
+                  controls={true}
+                  src={msg.videoUrl}
+                  className="w-full rounded-lg"
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            )}
+
             <div className="text-xs text-gray-400 mt-1">
               {new Date(msg.createdAt).toLocaleTimeString()}
             </div>

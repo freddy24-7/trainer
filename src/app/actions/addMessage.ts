@@ -1,5 +1,6 @@
 'use server';
 
+import { handleUploadVideo } from '@/lib/cloudinary';
 import { createMessage, getSenderById } from '@/lib/services/createChatService';
 import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
 import { Sender, Message } from '@/types/message-types';
@@ -21,12 +22,28 @@ export default async function addMessage(
   }
 
   const { content, senderId, recipientId } = validation.data;
+  let videoUrl = null;
+
+  if (params.has('videoFile')) {
+    const videoFile = params.get('videoFile') as File;
+    if (videoFile) {
+      const filePath = `/tmp/${videoFile.name}`;
+      await videoFile
+        .arrayBuffer()
+        .then((buffer) =>
+          require('fs').writeFileSync(filePath, Buffer.from(buffer))
+        );
+      videoUrl = await handleUploadVideo(filePath);
+      require('fs').unlinkSync(filePath);
+    }
+  }
 
   try {
     const messageFromCreate = await createMessage(
       content,
       senderId,
-      recipientId
+      recipientId,
+      videoUrl
     );
 
     console.log('Message successfully saved:', messageFromCreate);

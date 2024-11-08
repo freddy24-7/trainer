@@ -91,6 +91,7 @@ model TrainingPlayer {
 model Message {
   id          Int      @id @default(autoincrement())
   content     String
+  videoUrl    String?
   senderId    Int
   sender      User     @relation("Sender", fields: [senderId], references: [id])
   recipientId Int?

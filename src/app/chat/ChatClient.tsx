@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 import getMessages from '@/app/actions/getMessages';
 import MessageInputForm from '@/components/helpers/ChatMessageInputForm';
@@ -29,6 +30,7 @@ function ChatClient({
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState('');
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(
     recipientId
   );
@@ -62,6 +64,15 @@ function ChatClient({
     await fetchMessagesForChat(selectedId);
   };
 
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: { 'video/*': [] },
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        setSelectedVideo(acceptedFiles[0]);
+      }
+    },
+  });
+
   const handleSendMessage = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     const formData = new FormData();
@@ -70,6 +81,10 @@ function ChatClient({
 
     if (selectedRecipientId !== null) {
       formData.append('recipientId', selectedRecipientId.toString());
+    }
+
+    if (selectedVideo) {
+      formData.append('videoFile', selectedVideo);
     }
 
     const response = await action({}, formData);
@@ -84,6 +99,7 @@ function ChatClient({
 
       setMessages((prevMessages) => [...prevMessages, newMessageData]);
       setNewMessage('');
+      setSelectedVideo(null);
     } else if (response.errors) {
       const errorMessages = response.errors
         .map((error) => error.message)
@@ -121,6 +137,18 @@ function ChatClient({
       </div>
 
       <MessageList messages={messages} signedInUser={signedInUser} />
+
+      <div
+        {...getRootProps()}
+        className="drag-drop-area mb-4 p-4 border border-dashed rounded"
+      >
+        <input {...getInputProps()} />
+        {selectedVideo ? (
+          <p>Selected video: {selectedVideo.name}</p>
+        ) : (
+          <p>Drag and drop a video here, or click to select one</p>
+        )}
+      </div>
 
       <MessageInputForm
         newMessage={newMessage}
