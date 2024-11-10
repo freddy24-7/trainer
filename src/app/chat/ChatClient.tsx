@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 
 import getMessages from '@/app/actions/getMessages';
-import MessageInputForm from '@/components/helpers/ChatMessageInputForm';
+import ChatMessageInputForm from '@/components/helpers/ChatMessageInputForm';
 import MessageList from '@/components/helpers/ChatMessageList';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Message } from '@/types/message-types';
+import { Message, PusherEventMessage } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
 import { SignedInUser, ChatUser } from '@/types/user-types';
 import { subscribeToPusherEvents } from '@/utils/chatUtils';
@@ -36,7 +35,22 @@ function ChatClient({
   );
 
   useEffect(() => {
-    return subscribeToPusherEvents(setMessages, setLoading, signedInUser.id);
+    return subscribeToPusherEvents(
+      (data: PusherEventMessage) => {
+        const incomingMessage: Message = {
+          id: data.id,
+          content: data.content,
+          sender: data.sender,
+          createdAt: new Date(data.createdAt),
+          videoUrl: data.videoUrl || null,
+          recipientId: data.recipientId ?? null,
+        };
+
+        setMessages((prevMessages) => [...prevMessages, incomingMessage]);
+      },
+      setLoading,
+      signedInUser.id
+    );
   }, [signedInUser.id]);
 
   const fetchMessagesForChat = async (
@@ -64,17 +78,12 @@ function ChatClient({
     await fetchMessagesForChat(selectedId);
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: { 'video/*': [] },
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        setSelectedVideo(acceptedFiles[0]);
-      }
-    },
-  });
-
   const handleSendMessage = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
+    if (!newMessage.trim() && !selectedVideo) {
+      return;
+    }
+
     const formData = new FormData();
     formData.append('content', newMessage);
     formData.append('senderId', signedInUser.id.toString());
@@ -89,15 +98,6 @@ function ChatClient({
 
     const response = await action({}, formData);
     if (response.success) {
-      const newMessageData: Message = {
-        id: Date.now(),
-        content: newMessage,
-        sender: { id: signedInUser.id, username: signedInUser.username },
-        createdAt: new Date(),
-        recipientId: selectedRecipientId ?? null,
-      };
-
-      setMessages((prevMessages) => [...prevMessages, newMessageData]);
       setNewMessage('');
       setSelectedVideo(null);
     } else if (response.errors) {
@@ -128,32 +128,24 @@ function ChatClient({
           onChange={handleRecipientChange}
         >
           <option value="group">Group Chat</option>
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>
-              Chat with {user.username}
-            </option>
-          ))}
+          {users
+            .filter((user) => user.id !== signedInUser.id)
+            .map((user) => (
+              <option key={user.id} value={user.id}>
+                Chat with {user.username}
+              </option>
+            ))}
         </select>
       </div>
 
       <MessageList messages={messages} signedInUser={signedInUser} />
 
-      <div
-        {...getRootProps()}
-        className="drag-drop-area mb-4 p-4 border border-dashed rounded"
-      >
-        <input {...getInputProps()} />
-        {selectedVideo ? (
-          <p>Selected video: {selectedVideo.name}</p>
-        ) : (
-          <p>Drag and drop a video here, or click to select one</p>
-        )}
-      </div>
-
-      <MessageInputForm
+      <ChatMessageInputForm
         newMessage={newMessage}
         setNewMessage={setNewMessage}
         handleSendMessage={handleSendMessage}
+        selectedVideo={selectedVideo}
+        setSelectedVideo={setSelectedVideo}
       />
     </div>
   );

@@ -3,14 +3,14 @@ import { Message, User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 
 export async function createMessage(
-  content: string,
+  content: string | null,
   senderId: number,
   recipientId: number | undefined,
   videoUrl: string | null = null
 ): Promise<Message> {
   return prisma.message.create({
     data: {
-      content,
+      content: content ?? '',
       senderId,
       recipientId,
       videoUrl,

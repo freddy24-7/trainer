@@ -6,5 +6,5 @@ export const createMessageSchema = z.object({
     .min(1, 'Message cannot be empty')
     .max(1000, 'Message too long'),
   senderId: z.number().positive('Invalid sender ID'),
-  recipientId: z.number().positive('Invalid recipient ID').optional(), // Add recipientId as an optional field
+  recipientId: z.number().positive('Invalid recipient ID').optional(),
 });

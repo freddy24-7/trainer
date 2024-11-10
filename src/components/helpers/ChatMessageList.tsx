@@ -12,28 +12,20 @@ const MessageList: React.FC<MessageListProps> = ({
         <div
           key={msg.id}
           className={`mb-4 flex ${
-            Number(msg.sender.id) === Number(signedInUser.id)
-              ? 'justify-end'
-              : 'justify-start'
+            msg.sender.id === signedInUser.id ? 'justify-end' : 'justify-start'
           }`}
         >
           <div
             className={`p-3 rounded-lg shadow-md max-w-xs break-words ${
-              Number(msg.sender.id) === Number(signedInUser.id)
+              msg.sender.id === signedInUser.id
                 ? 'bg-zinc-500 text-white self-end'
                 : 'bg-gray-200 text-gray-900 self-start'
             }`}
           >
             <div className="text-sm font-semibold mb-1">
-              {Number(msg.sender.id) === Number(signedInUser.id)
-                ? 'You'
-                : msg.sender.username}
+              {msg.sender.id === signedInUser.id ? 'You' : msg.sender.username}
             </div>
-
-            {/* Display message content if available */}
             {msg.content && <div className="text-sm">{msg.content}</div>}
-
-            {/* Display video if videoUrl is present */}
             {msg.videoUrl && (
               <div className="mt-2">
                 <video
@@ -45,7 +37,6 @@ const MessageList: React.FC<MessageListProps> = ({
                 </video>
               </div>
             )}
-
             <div className="text-xs text-gray-400 mt-1">
               {new Date(msg.createdAt).toLocaleTimeString()}
             </div>

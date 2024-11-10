@@ -57,9 +57,9 @@ describe('getPlayers', () => {
     const result = await getPlayers();
 
     expect(result).toEqual({
-      errors: [{ message: errorMessage }], // Use the constant here
+      errors: [{ message: errorMessage }],
     });
     expect(revalidatePath).not.toHaveBeenCalled();
-    expect(formatError).toHaveBeenCalledWith(errorMessage); // Use the constant here
+    expect(formatError).toHaveBeenCalledWith(errorMessage);
   });
 });

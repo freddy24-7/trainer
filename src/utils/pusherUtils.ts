@@ -3,36 +3,23 @@ import Pusher, { Channel } from 'pusher-js';
 import pusher from '@/lib/pusher';
 import { PusherEventMessage, Message, Sender } from '@/types/message-types';
 
-const newMessage = 'new-message';
-
 export async function handleTriggerNewMessageEvent(
   message: Message,
   sender: Sender,
   recipientId?: number
 ): Promise<unknown> {
-  try {
-    const channel = recipientId ? `private-chat-${recipientId}` : 'chat';
-    const pusherResponse = await pusher.trigger(channel, newMessage, {
-      id: message.id,
-      content: message.content,
-      sender: {
-        id: sender.id,
-        username: sender.username,
-      },
-      createdAt: message.createdAt,
-    });
-
-    console.log(
-      `Pusher event triggered for ${recipientId ? 'private' : 'group'} message:`,
-      message.id,
-      pusherResponse
-    );
-
-    return pusherResponse;
-  } catch (error) {
-    console.error('Error triggering Pusher event:', error);
-    throw new Error('Error triggering Pusher event');
-  }
+  const channel = recipientId ? `private-chat-${recipientId}` : 'chat';
+  return pusher.trigger(channel, 'new-message', {
+    id: message.id,
+    content: message.content,
+    videoUrl: message.videoUrl || null,
+    sender: {
+      id: sender.id,
+      username: sender.username,
+    },
+    createdAt: message.createdAt,
+    recipientId: recipientId ?? null,
+  });
 }
 
 export function handleInitializePusher(
@@ -91,14 +78,18 @@ export function handleInitializePusher(
   });
 
   const groupChannel: Channel = pusher.subscribe('chat');
-  groupChannel.bind(newMessage, onMessageReceived);
+  groupChannel.bind(newMessage, (data: PusherEventMessage) => {
+    onMessageReceived(data);
+  });
 
   const privateChannel = userId
     ? pusher.subscribe(`private-chat-${userId}`)
     : null;
 
   if (privateChannel) {
-    privateChannel.bind(newMessage, onMessageReceived);
+    privateChannel.bind(newMessage, (data: PusherEventMessage) => {
+      onMessageReceived(data);
+    });
   }
 
   return () => {

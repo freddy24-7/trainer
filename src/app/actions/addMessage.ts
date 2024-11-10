@@ -28,19 +28,31 @@ export default async function addMessage(
     const videoFile = params.get('videoFile') as File;
     if (videoFile) {
       const filePath = `/tmp/${videoFile.name}`;
-      await videoFile
-        .arrayBuffer()
-        .then((buffer) =>
-          require('fs').writeFileSync(filePath, Buffer.from(buffer))
-        );
-      videoUrl = await handleUploadVideo(filePath);
-      require('fs').unlinkSync(filePath);
+      try {
+        await videoFile
+          .arrayBuffer()
+          .then((buffer) =>
+            require('fs').writeFileSync(filePath, Buffer.from(buffer))
+          );
+
+        videoUrl = await handleUploadVideo(filePath);
+      } catch (uploadError) {
+        console.error('Error uploading video:', uploadError);
+        return formatError(
+          'Error uploading video.',
+          ['upload'],
+          'custom',
+          true
+        ) as ActionResponse;
+      } finally {
+        require('fs').unlinkSync(filePath);
+      }
     }
   }
 
   try {
     const messageFromCreate = await createMessage(
-      content,
+      content || null,
       senderId,
       recipientId,
       videoUrl
@@ -49,21 +61,10 @@ export default async function addMessage(
     console.log('Message successfully saved:', messageFromCreate);
 
     const senderData = await getSenderById(messageFromCreate.senderId);
-
-    if (!senderData) {
-      console.error('Sender not found');
+    if (!senderData || !senderData.username) {
+      console.error('Sender not found or username is null');
       return formatError(
-        'Error sending the message: Sender not found',
-        ['form'],
-        'custom',
-        true
-      ) as ActionResponse;
-    }
-
-    if (!senderData.username) {
-      console.error('Sender username is null');
-      return formatError(
-        'Error sending the message: Username is null',
+        'Error sending the message: Sender not found or username is null',
         ['form'],
         'custom',
         true
@@ -82,7 +83,7 @@ export default async function addMessage(
 
     await handleTriggerNewMessageEvent(completeMessage, sender, recipientId);
 
-    return { success: true };
+    return { success: true, videoUrl };
   } catch (error) {
     console.error('Error adding message:', error);
 

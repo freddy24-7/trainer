@@ -7,4 +7,5 @@ export interface ResponseError {
 export interface ActionResponse {
   success: boolean;
   errors?: ZodIssue[];
+  videoUrl?: string | null;
 }

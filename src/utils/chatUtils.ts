@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Message, PusherEventMessage } from '@/types/message-types';
+import { PusherEventMessage } from '@/types/message-types';
 import { handleInitializePusher } from '@/utils/pusherUtils';
 
 export const subscribeToPusherEvents = (
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
+  onMessageReceived: (data: PusherEventMessage) => void,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   userId?: number
 ): (() => void) => {
@@ -15,15 +15,7 @@ export const subscribeToPusherEvents = (
       return;
     }
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        id: data.id,
-        content: data.content,
-        sender: data.sender,
-        createdAt: new Date(data.createdAt),
-      },
-    ]);
+    onMessageReceived(data);
   };
 
   const cleanup = handleInitializePusher(handlePusherEvent, userId || 0);

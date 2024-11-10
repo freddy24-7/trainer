@@ -17,8 +17,8 @@ model User {
   createdAt        DateTime         @default(now())
   teamId           Int?
   team             Team?            @relation(fields: [teamId], references: [id])
-  MatchPlayer      MatchPlayer[]
-  TrainingPlayer   TrainingPlayer[]
+  matchPlayers     MatchPlayer[]
+  trainingPlayers  TrainingPlayer[]
   messagesSent     Message[]        @relation("Sender")
   messagesReceived Message[]        @relation("Recipient")
 }
@@ -28,7 +28,7 @@ model Team {
   name           String           @unique
   players        User[]
   poules         Poule[]          @relation("PrimaryTeam")
-  PouleOpponents PouleOpponents[]
+  pouleOpponents PouleOpponents[]
 }
 
 model Poule {
@@ -46,7 +46,7 @@ model PouleOpponents {
   teamId  Int
   poule   Poule   @relation(fields: [pouleId], references: [id])
   team    Team    @relation(fields: [teamId], references: [id])
-  Match   Match[]
+  matches Match[]
 }
 
 model Match {
@@ -90,13 +90,13 @@ model TrainingPlayer {
 
 model Message {
   id          Int      @id @default(autoincrement())
-  content     String
+  content     String?
   videoUrl    String?
   senderId    Int
-  sender      User     @relation("Sender", fields: [senderId], references: [id])
   recipientId Int?
-  recipient   User?    @relation("Recipient", fields: [recipientId], references: [id])
   createdAt   DateTime @default(now())
+  sender      User     @relation("Sender", fields: [senderId], references: [id])
+  recipient   User?    @relation("Recipient", fields: [recipientId], references: [id])
 }
 
 enum Role {
