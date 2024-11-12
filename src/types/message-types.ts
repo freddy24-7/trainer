@@ -14,6 +14,7 @@ export interface Message {
 export interface MessageListProps {
   messages: Message[];
   signedInUser: SignedInUser;
+  onDeleteVideo: (messageId: number, removeFromDatabase?: boolean) => void;
 }
 
 export interface PusherEventMessage {
@@ -23,6 +24,7 @@ export interface PusherEventMessage {
   sender: Sender;
   videoUrl?: string | null;
   createdAt: string;
+  type?: 'delete-message' | 'new-message';
 }
 
 export interface Sender {

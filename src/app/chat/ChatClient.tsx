@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useEffect, useState } from 'react';
 
+import { deleteVideo } from '@/app/actions/deleteVideo';
 import getMessages from '@/app/actions/getMessages';
 import ChatMessageInputForm from '@/components/helpers/ChatMessageInputForm';
 import MessageList from '@/components/helpers/ChatMessageList';
@@ -36,6 +36,38 @@ function ChatClient({
     recipientId
   );
 
+  const handleDeleteMessage = (messageId: number): void => {
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.id === messageId ? { ...msg, videoUrl: null } : msg
+      )
+    );
+  };
+
+  const onDeleteVideo = async (
+    messageId: number,
+    removeFromDatabase = true
+  ) => {
+    if (removeFromDatabase) {
+      const response = await deleteVideo(messageId, signedInUser.id);
+      if (response.success) {
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) =>
+            msg.id === messageId ? { ...msg, videoUrl: null } : msg
+          )
+        );
+      } else {
+        console.error('Failed to delete video from the database');
+      }
+    } else {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === messageId ? { ...msg, videoUrl: null } : msg
+        )
+      );
+    }
+  };
+
   useEffect(() => {
     return subscribeToPusherEvents(
       (data: PusherEventMessage) => {
@@ -50,6 +82,7 @@ function ChatClient({
 
         setMessages((prevMessages) => [...prevMessages, incomingMessage]);
       },
+      handleDeleteMessage,
       setLoading,
       signedInUser.id
     );
@@ -117,22 +150,6 @@ function ChatClient({
     }
   };
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const videoFile = acceptedFiles[0];
-    if (videoFile && videoFile.type.startsWith('video/')) {
-      setSelectedVideo(videoFile);
-    } else {
-      console.error('Only video files are accepted');
-    }
-  }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      'video/*': ['.mp4', '.mov', '.avi'],
-    },
-  });
-
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -161,7 +178,11 @@ function ChatClient({
         </select>
       </div>
 
-      <MessageList messages={messages} signedInUser={signedInUser} />
+      <MessageList
+        messages={messages}
+        signedInUser={signedInUser}
+        onDeleteVideo={onDeleteVideo}
+      />
       {isSending && (
         <LoadingSpinner
           label="Sending..."
@@ -169,20 +190,6 @@ function ChatClient({
           labelColor="primary"
         />
       )}
-
-      <div
-        {...getRootProps()}
-        className={`border-2 border-dashed p-4 rounded-md ${
-          isDragActive ? 'border-blue-500' : 'border-gray-300'
-        } mb-4`}
-      >
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>Drop the video here...</p>
-        ) : (
-          <p>Drag & drop a video here, or click icon below to select one</p>
-        )}
-      </div>
 
       <ChatMessageInputForm
         newMessage={newMessage}

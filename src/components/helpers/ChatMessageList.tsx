@@ -5,6 +5,7 @@ import { MessageListProps } from '@/types/message-types';
 const MessageList: React.FC<MessageListProps> = ({
   messages,
   signedInUser,
+  onDeleteVideo,
 }) => {
   return (
     <div className="overflow-y-auto max-h-96 mb-4 p-4 bg-white rounded-lg">
@@ -35,6 +36,23 @@ const MessageList: React.FC<MessageListProps> = ({
                 >
                   Your browser does not support the video tag.
                 </video>
+                <div className="flex justify-end mt-2">
+                  {msg.sender.id === signedInUser.id ? (
+                    <button
+                      onClick={() => onDeleteVideo(msg.id)}
+                      className="text-red-500 text-xs"
+                    >
+                      Delete Video
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => onDeleteVideo(msg.id, false)}
+                      className="text-red-500 text-xs"
+                    >
+                      Remove from my view
+                    </button>
+                  )}
+                </div>
               </div>
             )}
             <div className="text-xs text-gray-400 mt-1">
