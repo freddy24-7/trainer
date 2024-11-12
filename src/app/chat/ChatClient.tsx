@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 import getMessages from '@/app/actions/getMessages';
 import ChatMessageInputForm from '@/components/helpers/ChatMessageInputForm';
@@ -29,6 +30,7 @@ function ChatClient({
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(
     recipientId
@@ -84,6 +86,8 @@ function ChatClient({
       return;
     }
 
+    setIsSending(true);
+
     const formData = new FormData();
     formData.append('content', newMessage);
     formData.append('senderId', signedInUser.id.toString());
@@ -97,6 +101,9 @@ function ChatClient({
     }
 
     const response = await action({}, formData);
+
+    setIsSending(false);
+
     if (response.success) {
       setNewMessage('');
       setSelectedVideo(null);
@@ -109,6 +116,22 @@ function ChatClient({
       console.error('Failed to send message due to unknown reasons.');
     }
   };
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const videoFile = acceptedFiles[0];
+    if (videoFile && videoFile.type.startsWith('video/')) {
+      setSelectedVideo(videoFile);
+    } else {
+      console.error('Only video files are accepted');
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'video/*': ['.mp4', '.mov', '.avi'],
+    },
+  });
 
   if (loading) {
     return <LoadingSpinner />;
@@ -139,6 +162,27 @@ function ChatClient({
       </div>
 
       <MessageList messages={messages} signedInUser={signedInUser} />
+      {isSending && (
+        <LoadingSpinner
+          label="Sending..."
+          color="primary"
+          labelColor="primary"
+        />
+      )}
+
+      <div
+        {...getRootProps()}
+        className={`border-2 border-dashed p-4 rounded-md ${
+          isDragActive ? 'border-blue-500' : 'border-gray-300'
+        } mb-4`}
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop the video here...</p>
+        ) : (
+          <p>Drag & drop a video here, or click icon below to select one</p>
+        )}
+      </div>
 
       <ChatMessageInputForm
         newMessage={newMessage}
