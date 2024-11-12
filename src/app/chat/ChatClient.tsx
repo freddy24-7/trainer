@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { deleteVideo } from '@/app/actions/deleteVideo';
-import getMessages from '@/app/actions/getMessages';
 import ChatMessageInputForm from '@/components/helpers/ChatMessageInputForm';
 import MessageList from '@/components/helpers/ChatMessageList';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -17,6 +15,15 @@ interface Props {
   messages: Message[];
   users: ChatUser[];
   action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
+  getMessages: (
+    userId: number,
+    recipientId?: number
+  ) => Promise<{
+    messages: unknown[];
+    success: boolean;
+    error?: string;
+  }>;
+  deleteVideo: (messageId: number, userId: number) => Promise<ActionResponse>;
   recipientId?: number | null;
 }
 
@@ -25,6 +32,8 @@ function ChatClient({
   messages: initialMessages,
   users,
   action,
+  getMessages,
+  deleteVideo,
   recipientId = null,
 }: Props): React.ReactElement {
   const [loading, setLoading] = useState(true);

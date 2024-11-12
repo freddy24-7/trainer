@@ -1,6 +1,7 @@
 import React from 'react';
 
 import addMessage from '@/app/actions/addMessage';
+import { deleteVideo } from '@/app/actions/deleteVideo';
 import getMessages from '@/app/actions/getMessages';
 import getUsers from '@/app/actions/getUsers';
 import ChatClient from '@/app/chat/ChatClient';
@@ -50,6 +51,8 @@ export default async function ChatPage({
       signedInUser={signedInUser}
       messages={messages}
       action={addMessage}
+      getMessages={getMessages}
+      deleteVideo={deleteVideo}
       recipientId={recipientId}
       users={users}
     />
