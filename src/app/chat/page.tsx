@@ -1,6 +1,7 @@
 import React from 'react';
 
 import addMessage from '@/app/actions/addMessage';
+import { deleteMessage } from '@/app/actions/deleteMessage';
 import { deleteVideo } from '@/app/actions/deleteVideo';
 import getMessages from '@/app/actions/getMessages';
 import getUsers from '@/app/actions/getUsers';
@@ -37,11 +38,13 @@ export default async function ChatPage({
 
   const usersResponse = await getUsers();
   const users: ChatUser[] = usersResponse.success
-    ? (usersResponse.users?.map((user) => ({
-        ...user,
-        username: user.username || 'Unknown',
-        whatsappNumber: user.whatsappNumber || '',
-      })) ?? [])
+    ? (usersResponse.users?.map((user) => {
+        return {
+          ...user,
+          username: user.username || 'Unknown',
+          whatsappNumber: user.whatsappNumber || '',
+        };
+      }) ?? [])
     : [];
 
   const messages = response.messages as Message[];
@@ -53,6 +56,7 @@ export default async function ChatPage({
       action={addMessage}
       getMessages={getMessages}
       deleteVideo={deleteVideo}
+      deleteMessage={deleteMessage}
       recipientId={recipientId}
       users={users}
     />

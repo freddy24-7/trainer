@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 
 import ChatMessageInputForm from '@/components/helpers/ChatMessageInputForm';
@@ -24,6 +23,7 @@ interface Props {
     error?: string;
   }>;
   deleteVideo: (messageId: number, userId: number) => Promise<ActionResponse>;
+  deleteMessage: (messageId: number, userId: number) => Promise<ActionResponse>;
   recipientId?: number | null;
 }
 
@@ -34,6 +34,7 @@ function ChatClient({
   action,
   getMessages,
   deleteVideo,
+  deleteMessage,
   recipientId = null,
 }: Props): React.ReactElement {
   const [loading, setLoading] = useState(true);
@@ -45,11 +46,17 @@ function ChatClient({
     recipientId
   );
 
-  const handleDeleteMessage = (messageId: number): void => {
+  const handleDeleteVideoLocal = (messageId: number): void => {
     setMessages((prevMessages) =>
       prevMessages.map((msg) =>
         msg.id === messageId ? { ...msg, videoUrl: null } : msg
       )
+    );
+  };
+
+  const handleDeleteMessageLocal = (messageId: number): void => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((msg) => msg.id !== messageId)
     );
   };
 
@@ -60,20 +67,28 @@ function ChatClient({
     if (removeFromDatabase) {
       const response = await deleteVideo(messageId, signedInUser.id);
       if (response.success) {
-        setMessages((prevMessages) =>
-          prevMessages.map((msg) =>
-            msg.id === messageId ? { ...msg, videoUrl: null } : msg
-          )
-        );
+        handleDeleteVideoLocal(messageId);
       } else {
         console.error('Failed to delete video from the database');
       }
     } else {
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.id === messageId ? { ...msg, videoUrl: null } : msg
-        )
-      );
+      handleDeleteVideoLocal(messageId);
+    }
+  };
+
+  const onDeleteMessage = async (
+    messageId: number,
+    removeFromDatabase = true
+  ) => {
+    if (removeFromDatabase) {
+      const response = await deleteMessage(messageId, signedInUser.id);
+      if (response.success) {
+        handleDeleteMessageLocal(messageId);
+      } else {
+        console.error('Failed to delete message from the database');
+      }
+    } else {
+      handleDeleteMessageLocal(messageId);
     }
   };
 
@@ -91,7 +106,7 @@ function ChatClient({
 
         setMessages((prevMessages) => [...prevMessages, incomingMessage]);
       },
-      handleDeleteMessage,
+      handleDeleteMessageLocal,
       setLoading,
       signedInUser.id
     );
@@ -191,6 +206,7 @@ function ChatClient({
         messages={messages}
         signedInUser={signedInUser}
         onDeleteVideo={onDeleteVideo}
+        onDeleteMessage={onDeleteMessage}
       />
       {isSending && (
         <LoadingSpinner

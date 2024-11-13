@@ -15,6 +15,7 @@ export interface MessageListProps {
   messages: Message[];
   signedInUser: SignedInUser;
   onDeleteVideo: (messageId: number, removeFromDatabase?: boolean) => void;
+  onDeleteMessage: (messageId: number, removeFromDatabase?: boolean) => void;
 }
 
 export interface PusherEventMessage {
