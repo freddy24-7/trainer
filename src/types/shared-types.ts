@@ -8,4 +8,5 @@ export interface ActionResponse {
   success: boolean;
   errors?: ZodIssue[];
   videoUrl?: string | null;
+  videoPublicId?: string | null;
 }

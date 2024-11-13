@@ -1,13 +1,12 @@
 'use server';
 
-import fs from 'fs';
-
-import { handleUploadVideo } from '@/lib/cloudinary';
-import { createMessage, getSenderById } from '@/lib/services/createChatService';
+import { createMessage } from '@/lib/services/createChatService';
 import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
-import { Sender, Message } from '@/types/message-types';
+import { Message } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
+import { handleFileUpload } from '@/utils/fileUtils';
+import { getAndValidateSender } from '@/utils/messageUtils';
 import { handleTriggerNewMessageEvent } from '@/utils/pusherUtils';
 
 export default async function addMessage(
@@ -29,44 +28,29 @@ export default async function addMessage(
 
   if (params.has('videoFile')) {
     const videoFile = params.get('videoFile') as File;
-    if (videoFile) {
-      const filePath = `/tmp/${videoFile.name}`;
-      try {
-        await videoFile
-          .arrayBuffer()
-          .then((buffer) => fs.writeFileSync(filePath, Buffer.from(buffer)));
+    const uploadResult = await handleFileUpload(videoFile);
 
-        const { url, publicId } = await handleUploadVideo(filePath);
-        videoUrl = url;
-        videoPublicId = publicId;
-      } catch (uploadError) {
-        console.error('Error uploading video:', uploadError);
-        return formatError(
-          'Error uploading video.',
-          ['upload'],
-          'custom',
-          true
-        ) as ActionResponse;
-      } finally {
-        fs.unlinkSync(filePath);
-      }
+    if (!uploadResult.success) {
+      return uploadResult;
     }
+
+    videoUrl = uploadResult.videoUrl;
+    videoPublicId = uploadResult.videoPublicId;
   }
 
   try {
-    const messageFromCreate = await createMessage(
-      content || null,
+    const messageFromCreate = await createMessage({
+      content: content || null,
       senderId,
       recipientId,
       videoUrl,
-      videoPublicId
-    );
+      videoPublicId,
+    });
 
     console.log('Message successfully saved:', messageFromCreate);
 
-    const senderData = await getSenderById(messageFromCreate.senderId);
-    if (!senderData || !senderData.username) {
-      console.error('Sender not found or username is null');
+    const sender = await getAndValidateSender(senderId);
+    if (!sender) {
       return formatError(
         'Error sending the message: Sender not found or username is null',
         ['form'],
@@ -74,11 +58,6 @@ export default async function addMessage(
         true
       ) as ActionResponse;
     }
-
-    const sender: Sender = {
-      id: senderData.id,
-      username: senderData.username,
-    };
 
     const completeMessage: Message = {
       ...messageFromCreate,
@@ -90,14 +69,11 @@ export default async function addMessage(
     return { success: true, videoUrl };
   } catch (error) {
     console.error('Error adding message:', error);
-
-    const errorResponse = formatError(
+    return formatError(
       'Error sending the message.',
       ['form'],
       'custom',
       true
-    );
-
-    return errorResponse as ActionResponse;
+    ) as ActionResponse;
   }
 }

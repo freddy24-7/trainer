@@ -79,7 +79,7 @@ function ChatClient({
   const onDeleteVideo = async (
     messageId: number,
     removeFromDatabase = true
-  ) => {
+  ): Promise<void> => {
     if (removeFromDatabase) {
       const response = await deleteVideo(messageId, signedInUser.id);
       if (response.success) {
@@ -95,7 +95,7 @@ function ChatClient({
   const onDeleteMessage = async (
     messageId: number,
     removeFromDatabase = true
-  ) => {
+  ): Promise<void> => {
     if (removeFromDatabase) {
       const response = await deleteMessage(messageId, signedInUser.id);
       if (response.success) {

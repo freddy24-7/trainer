@@ -1,6 +1,7 @@
 'use server';
 
 import { v2 as cloudinary } from 'cloudinary';
+
 import prisma from '@/lib/prisma';
 import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
@@ -34,13 +35,7 @@ export async function deleteMessage(
     }
 
     if (message.videoPublicId) {
-      try {
-        await cloudinary.uploader.destroy(message.videoPublicId, {
-          resource_type: 'video',
-        });
-      } catch (cloudinaryError) {
-        console.error('Error deleting video from Cloudinary:', cloudinaryError);
-      }
+      await deleteVideoFromCloudinary(message.videoPublicId);
     }
 
     await prisma.message.delete({
@@ -54,5 +49,15 @@ export async function deleteMessage(
       success: false,
       ...formatError('Error deleting message.', ['database'], 'custom', true),
     };
+  }
+}
+
+async function deleteVideoFromCloudinary(videoPublicId: string): Promise<void> {
+  try {
+    await cloudinary.uploader.destroy(videoPublicId, {
+      resource_type: 'video',
+    });
+  } catch (cloudinaryError) {
+    console.error('Error deleting video from Cloudinary:', cloudinaryError);
   }
 }

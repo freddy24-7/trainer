@@ -1,12 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs';
+import { NextRequest, NextResponse } from 'next/server';
+
 import prisma from '@/lib/prisma';
 import pusher from '@/lib/pusher';
+
+async function handleAuthorizePrivateChannel(
+  dbUserId: number,
+  channelName: string
+): Promise<boolean> {
+  if (channelName.startsWith('private-chat-')) {
+    const recipientId = channelName.split('-').pop();
+    return dbUserId.toString() === recipientId;
+  }
+  return true;
+}
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await currentUser();
-
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
@@ -14,25 +25,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const dbUser = await prisma.user.findUnique({
       where: { clerkId: user.id },
     });
-
     if (!dbUser) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const { socket_id, channel_name } = (await req.json()) as {
-      socket_id: string;
-      channel_name: string;
+    const { socketId, channelName } = (await req.json()) as {
+      socketId: string;
+      channelName: string;
     };
 
-    if (channel_name.startsWith('private-chat-')) {
-      const recipientId = channel_name.split('-').pop();
-
-      if (dbUser.id.toString() !== recipientId) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-      }
+    const isAuthorized = await handleAuthorizePrivateChannel(
+      dbUser.id,
+      channelName
+    );
+    if (!isAuthorized) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    const authResponse = pusher.authorizeChannel(socket_id, channel_name, {
+    const authResponse = pusher.authorizeChannel(socketId, channelName, {
       user_id: dbUser.id.toString(),
       user_info: {
         username: dbUser.username || 'Anonymous',
