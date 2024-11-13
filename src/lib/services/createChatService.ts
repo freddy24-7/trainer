@@ -6,7 +6,8 @@ export async function createMessage(
   content: string | null,
   senderId: number,
   recipientId: number | undefined,
-  videoUrl: string | null = null
+  videoUrl: string | null = null,
+  videoPublicId: string | null
 ): Promise<Message> {
   return prisma.message.create({
     data: {
@@ -14,6 +15,7 @@ export async function createMessage(
       senderId,
       recipientId,
       videoUrl,
+      videoPublicId,
     },
   });
 }

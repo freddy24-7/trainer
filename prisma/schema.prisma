@@ -89,14 +89,15 @@ model TrainingPlayer {
 }
 
 model Message {
-  id          Int      @id @default(autoincrement())
-  content     String?
-  videoUrl    String?
-  senderId    Int
-  recipientId Int?
-  createdAt   DateTime @default(now())
-  sender      User     @relation("Sender", fields: [senderId], references: [id])
-  recipient   User?    @relation("Recipient", fields: [recipientId], references: [id])
+  id            Int      @id @default(autoincrement())
+  content       String?
+  videoUrl      String?
+  videoPublicId String?
+  senderId      Int
+  recipientId   Int?
+  createdAt     DateTime @default(now())
+  sender        User     @relation("Sender", fields: [senderId], references: [id])
+  recipient     User?    @relation("Recipient", fields: [recipientId], references: [id])
 }
 
 enum Role {

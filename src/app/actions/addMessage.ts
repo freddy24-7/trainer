@@ -1,5 +1,7 @@
 'use server';
 
+import fs from 'fs';
+
 import { handleUploadVideo } from '@/lib/cloudinary';
 import { createMessage, getSenderById } from '@/lib/services/createChatService';
 import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
@@ -23,6 +25,7 @@ export default async function addMessage(
 
   const { content, senderId, recipientId } = validation.data;
   let videoUrl = null;
+  let videoPublicId = null;
 
   if (params.has('videoFile')) {
     const videoFile = params.get('videoFile') as File;
@@ -31,11 +34,11 @@ export default async function addMessage(
       try {
         await videoFile
           .arrayBuffer()
-          .then((buffer) =>
-            require('fs').writeFileSync(filePath, Buffer.from(buffer))
-          );
+          .then((buffer) => fs.writeFileSync(filePath, Buffer.from(buffer)));
 
-        videoUrl = await handleUploadVideo(filePath);
+        const { url, publicId } = await handleUploadVideo(filePath);
+        videoUrl = url;
+        videoPublicId = publicId;
       } catch (uploadError) {
         console.error('Error uploading video:', uploadError);
         return formatError(
@@ -45,7 +48,7 @@ export default async function addMessage(
           true
         ) as ActionResponse;
       } finally {
-        require('fs').unlinkSync(filePath);
+        fs.unlinkSync(filePath);
       }
     }
   }
@@ -55,7 +58,8 @@ export default async function addMessage(
       content || null,
       senderId,
       recipientId,
-      videoUrl
+      videoUrl,
+      videoPublicId
     );
 
     console.log('Message successfully saved:', messageFromCreate);

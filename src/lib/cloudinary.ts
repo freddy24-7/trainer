@@ -6,10 +6,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function handleUploadVideo(filePath: string): Promise<string> {
+export async function handleUploadVideo(
+  filePath: string
+): Promise<{ url: string; publicId: string }> {
   const response = await cloudinary.uploader.upload(filePath, {
     resource_type: 'video',
     folder: 'trainer2',
   });
-  return response.secure_url;
+
+  return {
+    url: response.secure_url,
+    publicId: response.public_id,
+  };
 }
