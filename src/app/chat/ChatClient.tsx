@@ -13,7 +13,11 @@ import { ActionResponse } from '@/types/shared-types';
 import { SignedInUser, ChatUser } from '@/types/user-types';
 import {
   handleDeleteMessageLocal,
-  handleDeleteVideoLocal,
+  onDeleteMessage,
+  onDeleteVideo,
+  fetchMessagesForChat,
+  handleRecipientChange,
+  handleSendMessage,
 } from '@/utils/chatUtils';
 
 interface Props {
@@ -59,100 +63,6 @@ function ChatClient({
     setLoading
   );
 
-  const onDeleteVideo = async (
-    messageId: number,
-    removeFromDatabase = true
-  ): Promise<void> => {
-    if (removeFromDatabase) {
-      const response = await deleteVideo(messageId, signedInUser.id);
-      if (response.success) {
-        handleDeleteVideoLocal(messageId, setMessages);
-      } else {
-        console.error('Failed to delete video from the database');
-      }
-    } else {
-      handleDeleteVideoLocal(messageId, setMessages);
-    }
-  };
-
-  const onDeleteMessage = async (
-    messageId: number,
-    removeFromDatabase = true
-  ): Promise<void> => {
-    if (removeFromDatabase) {
-      const response = await deleteMessage(messageId, signedInUser.id);
-      if (response.success) {
-        handleDeleteMessageLocal(messageId, setMessages);
-      } else {
-        console.error('Failed to delete message from the database');
-      }
-    } else {
-      handleDeleteMessageLocal(messageId, setMessages);
-    }
-  };
-
-  const fetchMessagesForChat = async (
-    recipientId: number | null
-  ): Promise<void> => {
-    setLoading(true);
-    const response = await getMessages(
-      signedInUser.id,
-      recipientId ?? undefined
-    );
-    if (response.success) {
-      setMessages(response.messages as Message[]);
-    } else {
-      console.error('Error fetching messages:', response.error);
-    }
-    setLoading(false);
-  };
-
-  const handleRecipientChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ): Promise<void> => {
-    const selectedId =
-      event.target.value === 'group' ? null : Number(event.target.value);
-    setSelectedRecipientId(selectedId);
-    await fetchMessagesForChat(selectedId);
-  };
-
-  const handleSendMessage = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault();
-    if (!newMessage.trim() && !selectedVideo) {
-      return;
-    }
-
-    setIsSending(true);
-
-    const formData = new FormData();
-    formData.append('content', newMessage);
-    formData.append('senderId', signedInUser.id.toString());
-
-    if (selectedRecipientId !== null) {
-      formData.append('recipientId', selectedRecipientId.toString());
-    }
-
-    if (selectedVideo) {
-      formData.append('videoFile', selectedVideo);
-    }
-
-    const response = await action({}, formData);
-
-    setIsSending(false);
-
-    if (response.success) {
-      setNewMessage('');
-      setSelectedVideo(null);
-    } else if (response.errors) {
-      const errorMessages = response.errors
-        .map((error) => error.message)
-        .join(', ');
-      console.error(`Failed to send message: ${errorMessages}`);
-    } else {
-      console.error('Failed to send message due to unknown reasons.');
-    }
-  };
-
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -167,14 +77,40 @@ function ChatClient({
         users={users}
         signedInUser={signedInUser}
         selectedRecipientId={selectedRecipientId}
-        handleRecipientChange={handleRecipientChange}
+        handleRecipientChange={(event) =>
+          handleRecipientChange(event, setSelectedRecipientId, (recipientId) =>
+            fetchMessagesForChat(
+              recipientId,
+              signedInUser.id,
+              getMessages,
+              setMessages,
+              setLoading
+            )
+          )
+        }
       />
 
       <MessageList
         messages={messages}
         signedInUser={signedInUser}
-        onDeleteVideo={onDeleteVideo}
-        onDeleteMessage={onDeleteMessage}
+        onDeleteVideo={(messageId, removeFromDatabase = true) =>
+          onDeleteVideo(
+            messageId,
+            removeFromDatabase,
+            deleteVideo,
+            signedInUser.id,
+            setMessages
+          )
+        }
+        onDeleteMessage={(messageId, removeFromDatabase = true) =>
+          onDeleteMessage(
+            messageId,
+            removeFromDatabase,
+            deleteMessage,
+            signedInUser.id,
+            setMessages
+          )
+        }
       />
       {isSending && (
         <LoadingSpinner
@@ -189,7 +125,19 @@ function ChatClient({
       <ChatMessageInputForm
         newMessage={newMessage}
         setNewMessage={setNewMessage}
-        handleSendMessage={handleSendMessage}
+        handleSendMessage={(e) =>
+          handleSendMessage(
+            e,
+            newMessage,
+            selectedVideo,
+            setIsSending,
+            signedInUser.id,
+            selectedRecipientId,
+            action,
+            setNewMessage,
+            setSelectedVideo
+          )
+        }
         selectedVideo={selectedVideo}
         setSelectedVideo={setSelectedVideo}
       />

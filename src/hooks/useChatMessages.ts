@@ -8,7 +8,10 @@ export const useChatMessages = (
   initialMessages: Message[],
   handleDeleteMessageLocal: (messageId: number) => void,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+): {
+  messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+} => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
   useEffect(() => {
