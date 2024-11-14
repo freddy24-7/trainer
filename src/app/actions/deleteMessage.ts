@@ -1,6 +1,7 @@
 'use server';
 
 import { v2 as cloudinary } from 'cloudinary';
+
 import prisma from '@/lib/prisma';
 import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
