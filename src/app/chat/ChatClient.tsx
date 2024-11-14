@@ -13,8 +13,8 @@ import { ActionResponse } from '@/types/shared-types';
 import { SignedInUser, ChatUser } from '@/types/user-types';
 import {
   handleDeleteMessageLocal,
-  onDeleteMessage,
-  onDeleteVideo,
+  handleOnDeleteMessage,
+  handleOnDeleteVideo,
   fetchMessagesForChat,
   handleRecipientChange,
   handleSendMessage,
@@ -94,7 +94,7 @@ function ChatClient({
         messages={messages}
         signedInUser={signedInUser}
         onDeleteVideo={(messageId, removeFromDatabase = true) =>
-          onDeleteVideo(
+          handleOnDeleteVideo(
             messageId,
             removeFromDatabase,
             deleteVideo,
@@ -103,7 +103,7 @@ function ChatClient({
           )
         }
         onDeleteMessage={(messageId, removeFromDatabase = true) =>
-          onDeleteMessage(
+          handleOnDeleteMessage(
             messageId,
             removeFromDatabase,
             deleteMessage,

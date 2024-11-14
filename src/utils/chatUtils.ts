@@ -44,7 +44,7 @@ export const handleDeleteMessageLocal = (
   );
 };
 
-export async function onDeleteVideo(
+export async function handleOnDeleteVideo(
   messageId: number,
   removeFromDatabase: boolean,
   deleteVideo: (messageId: number, userId: number) => Promise<ActionResponse>,
@@ -63,7 +63,7 @@ export async function onDeleteVideo(
   }
 }
 
-export async function onDeleteMessage(
+export async function handleOnDeleteMessage(
   messageId: number,
   removeFromDatabase: boolean,
   deleteMessage: (messageId: number, userId: number) => Promise<ActionResponse>,
