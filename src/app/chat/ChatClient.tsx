@@ -1,15 +1,20 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useState } from 'react';
 
 import ChatMessageInputForm from '@/components/helpers/ChatMessageInputForm';
 import MessageList from '@/components/helpers/ChatMessageList';
+import ChatRecipientSelector from '@/components/helpers/ChatRecipientSelector';
+import VideoDropzone from '@/components/helpers/VideoDropzone';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Message, PusherEventMessage } from '@/types/message-types';
+import { useChatMessages } from '@/hooks/useChatMessages';
+import { Message } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
 import { SignedInUser, ChatUser } from '@/types/user-types';
-import { subscribeToPusherEvents } from '@/utils/chatUtils';
+import {
+  handleDeleteMessageLocal,
+  handleDeleteVideoLocal,
+} from '@/utils/chatUtils';
 
 interface Props {
   signedInUser: SignedInUser;
@@ -40,7 +45,6 @@ function ChatClient({
   recipientId = null,
 }: Props): React.ReactElement {
   const [loading, setLoading] = useState(true);
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
@@ -48,33 +52,12 @@ function ChatClient({
     recipientId
   );
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const videoFile = acceptedFiles[0];
-    if (videoFile && videoFile.type.startsWith('video/')) {
-      setSelectedVideo(videoFile);
-    } else {
-      console.error('Only video files are accepted');
-    }
-  }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { 'video/*': ['.mp4', '.mov', '.avi'] },
-  });
-
-  const handleDeleteVideoLocal = (messageId: number): void => {
-    setMessages((prevMessages) =>
-      prevMessages.map((msg) =>
-        msg.id === messageId ? { ...msg, videoUrl: null } : msg
-      )
-    );
-  };
-
-  const handleDeleteMessageLocal = (messageId: number): void => {
-    setMessages((prevMessages) =>
-      prevMessages.filter((msg) => msg.id !== messageId)
-    );
-  };
+  const { messages, setMessages } = useChatMessages(
+    signedInUser.id,
+    initialMessages,
+    (messageId) => handleDeleteMessageLocal(messageId, setMessages),
+    setLoading
+  );
 
   const onDeleteVideo = async (
     messageId: number,
@@ -83,12 +66,12 @@ function ChatClient({
     if (removeFromDatabase) {
       const response = await deleteVideo(messageId, signedInUser.id);
       if (response.success) {
-        handleDeleteVideoLocal(messageId);
+        handleDeleteVideoLocal(messageId, setMessages);
       } else {
         console.error('Failed to delete video from the database');
       }
     } else {
-      handleDeleteVideoLocal(messageId);
+      handleDeleteVideoLocal(messageId, setMessages);
     }
   };
 
@@ -99,34 +82,14 @@ function ChatClient({
     if (removeFromDatabase) {
       const response = await deleteMessage(messageId, signedInUser.id);
       if (response.success) {
-        handleDeleteMessageLocal(messageId);
+        handleDeleteMessageLocal(messageId, setMessages);
       } else {
         console.error('Failed to delete message from the database');
       }
     } else {
-      handleDeleteMessageLocal(messageId);
+      handleDeleteMessageLocal(messageId, setMessages);
     }
   };
-
-  useEffect(() => {
-    return subscribeToPusherEvents(
-      (data: PusherEventMessage) => {
-        const incomingMessage: Message = {
-          id: data.id,
-          content: data.content,
-          sender: data.sender,
-          createdAt: new Date(data.createdAt),
-          videoUrl: data.videoUrl || null,
-          recipientId: data.recipientId ?? null,
-        };
-
-        setMessages((prevMessages) => [...prevMessages, incomingMessage]);
-      },
-      handleDeleteMessageLocal,
-      setLoading,
-      signedInUser.id
-    );
-  }, [signedInUser.id]);
 
   const fetchMessagesForChat = async (
     recipientId: number | null
@@ -200,23 +163,12 @@ function ChatClient({
         Welcome to Chat, {signedInUser.username}!
       </h1>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Select Chat:</label>
-        <select
-          className="p-2 border rounded w-full"
-          value={selectedRecipientId ?? 'group'}
-          onChange={handleRecipientChange}
-        >
-          <option value="group">Group Chat</option>
-          {users
-            .filter((user) => user.id !== signedInUser.id)
-            .map((user) => (
-              <option key={user.id} value={user.id}>
-                Chat with {user.username}
-              </option>
-            ))}
-        </select>
-      </div>
+      <ChatRecipientSelector
+        users={users}
+        signedInUser={signedInUser}
+        selectedRecipientId={selectedRecipientId}
+        handleRecipientChange={handleRecipientChange}
+      />
 
       <MessageList
         messages={messages}
@@ -232,19 +184,7 @@ function ChatClient({
         />
       )}
 
-      <div
-        {...getRootProps()}
-        className={`border-2 border-dashed p-4 rounded-md ${
-          isDragActive ? 'border-blue-500' : 'border-gray-300'
-        } mb-4`}
-      >
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>Drop the video here...</p>
-        ) : (
-          <p>Drag & drop a video here, or click icon below to select one</p>
-        )}
-      </div>
+      <VideoDropzone setSelectedVideo={setSelectedVideo} />
 
       <ChatMessageInputForm
         newMessage={newMessage}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PusherEventMessage } from '@/types/message-types';
+import { PusherEventMessage, Message } from '@/types/message-types';
 import { handleInitializePusher } from '@/utils/pusherUtils';
 
 export const subscribeToPusherEvents = (
@@ -21,4 +21,24 @@ export const subscribeToPusherEvents = (
   setLoading(false);
 
   return cleanup;
+};
+
+export const handleDeleteVideoLocal = (
+  messageId: number,
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+): void => {
+  setMessages((prevMessages) =>
+    prevMessages.map((msg) =>
+      msg.id === messageId ? { ...msg, videoUrl: null } : msg
+    )
+  );
+};
+
+export const handleDeleteMessageLocal = (
+  messageId: number,
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+): void => {
+  setMessages((prevMessages) =>
+    prevMessages.filter((msg) => msg.id !== messageId)
+  );
 };
