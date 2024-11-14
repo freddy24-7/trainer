@@ -9,7 +9,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
   selectedVideo,
   setSelectedVideo,
 }) => {
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.files && e.target.files[0]) {
       setSelectedVideo(e.target.files[0]);
     }
