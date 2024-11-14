@@ -10,6 +10,52 @@ import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleTriggerNewMessageEvent } from '@/utils/pusherUtils';
 
+async function handleProcessVideoFile(
+  params: FormData
+): Promise<{ videoUrl: string | null; videoPublicId: string | null }> {
+  if (!params.has('videoFile')) {
+    return { videoUrl: null, videoPublicId: null };
+  }
+
+  const videoFile = params.get('videoFile') as File;
+  if (!videoFile) {
+    return { videoUrl: null, videoPublicId: null };
+  }
+
+  const filePath = `/tmp/${videoFile.name}`;
+  try {
+    const buffer = await videoFile.arrayBuffer();
+    fs.writeFileSync(filePath, Buffer.from(buffer));
+
+    const { url, publicId } = await handleUploadVideo(filePath);
+    return { videoUrl: url, videoPublicId: publicId };
+  } catch (uploadError) {
+    console.error('Error uploading video:', uploadError);
+    throw formatError(
+      'Error uploading video.',
+      ['upload'],
+      'custom',
+      true
+    ) as ActionResponse;
+  } finally {
+    fs.unlinkSync(filePath);
+  }
+}
+
+async function getSenderData(senderId: number): Promise<Sender> {
+  const senderData = await getSenderById(senderId);
+  if (!senderData || !senderData.username) {
+    console.error('Sender not found or username is null');
+    throw formatError(
+      'Error: Sender not found or username is null',
+      ['form'],
+      'custom',
+      true
+    ) as ActionResponse;
+  }
+  return { id: senderData.id, username: senderData.username };
+}
+
 export default async function addMessage(
   _prevState: unknown,
   params: FormData
@@ -17,68 +63,34 @@ export default async function addMessage(
   const validation = validateMessageInput(params);
 
   if (!validation.success) {
-    return {
-      success: false,
-      errors: validation.error.issues,
-    };
+    return { success: false, errors: validation.error.issues };
   }
 
   const { content, senderId, recipientId } = validation.data;
-  let videoUrl = null;
-  let videoPublicId = null;
 
-  if (params.has('videoFile')) {
-    const videoFile = params.get('videoFile') as File;
-    if (videoFile) {
-      const filePath = `/tmp/${videoFile.name}`;
-      try {
-        await videoFile
-          .arrayBuffer()
-          .then((buffer) => fs.writeFileSync(filePath, Buffer.from(buffer)));
+  let videoUrl: string | null = null;
+  let videoPublicId: string | null = null;
 
-        const { url, publicId } = await handleUploadVideo(filePath);
-        videoUrl = url;
-        videoPublicId = publicId;
-      } catch (uploadError) {
-        console.error('Error uploading video:', uploadError);
-        return formatError(
-          'Error uploading video.',
-          ['upload'],
-          'custom',
-          true
-        ) as ActionResponse;
-      } finally {
-        fs.unlinkSync(filePath);
-      }
-    }
+  try {
+    const videoResult = await handleProcessVideoFile(params);
+    videoUrl = videoResult.videoUrl;
+    videoPublicId = videoResult.videoPublicId;
+  } catch (error) {
+    return error as ActionResponse;
   }
 
   try {
-    const messageFromCreate = await createMessage(
-      content || null,
+    const messageFromCreate = await createMessage({
+      content: content || null,
       senderId,
       recipientId,
       videoUrl,
-      videoPublicId
-    );
+      videoPublicId,
+    });
 
     console.log('Message successfully saved:', messageFromCreate);
 
-    const senderData = await getSenderById(messageFromCreate.senderId);
-    if (!senderData || !senderData.username) {
-      console.error('Sender not found or username is null');
-      return formatError(
-        'Error sending the message: Sender not found or username is null',
-        ['form'],
-        'custom',
-        true
-      ) as ActionResponse;
-    }
-
-    const sender: Sender = {
-      id: senderData.id,
-      username: senderData.username,
-    };
+    const sender = await getSenderData(messageFromCreate.senderId);
 
     const completeMessage: Message = {
       ...messageFromCreate,
@@ -90,14 +102,11 @@ export default async function addMessage(
     return { success: true, videoUrl };
   } catch (error) {
     console.error('Error adding message:', error);
-
-    const errorResponse = formatError(
+    return formatError(
       'Error sending the message.',
       ['form'],
       'custom',
       true
-    );
-
-    return errorResponse as ActionResponse;
+    ) as ActionResponse;
   }
 }

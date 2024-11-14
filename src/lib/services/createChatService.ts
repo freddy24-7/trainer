@@ -2,13 +2,18 @@ import { Message, User } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
 
+interface CreateMessageParams {
+  content: string | null;
+  senderId: number;
+  recipientId?: number;
+  videoUrl?: string | null;
+  videoPublicId?: string | null;
+}
+
 export async function createMessage(
-  content: string | null,
-  senderId: number,
-  recipientId: number | undefined,
-  videoUrl: string | null = null,
-  videoPublicId: string | null
+  params: CreateMessageParams
 ): Promise<Message> {
+  const { content, senderId, recipientId, videoUrl, videoPublicId } = params;
   return prisma.message.create({
     data: {
       content: content ?? '',
