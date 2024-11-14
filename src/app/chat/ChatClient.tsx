@@ -78,15 +78,18 @@ function ChatClient({
         signedInUser={signedInUser}
         selectedRecipientId={selectedRecipientId}
         handleRecipientChange={(event) =>
-          handleRecipientChange(event, setSelectedRecipientId, (recipientId) =>
-            fetchMessagesForChat(
-              recipientId,
-              signedInUser.id,
-              getMessages,
-              setMessages,
-              setLoading
-            )
-          )
+          handleRecipientChange({
+            event,
+            setSelectedRecipientId,
+            fetchMessagesForChat: (recipientId) =>
+              fetchMessagesForChat({
+                recipientId,
+                signedInUserId: signedInUser.id,
+                getMessages,
+                setMessages,
+                setLoading,
+              }),
+          })
         }
       />
 
@@ -94,22 +97,22 @@ function ChatClient({
         messages={messages}
         signedInUser={signedInUser}
         onDeleteVideo={(messageId, removeFromDatabase = true) =>
-          handleOnDeleteVideo(
+          handleOnDeleteVideo({
             messageId,
             removeFromDatabase,
             deleteVideo,
-            signedInUser.id,
-            setMessages
-          )
+            signedInUserId: signedInUser.id,
+            setMessages,
+          })
         }
         onDeleteMessage={(messageId, removeFromDatabase = true) =>
-          handleOnDeleteMessage(
+          handleOnDeleteMessage({
             messageId,
             removeFromDatabase,
             deleteMessage,
-            signedInUser.id,
-            setMessages
-          )
+            signedInUserId: signedInUser.id,
+            setMessages,
+          })
         }
       />
       {isSending && (
@@ -126,17 +129,17 @@ function ChatClient({
         newMessage={newMessage}
         setNewMessage={setNewMessage}
         handleSendMessage={(e) =>
-          handleSendMessage(
+          handleSendMessage({
             e,
             newMessage,
             selectedVideo,
             setIsSending,
-            signedInUser.id,
+            signedInUserId: signedInUser.id,
             selectedRecipientId,
             action,
             setNewMessage,
-            setSelectedVideo
-          )
+            setSelectedVideo,
+          })
         }
         selectedVideo={selectedVideo}
         setSelectedVideo={setSelectedVideo}

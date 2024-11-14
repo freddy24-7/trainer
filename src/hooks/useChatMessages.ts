@@ -15,8 +15,8 @@ export const useChatMessages = (
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
   useEffect(() => {
-    const unsubscribe = subscribeToPusherEvents(
-      (data: PusherEventMessage) => {
+    const unsubscribe = subscribeToPusherEvents({
+      onMessageReceived: (data: PusherEventMessage) => {
         const incomingMessage: Message = {
           id: data.id,
           content: data.content,
@@ -28,10 +28,10 @@ export const useChatMessages = (
 
         setMessages((prevMessages) => [...prevMessages, incomingMessage]);
       },
-      handleDeleteMessageLocal,
+      onDeleteMessage: handleDeleteMessageLocal,
       setLoading,
-      signedInUserId
-    );
+      userId: signedInUserId,
+    });
 
     return () => {
       unsubscribe();

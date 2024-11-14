@@ -4,12 +4,68 @@ import { PusherEventMessage, Message } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
 import { handleInitializePusher } from '@/utils/pusherUtils';
 
-export const subscribeToPusherEvents = (
-  onMessageReceived: (data: PusherEventMessage) => void,
-  onDeleteMessage: (messageId: number) => void,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  userId?: number
-): (() => void) => {
+interface HandleOnDeleteVideoParams {
+  messageId: number;
+  removeFromDatabase: boolean;
+  deleteVideo: (messageId: number, userId: number) => Promise<ActionResponse>;
+  signedInUserId: number;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+}
+
+interface HandleOnDeleteMessageParams {
+  messageId: number;
+  removeFromDatabase: boolean;
+  deleteMessage: (messageId: number, userId: number) => Promise<ActionResponse>;
+  signedInUserId: number;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+}
+
+interface FetchMessagesForChatParams {
+  recipientId: number | null;
+  signedInUserId: number;
+  getMessages: (
+    userId: number,
+    recipientId?: number
+  ) => Promise<{
+    messages: unknown[];
+    success: boolean;
+    error?: string;
+  }>;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface HandleSendMessageParams {
+  e: React.FormEvent;
+  newMessage: string;
+  selectedVideo: File | null;
+  setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
+  signedInUserId: number;
+  selectedRecipientId: number | null;
+  action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
+  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
+}
+
+interface SubscribeToPusherEventsParams {
+  onMessageReceived: (data: PusherEventMessage) => void;
+  onDeleteMessage: (messageId: number) => void;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  userId?: number;
+}
+
+interface HandleRecipientChangeParams {
+  event: React.ChangeEvent<HTMLSelectElement>;
+  setSelectedRecipientId: React.Dispatch<React.SetStateAction<number | null>>;
+  fetchMessagesForChat: (recipientId: number | null) => Promise<void>;
+}
+
+export const subscribeToPusherEvents = ({
+  onMessageReceived,
+  onDeleteMessage,
+  setLoading,
+  userId,
+}: SubscribeToPusherEventsParams): (() => void) => {
   const handlePusherEvent = (data: PusherEventMessage): void => {
     if (data.type === 'delete-message') {
       onDeleteMessage(data.id);
@@ -44,13 +100,13 @@ export const handleDeleteMessageLocal = (
   );
 };
 
-export async function handleOnDeleteVideo(
-  messageId: number,
-  removeFromDatabase: boolean,
-  deleteVideo: (messageId: number, userId: number) => Promise<ActionResponse>,
-  signedInUserId: number,
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
-): Promise<void> {
+export async function handleOnDeleteVideo({
+  messageId,
+  removeFromDatabase,
+  deleteVideo,
+  signedInUserId,
+  setMessages,
+}: HandleOnDeleteVideoParams): Promise<void> {
   if (removeFromDatabase) {
     const response = await deleteVideo(messageId, signedInUserId);
     if (response.success) {
@@ -63,13 +119,13 @@ export async function handleOnDeleteVideo(
   }
 }
 
-export async function handleOnDeleteMessage(
-  messageId: number,
-  removeFromDatabase: boolean,
-  deleteMessage: (messageId: number, userId: number) => Promise<ActionResponse>,
-  signedInUserId: number,
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
-): Promise<void> {
+export async function handleOnDeleteMessage({
+  messageId,
+  removeFromDatabase,
+  deleteMessage,
+  signedInUserId,
+  setMessages,
+}: HandleOnDeleteMessageParams): Promise<void> {
   if (removeFromDatabase) {
     const response = await deleteMessage(messageId, signedInUserId);
     if (response.success) {
@@ -82,20 +138,13 @@ export async function handleOnDeleteMessage(
   }
 }
 
-export async function fetchMessagesForChat(
-  recipientId: number | null,
-  signedInUserId: number,
-  getMessages: (
-    userId: number,
-    recipientId?: number
-  ) => Promise<{
-    messages: unknown[];
-    success: boolean;
-    error?: string;
-  }>,
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
-): Promise<void> {
+export async function fetchMessagesForChat({
+  recipientId,
+  signedInUserId,
+  getMessages,
+  setMessages,
+  setLoading,
+}: FetchMessagesForChatParams): Promise<void> {
   setLoading(true);
   const response = await getMessages(signedInUserId, recipientId ?? undefined);
   if (response.success) {
@@ -106,28 +155,28 @@ export async function fetchMessagesForChat(
   setLoading(false);
 }
 
-export async function handleRecipientChange(
-  event: React.ChangeEvent<HTMLSelectElement>,
-  setSelectedRecipientId: React.Dispatch<React.SetStateAction<number | null>>,
-  fetchMessagesForChat: (recipientId: number | null) => Promise<void>
-): Promise<void> {
+export async function handleRecipientChange({
+  event,
+  setSelectedRecipientId,
+  fetchMessagesForChat,
+}: HandleRecipientChangeParams): Promise<void> {
   const selectedId =
     event.target.value === 'group' ? null : Number(event.target.value);
   setSelectedRecipientId(selectedId);
   await fetchMessagesForChat(selectedId);
 }
 
-export async function handleSendMessage(
-  e: React.FormEvent,
-  newMessage: string,
-  selectedVideo: File | null,
-  setIsSending: React.Dispatch<React.SetStateAction<boolean>>,
-  signedInUserId: number,
-  selectedRecipientId: number | null,
-  action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>,
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>,
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>
-): Promise<void> {
+export async function handleSendMessage({
+  e,
+  newMessage,
+  selectedVideo,
+  setIsSending,
+  signedInUserId,
+  selectedRecipientId,
+  action,
+  setNewMessage,
+  setSelectedVideo,
+}: HandleSendMessageParams): Promise<void> {
   e.preventDefault();
   if (!newMessage.trim() && !selectedVideo) {
     return;
