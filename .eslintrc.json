@@ -49,7 +49,7 @@
     "max-lines-per-function": [
       "warn",
       {
-        "max": 80
+        "max": 90
       }
     ],
     "max-params": [
