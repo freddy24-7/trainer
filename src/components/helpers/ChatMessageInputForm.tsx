@@ -17,7 +17,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
 
   return (
     <form onSubmit={handleSendMessage} className="flex items-center mt-4">
-      {/* Video Upload Button */}
       <label htmlFor="video-upload" className="cursor-pointer mr-2">
         <svg
           className="w-6 h-6 text-gray-600 hover:text-gray-800"
@@ -25,7 +24,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          {/* Video upload icon */}
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -42,12 +40,10 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         />
       </label>
 
-      {/* Display Selected Video Name */}
       {selectedVideo && (
         <span className="text-sm text-gray-600 mr-2">{selectedVideo.name}</span>
       )}
 
-      {/* Message Input Field */}
       <input
         type="text"
         value={newMessage}
@@ -56,7 +52,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         placeholder="Type your message..."
       />
 
-      {/* Send Button - Disabled if both message and video are empty */}
       <button
         type="submit"
         className="p-2 bg-zinc-600 text-white rounded-r"

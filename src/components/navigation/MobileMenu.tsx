@@ -45,7 +45,6 @@ export function MobileMenu({
           >
             {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
           </Button>
-          {/* Add the management and stats dropdowns */}
           {userId && userRole === 'TRAINER' && (
             <>
               <ManagementDropdown dropdownTextColor={dropdownTextColor} />

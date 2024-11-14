@@ -8,8 +8,10 @@ export async function handleTriggerNewMessageEvent(
   sender: Sender,
   recipientId?: number
 ): Promise<unknown> {
-  const channel = recipientId ? `private-chat-${recipientId}` : 'chat';
-  return pusher.trigger(channel, 'new-message', {
+  const channels = recipientId
+    ? [`private-chat-${recipientId}`, `private-chat-${sender.id}`]
+    : ['chat'];
+  return pusher.trigger(channels, 'new-message', {
     id: message.id,
     content: message.content,
     videoUrl: message.videoUrl || null,
