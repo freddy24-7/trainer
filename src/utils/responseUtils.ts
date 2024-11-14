@@ -3,7 +3,7 @@ import { PlayerResponseData, PlayerResponse } from '@/types/user-types';
 interface PlayerApiResponse {
   success?: boolean;
   players?: PlayerResponse[];
-  errors?: any;
+  errors?: undefined;
 }
 
 export function handlePlayerResponse(
