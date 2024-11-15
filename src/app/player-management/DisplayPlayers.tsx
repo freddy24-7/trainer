@@ -6,7 +6,7 @@ import { ZodIssue } from 'zod';
 import {
   handleEditPlayer,
   handleDeletePlayer,
-} from '@/components/helpers/playerManagementHelper';
+} from '@/components/helpers/PlayerManagementHelper';
 import PlayerModal from '@/components/helpers/PlayerModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import PlayersList from '@/components/PlayersList';

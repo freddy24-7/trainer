@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
-import MatchForm from '@/components/helpers/matchFormFieldHelpers';
+import MatchForm from '@/components/helpers/MatchFormFieldHelpers';
 import { useMatchFormConfig } from '@/hooks/useMatchFormConfig';
 import { usePouleState } from '@/hooks/usePouleState';
 import { Poule } from '@/types/poule-types';
