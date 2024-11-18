@@ -1,14 +1,7 @@
 import { Message, User } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
-
-interface CreateMessageParams {
-  content: string | null;
-  senderId: number;
-  recipientId?: number;
-  videoUrl?: string | null;
-  videoPublicId?: string | null;
-}
+import { CreateMessageParams } from '@/types/message-types';
 
 export async function createMessage(
   params: CreateMessageParams

@@ -1,28 +1,8 @@
 import prisma from '@/lib/prisma';
-import { MatchDataHelper } from '@/types/match-types';
-
-interface MatchData {
-  id: number;
-  date: Date;
-  pouleOpponent: {
-    id: number;
-    team: {
-      id: number;
-      name: string;
-    } | null;
-  } | null;
-  matchPlayers: {
-    id: number;
-    available: boolean;
-    user: {
-      id: number;
-      username: string | null;
-    };
-  }[];
-}
+import { MatchDataHelper, ObtainMatchData } from '@/types/match-types';
 
 export async function getMatchDataService(): Promise<MatchDataHelper[]> {
-  const matches: MatchData[] = await prisma.match.findMany({
+  const matches: ObtainMatchData[] = await prisma.match.findMany({
     include: {
       pouleOpponent: {
         include: {

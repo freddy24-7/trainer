@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-interface VideoDropzoneProps {
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
-}
+import { VideoDropzoneProps } from '@/types/message-types';
 
 const VideoDropzone: React.FC<VideoDropzoneProps> = ({ setSelectedVideo }) => {
   const onDrop = useCallback(

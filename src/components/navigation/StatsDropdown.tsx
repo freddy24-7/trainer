@@ -8,9 +8,7 @@ import {
 import Link from 'next/link';
 import React from 'react';
 
-interface StatsDropdownProps {
-  dropdownTextColor: string;
-}
+import { StatsDropdownProps } from '@/types/ui-types';
 
 export function StatsDropdown({
   dropdownTextColor,

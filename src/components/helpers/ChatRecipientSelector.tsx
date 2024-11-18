@@ -1,13 +1,6 @@
 import React from 'react';
 
-import { ChatUser, SignedInUser } from '@/types/user-types';
-
-interface ChatRecipientSelectorProps {
-  users: ChatUser[];
-  signedInUser: SignedInUser;
-  selectedRecipientId: number | null;
-  handleRecipientChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-}
+import { ChatRecipientSelectorProps } from '@/types/message-types';
 
 const ChatRecipientSelector: React.FC<ChatRecipientSelectorProps> = ({
   users,

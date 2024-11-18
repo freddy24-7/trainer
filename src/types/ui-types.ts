@@ -28,3 +28,23 @@ export interface ReusableModalProps {
   cancelLabel?: string;
   cancelAction?: () => void;
 }
+
+export interface ManagementDropdownProps {
+  dropdownTextColor: string;
+}
+
+export interface MobileMenuProps {
+  userId: number | null;
+  userRole: string | null;
+  dropdownTextColor: string;
+}
+
+export interface NavBarUserContentProps {
+  userId: number | null;
+  userRole: string | null;
+  dropdownTextColor: string;
+}
+
+export interface StatsDropdownProps {
+  dropdownTextColor: string;
+}

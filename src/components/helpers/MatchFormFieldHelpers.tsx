@@ -1,18 +1,12 @@
 import React from 'react';
-import {
-  FormProvider,
-  UseFormReturn,
-  UseFormSetValue,
-  FieldErrors,
-} from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 
 import ListPlayersInTeam from '@/app/matches/ListPlayersInTeam';
 import DateField from '@/components/helpers/DateField';
 import OpponentField from '@/components/helpers/OpponentField';
 import PouleField from '@/components/helpers/PouleField';
 import { Button } from '@/components/ui/button';
-import { Poule, PouleOpponent } from '@/types/poule-types';
-import { Player, FormValues } from '@/types/user-types';
+import { MatchFormFieldProps } from '@/types/match-types';
 import {
   getPlayerMinutes,
   getPlayerAvailability,
@@ -20,19 +14,7 @@ import {
   updatePlayerAvailability,
 } from '@/utils/playerUtils';
 
-interface MatchFormProps {
-  methods: UseFormReturn<FormValues>;
-  poules: Poule[];
-  players: Player[];
-  selectedPoule: Poule | null;
-  selectedOpponent: PouleOpponent | null;
-  playerValues: FormValues['players'];
-  errors: FieldErrors<FormValues>;
-  onSubmit: (data: FormValues) => Promise<void>;
-  setValue: UseFormSetValue<FormValues>;
-}
-
-const MatchForm: React.FC<MatchFormProps> = ({
+const MatchForm: React.FC<MatchFormFieldProps> = ({
   methods,
   poules,
   players,

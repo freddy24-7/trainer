@@ -1,6 +1,18 @@
-import { MatchData } from '@/types/match-types';
+import { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form';
+import { ZodIssue } from 'zod';
 
 import { Team } from './team-types';
+
+export interface ActionResponse {
+  errors?: ZodIssue[];
+}
+
+export interface PouleProps {
+  action: (
+    _prevState: unknown,
+    params: FormData
+  ) => Promise<ActionResponse | void>;
+}
 
 export interface Poule {
   id: number;
@@ -33,10 +45,6 @@ export interface PouleSelectorProps {
   onPouleChange: (pouleId: number) => void;
 }
 
-export interface OpponentClientProps {
-  matchData: MatchData[];
-}
-
 export interface OpponentSelectorProps {
   opponents: PouleOpponent[];
   selectedOpponent: PouleOpponent | null;
@@ -47,4 +55,41 @@ export interface PouleFormData {
   pouleName: string;
   mainTeamName: string;
   opponents: string[];
+}
+
+export interface FieldError {
+  message?: string;
+}
+
+export interface PouleFieldProps {
+  poules: Poule[];
+  selectedPoule: Poule | null;
+  errors: { poule?: FieldError };
+  onChange: (pouleId: number) => void;
+}
+
+export interface PouleFormContentProps {
+  handleSubmit: UseFormHandleSubmit<PouleFormValues>;
+  onSubmit: (data: PouleFormValues) => Promise<void>;
+  control: Control<PouleFormValues>;
+  errors: FieldErrors<PouleFormValues>;
+  handleAddOpponent: () => void;
+  opponents: string[];
+  handleRemoveOpponent: (index: number) => void;
+}
+
+export interface PouleFormFieldsProps {
+  control: Control<PouleFormValues>;
+  errors: FieldErrors<PouleFormValues>;
+  handleAddOpponent: () => void;
+}
+
+export interface PouleItemProps {
+  poule: Poule;
+}
+
+export interface PouleFormControls {
+  reset: () => void;
+  setOpponents: (opponents: string[]) => void;
+  setShowForm: (show: boolean) => void;
 }

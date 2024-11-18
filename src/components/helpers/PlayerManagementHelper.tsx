@@ -1,13 +1,7 @@
 import React from 'react';
 
+import { ModalSetupParams } from '@/types/shared-types';
 import { Player } from '@/types/user-types';
-
-interface ModalSetupParams {
-  setModalTitle: React.Dispatch<React.SetStateAction<string>>;
-  setModalBody: React.Dispatch<React.SetStateAction<React.ReactNode>>;
-  setConfirmAction: React.Dispatch<React.SetStateAction<() => void>>;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 export const handleEditPlayer = (
   setupModal: ({

@@ -5,9 +5,7 @@ import React, { useState } from 'react';
 import ChatOrganizer from '@/components/helpers/ChatOrganizer';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useChatMessages } from '@/hooks/useChatMessages';
-import { Message } from '@/types/message-types';
-import { ActionResponse } from '@/types/shared-types';
-import { SignedInUser, ChatUser } from '@/types/user-types';
+import { ChatClientProps } from '@/types/message-types';
 import {
   handleDeleteMessageLocal,
   handleOnDeleteMessage,
@@ -16,24 +14,6 @@ import {
   handleRecipientChange,
   handleSendMessage,
 } from '@/utils/chatUtils';
-
-interface Props {
-  signedInUser: SignedInUser;
-  messages: Message[];
-  users: ChatUser[];
-  action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
-  getMessages: (
-    userId: number,
-    recipientId?: number
-  ) => Promise<{
-    messages: unknown[];
-    success: boolean;
-    error?: string;
-  }>;
-  deleteVideo: (messageId: number, userId: number) => Promise<ActionResponse>;
-  deleteMessage: (messageId: number, userId: number) => Promise<ActionResponse>;
-  recipientId?: number | null;
-}
 
 function ChatClient({
   signedInUser,
@@ -44,7 +24,7 @@ function ChatClient({
   deleteVideo,
   deleteMessage,
   recipientId = null,
-}: Props): React.ReactElement {
+}: ChatClientProps): React.ReactElement {
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);

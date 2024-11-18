@@ -1,30 +1,10 @@
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import React, { useState } from 'react';
-import { ZodIssue } from 'zod';
 
 import { renderPlayerFormWithWhatsAppLink } from '@/components/helpers/RenderPlayerFormWithWhatsAppLink';
 import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
-import { PlayerFormData } from '@/types/user-types';
+import { PlayerFormData, EditPlayerFormProps } from '@/types/user-types';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
-
-interface EditPlayerFormProps {
-  playerId: number;
-  action: (
-    playerId: number,
-    params: FormData
-  ) => Promise<{ errors: ZodIssue[] }>;
-  initialUsername: string;
-  initialWhatsappNumber: string;
-  onPlayerEdited: (updatedPlayer: {
-    id: number;
-    username: string;
-    whatsappNumber: string;
-    whatsappLink: string;
-  }) => void;
-  onSubmissionStart?: () => void;
-  onAbort?: () => void;
-  onCloseModal: () => void;
-}
 
 function EditPlayerForm({
   playerId,

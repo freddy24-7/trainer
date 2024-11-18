@@ -1,11 +1,7 @@
 import { Spinner } from '@nextui-org/spinner';
 import React from 'react';
 
-interface LoadingSpinnerProps {
-  label?: string;
-  color?: 'primary' | 'success' | 'danger' | 'warning';
-  labelColor?: 'primary' | 'success' | 'danger' | 'warning';
-}
+import { LoadingSpinnerProps } from '@/types/shared-types';
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   label = 'Loading...',

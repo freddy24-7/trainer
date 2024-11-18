@@ -1,19 +1,8 @@
 import React from 'react';
 
 import PlayerForm from '@/components/PlayerForm';
-import { PlayerFormData } from '@/types/user-types';
+import { RenderPlayerFormProps } from '@/types/user-types';
 import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
-
-interface RenderPlayerFormProps {
-  formKey: number;
-  initialUsername: string;
-  initialWhatsappNumber: string;
-  isSubmitting: boolean;
-  playerData: PlayerFormData | null;
-  handleEditPlayer: (data: PlayerFormData) => Promise<void>;
-  onSubmissionStart?: () => void;
-  onAbort?: () => void;
-}
 
 export const renderPlayerFormWithWhatsAppLink = ({
   formKey,

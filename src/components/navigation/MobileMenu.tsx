@@ -7,12 +7,7 @@ import { FiMoon, FiSun, FiMenu, FiX } from 'react-icons/fi';
 
 import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
-
-interface MobileMenuProps {
-  userId: number | null;
-  userRole: string | null;
-  dropdownTextColor: string;
-}
+import { MobileMenuProps } from '@/types/ui-types';
 
 export function MobileMenu({
   userId,

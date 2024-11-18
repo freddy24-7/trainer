@@ -8,9 +8,7 @@ import {
 import Link from 'next/link';
 import React from 'react';
 
-interface ManagementDropdownProps {
-  dropdownTextColor: string;
-}
+import { ManagementDropdownProps } from '@/types/ui-types';
 
 export function ManagementDropdown({
   dropdownTextColor,

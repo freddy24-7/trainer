@@ -1,64 +1,16 @@
 import React from 'react';
 
-import { PusherEventMessage, Message } from '@/types/message-types';
-import { ActionResponse } from '@/types/shared-types';
+import {
+  PusherEventMessage,
+  Message,
+  HandleOnDeleteVideoParams,
+  HandleOnDeleteMessageParams,
+  FetchMessagesForChatParams,
+  HandleSendMessageParams,
+  SubscribeToPusherEventsParams,
+  HandleRecipientChangeParams,
+} from '@/types/message-types';
 import { handleInitializePusher } from '@/utils/pusherUtils';
-
-interface HandleOnDeleteVideoParams {
-  messageId: number;
-  removeFromDatabase: boolean;
-  deleteVideo: (messageId: number, userId: number) => Promise<ActionResponse>;
-  signedInUserId: number;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-}
-
-interface HandleOnDeleteMessageParams {
-  messageId: number;
-  removeFromDatabase: boolean;
-  deleteMessage: (messageId: number, userId: number) => Promise<ActionResponse>;
-  signedInUserId: number;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-}
-
-interface FetchMessagesForChatParams {
-  recipientId: number | null;
-  signedInUserId: number;
-  getMessages: (
-    userId: number,
-    recipientId?: number
-  ) => Promise<{
-    messages: unknown[];
-    success: boolean;
-    error?: string;
-  }>;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-interface HandleSendMessageParams {
-  e: React.FormEvent;
-  newMessage: string;
-  selectedVideo: File | null;
-  setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
-  signedInUserId: number;
-  selectedRecipientId: number | null;
-  action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
-}
-
-interface SubscribeToPusherEventsParams {
-  onMessageReceived: (data: PusherEventMessage) => void;
-  onDeleteMessage: (messageId: number) => void;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  userId?: number;
-}
-
-interface HandleRecipientChangeParams {
-  event: React.ChangeEvent<HTMLSelectElement>;
-  setSelectedRecipientId: React.Dispatch<React.SetStateAction<number | null>>;
-  fetchMessagesForChat: (recipientId: number | null) => Promise<void>;
-}
 
 export const subscribeToPusherEvents = ({
   onMessageReceived,

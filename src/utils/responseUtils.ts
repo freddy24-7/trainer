@@ -1,10 +1,4 @@
-import { PlayerResponseData, PlayerResponse } from '@/types/user-types';
-
-interface PlayerApiResponse {
-  success?: boolean;
-  players?: PlayerResponse[];
-  errors?: undefined;
-}
+import { PlayerResponseData, PlayerApiResponse } from '@/types/user-types';
 
 export function handlePlayerResponse(
   response: PlayerApiResponse

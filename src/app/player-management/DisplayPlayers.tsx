@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ZodIssue } from 'zod';
 
 import {
   handleEditPlayer,
@@ -10,19 +9,9 @@ import {
 import PlayerModal from '@/components/helpers/PlayerModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import PlayersList from '@/components/PlayersList';
-import { PlayerManagementClientProps, Player } from '@/types/user-types';
+import { Player, DisplayPlayersProps } from '@/types/user-types';
 import { setupModal } from '@/utils/modalUtils';
 import { updatePlayerList } from '@/utils/playerUtils';
-
-interface DisplayPlayersProps extends PlayerManagementClientProps {
-  editPlayerAction: (
-    playerId: number,
-    params: FormData
-  ) => Promise<{ errors: ZodIssue[] }>;
-  deletePlayerAction: (
-    playerId: number
-  ) => Promise<{ success: boolean; errors?: string }>;
-}
 
 function DisplayPlayers({
   players: initialPlayers,

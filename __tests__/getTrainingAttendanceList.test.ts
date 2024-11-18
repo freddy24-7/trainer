@@ -17,12 +17,12 @@ describe('getTrainingAttendanceList', () => {
       {
         id: 1,
         username: 'player1',
-        TrainingPlayer: [{ absent: true }, { absent: true }],
+        trainingPlayers: [{ absent: true }, { absent: true }],
       },
       {
         id: 2,
         username: 'player2',
-        TrainingPlayer: [{ absent: true }],
+        trainingPlayers: [{ absent: true }],
       },
     ];
 
@@ -63,7 +63,7 @@ describe('getTrainingAttendanceList', () => {
       {
         id: 3,
         username: 'player3',
-        TrainingPlayer: [],
+        trainingPlayers: [],
       },
     ];
 

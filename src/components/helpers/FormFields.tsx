@@ -1,5 +1,4 @@
 import React from 'react';
-import { Control, FieldErrors } from 'react-hook-form';
 
 import {
   FormField,
@@ -7,15 +6,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { PouleFormValues } from '@/types/poule-types';
-
-interface InputFieldProps {
-  name: keyof PouleFormValues;
-  control: Control<PouleFormValues>;
-  placeholder: string;
-  errors: FieldErrors<PouleFormValues>;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-}
+import { InputFieldProps } from '@/types/shared-types';
 
 export const InputField: React.FC<InputFieldProps> = ({
   name,

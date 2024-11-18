@@ -5,6 +5,35 @@ import { ZodIssue } from 'zod';
 
 import { ResponseError } from './shared-types';
 
+export interface DisplayPlayersProps extends PlayerManagementClientProps {
+  editPlayerAction: (
+    playerId: number,
+    params: FormData
+  ) => Promise<{ errors: ZodIssue[] }>;
+  deletePlayerAction: (
+    playerId: number
+  ) => Promise<{ success: boolean; errors?: string }>;
+}
+
+export interface EditPlayerFormProps {
+  playerId: number;
+  action: (
+    playerId: number,
+    params: FormData
+  ) => Promise<{ errors: ZodIssue[] }>;
+  initialUsername: string;
+  initialWhatsappNumber: string;
+  onPlayerEdited: (updatedPlayer: {
+    id: number;
+    username: string;
+    whatsappNumber: string;
+    whatsappLink: string;
+  }) => void;
+  onSubmissionStart?: () => void;
+  onAbort?: () => void;
+  onCloseModal: () => void;
+}
+
 export interface FormValues {
   poule: number | undefined;
   opponent: number | undefined;
@@ -141,4 +170,61 @@ export type GetPlayerMatchStatsResponse =
 export interface ClerkUser {
   id: string;
   username: string | null;
+}
+
+export type UpdateUsernameResult =
+  | { success: true }
+  | { errors: ZodIssue[]; success?: false };
+
+export interface PlayerModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  modalTitle: string;
+  modalBody: React.ReactNode;
+  editPlayerData: Player | null;
+  setSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  handlePlayerEdited: (updatedPlayer: Player) => void;
+  editPlayerAction: (
+    playerId: number,
+    params: FormData
+  ) => Promise<{ errors: ZodIssue[] }>;
+  confirmAction?: () => void;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  cancelAction?: () => void;
+}
+
+export interface RenderPlayerFormProps {
+  formKey: number;
+  initialUsername: string;
+  initialWhatsappNumber: string;
+  isSubmitting: boolean;
+  playerData: PlayerFormData | null;
+  handleEditPlayer: (data: PlayerFormData) => Promise<void>;
+  onSubmissionStart?: () => void;
+  onAbort?: () => void;
+}
+
+export interface PlayerFormInputFieldProps {
+  id: string;
+  label: string;
+  type: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  placeholder?: string;
+}
+
+export interface ExtendedPlayersListProps {
+  players: Player[];
+  showGroupChatOption?: boolean;
+  onSelect?: (id: number | null) => void;
+  onEdit?: (player: Player) => void;
+  onDelete?: (playerId: number) => void;
+}
+
+export interface PlayerApiResponse {
+  success?: boolean;
+  players?: PlayerResponse[];
+  errors?: (ResponseError | ZodIssue)[];
 }

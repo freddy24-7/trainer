@@ -8,21 +8,16 @@ import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
 import DateField from '@/components/helpers/DateField';
 import TrainingPlayersField from '@/components/helpers/TrainingPlayersField';
 import { Button } from '@/components/ui/button';
-import { TrainingFormValues } from '@/types/training-types';
-import { Player } from '@/types/user-types';
+import {
+  TrainingFormValues,
+  TrainingFrontEndProps,
+} from '@/types/training-types';
 import { submitTrainingForm } from '@/utils/trainingFormUtils';
 
-interface ActionResponse {
-  success?: boolean;
-  errors?: { message: string }[];
-}
-
-interface Props {
-  action: (params: FormData) => Promise<ActionResponse>;
-  players: Player[];
-}
-
-const AddTrainingForm = ({ action, players }: Props): React.ReactElement => {
+const AddTrainingForm = ({
+  action,
+  players,
+}: TrainingFrontEndProps): React.ReactElement => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 

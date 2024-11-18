@@ -53,7 +53,7 @@ export interface AbsentTrainingPlayer {
 export interface PlayerAbsence {
   id: number;
   username: string | null;
-  TrainingPlayer: AbsentTrainingPlayer[];
+  trainingPlayers: AbsentTrainingPlayer[];
 }
 
 export interface PlayerAttendance {
@@ -82,4 +82,18 @@ export interface Training {
 export interface TrainingFormData {
   date: string | null;
   players: { userId: number; absent: boolean }[];
+}
+
+export interface ActionResponse {
+  success?: boolean;
+  errors?: { message: string }[];
+}
+
+export interface TrainingFrontEndProps {
+  action: (params: FormData) => Promise<ActionResponse>;
+  players: Player[];
+}
+
+export interface ErrorDetails {
+  message: string;
 }

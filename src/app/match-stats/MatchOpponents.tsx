@@ -2,7 +2,7 @@ import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import React from 'react';
 
 import MatchDetail from '@/components/helpers/MatchDetail';
-import { OpponentClientProps } from '@/types/poule-types';
+import { OpponentClientProps } from '@/types/shared-types';
 
 const MatchOpponents: React.FC<OpponentClientProps> = ({ matchData }) => {
   return (

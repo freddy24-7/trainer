@@ -1,14 +1,8 @@
 import { toast } from 'react-toastify';
 import type { ZodIssue } from 'zod';
 
-import { Poule, PouleFormValues } from '@/types/poule-types';
+import { Poule, PouleFormValues, PouleFormControls } from '@/types/poule-types';
 import { Team } from '@/types/team-types';
-
-interface FormControls {
-  reset: () => void;
-  setOpponents: (opponents: string[]) => void;
-  setShowForm: (show: boolean) => void;
-}
 
 export function handleFormatPoules(
   poules: {
@@ -35,7 +29,7 @@ export async function handleSubmitPouleForm(
     _prevState: unknown,
     params: FormData
   ) => Promise<{ errors?: ZodIssue[] } | void>,
-  formControls: FormControls
+  formControls: PouleFormControls
 ): Promise<void> {
   const { reset, setOpponents, setShowForm } = formControls;
 

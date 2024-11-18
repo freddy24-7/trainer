@@ -1,4 +1,5 @@
 import React from 'react';
+import { ZodIssue } from 'zod';
 
 import addPlayer from '@/app/actions/addPlayer';
 import deletePlayer from '@/app/actions/deletePlayer';
@@ -8,6 +9,7 @@ import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
 import { DisplayPlayers } from '@/app/player-management/DisplayPlayers';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { handleRenderError } from '@/components/helpers/RenderError';
+import { ResponseError } from '@/types/shared-types';
 import { Player } from '@/types/user-types';
 import { handleMapPlayers } from '@/utils/playerUtils';
 import { handlePlayerResponse } from '@/utils/responseUtils';
@@ -15,7 +17,12 @@ import { handlePlayerResponse } from '@/utils/responseUtils';
 export default async function ManagementPage(): Promise<React.ReactElement> {
   const response = await getPlayers();
 
-  const validatedResponse = handlePlayerResponse(response);
+  const validatedResponse = handlePlayerResponse({
+    ...response,
+    errors: Array.isArray(response.errors)
+      ? (response.errors as (ResponseError | ZodIssue)[])
+      : undefined,
+  });
 
   const errorElement = handleRenderError(validatedResponse);
   if (errorElement) {

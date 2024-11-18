@@ -1,11 +1,7 @@
 import React from 'react';
 
 import TeamsList from '@/components/TeamsList';
-import { Poule } from '@/types/poule-types';
-
-interface PouleItemProps {
-  poule: Poule;
-}
+import { PouleItemProps } from '@/types/poule-types';
 
 const PouleItem: React.FC<PouleItemProps> = ({ poule }) => {
   return (

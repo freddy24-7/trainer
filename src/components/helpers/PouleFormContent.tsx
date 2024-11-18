@@ -1,20 +1,9 @@
 import React from 'react';
-import { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form';
 
 import { OpponentsList } from '@/components/helpers/OpponentsList';
 import { PouleFormFields } from '@/components/helpers/PouleFormFields';
 import { Button } from '@/components/ui/button';
-import { PouleFormValues } from '@/types/poule-types';
-
-interface PouleFormContentProps {
-  handleSubmit: UseFormHandleSubmit<PouleFormValues>;
-  onSubmit: (data: PouleFormValues) => Promise<void>;
-  control: Control<PouleFormValues>;
-  errors: FieldErrors<PouleFormValues>;
-  handleAddOpponent: () => void;
-  opponents: string[];
-  handleRemoveOpponent: (index: number) => void;
-}
+import { PouleFormContentProps } from '@/types/poule-types';
 
 const PouleFormContent: React.FC<PouleFormContentProps> = ({
   handleSubmit,

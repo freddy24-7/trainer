@@ -1,10 +1,12 @@
 import React from 'react';
+import { ZodIssue } from 'zod';
 
 import addTraining from '@/app/actions/addTraining';
 import getPlayers from '@/app/actions/getPlayers';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import AddTrainingForm from '@/app/trainings/AddTrainingForm';
 import { handleRenderError } from '@/components/helpers/RenderError';
+import { ResponseError } from '@/types/shared-types';
 import { Player } from '@/types/user-types';
 import { handleMapPlayers } from '@/utils/playerUtils';
 import { handlePlayerResponse } from '@/utils/responseUtils';
@@ -12,7 +14,12 @@ import { handlePlayerResponse } from '@/utils/responseUtils';
 export default async function TrainingsPage(): Promise<React.ReactElement> {
   const response = await getPlayers();
 
-  const validatedResponse = handlePlayerResponse(response);
+  const validatedResponse = handlePlayerResponse({
+    ...response,
+    errors: Array.isArray(response.errors)
+      ? (response.errors as (ResponseError | ZodIssue)[])
+      : undefined,
+  });
 
   const errorElement = handleRenderError(validatedResponse);
   if (errorElement) {

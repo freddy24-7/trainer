@@ -3,27 +3,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import { ZodIssue } from 'zod';
 
 import { PouleFormContent } from '@/components/helpers/PouleFormContent';
 import { Button } from '@/components/ui/button';
 import { useOpponentManagement } from '@/hooks/useOpponentManagement';
 import { createPouleSchema } from '@/schemas/createPouleSchema';
-import { PouleFormValues } from '@/types/poule-types';
+import { PouleFormValues, PouleProps } from '@/types/poule-types';
 import { handleSubmitPouleForm } from '@/utils/pouleUtils';
 
-interface ActionResponse {
-  errors?: ZodIssue[];
-}
-
-interface Props {
-  action: (
-    _prevState: unknown,
-    params: FormData
-  ) => Promise<ActionResponse | void>;
-}
-
-function AddPouleForm({ action }: Props): React.ReactElement {
+function AddPouleForm({ action }: PouleProps): React.ReactElement {
   const [showForm, setShowForm] = useState(false);
 
   const methods = useForm<PouleFormValues>({

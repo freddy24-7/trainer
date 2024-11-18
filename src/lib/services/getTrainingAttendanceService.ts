@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 
 export async function getTrainingAttendanceFromDB(): Promise<
   (User & {
-    TrainingPlayer: {
+    trainingPlayers: {
       absent: boolean;
     }[];
   })[]
@@ -14,7 +14,7 @@ export async function getTrainingAttendanceFromDB(): Promise<
       role: 'PLAYER',
     },
     include: {
-      TrainingPlayer: {
+      trainingPlayers: {
         where: { absent: true },
       },
     },

@@ -4,26 +4,20 @@ import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { ZodIssue } from 'zod';
 
 import MatchForm from '@/components/helpers/MatchFormFieldHelpers';
 import { useMatchFormConfig } from '@/hooks/useMatchFormConfig';
 import { usePouleState } from '@/hooks/usePouleState';
-import { Poule } from '@/types/poule-types';
-import { Player, FormValues } from '@/types/user-types';
+import { MatchFormProps } from '@/types/match-types';
+import { FormValues } from '@/types/user-types';
 import { submitMatchForm } from '@/utils/matchFormUtils';
 import { validateAllPlayers } from '@/utils/playerUtils';
 
-interface Props {
-  poules: Poule[];
-  players: Player[];
-  action: (
-    _prevState: unknown,
-    params: FormData
-  ) => Promise<{ errors: ZodIssue[] }>;
-}
-
-function AddMatchForm({ action, poules, players }: Props): React.ReactElement {
+function AddMatchForm({
+  action,
+  poules,
+  players,
+}: MatchFormProps): React.ReactElement {
   const [, setSubmitting] = useState<boolean>(false);
   const router = useRouter();
 

@@ -1,14 +1,7 @@
 import React from 'react';
-import { Control, FieldErrors } from 'react-hook-form';
 
 import { InputField } from '@/components/helpers/FormFields';
-import { PouleFormValues } from '@/types/poule-types';
-
-interface PouleFormFieldsProps {
-  control: Control<PouleFormValues>;
-  errors: FieldErrors<PouleFormValues>;
-  handleAddOpponent: () => void;
-}
+import { PouleFormFieldsProps } from '@/types/poule-types';
 
 export function PouleFormFields({
   control,

@@ -1,11 +1,7 @@
 import { format } from 'date-fns';
 import React from 'react';
 
-import { MatchData } from '@/types/match-types';
-
-interface MatchDetailProps {
-  match: MatchData;
-}
+import { MatchDetailProps } from '@/types/match-types';
 
 const MatchDetail: React.FC<MatchDetailProps> = ({ match }) => {
   return (

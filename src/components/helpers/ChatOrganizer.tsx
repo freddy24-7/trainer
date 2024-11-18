@@ -5,34 +5,9 @@ import MessageList from '@/components/helpers/ChatMessageList';
 import ChatRecipientSelector from '@/components/helpers/ChatRecipientSelector';
 import VideoDropzone from '@/components/helpers/VideoDropzone';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Message } from '@/types/message-types';
-import { SignedInUser, ChatUser } from '@/types/user-types';
+import { ChatMessageProps } from '@/types/message-types';
 
-interface ChatInterfaceProps {
-  signedInUser: SignedInUser;
-  users: ChatUser[];
-  selectedRecipientId: number | null;
-  handleRecipientChange: (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => Promise<void>;
-  messages: Message[];
-  onDeleteVideo: (
-    messageId: number,
-    removeFromDatabase?: boolean
-  ) => Promise<void>;
-  onDeleteMessage: (
-    messageId: number,
-    removeFromDatabase?: boolean
-  ) => Promise<void>;
-  isSending: boolean;
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
-  newMessage: string;
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
-  handleSendMessage: (e: React.FormEvent) => Promise<void>;
-  selectedVideo: File | null;
-}
-
-const ChatOrganizer: React.FC<ChatInterfaceProps> = ({
+const ChatOrganizer: React.FC<ChatMessageProps> = ({
   signedInUser,
   users,
   selectedRecipientId,

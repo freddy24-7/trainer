@@ -1,13 +1,7 @@
 import { ZodIssue } from 'zod';
 
 import { addMatchPlayerSchema } from '@/schemas/matchSchema';
-
-export interface MatchPlayerData {
-  userId: number;
-  matchId: number;
-  minutes: number;
-  available: boolean;
-}
+import { MatchPlayerData } from '@/types/validation-types';
 
 export function handleValidateMatchPlayerData(data: MatchPlayerData): {
   success: boolean;

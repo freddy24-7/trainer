@@ -1,17 +1,5 @@
 import prisma from '@/lib/prisma';
-
-interface UserWithOptionalMatchStats {
-  id: number;
-  username: string | null;
-  whatsappNumber: string | null;
-  MatchPlayer?: {
-    id: number;
-    matchId: number;
-    userId: number;
-    minutes: number;
-    available: boolean;
-  }[];
-}
+import { UserWithOptionalMatchStats } from '@/types/match-types';
 
 export async function fetchPlayers(
   includeMatchStats = false

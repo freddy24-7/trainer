@@ -1,17 +1,7 @@
 import React from 'react';
 
 import { usePlayerFormState } from '@/hooks/usePlayerFormState';
-import { PlayerFormProps } from '@/types/user-types';
-
-interface InputFieldProps {
-  id: string;
-  label: string;
-  type: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  required?: boolean;
-  placeholder?: string;
-}
+import { PlayerFormProps, PlayerFormInputFieldProps } from '@/types/user-types';
 
 const InputField = ({
   id,
@@ -21,7 +11,7 @@ const InputField = ({
   onChange,
   required = true,
   placeholder,
-}: InputFieldProps): React.ReactElement => (
+}: PlayerFormInputFieldProps): React.ReactElement => (
   <div>
     <label htmlFor={id} className="block text-brandcolor">
       {label}

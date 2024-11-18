@@ -1,19 +1,9 @@
 import { toast } from 'react-toastify';
-import { ZodIssue } from 'zod';
 
 import { handleValidateMatchData } from '@/schemas/validation/createMatchValidation';
-import { MatchFormValues } from '@/types/match-types';
+import { MatchFormValues, SubmitMatchFormOptions } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
-
-interface SubmitMatchFormOptions {
-  validatePlayers: () => boolean;
-  setSubmitting: (submitting: boolean) => void;
-  action: (
-    _prevState: unknown,
-    params: FormData
-  ) => Promise<{ errors: ZodIssue[] }>;
-}
 
 export const submitMatchForm = async (
   data: MatchFormValues,

@@ -1,6 +1,5 @@
 import { CalendarDate } from '@nextui-org/react';
 import React from 'react';
-import { FieldErrors } from 'react-hook-form';
 
 import DateSelector from '@/components/DateSelector';
 import {
@@ -9,17 +8,9 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
+import { DateProps } from '@/types/shared-types';
 
-interface DateFieldValues {
-  date: CalendarDate | null;
-}
-
-interface Props {
-  errors: FieldErrors<DateFieldValues>;
-  onChange: (date: CalendarDate | null) => void;
-}
-
-const DateField = ({ errors, onChange }: Props): React.ReactElement => (
+const DateField = ({ errors, onChange }: DateProps): React.ReactElement => (
   <FormItem>
     <FormField
       name="date"

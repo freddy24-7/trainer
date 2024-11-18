@@ -2,11 +2,7 @@ import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
-
-interface OpponentsListProps {
-  opponents: string[];
-  onRemove: (index: number) => void;
-}
+import { OpponentsListProps } from '@/types/shared-types';
 
 export const OpponentsList: React.FC<OpponentsListProps> = ({
   opponents,

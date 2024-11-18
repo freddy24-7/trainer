@@ -1,14 +1,10 @@
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-import { TrainingFormValues } from '@/types/training-types';
+import { TrainingFormValues, ErrorDetails } from '@/types/training-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 import { convertCalendarDateToDate } from '@/utils/trainingPlayerUtils';
-
-interface ErrorDetails {
-  message: string;
-}
 
 export const submitTrainingForm = async (
   data: TrainingFormValues,

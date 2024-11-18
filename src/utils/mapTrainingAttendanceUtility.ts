@@ -6,6 +6,6 @@ export function handleMapTrainingAttendance(
   return players.map((player) => ({
     playerId: player.id,
     username: player.username ?? 'Unknown Player',
-    absences: player.TrainingPlayer.length,
+    absences: player.trainingPlayers.length,
   }));
 }

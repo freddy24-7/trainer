@@ -1,15 +1,7 @@
 import { Button, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
 import React from 'react';
 
-import { Player } from '@/types/user-types';
-
-interface ExtendedPlayersListProps {
-  players: Player[];
-  showGroupChatOption?: boolean;
-  onSelect?: (id: number | null) => void;
-  onEdit?: (player: Player) => void;
-  onDelete?: (playerId: number) => void;
-}
+import { Player, ExtendedPlayersListProps } from '@/types/user-types';
 
 export default function PlayersList({
   players,

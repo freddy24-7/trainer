@@ -4,12 +4,7 @@ import React from 'react';
 import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
-
-interface NavBarUserContentProps {
-  userId: number | null;
-  userRole: string | null;
-  dropdownTextColor: string;
-}
+import { NavBarUserContentProps } from '@/types/ui-types';
 
 export function NavBarUserContent({
   userId,

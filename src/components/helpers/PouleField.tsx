@@ -7,25 +7,14 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { Poule } from '@/types/poule-types';
-
-interface FieldError {
-  message?: string;
-}
-
-interface Props {
-  poules: Poule[];
-  selectedPoule: Poule | null;
-  errors: { poule?: FieldError };
-  onChange: (pouleId: number) => void;
-}
+import { PouleFieldProps } from '@/types/poule-types';
 
 const PouleField = ({
   poules,
   selectedPoule,
   errors,
   onChange,
-}: Props): React.ReactElement => (
+}: PouleFieldProps): React.ReactElement => (
   <FormItem>
     <FormField
       name="poule"

@@ -1,11 +1,7 @@
 import { ZodIssue } from 'zod';
 
 import { createMatchSchema } from '@/schemas/matchSchema';
-
-interface MatchFormData {
-  pouleOpponentId: number;
-  date: string | null;
-}
+import { MatchFormData } from '@/types/validation-types';
 
 export function handleValidateMatchData(params: FormData): {
   success: boolean;

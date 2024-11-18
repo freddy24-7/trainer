@@ -1,14 +1,9 @@
-import { ZodIssue } from 'zod';
-
 import {
   handleFindUserByClerkId,
   updateUserUsername,
 } from '@/lib/services/updateUserService';
+import { UpdateUsernameResult } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
-
-type UpdateUsernameResult =
-  | { success: true }
-  | { errors: ZodIssue[]; success?: false };
 
 export async function updateUsername(
   clerkId: string,
