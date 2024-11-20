@@ -3,10 +3,8 @@
 import { ZodIssue } from 'zod';
 
 import { addMatchPlayerToDatabase } from '@/lib/services/createMatchPlayerService';
-import {
-  handleValidateMatchPlayerData,
-  MatchPlayerData,
-} from '@/schemas/validation/addMatchPlayerValidation';
+import { handleValidateMatchPlayerData } from '@/schemas/validation/addMatchPlayerValidation';
+import { MatchPlayerData } from '@/types/validation-types';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function addMatchPlayer(data: {

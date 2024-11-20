@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import { IoFootball } from 'react-icons/io5';
 
-import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
+import { fetchAndCheckUser } from '@/utils/fetchAndCheckUser';
 
 import NavBarClient from './NavBarClient';
 

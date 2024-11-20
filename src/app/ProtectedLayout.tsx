@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
 import React from 'react';
 
-import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import { ProtectedLayoutProps } from '@/types/shared-types';
+import { fetchAndCheckUser } from '@/utils/fetchAndCheckUser';
 
 const ProtectedLayout = async ({
   children,

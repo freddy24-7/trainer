@@ -1,10 +1,10 @@
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 
 import prisma from '@/lib/prisma';
 import { SignedInUser } from '@/types/user-types';
 
 export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     console.log('User is not authenticated');

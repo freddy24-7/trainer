@@ -1,6 +1,6 @@
 'use server';
 
-import { users } from '@clerk/clerk-sdk-node';
+import { clerkClient } from '@clerk/clerk-sdk-node';
 import { revalidatePath } from 'next/cache';
 import { ZodIssue } from 'zod';
 
@@ -23,7 +23,8 @@ export default async function addPlayer(
   const { username, password, whatsappNumber } = validation.data;
 
   try {
-    const clerkUser = await users.createUser({
+    // Replace users.createUser with clerkClient.users.createUser
+    const clerkUser = await clerkClient.users.createUser({
       username,
       password,
     });

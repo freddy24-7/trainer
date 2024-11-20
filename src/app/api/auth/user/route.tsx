@@ -1,11 +1,11 @@
-import { auth, currentUser } from '@clerk/nextjs';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
 import { UserSchema } from '@/schemas/userSchema';
 
 export async function GET(): Promise<NextResponse> {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return NextResponse.redirect('/sign-in');

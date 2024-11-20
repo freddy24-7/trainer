@@ -3,7 +3,7 @@ import React from 'react';
 
 import { updateUsername } from '@/app/actions/updateUsername';
 import Dashboard from '@/app/dashboard/Dashboard';
-import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
+import { fetchAndCheckUser } from '@/utils/fetchAndCheckUser';
 import LoginModal from '@/components/LoginModal';
 import { SignedInUser, ClerkUser } from '@/types/user-types';
 
