@@ -9,6 +9,8 @@ import { ToastContainer } from 'react-toastify';
 import NavBar from '@/components/navigation/NavBar';
 import 'react-toastify/dist/ReactToastify.css';
 
+export const runtime = 'nodejs';
+
 export const metadata: Metadata = {
   title: 'ClubTrainer',
   description: 'Trainers app for player feedback',
