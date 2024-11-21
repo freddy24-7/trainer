@@ -13,21 +13,21 @@ import { Message } from '@/types/message-types';
 import { ChatUser } from '@/types/user-types';
 
 export default async function ChatPage({
-  searchParams,
+  params,
 }: {
-  searchParams: { recipientId?: string | string[] };
+  params: Promise<{ recipientId?: string | string[] }>;
 }): Promise<React.ReactElement> {
+  const { recipientId } = await params; // Await the `params` object
+
   const signedInUser = await fetchAndCheckUser();
 
   if (!signedInUser) {
     return <LoginModal />;
   }
 
-  const recipientId = searchParams.recipientId
-    ? Number(searchParams.recipientId)
-    : undefined;
+  const recipientIdNumber = recipientId ? Number(recipientId) : undefined;
 
-  const response = await getMessages(signedInUser.id, recipientId);
+  const response = await getMessages(signedInUser.id, recipientIdNumber);
 
   if (!response.success) {
     return handleChatErrorResponse(response.error || 'Error loading messages', [
@@ -38,13 +38,11 @@ export default async function ChatPage({
 
   const usersResponse = await getUsers();
   const users: ChatUser[] = usersResponse.success
-    ? (usersResponse.users?.map((user) => {
-        return {
-          ...user,
-          username: user.username || 'Unknown',
-          whatsappNumber: user.whatsappNumber || '',
-        };
-      }) ?? [])
+    ? (usersResponse.users?.map((user) => ({
+        ...user,
+        username: user.username || 'Unknown',
+        whatsappNumber: user.whatsappNumber || '',
+      })) ?? [])
     : [];
 
   const messages = response.messages as Message[];
@@ -57,7 +55,7 @@ export default async function ChatPage({
       getMessages={getMessages}
       deleteVideo={deleteVideo}
       deleteMessage={deleteMessage}
-      recipientId={recipientId}
+      recipientId={recipientIdNumber}
       users={users}
     />
   );
