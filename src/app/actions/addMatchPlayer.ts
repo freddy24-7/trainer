@@ -4,6 +4,10 @@ import { ZodIssue } from 'zod';
 
 import { addMatchPlayerToDatabase } from '@/lib/services/createMatchPlayerService';
 import { handleValidateMatchPlayerData } from '@/schemas/validation/addMatchPlayerValidation';
+import {
+  validationFailedMessage,
+  failedToAddMatchPlayer,
+} from '@/strings/actionStrings';
 import { MatchPlayerData } from '@/types/validation-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -16,7 +20,7 @@ export default async function addMatchPlayer(data: {
   const validation = handleValidateMatchPlayerData(data);
 
   if (!validation.success || !validation.data) {
-    return formatError('Validation failed.', ['form']);
+    return formatError(validationFailedMessage, ['form']);
   }
 
   const { userId, matchId, minutes, available } =
@@ -29,8 +33,8 @@ export default async function addMatchPlayer(data: {
       success: true,
     };
   } catch (error) {
-    console.error('Error adding match player to the database:', error);
+    console.error(failedToAddMatchPlayer, error);
 
-    return formatError('Failed to add match player to the database.', ['form']);
+    return formatError(failedToAddMatchPlayer, ['form']);
   }
 }

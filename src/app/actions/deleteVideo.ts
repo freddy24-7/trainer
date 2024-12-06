@@ -3,6 +3,11 @@
 import { v2 as cloudinary } from 'cloudinary';
 
 import prisma from '@/lib/prisma';
+import {
+  messageNotFound,
+  unauthorizedToDeleteVideo,
+  errorDeletingVideo,
+} from '@/strings/actionStrings';
 import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -18,7 +23,7 @@ export async function deleteVideo(
     if (!message) {
       return {
         success: false,
-        ...formatError('Message not found.', ['delete'], 'custom', true),
+        ...formatError(messageNotFound, ['delete'], 'custom', true),
       };
     }
 
@@ -26,7 +31,7 @@ export async function deleteVideo(
       return {
         success: false,
         ...formatError(
-          'Unauthorized to delete this video.',
+          unauthorizedToDeleteVideo,
           ['authorization'],
           'custom',
           true
@@ -47,10 +52,10 @@ export async function deleteVideo(
 
     return { success: true };
   } catch (error) {
-    console.error('Error deleting video:', error);
+    console.error(errorDeletingVideo, error);
     return {
       success: false,
-      ...formatError('Error deleting video.', ['database'], 'custom', true),
+      ...formatError(errorDeletingVideo, ['database'], 'custom', true),
     };
   }
 }

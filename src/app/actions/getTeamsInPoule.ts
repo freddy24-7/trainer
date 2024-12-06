@@ -1,4 +1,8 @@
 import { getPoulesWithTeams } from '@/lib/services/getPouleService';
+import {
+  noPoulesFound,
+  failedToLoadTeamsInPoules,
+} from '@/strings/actionStrings';
 import { Poule } from '@/types/poule-types';
 import {
   GetTeamsInPouleResponse,
@@ -14,7 +18,7 @@ export async function getTeamsInPoule(): Promise<GetTeamsInPouleResponse> {
 
     if (poules.length === 0) {
       return formatError(
-        'No poules found. Please create a new poule.',
+        noPoulesFound,
         ['poules'],
         'custom',
         true
@@ -38,9 +42,9 @@ export async function getTeamsInPoule(): Promise<GetTeamsInPouleResponse> {
       latestPoule: formattedPoules[0],
     };
   } catch (error) {
-    console.error('Error fetching poules:', error);
+    console.error(failedToLoadTeamsInPoules, error);
     return formatError(
-      'Failed to load teams in the poules.',
+      failedToLoadTeamsInPoules,
       ['poules'],
       'custom',
       true

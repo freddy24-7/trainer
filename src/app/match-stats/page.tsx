@@ -5,6 +5,11 @@ import { getPlayerStats } from '@/app/actions/getPlayerStats';
 import MatchOpponents from '@/app/match-stats/MatchOpponents';
 import MatchStats from '@/app/match-stats/MatchStats';
 import ProtectedLayout from '@/app/ProtectedLayout';
+import {
+  errorLoadingPlayerStatistics,
+  errorLoadingMatchData,
+  unknownErrorOccurred,
+} from '@/strings/serverStrings';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function MatchStatsPage(): Promise<React.ReactElement> {
@@ -16,7 +21,7 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
 
     if (!playerStatsResponse.success) {
       const formattedError = formatError(
-        playerStatsResponse.error || 'Error loading player statistics',
+        playerStatsResponse.error || errorLoadingPlayerStatistics,
         ['getPlayerStats']
       );
       return (
@@ -30,7 +35,7 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
 
     if (!matchDataResponse.success) {
       const formattedError = formatError(
-        matchDataResponse.error || 'Error loading match data',
+        matchDataResponse.error || errorLoadingMatchData,
         ['getMatchData']
       );
       return (
@@ -55,7 +60,7 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
     );
   } catch (error) {
     const formattedError = formatError(
-      error instanceof Error ? error.message : 'Unknown error occurred',
+      error instanceof Error ? error.message : unknownErrorOccurred,
       ['MatchStatsPage']
     );
     return (

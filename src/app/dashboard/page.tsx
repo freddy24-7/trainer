@@ -5,6 +5,11 @@ import { updateUsername } from '@/app/actions/updateUsername';
 import Dashboard from '@/app/dashboard/Dashboard';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import LoginModal from '@/components/LoginModal';
+import {
+  usernameUpdateFailed,
+  errorCheckingOrUpdatingUsername,
+  usernameSuccessfullyUpdated,
+} from '@/strings/serverStrings';
 import { SignedInUser, ClerkUser } from '@/types/user-types';
 
 let lastCheckedUsername: string | null = null;
@@ -31,15 +36,15 @@ async function handleUpdateUsername(
     );
 
     if ('errors' in updateResponse) {
-      console.error('Failed to update username:', updateResponse.errors);
+      console.error(usernameUpdateFailed, updateResponse.errors);
       return false;
     } else {
-      console.log('Username successfully updated!');
+      console.log(usernameSuccessfullyUpdated);
       lastCheckedUsername = clerkUser.username;
       return true;
     }
   } catch (error) {
-    console.error('Error checking or updating username:', error);
+    console.error(errorCheckingOrUpdatingUsername, error);
     return false;
   }
 }

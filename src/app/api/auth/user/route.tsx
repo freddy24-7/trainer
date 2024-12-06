@@ -3,6 +3,10 @@ import { NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
 import { UserSchema } from '@/schemas/userSchema';
+import {
+  invalidUserData,
+  errorInteractingWithDatabase,
+} from '@/strings/serverStrings';
 
 export async function GET(): Promise<NextResponse> {
   const { userId } = auth();
@@ -30,7 +34,7 @@ export async function GET(): Promise<NextResponse> {
   if (!parsedUser.success) {
     console.error(parsedUser.error.format());
     return NextResponse.json(
-      { error: 'Invalid user data', details: parsedUser.error.format() },
+      { error: invalidUserData, details: parsedUser.error.format() },
       { status: 400 }
     );
   }
@@ -46,7 +50,7 @@ export async function GET(): Promise<NextResponse> {
       });
     }
   } catch (error) {
-    console.error('Error interacting with the database:', error);
+    console.error(errorInteractingWithDatabase, error);
   } finally {
     await prisma.$disconnect();
   }

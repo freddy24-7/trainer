@@ -6,6 +6,7 @@ import { ZodIssue } from 'zod';
 
 import { createPlayerInDatabase } from '@/lib/services/createPlayerService';
 import { handleValidatePlayerData } from '@/schemas/validation/createPlayerValidation';
+import { errorRegisteringPlayer } from '@/strings/actionStrings';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function addPlayer(
@@ -39,6 +40,6 @@ export default async function addPlayer(
     return { errors: [], success: true };
   } catch (error) {
     console.error(error);
-    return formatError('Error registering the player.');
+    return formatError(errorRegisteringPlayer);
   }
 }

@@ -3,13 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
 import pusher from '@/lib/pusher';
+import {
+  unauthorizedError,
+  userNotFoundError,
+  channelAuthorizationError,
+} from '@/strings/serverStrings';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await currentUser();
 
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      return NextResponse.json({ error: unauthorizedError }, { status: 403 });
     }
 
     const dbUser = await prisma.user.findUnique({
@@ -17,7 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
 
     if (!dbUser) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: userNotFoundError }, { status: 404 });
     }
 
     const { socket_id, channel_name } = (await req.json()) as {
@@ -29,7 +34,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const recipientId = channel_name.split('-').pop();
 
       if (dbUser.id.toString() !== recipientId) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+        return NextResponse.json({ error: unauthorizedError }, { status: 403 });
       }
     }
 
@@ -42,9 +47,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json(authResponse);
   } catch (error) {
-    console.error('Error authorizing Pusher channel:', error);
+    console.error(channelAuthorizationError, error);
     return NextResponse.json(
-      { error: 'Error authorizing channel' },
+      { error: channelAuthorizationError },
       { status: 500 }
     );
   }

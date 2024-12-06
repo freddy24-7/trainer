@@ -1,6 +1,7 @@
 'use server';
 
 import { fetchTrainingData } from '@/lib/services/getTrainingDataService';
+import { errorFetchingTrainingData } from '@/strings/actionStrings';
 import { GetTrainingDataResponse } from '@/types/response-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleMapTrainingData } from '@/utils/mapTrainingData';
@@ -12,9 +13,9 @@ export async function getTrainingData(): Promise<GetTrainingDataResponse> {
 
     return { success: true, trainingData };
   } catch (error) {
-    console.error('Error fetching training data:', error);
+    console.error(errorFetchingTrainingData, error);
     const formattedError = formatError(
-      'Failed to fetch training data.',
+      errorFetchingTrainingData,
       ['getTrainingData'],
       'custom',
       true

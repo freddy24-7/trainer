@@ -8,6 +8,10 @@ import {
   updateClerkUser,
 } from '@/lib/services/editPlayerService';
 import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
+import {
+  playerNotFoundOrInvalid,
+  errorUpdatingPlayer,
+} from '@/strings/actionStrings';
 import { EditPlayerFormData } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -26,9 +30,7 @@ export default async function handleEditPlayer(
   try {
     const player = await handleFindPlayerById(playerId);
     if (!player || !player.clerkId || player.username === null) {
-      return formatError(
-        'Player not found, Clerk ID missing, or username is null.'
-      );
+      return formatError(playerNotFoundOrInvalid);
     }
 
     await updateClerkUser(player.clerkId, { username, password });
@@ -37,6 +39,6 @@ export default async function handleEditPlayer(
     return { errors: [], success: true };
   } catch (error) {
     console.error(error);
-    return formatError('Error updating the player.');
+    return formatError(errorUpdatingPlayer);
   }
 }

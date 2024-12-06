@@ -3,6 +3,11 @@
 import { v2 as cloudinary } from 'cloudinary';
 
 import prisma from '@/lib/prisma';
+import {
+  messageNotFound,
+  unauthorizedToDeleteMessage,
+  errorDeletingMessage,
+} from '@/strings/actionStrings';
 import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -18,7 +23,7 @@ export async function deleteMessage(
     if (!message) {
       return {
         success: false,
-        ...formatError('Message not found.', ['delete'], 'custom', true),
+        ...formatError(messageNotFound, ['delete'], 'custom', true),
       };
     }
 
@@ -26,7 +31,7 @@ export async function deleteMessage(
       return {
         success: false,
         ...formatError(
-          'Unauthorized to delete this message.',
+          unauthorizedToDeleteMessage,
           ['authorization'],
           'custom',
           true
@@ -44,10 +49,10 @@ export async function deleteMessage(
 
     return { success: true };
   } catch (error) {
-    console.error('Error deleting message:', error);
+    console.error(errorDeletingMessage, error);
     return {
       success: false,
-      ...formatError('Error deleting message.', ['database'], 'custom', true),
+      ...formatError(errorDeletingMessage, ['database'], 'custom', true),
     };
   }
 }

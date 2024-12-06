@@ -2,6 +2,11 @@
 
 import { createTraining } from '@/lib/services/createTrainingService';
 import { handleValidateTrainingData } from '@/schemas/validation/createTrainingValidation';
+import {
+  validationFailedMessage,
+  dateCannotBeNull,
+  failedToCreateTraining,
+} from '@/strings/actionStrings';
 import { AddTrainingSuccess, AddTrainingFailure } from '@/types/training-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -11,27 +16,27 @@ export default async function addTraining(
   const validation = handleValidateTrainingData(params);
 
   if (!validation.success || !validation.data) {
-    return formatError('Validation failed.', ['addTraining'], 'custom', true);
+    return formatError(
+      validationFailedMessage,
+      ['addTraining'],
+      'custom',
+      true
+    );
   }
 
   const { date, players } = validation.data;
 
   if (!date) {
-    return formatError(
-      'Date cannot be null.',
-      ['addTraining'],
-      'custom',
-      false
-    );
+    return formatError(dateCannotBeNull, ['addTraining'], 'custom', false);
   }
 
   try {
     const training = await createTraining(date, players);
     return { success: true, training };
   } catch (error) {
-    console.error('Error creating training:', error);
+    console.error(failedToCreateTraining, error);
     return formatError(
-      'Failed to create training.',
+      failedToCreateTraining,
       ['addTraining'],
       'custom',
       false

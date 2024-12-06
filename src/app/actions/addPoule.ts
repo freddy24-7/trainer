@@ -10,6 +10,11 @@ import {
   addOpponentsToPoule,
 } from '@/lib/services/createPouleService';
 import { handleValidatePouleData } from '@/schemas/validation/createPouleValidation';
+import {
+  validationFailedMessage,
+  failedToCreateMainTeam,
+  errorCreatingPoule,
+} from '@/strings/actionStrings';
 import { PouleFormData } from '@/types/poule-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -20,7 +25,7 @@ export default async function addPoule(
   const validation = handleValidatePouleData(params);
 
   if (!validation.success || !validation.data) {
-    return formatError('Validation failed.', ['addPoule'], 'custom', true);
+    return formatError(validationFailedMessage, ['addPoule'], 'custom', true);
   }
 
   const { pouleName, mainTeamName, opponents } =
@@ -32,7 +37,7 @@ export default async function addPoule(
 
     if (!mainTeam) {
       return formatError(
-        'Failed to create main team.',
+        failedToCreateMainTeam,
         ['addPoule'],
         'custom',
         false
@@ -47,12 +52,10 @@ export default async function addPoule(
 
     redirectPath = '/poule-management';
   } catch (error) {
-    console.error('Error creating the poule:', error);
-    return formatError(
-      'Error creating the poule or linking opponents.',
-      ['form'],
-      'custom'
-    ) as { errors: ZodIssue[] };
+    console.error(errorCreatingPoule, error);
+    return formatError(errorCreatingPoule, ['form'], 'custom') as {
+      errors: ZodIssue[];
+    };
   } finally {
     if (redirectPath) {
       revalidatePath(redirectPath);

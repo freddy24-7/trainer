@@ -5,6 +5,11 @@ import fs from 'fs';
 import { handleUploadVideo } from '@/lib/cloudinary';
 import { createMessage, getSenderById } from '@/lib/services/createChatService';
 import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
+import {
+  errorUploadingVideo,
+  senderNotFoundOrUsernameNull,
+  errorSendingMessage,
+} from '@/strings/actionStrings';
 import { Sender, Message } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
@@ -30,9 +35,9 @@ async function handleProcessVideoFile(
     const { url, publicId } = await handleUploadVideo(filePath);
     return { videoUrl: url, videoPublicId: publicId };
   } catch (uploadError) {
-    console.error('Error uploading video:', uploadError);
+    console.error(errorUploadingVideo, uploadError);
     throw formatError(
-      'Error uploading video.',
+      errorUploadingVideo,
       ['upload'],
       'custom',
       true
@@ -45,9 +50,9 @@ async function handleProcessVideoFile(
 async function getSenderData(senderId: number): Promise<Sender> {
   const senderData = await getSenderById(senderId);
   if (!senderData || !senderData.username) {
-    console.error('Sender not found or username is null');
+    console.error(senderNotFoundOrUsernameNull);
     throw formatError(
-      'Error: Sender not found or username is null',
+      senderNotFoundOrUsernameNull,
       ['form'],
       'custom',
       true
@@ -101,9 +106,9 @@ export default async function addMessage(
 
     return { success: true, videoUrl };
   } catch (error) {
-    console.error('Error adding message:', error);
+    console.error(errorSendingMessage, error);
     return formatError(
-      'Error sending the message.',
+      errorSendingMessage,
       ['form'],
       'custom',
       true

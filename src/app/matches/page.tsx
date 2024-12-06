@@ -6,6 +6,7 @@ import getPlayers from '@/app/actions/getPlayers';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import { AddMatchForm } from '@/app/matches/AddMatchForm';
 import ProtectedLayout from '@/app/ProtectedLayout';
+import { unknownError, errorLoadingData } from '@/strings/serverStrings';
 import {
   GetTeamsInPouleResponse,
   GetTeamsInPouleError,
@@ -55,7 +56,7 @@ function getErrorMessage(
       true
     ).errors[0].message;
   } else {
-    return 'Unknown error';
+    return unknownError;
   }
 }
 
@@ -78,7 +79,7 @@ export default async function MatchManagementPage(): Promise<React.ReactElement>
       pouleResponse,
       playerResponseWithValidatedErrors
     );
-    return <div>Error loading data: {errorMessage}</div>;
+    return <div>{`${errorLoadingData}: ${errorMessage}`}</div>;
   }
 
   return (

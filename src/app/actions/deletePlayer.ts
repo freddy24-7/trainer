@@ -5,6 +5,10 @@ import {
   deletePlayerFromDatabase,
   deleteClerkUser,
 } from '@/lib/services/deletePlayerService';
+import {
+  playerNotFoundOrMissingClerkId,
+  errorDeletingPlayer,
+} from '@/strings/actionStrings';
 import { formatStringError } from '@/utils/errorUtils';
 
 export default async function deletePlayer(
@@ -13,7 +17,7 @@ export default async function deletePlayer(
   try {
     const player = await handleFindPlayerById(playerId);
     if (!player || !player.clerkId) {
-      return formatStringError('Player not found or Clerk ID is missing.');
+      return formatStringError(playerNotFoundOrMissingClerkId);
     }
 
     await deleteClerkUser(player.clerkId);
@@ -22,6 +26,6 @@ export default async function deletePlayer(
     return { success: true, errors: undefined };
   } catch (error) {
     console.error(error);
-    return formatStringError('Error deleting the player.');
+    return formatStringError(errorDeletingPlayer);
   }
 }

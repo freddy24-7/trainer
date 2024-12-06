@@ -9,6 +9,7 @@ import ChatClient from '@/app/chat/ChatClient';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import { handleChatErrorResponse } from '@/components/helpers/RenderError';
 import LoginModal from '@/components/LoginModal';
+import { errorLoadingMessages } from '@/strings/serverStrings';
 import { Message } from '@/types/message-types';
 import { ChatUser } from '@/types/user-types';
 
@@ -30,7 +31,7 @@ export default async function ChatPage({
   const response = await getMessages(signedInUser.id, recipientId);
 
   if (!response.success) {
-    return handleChatErrorResponse(response.error || 'Error loading messages', [
+    return handleChatErrorResponse(response.error || errorLoadingMessages, [
       'chat',
       'fetchMessages',
     ]);

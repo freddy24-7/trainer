@@ -4,77 +4,74 @@ import { ZodIssue } from 'zod';
 
 import addMatch from '@/app/actions/addMatch';
 import addMatchPlayer from '@/app/actions/addMatchPlayer';
+import {
+  errorAddingPlayer,
+  unexpectedErrorAddingPlayer,
+  failedToCreateMatchMessage,
+  matchIdNotFound,
+} from '@/strings/actionStrings';
 import { PlayerInMatch } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
+import {
+  handleParsePlayersData,
+  handleValidatePlayerData,
+} from '@/utils/playerUtils';
 
-function handleParsePlayersData(playersString: string | null): {
-  players?: PlayerInMatch[];
-  errors?: ZodIssue[];
-} {
-  if (!playersString) {
-    return formatError('Players data is missing.', ['players']);
-  }
-
-  let players: PlayerInMatch[];
-  try {
-    players = JSON.parse(playersString);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : 'Unknown error parsing players data';
-    return formatError(`Invalid player data format: ${errorMessage}`, [
-      'players',
-    ]);
-  }
-
-  if (!Array.isArray(players)) {
-    return formatError('Players data is not an array.', ['players']);
-  }
-
-  return { players };
-}
-
-async function handleProcessPlayer(
-  player: PlayerInMatch,
+async function handleProcessPlayers(
+  players: PlayerInMatch[],
   matchId: number
 ): Promise<ZodIssue[]> {
-  const { id, minutes, available } = player;
   const playerErrors: ZodIssue[] = [];
-  const parsedMinutes = available ? parseInt(minutes, 10) : 0;
 
-  if (isNaN(parsedMinutes)) {
-    return formatError(`Invalid minutes for player ${id}. Expected a number.`, [
-      'players',
-      'minutes',
-    ]).errors;
-  }
+  for (const player of players) {
+    const { isValid, parsedMinutes, errors } = handleValidatePlayerData(player);
 
-  try {
-    const response = await addMatchPlayer({
-      matchId,
-      userId: id,
-      minutes: parsedMinutes,
-      available,
-    });
-
-    if (!response.success) {
-      playerErrors.push(
-        ...(response.errors ||
-          formatError(`Error adding player ${id}.`, ['form']).errors)
-      );
+    if (!isValid || !parsedMinutes) {
+      playerErrors.push(...errors);
+      continue;
     }
-  } catch (error) {
-    console.error(`Error adding player ${id}:`, error);
-    playerErrors.push(
-      ...formatError(`Unexpected error adding player ${id}.`, [
-        'players',
-        String(id),
-      ]).errors
+
+    const playerError = await handleProcessSinglePlayer(
+      player,
+      matchId,
+      parsedMinutes
     );
+    if (playerError) {
+      playerErrors.push(...playerError);
+    }
   }
 
   return playerErrors;
+}
+
+async function handleProcessSinglePlayer(
+  player: PlayerInMatch,
+  matchId: number,
+  parsedMinutes: number
+): Promise<ZodIssue[] | null> {
+  try {
+    const response = await addMatchPlayer({
+      matchId,
+      userId: player.id,
+      minutes: parsedMinutes,
+      available: player.available,
+    });
+
+    if (!response.success) {
+      return (
+        response.errors ||
+        formatError(`${errorAddingPlayer} ${player.id}.`, ['form']).errors
+      );
+    }
+  } catch (error) {
+    console.error(`${unexpectedErrorAddingPlayer} ${player.id}:`, error);
+    return formatError(`${unexpectedErrorAddingPlayer} ${player.id}.`, [
+      'players',
+      String(player.id),
+    ]).errors;
+  }
+
+  return null;
 }
 
 export default async function addMatchAndPlayers(
@@ -84,28 +81,25 @@ export default async function addMatchAndPlayers(
   const matchResponse = await addMatch(null, params);
 
   if (matchResponse.errors) {
-    return formatError('Failed to create match.', ['form']);
+    return formatError(failedToCreateMatchMessage, ['form']);
   }
 
   const createdMatchId = matchResponse.match?.id;
   if (!createdMatchId) {
-    return formatError('Error: Match ID not found.', ['form']);
+    return formatError(matchIdNotFound, ['form']);
   }
 
   const playersString = params.get('players') as string | null;
   const { players, errors: parsingErrors } =
     handleParsePlayersData(playersString);
+
   if (parsingErrors) {
     return { errors: parsingErrors };
   }
 
-  const playerErrors: ZodIssue[] = [];
-  if (players) {
-    for (const player of players) {
-      const errors = await handleProcessPlayer(player, createdMatchId);
-      playerErrors.push(...errors);
-    }
-  }
+  const playerErrors = players
+    ? await handleProcessPlayers(players, createdMatchId)
+    : [];
 
   return { errors: playerErrors };
 }

@@ -1,6 +1,7 @@
 'use server';
 
 import { getMatchDataService } from '@/lib/services/getMatchDataService';
+import { errorFetchingMatchData } from '@/strings/actionStrings';
 import { GetMatchDataResponse } from '@/types/response-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleMapMatchData } from '@/utils/matchDataUtils';
@@ -13,8 +14,8 @@ export async function getMatchData(): Promise<GetMatchDataResponse> {
 
     return { success: true, matchData };
   } catch (error) {
-    console.error('Error fetching match data:', error);
-    const formattedError = formatError('Failed to fetch match data.', [
+    console.error(errorFetchingMatchData, error);
+    const formattedError = formatError(errorFetchingMatchData, [
       'getMatchData',
     ]);
     return { success: false, error: formattedError.errors[0].message };
