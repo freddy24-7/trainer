@@ -6,7 +6,7 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 
-import NavBar from '@/app/NavBar';
+import NavBar from '@/components/navigation/NavBar';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const runtime = 'nodejs';

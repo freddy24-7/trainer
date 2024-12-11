@@ -4,11 +4,7 @@ import React from 'react';
 import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
-import {
-  dashboardLabel,
-  chatLabel,
-  signInLabel,
-} from '@/strings/clientStrings';
+import { chatLabel, signInLabel } from '@/strings/clientStrings';
 import { NavBarUserContentProps } from '@/types/ui-types';
 
 export function NavBarUserContent({
@@ -24,12 +20,14 @@ export function NavBarUserContent({
       {userRole === 'TRAINER' && (
         <StatsDropdown dropdownTextColor={dropdownTextColor} />
       )}
-      <NavLink href="/dashboard" className="text-white">
-        {dashboardLabel}
-      </NavLink>
       <NavLink href="/chat" className="text-white">
         {chatLabel}
       </NavLink>
+      {userRole === 'TRAINER' && (
+        <NavLink href="/instructions" className="text-white">
+          Info
+        </NavLink>
+      )}
       <UserButton afterSignOutUrl="/" />
     </div>
   ) : (
