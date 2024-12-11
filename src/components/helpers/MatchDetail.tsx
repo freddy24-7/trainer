@@ -7,14 +7,14 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match }) => {
   return (
     <div className="mb-6 border-b pb-4">
       <h3 className="text-xl font-semibold mb-2">
-        Opponent: {match.opponentTeamName}
+        Tegenstander: {match.opponentTeamName}
       </h3>
       <p className="mb-2">
-        <strong>Date Played:</strong>{' '}
+        <strong>Datum gespeeld:</strong>{' '}
         {format(new Date(match.date), 'dd/MM/yyyy')}
       </p>
       <p className="mb-2">
-        <strong>Absent Players:</strong>
+        <strong>Afwezige spelers:</strong>
       </p>
       {match.absentPlayers.length > 0 ? (
         <ul className="list-disc list-inside">
@@ -23,7 +23,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match }) => {
           ))}
         </ul>
       ) : (
-        <p>All players were available.</p>
+        <p>Alle spelers waren beschikbaar.</p>
       )}
     </div>
   );

@@ -1,10 +1,17 @@
 import { z } from 'zod';
 
+import {
+  emptyMessageErrorMessage,
+  messageTooLongErrorMessage,
+  invalidSenderIdMessage,
+  invalidRecipientIdMessage,
+} from '@/strings/validationStrings';
+
 export const createMessageSchema = z.object({
   content: z
     .string()
-    .min(1, 'Message cannot be empty')
-    .max(1000, 'Message too long'),
-  senderId: z.number().positive('Invalid sender ID'),
-  recipientId: z.number().positive('Invalid recipient ID').optional(),
+    .min(1, emptyMessageErrorMessage)
+    .max(1000, messageTooLongErrorMessage),
+  senderId: z.number().positive(invalidSenderIdMessage),
+  recipientId: z.number().positive(invalidRecipientIdMessage).optional(),
 });

@@ -2,6 +2,7 @@ import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+import { opponentNameEmptyMessage } from '@/strings/serverStrings';
 import { PouleFormValues } from '@/types/poule-types';
 
 export const addOpponent = (
@@ -17,7 +18,7 @@ export const addOpponent = (
     setValue('opponents', updatedOpponents);
     setValue('opponentName', '');
   } else {
-    toast.error('Opponent name cannot be empty');
+    toast.error(opponentNameEmptyMessage);
   }
 };
 

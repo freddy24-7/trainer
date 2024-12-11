@@ -1,13 +1,18 @@
 import { auth } from '@clerk/nextjs';
 
 import prisma from '@/lib/prisma';
+import {
+  userNotAuthenticatedMessage,
+  prismaUserNotFoundMessage,
+  prismaUserLogMessage,
+} from '@/strings/serverStrings';
 import { SignedInUser } from '@/types/user-types';
 
 export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
   const { userId } = auth();
 
   if (!userId) {
-    console.log('User is not authenticated');
+    console.log(userNotAuthenticatedMessage);
     return null;
   }
 
@@ -16,7 +21,7 @@ export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
   });
 
   if (!prismaUser) {
-    console.error('Prisma User not found for Clerk ID:', userId);
+    console.error(prismaUserNotFoundMessage, userId);
     return null;
   }
 
@@ -27,7 +32,7 @@ export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
   };
 
   console.log(
-    'Current Prisma username:',
+    prismaUserLogMessage,
     signedInUser.username,
     'Role:',
     signedInUser.role

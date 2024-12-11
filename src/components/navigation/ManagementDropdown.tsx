@@ -8,6 +8,14 @@ import {
 import Link from 'next/link';
 import React from 'react';
 
+import {
+  managementButtonText,
+  managementOptionsAriaLabel,
+  playerManagementText,
+  pouleManagementText,
+  matchManagementText,
+  trainingManagementText,
+} from '@/strings/clientStrings';
 import { ManagementDropdownProps } from '@/types/ui-types';
 
 export function ManagementDropdown({
@@ -20,28 +28,28 @@ export function ManagementDropdown({
           variant="bordered"
           className={`capitalize ${dropdownTextColor}`}
         >
-          Management
+          {managementButtonText}
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Management Options" variant="light">
+      <DropdownMenu aria-label={managementOptionsAriaLabel} variant="light">
         <DropdownItem key="player-management">
           <Link href="/player-management" className={dropdownTextColor}>
-            Player-Management
+            {playerManagementText}
           </Link>
         </DropdownItem>
         <DropdownItem key="poule-management">
           <Link href="/poule-management" className={dropdownTextColor}>
-            Poule-Management
+            {pouleManagementText}
           </Link>
         </DropdownItem>
         <DropdownItem key="match-management">
           <Link href="/matches" className={dropdownTextColor}>
-            Match-Management
+            {matchManagementText}
           </Link>
         </DropdownItem>
         <DropdownItem key="training-management">
           <Link href="/trainings" className={dropdownTextColor}>
-            Training-Management
+            {trainingManagementText}
           </Link>
         </DropdownItem>
       </DropdownMenu>

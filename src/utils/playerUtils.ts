@@ -2,6 +2,12 @@ import React from 'react';
 import { ZodIssue } from 'zod';
 
 import { handleValidateMatchPlayerData } from '@/schemas/validation/addMatchPlayerValidation';
+import {
+  playersDataMissingMessage,
+  invalidPlayerDataFormatMessage,
+  playersDataNotArrayMessage,
+  invalidMinutesMessage,
+} from '@/strings/serverStrings';
 import { MatchFormValues, PlayerInMatch } from '@/types/match-types';
 import { Player, PlayerResponseData } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
@@ -106,7 +112,7 @@ export function handleParsePlayersData(playersString: string | null): {
   errors?: ZodIssue[];
 } {
   if (!playersString) {
-    return formatError('Players data is missing.', ['players']);
+    return formatError(playersDataMissingMessage, ['players']);
   }
 
   let players: PlayerInMatch[];
@@ -114,16 +120,14 @@ export function handleParsePlayersData(playersString: string | null): {
     players = JSON.parse(playersString);
   } catch (error) {
     const errorMessage =
-      error instanceof Error
-        ? error.message
-        : 'Unknown error parsing players data';
+      error instanceof Error ? error.message : invalidPlayerDataFormatMessage;
     return formatError(`Invalid player data format: ${errorMessage}`, [
       'players',
     ]);
   }
 
   if (!Array.isArray(players)) {
-    return formatError('Players data is not an array.', ['players']);
+    return formatError(playersDataNotArrayMessage, ['players']);
   }
 
   return { players };
@@ -141,7 +145,7 @@ export function handleValidatePlayerData(player: PlayerInMatch): {
     return {
       isValid: false,
       errors: formatError(
-        `Invalid minutes for player ${id}. Expected a number.`,
+        invalidMinutesMessage.replace('{id}', id.toString()),
         ['players', 'minutes']
       ).errors,
     };

@@ -10,7 +10,7 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
-const pouleAddition = 'Add Another Poule';
+const pouleAddition = 'Add Poule';
 const opponentName1 = 'Opponent 1';
 
 describe('AddPouleFormValidation', () => {

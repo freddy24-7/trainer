@@ -7,6 +7,7 @@ import { FiMoon, FiSun, FiMenu, FiX } from 'react-icons/fi';
 
 import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
+import { homeLabel } from '@/strings/clientStrings';
 import { MobileMenuProps } from '@/types/ui-types';
 
 export function MobileMenu({
@@ -31,7 +32,7 @@ export function MobileMenu({
         <div className="flex flex-col items-center bg-brandcolor w-auto py-4 mt-12">
           <Link href="/" className="text-white w-auto my-2 flex items-center">
             <CiHome size={24} />
-            <span className="ml-2">Home</span>
+            <span className="ml-2">{homeLabel}</span>
           </Link>
           <Button
             variant="bordered"

@@ -3,6 +3,11 @@ import React from 'react';
 import { OpponentsList } from '@/components/helpers/OpponentsList';
 import { PouleFormFields } from '@/components/helpers/PouleFormFields';
 import { Button } from '@/components/ui/button';
+import {
+  pouleManagementHeading,
+  addOpponentButtonText,
+  addPouleButtonText,
+} from '@/strings/clientStrings';
 import { PouleFormContentProps } from '@/types/poule-types';
 
 const PouleFormContent: React.FC<PouleFormContentProps> = ({
@@ -16,7 +21,7 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h3 className="text-lg font-semibold">Poule Management</h3>
+      <h3 className="text-lg font-semibold">{pouleManagementHeading}</h3>
 
       <PouleFormFields
         control={control}
@@ -29,7 +34,7 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
         onClick={handleAddOpponent}
         className="mt-2 bg-blue-500 text-white p-1 rounded"
       >
-        Add Opponent
+        {addOpponentButtonText}
       </Button>
 
       {opponents.length > 0 && (
@@ -40,7 +45,7 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
         type="submit"
         className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800"
       >
-        Add Poule
+        {addPouleButtonText}
       </Button>
     </form>
   );

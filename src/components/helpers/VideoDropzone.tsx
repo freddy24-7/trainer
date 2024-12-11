@@ -1,6 +1,11 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
+import {
+  onlyVideoFilesMessage,
+  dropVideoHereMessage,
+  dragOrClickVideoMessage,
+} from '@/strings/clientStrings';
 import { VideoDropzoneProps } from '@/types/message-types';
 
 const VideoDropzone: React.FC<VideoDropzoneProps> = ({ setSelectedVideo }) => {
@@ -10,7 +15,7 @@ const VideoDropzone: React.FC<VideoDropzoneProps> = ({ setSelectedVideo }) => {
       if (videoFile && videoFile.type.startsWith('video/')) {
         setSelectedVideo(videoFile);
       } else {
-        console.error('Only video files are accepted');
+        console.error(onlyVideoFilesMessage);
       }
     },
     [setSelectedVideo]
@@ -30,9 +35,9 @@ const VideoDropzone: React.FC<VideoDropzoneProps> = ({ setSelectedVideo }) => {
     >
       <input {...getInputProps()} />
       {isDragActive ? (
-        <p>Drop the video here...</p>
+        <p>{dropVideoHereMessage}</p>
       ) : (
-        <p>Drag & drop a video here, or click icon below to select one</p>
+        <p>{dragOrClickVideoMessage}</p>
       )}
     </div>
   );

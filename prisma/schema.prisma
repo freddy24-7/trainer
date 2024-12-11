@@ -10,52 +10,52 @@ datasource db {
 
 model User {
   id               Int              @id @default(autoincrement())
-  clerkId          String?          @unique
-  username         String?          @unique
-  whatsappNumber   String?
   role             Role             @default(TRAINER)
   createdAt        DateTime         @default(now())
+  username         String?          @unique
+  clerkId          String?          @unique
   teamId           Int?
-  team             Team?            @relation(fields: [teamId], references: [id])
+  whatsappNumber   String?
   matchPlayers     MatchPlayer[]
-  trainingPlayers  TrainingPlayer[]
-  messagesSent     Message[]        @relation("Sender")
   messagesReceived Message[]        @relation("Recipient")
+  messagesSent     Message[]        @relation("Sender")
+  trainingPlayers  TrainingPlayer[]
+  team             Team?            @relation(fields: [teamId], references: [id])
 }
 
 model Team {
   id             Int              @id @default(autoincrement())
   name           String           @unique
-  players        User[]
   poules         Poule[]          @relation("PrimaryTeam")
   pouleOpponents PouleOpponents[]
+  players        User[]
 }
 
 model Poule {
   id        Int              @id @default(autoincrement())
   name      String           @unique
   teamId    Int
+  createdAt DateTime         @default(now())
   team      Team             @relation("PrimaryTeam", fields: [teamId], references: [id])
   opponents PouleOpponents[]
-  createdAt DateTime         @default(now())
 }
 
 model PouleOpponents {
   id      Int     @id @default(autoincrement())
   pouleId Int
   teamId  Int
+  matches Match[]
   poule   Poule   @relation(fields: [pouleId], references: [id])
   team    Team    @relation(fields: [teamId], references: [id])
-  matches Match[]
 }
 
 model Match {
   id              Int            @id @default(autoincrement())
   pouleOpponentId Int
-  pouleOpponent   PouleOpponents @relation(fields: [pouleOpponentId], references: [id])
   date            DateTime
-  matchPlayers    MatchPlayer[]
   createdAt       DateTime       @default(now())
+  pouleOpponent   PouleOpponents @relation(fields: [pouleOpponentId], references: [id])
+  matchPlayers    MatchPlayer[]
 }
 
 model MatchPlayer {
@@ -73,8 +73,8 @@ model MatchPlayer {
 model Training {
   id              Int              @id @default(autoincrement())
   date            DateTime
-  trainingPlayers TrainingPlayer[]
   createdAt       DateTime         @default(now())
+  trainingPlayers TrainingPlayer[]
 }
 
 model TrainingPlayer {
@@ -91,13 +91,13 @@ model TrainingPlayer {
 model Message {
   id            Int      @id @default(autoincrement())
   content       String?
+  senderId      Int
+  createdAt     DateTime @default(now())
+  recipientId   Int?
   videoUrl      String?
   videoPublicId String?
-  senderId      Int
-  recipientId   Int?
-  createdAt     DateTime @default(now())
-  sender        User     @relation("Sender", fields: [senderId], references: [id])
   recipient     User?    @relation("Recipient", fields: [recipientId], references: [id])
+  sender        User     @relation("Sender", fields: [senderId], references: [id])
 }
 
 enum Role {

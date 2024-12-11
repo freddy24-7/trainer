@@ -1,6 +1,7 @@
 import { Poule } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
+import { loadPoulesErrorMessage } from '@/strings/serverStrings';
 
 export async function getPoulesWithTeams(): Promise<
   (Poule & {
@@ -26,6 +27,6 @@ export async function getPoulesWithTeams(): Promise<
     });
   } catch (error) {
     console.error(error);
-    throw new Error('Failed to load poules');
+    throw new Error(loadPoulesErrorMessage);
   }
 }

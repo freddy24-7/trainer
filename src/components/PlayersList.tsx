@@ -1,6 +1,11 @@
 import { Button, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
 import React from 'react';
 
+import {
+  groupChatLabel,
+  editButtonLabel,
+  deleteButtonLabel,
+} from '@/strings/clientStrings';
 import { Player, ExtendedPlayersListProps } from '@/types/user-types';
 
 export default function PlayersList({
@@ -19,7 +24,7 @@ export default function PlayersList({
             onClick={() => onSelect?.(null)}
           >
             <CardHeader>
-              <span className="text-md font-bold">Group Chat</span>
+              <span className="text-md font-bold">{groupChatLabel}</span>
             </CardHeader>
           </Card>
         </li>
@@ -47,7 +52,7 @@ export default function PlayersList({
                     }}
                     className="text-sm px-2 py-1"
                   >
-                    Edit
+                    {editButtonLabel}
                   </Button>
                 )}
                 {onDelete && (
@@ -59,7 +64,7 @@ export default function PlayersList({
                     }}
                     className="text-sm px-2 py-1"
                   >
-                    Delete
+                    {deleteButtonLabel}
                   </Button>
                 )}
               </div>

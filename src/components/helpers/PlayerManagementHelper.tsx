@@ -1,5 +1,14 @@
 import React from 'react';
 
+import {
+  editPlayerTitle,
+  confirmDeletionTitle,
+  confirmDeletionMessage,
+  playerDeletedTitle,
+  playerDeletedMessage,
+  errorTitle,
+  errorDeletingPlayerMessage,
+} from '@/strings/clientStrings';
 import { ModalSetupParams } from '@/types/shared-types';
 import { Player } from '@/types/user-types';
 
@@ -31,7 +40,7 @@ export const handleEditPlayer = (
     setModalBody,
     setConfirmAction,
     setIsModalOpen,
-    title: 'Edit Player',
+    title: editPlayerTitle,
     body: null,
     confirmAction: () => {},
   });
@@ -48,13 +57,8 @@ export const handleDeletePlayer = async (
   const { setModalTitle, setModalBody, setConfirmAction, setIsModalOpen } =
     modalSetters;
 
-  setModalTitle('Confirm Deletion');
-  setModalBody(
-    <p>
-      Are you sure you want to delete this player? Players with already
-      registered data (minutes played) cannot be deleted.
-    </p>
-  );
+  setModalTitle(confirmDeletionTitle);
+  setModalBody(<p>{confirmDeletionMessage}</p>);
 
   setConfirmAction(() => async () => {
     const result = await deletePlayerAction(playerId);
@@ -63,17 +67,15 @@ export const handleDeletePlayer = async (
       setPlayers((prevPlayers) =>
         prevPlayers.filter((player) => player.id !== playerId)
       );
-      setModalTitle('Player Deleted');
-      setModalBody(<p>The player was successfully deleted.</p>);
+      setModalTitle(playerDeletedTitle);
+      setModalBody(<p>{playerDeletedMessage}</p>);
 
       setTimeout(() => {
         setIsModalOpen(false);
       }, 2000);
     } else {
-      setModalTitle('Error');
-      setModalBody(
-        <p>{result.errors || 'An error occurred while deleting the player.'}</p>
-      );
+      setModalTitle(errorTitle);
+      setModalBody(<p>{result.errors || errorDeletingPlayerMessage}</p>);
     }
 
     setConfirmAction(() => {});

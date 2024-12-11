@@ -1,5 +1,10 @@
 import { toast } from 'react-toastify';
 
+import {
+  invalidWhatsappNumberMessage,
+  invalidInputMessage,
+  operationSuccessMessage,
+} from '@/strings/serverStrings';
 import { HandlePlayerFormSubmitParams } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleFormatWhatsappNumber } from '@/utils/phoneNumberUtils';
@@ -15,9 +20,7 @@ export async function handlePlayerFormSubmit({
 
   const formattedNumber = handleFormatWhatsappNumber(data.whatsappNumber);
   if (!formattedNumber) {
-    const errorMessage =
-      "WhatsApp number must start with '06' and be exactly 10 digits long.";
-    const error = formatError(errorMessage);
+    const error = formatError(invalidWhatsappNumberMessage);
     toast.error(error.errors[0].message);
     setIsSubmitting(false);
     return;
@@ -33,7 +36,7 @@ export async function handlePlayerFormSubmit({
   if (!validation.success) {
     const error = formatError(
       validation.errors?.map((err) => err.message).join(', ') ||
-        'Invalid input.'
+        invalidInputMessage
     );
     toast.error(error.errors[0].message);
     setIsSubmitting(false);
@@ -44,7 +47,7 @@ export async function handlePlayerFormSubmit({
     const response = await actionFunction(formData);
     if (response.errors.length === 0) {
       onSuccess({ ...data, whatsappNumber: formattedNumber });
-      toast.success('Operation successful!');
+      toast.success(operationSuccessMessage);
     } else {
       const error = formatError(
         response.errors.map((error) => error.message).join(', ')

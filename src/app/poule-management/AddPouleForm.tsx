@@ -8,6 +8,7 @@ import { PouleFormContent } from '@/components/helpers/PouleFormContent';
 import { Button } from '@/components/ui/button';
 import { useOpponentManagement } from '@/hooks/useOpponentManagement';
 import { createPouleSchema } from '@/schemas/createPouleSchema';
+import { cancelButtonText, addPouleButtonText } from '@/strings/clientStrings';
 import { PouleFormValues, PouleProps } from '@/types/poule-types';
 import { handleSubmitPouleForm } from '@/utils/pouleUtils';
 
@@ -57,7 +58,7 @@ function AddPouleForm({ action }: PouleProps): React.ReactElement {
         onClick={() => setShowForm((prev) => !prev)}
         className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
-        {showForm ? 'Cancel' : 'Add Another Poule'}
+        {showForm ? cancelButtonText : addPouleButtonText}
       </Button>
 
       {showForm && (

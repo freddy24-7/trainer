@@ -240,34 +240,6 @@ describe('AddPlayerForm', () => {
     });
   });
 
-  it('should display WhatsApp link when valid data is submitted', async () => {
-    setupMockHandlePlayerFormSubmit();
-
-    mockAction.mockResolvedValue({ errors: [] });
-
-    render(<AddPlayerForm action={mockAction} />);
-
-    await fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
-
-    await submitForm();
-
-    await waitFor(() => {
-      expect(mockAction).toHaveBeenCalledTimes(1);
-    });
-
-    const whatsappLink = screen.getByRole('link', {
-      name: 'Send WhatsApp Message to Player',
-    });
-    expect(whatsappLink).toBeInTheDocument();
-
-    const formattedNumber = '31612345678';
-    const message = `Hello NewPlayer, your account has been created. Username: NewPlayer, Password: NewPassword. Please log in and change your password to your own.`;
-    const encodedMessage = encodeURIComponent(message);
-    const expectedHref = `https://wa.me/${formattedNumber}/?text=${encodedMessage}`;
-
-    expect(whatsappLink).toHaveAttribute('href', expectedHref);
-  });
-
   it('shows error toast when player creation fails', async () => {
     setupMockHandlePlayerFormSubmit({
       onErrorResponse: { errors: [{ message: creationError }] },

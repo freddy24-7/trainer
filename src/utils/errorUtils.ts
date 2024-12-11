@@ -1,7 +1,9 @@
 import { ZodIssue } from 'zod';
 
+import { defaultErrorMessage } from '@/strings/serverStrings';
+
 export function formatError(
-  message: string,
+  message: string = defaultErrorMessage,
   path: string[] = ['form'],
   code: 'custom' = 'custom',
   includeSuccess = false
@@ -9,7 +11,7 @@ export function formatError(
   const errorObject = {
     errors: [
       {
-        message: message || 'An error occurred',
+        message,
         path,
         code,
       } as ZodIssue,
@@ -26,12 +28,12 @@ export function formatError(
   return errorObject;
 }
 
-export function formatStringError(message: string): {
+export function formatStringError(message: string = defaultErrorMessage): {
   success: boolean;
   errors: string;
 } {
   return {
     success: false,
-    errors: message || 'An error occurred',
+    errors: message,
   };
 }

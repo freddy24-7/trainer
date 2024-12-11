@@ -5,6 +5,10 @@ import { getTrainingData } from '@/app/actions/getTrainingData';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import AttendanceTraining from '@/app/training-stats/AttendanceTraining';
 import DataTrainingClient from '@/app/training-stats/DataTrainingClient';
+import {
+  errorLoadingTrainingData,
+  errorLoadingAttendanceData,
+} from '@/strings/serverStrings';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function TrainingsPage(): Promise<React.ReactElement> {
@@ -15,7 +19,7 @@ export default async function TrainingsPage(): Promise<React.ReactElement> {
 
   if (!trainingDataResponse.success) {
     const formattedError = formatError(
-      trainingDataResponse.error || 'Error loading training data',
+      trainingDataResponse.error || errorLoadingTrainingData,
       ['getTrainingData']
     );
     return (
@@ -29,7 +33,7 @@ export default async function TrainingsPage(): Promise<React.ReactElement> {
 
   if (!attendanceDataResponse.success) {
     const formattedError = formatError(
-      attendanceDataResponse.error || 'Error loading attendance data',
+      attendanceDataResponse.error || errorLoadingAttendanceData,
       ['getTrainingAttendanceList']
     );
     return (

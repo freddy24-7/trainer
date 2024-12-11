@@ -1,6 +1,11 @@
 import { toast } from 'react-toastify';
 import type { ZodIssue } from 'zod';
 
+import {
+  failedToAddPouleMessage,
+  pouleAddedSuccessMessage,
+  submissionErrorMessage,
+} from '@/strings/serverStrings';
 import { Poule, PouleFormValues, PouleFormControls } from '@/types/poule-types';
 import { Team } from '@/types/team-types';
 
@@ -44,16 +49,16 @@ export async function handleSubmitPouleForm(
     const result = await action(null, formData);
 
     if (result?.errors?.length) {
-      toast.error('Failed to add poule. Please check your inputs.');
+      toast.error(failedToAddPouleMessage);
       console.error('Submission errors:', result.errors);
     } else {
-      toast.success('Poule added successfully!');
+      toast.success(pouleAddedSuccessMessage);
       reset();
       setOpponents([]);
       setShowForm(false);
     }
   } catch (error) {
     console.error('Error during form submission:', error);
-    toast.error('An error occurred during submission.');
+    toast.error(submissionErrorMessage);
   }
 }

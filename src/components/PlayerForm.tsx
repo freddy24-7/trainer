@@ -1,6 +1,12 @@
 import React from 'react';
 
 import { usePlayerFormState } from '@/hooks/usePlayerFormState';
+import {
+  usernameLabel,
+  passwordLabel,
+  whatsappNumberLabel,
+  whatsappNumberPlaceholder,
+} from '@/strings/clientStrings';
 import { PlayerFormProps, PlayerFormInputFieldProps } from '@/types/user-types';
 
 const InputField = ({
@@ -60,25 +66,25 @@ function PlayerForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <InputField
         id="username"
-        label="Username"
+        label={usernameLabel}
         type="text"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
       <InputField
         id="password"
-        label="Password"
+        label={passwordLabel}
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
       <InputField
         id="whatsappNumber"
-        label="WhatsApp Number"
+        label={whatsappNumberLabel}
         type="tel"
         value={whatsappNumber}
         onChange={(e) => setWhatsappNumber(e.target.value)}
-        placeholder="06XXXXXXXX"
+        placeholder={whatsappNumberPlaceholder}
       />
 
       <button

@@ -1,6 +1,7 @@
 import { DatePicker, CalendarDate } from '@nextui-org/react';
 import React from 'react';
 
+import { matchDateLabel, selectMatchDateLabel } from '@/strings/clientStrings';
 import { DateSelectorProps } from '@/types/ui-types';
 
 const DateSelector: React.FC<DateSelectorProps> = ({
@@ -9,9 +10,9 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 }) => {
   return (
     <div>
-      <label className="block mb-2 mx-auto text-center">Match Date:</label>
+      <label className="block mb-2 mx-auto text-center">{matchDateLabel}</label>
       <DatePicker
-        label="Select Match Date"
+        label={selectMatchDateLabel}
         className="max-w-[284px]"
         onChange={(date) => onDateChange(date as CalendarDate)}
         value={matchDate}

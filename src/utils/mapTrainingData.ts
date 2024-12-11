@@ -1,3 +1,4 @@
+import { unknownPlayerMessage } from '@/strings/validationStrings';
 import {
   TrainingData,
   TrainingPlayer,
@@ -11,7 +12,7 @@ export function handleMapTrainingData(
     id: training.id,
     date: training.date.toISOString(),
     absentPlayers: training.trainingPlayers.map(
-      (tp: TrainingPlayer) => tp.user.username ?? 'Unknown Player'
+      (tp: TrainingPlayer) => tp.user.username ?? unknownPlayerMessage
     ),
   }));
 }

@@ -9,6 +9,11 @@ import DateField from '@/components/helpers/DateField';
 import TrainingPlayersField from '@/components/helpers/TrainingPlayersField';
 import { Button } from '@/components/ui/button';
 import {
+  submittingButtonText,
+  addTrainingButtonText,
+  addTrainingHeader,
+} from '@/strings/clientStrings';
+import {
   TrainingFormValues,
   TrainingFrontEndProps,
 } from '@/types/training-types';
@@ -47,7 +52,7 @@ const AddTrainingForm = ({
       <Card>
         <CardHeader>
           <h3 className="text-lg font-semibold mx-auto text-center">
-            Add a New Training Session
+            {addTrainingHeader}
           </h3>
         </CardHeader>
         <CardBody>
@@ -72,7 +77,7 @@ const AddTrainingForm = ({
                 className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Submitting...' : 'Add Training'}
+                {isSubmitting ? submittingButtonText : addTrainingButtonText}
               </Button>
             </form>
           </FormProvider>

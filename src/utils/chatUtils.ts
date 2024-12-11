@@ -1,6 +1,13 @@
 import React from 'react';
 
 import {
+  failedToDeleteVideoMessage,
+  failedToDeleteMessageMessage,
+  failedToFetchMessagesMessage,
+  failedToSendMessageErrorsMessage,
+  failedToSendMessageUnknownMessage,
+} from '@/strings/serverStrings';
+import {
   PusherEventMessage,
   Message,
   HandleOnDeleteVideoParams,
@@ -64,7 +71,7 @@ export async function handleOnDeleteVideo({
     if (response.success) {
       handleDeleteVideoLocal(messageId, setMessages);
     } else {
-      console.error('Failed to delete video from the database');
+      console.error(failedToDeleteVideoMessage);
     }
   } else {
     handleDeleteVideoLocal(messageId, setMessages);
@@ -83,7 +90,7 @@ export async function handleOnDeleteMessage({
     if (response.success) {
       handleDeleteMessageLocal(messageId, setMessages);
     } else {
-      console.error('Failed to delete message from the database');
+      console.error(failedToDeleteMessageMessage);
     }
   } else {
     handleDeleteMessageLocal(messageId, setMessages);
@@ -102,7 +109,7 @@ export async function fetchMessagesForChat({
   if (response.success) {
     setMessages(response.messages as Message[]);
   } else {
-    console.error('Error fetching messages:', response.error);
+    console.error(failedToFetchMessagesMessage, response.error);
   }
   setLoading(false);
 }
@@ -159,8 +166,8 @@ export async function handleSendMessage({
     const errorMessages = response.errors
       .map((error) => error.message)
       .join(', ');
-    console.error(`Failed to send message: ${errorMessages}`);
+    console.error(failedToSendMessageErrorsMessage, errorMessages);
   } else {
-    console.error('Failed to send message due to unknown reasons.');
+    console.error(failedToSendMessageUnknownMessage);
   }
 }

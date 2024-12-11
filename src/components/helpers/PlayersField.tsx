@@ -1,5 +1,10 @@
 import React from 'react';
 
+import {
+  playersInTeamHeading,
+  minutesPlayedPlaceholder,
+  availableLabel,
+} from '@/strings/clientStrings';
 import { PlayersFieldProps } from '@/types/user-types';
 
 const PlayersField: React.FC<PlayersFieldProps> = ({
@@ -9,7 +14,7 @@ const PlayersField: React.FC<PlayersFieldProps> = ({
 }) => {
   return (
     <div>
-      <h4 className="text-lg font-semibold mb-4">Players in Team</h4>
+      <h4 className="text-lg font-semibold mb-4">{playersInTeamHeading}</h4>
       {players.map((player, index) => (
         <div key={player.id} className="flex items-center space-x-4 mb-2">
           <div className="w-1/3">
@@ -20,7 +25,7 @@ const PlayersField: React.FC<PlayersFieldProps> = ({
               type="number"
               value={playerValues[index].minutes}
               disabled={!playerValues[index].available}
-              placeholder="Minutes played"
+              placeholder={minutesPlayedPlaceholder}
               onChange={(e) =>
                 setValue(
                   `players.${index}.minutes`,
@@ -39,7 +44,7 @@ const PlayersField: React.FC<PlayersFieldProps> = ({
                   setValue(`players.${index}.available`, e.target.checked)
                 }
               />
-              Available
+              {availableLabel}
             </label>
           </div>
         </div>

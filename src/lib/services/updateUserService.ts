@@ -1,6 +1,10 @@
 import { User } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
+import {
+  fetchUserErrorMessage,
+  updateUsernameErrorMessage,
+} from '@/strings/serverStrings';
 
 export async function handleFindUserByClerkId(
   clerkId: string
@@ -11,7 +15,7 @@ export async function handleFindUserByClerkId(
     });
   } catch (error) {
     console.error(`Error fetching user with Clerk ID ${clerkId}:`, error);
-    throw new Error('Error fetching user from database');
+    throw new Error(fetchUserErrorMessage);
   }
 }
 
@@ -29,6 +33,6 @@ export async function updateUserUsername(
       `Error updating username for user with Clerk ID ${clerkId}:`,
       error
     );
-    throw new Error('Error updating username');
+    throw new Error(updateUsernameErrorMessage);
   }
 }

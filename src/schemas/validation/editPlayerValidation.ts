@@ -1,6 +1,7 @@
 import { ZodIssue } from 'zod';
 
 import { editPlayerSchema } from '@/schemas/editPlayerSchema';
+import { usernameAndWhatsappRequiredMessage } from '@/strings/serverStrings';
 import { EditPlayerFormData } from '@/types/user-types';
 
 export function handleValidateEditPlayerData(params: FormData): {
@@ -17,7 +18,7 @@ export function handleValidateEditPlayerData(params: FormData): {
       success: false,
       errors: [
         {
-          message: 'Username and WhatsApp number are required.',
+          message: usernameAndWhatsappRequiredMessage,
           path: ['form'],
           code: 'custom',
         },

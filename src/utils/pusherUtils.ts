@@ -2,6 +2,10 @@ import Pusher, { Channel } from 'pusher-js';
 
 import pusher from '@/lib/pusher';
 import { PusherEventMessage, Message, Sender } from '@/types/message-types';
+import {
+  failedPusherAuthMessage,
+  pusherAuthorizationErrorMessage,
+} from '@/strings/serverStrings';
 
 export async function handleTriggerNewMessageEvent(
   message: Message,
@@ -63,7 +67,7 @@ export function handleInitializePusher(
                 return response.json();
               } else {
                 throw new Error(
-                  `Failed to authenticate Pusher channel: ${response.statusText}`
+                  `${failedPusherAuthMessage}: ${response.statusText}`
                 );
               }
             })
@@ -71,7 +75,7 @@ export function handleInitializePusher(
               callback(null, data);
             })
             .catch((err) => {
-              console.error('Error in Pusher authorization:', err);
+              console.error(pusherAuthorizationErrorMessage, err);
               callback(err, null);
             });
         },

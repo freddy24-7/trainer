@@ -4,6 +4,11 @@ import React from 'react';
 import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
+import {
+  dashboardLabel,
+  chatLabel,
+  signInLabel,
+} from '@/strings/clientStrings';
 import { NavBarUserContentProps } from '@/types/ui-types';
 
 export function NavBarUserContent({
@@ -20,17 +25,17 @@ export function NavBarUserContent({
         <StatsDropdown dropdownTextColor={dropdownTextColor} />
       )}
       <NavLink href="/dashboard" className="text-white">
-        Dashboard
+        {dashboardLabel}
       </NavLink>
       <NavLink href="/chat" className="text-white">
-        Chat
+        {chatLabel}
       </NavLink>
       <UserButton afterSignOutUrl="/" />
     </div>
   ) : (
     <div className="flex gap-4 items-center">
       <NavLink href="/sign-in" className="text-gray-700">
-        Sign In
+        {signInLabel}
       </NavLink>
     </div>
   );

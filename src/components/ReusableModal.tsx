@@ -8,6 +8,10 @@ import {
 } from '@nextui-org/react';
 import React, { useCallback } from 'react';
 
+import {
+  defaultConfirmLabel,
+  defaultCancelLabel,
+} from '@/strings/clientStrings';
 import { ReusableModalProps } from '@/types/ui-types';
 
 export default function ReusableModal({
@@ -15,9 +19,9 @@ export default function ReusableModal({
   onClose,
   title,
   body,
-  confirmLabel = 'Confirm',
+  confirmLabel = defaultConfirmLabel,
   confirmAction,
-  cancelLabel = 'Cancel',
+  cancelLabel = defaultCancelLabel,
   cancelAction,
 }: ReusableModalProps): React.ReactElement {
   const handleClose = useCallback(() => {

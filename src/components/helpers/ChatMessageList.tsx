@@ -1,5 +1,10 @@
 import React from 'react';
 
+import {
+  youLabel,
+  removeVideoButtonText,
+  deleteMessageButtonText,
+} from '@/strings/clientStrings';
 import { MessageListProps } from '@/types/message-types';
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -25,7 +30,9 @@ const MessageList: React.FC<MessageListProps> = ({
             }`}
           >
             <div className="text-sm font-semibold mb-1">
-              {msg.sender.id === signedInUser.id ? 'You' : msg.sender.username}
+              {msg.sender.id === signedInUser.id
+                ? youLabel
+                : msg.sender.username}
             </div>
             {msg.content && <div className="text-sm">{msg.content}</div>}
             {msg.videoUrl && (
@@ -42,7 +49,7 @@ const MessageList: React.FC<MessageListProps> = ({
                     }
                     className="text-red-500 text-xs"
                   >
-                    Remove Video
+                    {removeVideoButtonText}
                   </button>
                 </div>
               </div>
@@ -55,7 +62,7 @@ const MessageList: React.FC<MessageListProps> = ({
                 }
                 className="text-red-500 text-xs"
               >
-                Delete Message
+                {deleteMessageButtonText}
               </button>
             </div>
 

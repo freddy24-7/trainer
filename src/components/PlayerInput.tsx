@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 
+import { minutesPlaceholder, notAvailableLabel } from '@/strings/clientStrings';
 import { PlayerInputProps } from '@/types/user-types';
 
 const PlayerInput: React.FC<PlayerInputProps> = ({
@@ -28,7 +29,7 @@ const PlayerInput: React.FC<PlayerInputProps> = ({
           value={minutes || ''}
           onChange={(e) => handleMinutesChange(e.target.value)}
           className="input-class p-1 border rounded w-20 block mx-auto"
-          placeholder="Minutes"
+          placeholder={minutesPlaceholder}
         />
 
         {showCheckbox && (
@@ -42,7 +43,7 @@ const PlayerInput: React.FC<PlayerInputProps> = ({
                 }
                 className="mr-2"
               />
-              Not Available?
+              {notAvailableLabel}
             </label>
           </div>
         )}

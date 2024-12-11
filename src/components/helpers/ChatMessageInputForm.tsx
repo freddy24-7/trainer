@@ -1,5 +1,9 @@
 import React from 'react';
 
+import {
+  messagePlaceholderText,
+  sendButtonText,
+} from '@/strings/clientStrings';
 import { MessageInputFormProps } from '@/types/message-types';
 
 const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
@@ -49,7 +53,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         className="flex-grow p-2 border border-gray-300 rounded-l"
-        placeholder="Type your message..."
+        placeholder={messagePlaceholderText}
       />
 
       <button
@@ -57,7 +61,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         className="p-2 bg-zinc-600 text-white rounded-r"
         disabled={!newMessage.trim() && !selectedVideo}
       >
-        Send
+        {sendButtonText}
       </button>
     </form>
   );

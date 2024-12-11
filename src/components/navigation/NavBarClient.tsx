@@ -6,6 +6,7 @@ import React, { useState, useEffect, ReactElement } from 'react';
 import { CiHome } from 'react-icons/ci';
 
 import NavLink from '@/components/navigation/NavLink';
+import { homeLabel } from '@/strings/clientStrings';
 import { NavBarClientProps } from '@/types/ui-types';
 
 import { MobileMenu } from './MobileMenu';
@@ -38,7 +39,7 @@ export default function NavBarClient({
       </div>
 
       <NavbarContent justify="end" className="hidden md:flex">
-        <NavLink href="/">
+        <NavLink href="/" aria-label={homeLabel}>
           <CiHome size={24} className="ml-2" />
         </NavLink>
         <ThemeToggleButton />

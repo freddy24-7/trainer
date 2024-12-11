@@ -4,8 +4,7 @@ import React from 'react';
 import { IoFootball } from 'react-icons/io5';
 
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
-
-import NavBarClient from './NavBarClient';
+import NavBarClient from '@/components/navigation/NavBarClient';
 
 export default async function NavBar(): Promise<React.ReactElement> {
   const user = await fetchAndCheckUser();

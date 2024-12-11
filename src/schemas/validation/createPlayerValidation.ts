@@ -1,6 +1,7 @@
 import { ZodIssue } from 'zod';
 
 import { createPlayerSchema } from '@/schemas/createPlayerSchema';
+import { requiredFieldsErrorMessage } from '@/strings/serverStrings';
 import { PlayerFormData } from '@/types/user-types';
 
 export function handleValidatePlayerData(params: FormData): {
@@ -17,7 +18,7 @@ export function handleValidatePlayerData(params: FormData): {
       success: false,
       errors: [
         {
-          message: 'Username, password, and WhatsApp number are required.',
+          message: requiredFieldsErrorMessage,
           path: ['form'],
           code: 'custom',
         },

@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import ReusableModal from '@/components/ReusableModal';
+import {
+  loginRequiredTitle,
+  loginRequiredBody,
+  closeButtonLabel,
+} from '@/strings/clientStrings';
 
 export default function LoginModal(): React.ReactElement {
   const { isOpen, onOpenChange } = useDisclosure({ defaultOpen: true });
@@ -19,9 +24,9 @@ export default function LoginModal(): React.ReactElement {
     <ReusableModal
       isOpen={isOpen}
       onClose={onOpenChange}
-      title="Log In Required"
-      body={<p>You need to be logged in to access the dashboard.</p>}
-      cancelLabel="Close"
+      title={loginRequiredTitle}
+      body={<p>{loginRequiredBody}</p>}
+      cancelLabel={closeButtonLabel}
       cancelAction={handleClose}
     />
   );
