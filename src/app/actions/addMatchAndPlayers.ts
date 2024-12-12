@@ -26,7 +26,7 @@ async function handleProcessPlayers(
   for (const player of players) {
     const { isValid, parsedMinutes, errors } = handleValidatePlayerData(player);
 
-    if (!isValid || !parsedMinutes) {
+    if (!isValid) {
       playerErrors.push(...errors);
       continue;
     }

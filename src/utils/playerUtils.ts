@@ -6,7 +6,6 @@ import {
   playersDataMissingMessage,
   invalidPlayerDataFormatMessage,
   playersDataNotArrayMessage,
-  invalidMinutesMessage,
 } from '@/strings/serverStrings';
 import { MatchFormValues, PlayerInMatch } from '@/types/match-types';
 import { Player, PlayerResponseData } from '@/types/user-types';
@@ -48,7 +47,11 @@ export const validateAllPlayers = (
       handleValidateMatchPlayerData({
         userId: player.id,
         matchId: selectedPouleId ?? 0,
-        minutes: typeof player.minutes === 'number' ? player.minutes : 0,
+        minutes: player.available
+          ? typeof player.minutes === 'number'
+            ? player.minutes
+            : 0
+          : 0,
         available: player.available,
       }).success
   );
@@ -135,19 +138,21 @@ export function handleParsePlayersData(playersString: string | null): {
 
 export function handleValidatePlayerData(player: PlayerInMatch): {
   isValid: boolean;
-  parsedMinutes?: number;
+  parsedMinutes: number;
   errors: ZodIssue[];
 } {
   const { id, minutes, available } = player;
+
   const parsedMinutes = available ? parseInt(minutes, 10) : 0;
 
-  if (isNaN(parsedMinutes)) {
+  if (available && (isNaN(parsedMinutes) || parsedMinutes < 0)) {
     return {
       isValid: false,
-      errors: formatError(
-        invalidMinutesMessage.replace('{id}', id.toString()),
-        ['players', 'minutes']
-      ).errors,
+      parsedMinutes: 0,
+      errors: formatError(`Invalid minutes value for player ${id}.`, [
+        'players',
+        'minutes',
+      ]).errors,
     };
   }
 
