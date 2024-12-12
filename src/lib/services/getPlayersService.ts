@@ -4,7 +4,7 @@ import { UserWithOptionalMatchStats } from '@/types/match-types';
 export async function fetchPlayers(
   includeMatchStats = false
 ): Promise<UserWithOptionalMatchStats[]> {
-  return prisma.user.findMany({
+  const result = await prisma.user.findMany({
     where: {
       role: 'PLAYER',
     },
@@ -13,7 +13,7 @@ export async function fetchPlayers(
       username: true,
       whatsappNumber: true,
       ...(includeMatchStats && {
-        MatchPlayer: {
+        matchPlayers: {
           select: {
             id: true,
             matchId: true,
@@ -28,4 +28,6 @@ export async function fetchPlayers(
       createdAt: 'desc',
     },
   });
+  console.log('Fetched players:', JSON.stringify(result, null, 2));
+  return result;
 }

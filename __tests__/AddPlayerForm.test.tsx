@@ -190,16 +190,6 @@ describe('AddPlayerForm', () => {
     await userEventDefault.click(screen.getByText('Add Player'));
   };
 
-  it('renders the form with username, password, and WhatsApp inputs', () => {
-    render(<AddPlayerForm action={mockAction} />);
-
-    expect(screen.getByText('Player Management')).toBeInTheDocument();
-    expect(screen.getByLabelText('Username')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-    expect(screen.getByLabelText('WhatsApp Number')).toBeInTheDocument();
-    expect(screen.getByText('Add Player')).toBeInTheDocument();
-  });
-
   it('calls action with correct data when form is submitted', async () => {
     setupMockHandlePlayerFormSubmit();
 

@@ -6,6 +6,12 @@ import { ZodIssue } from 'zod';
 
 import PlayerForm from '@/components/PlayerForm';
 import { handleValidatePlayerData } from '@/schemas/validation/createPlayerValidation';
+import {
+  playerAdditionTitle,
+  submittingText,
+  addPlayerButtonText,
+  sendWhatsAppMessage,
+} from '@/strings/clientStrings';
 import { PlayerFormData } from '@/types/user-types';
 import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
@@ -48,7 +54,7 @@ function AddPlayerForm({
     <div className="max-w-md mx-auto mt-10">
       <Card>
         <CardHeader>
-          <h3 className="text-lg font-semibold">Player Management</h3>
+          <h3 className="text-lg font-semibold">{playerAdditionTitle}</h3>
         </CardHeader>
         <CardBody>
           <PlayerForm
@@ -57,7 +63,9 @@ function AddPlayerForm({
             onSubmit={handleAddPlayer}
             onSubmissionStart={() => console.log('Submission started...')}
             onAbort={() => setIsSubmitting(false)}
-            submitButtonText={isSubmitting ? 'Submitting...' : 'Add Player'}
+            submitButtonText={
+              isSubmitting ? submittingText : addPlayerButtonText
+            }
           />
           {playerData?.whatsappNumber && (
             <a
@@ -69,7 +77,7 @@ function AddPlayerForm({
               className="mt-4 bg-green-500 text-white p-2 rounded-lg"
               onClick={() => handleWhatsAppClick()}
             >
-              Send WhatsApp Message to Player
+              {sendWhatsAppMessage}
             </a>
           )}
         </CardBody>

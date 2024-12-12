@@ -19,7 +19,17 @@ export const calculateAbsences = (
 ): number => matchPlayers.filter((mp) => !mp.available).length;
 
 export const mapPlayerStats = (
-  players: MatchPlayer[]
+  players: {
+    id: number;
+    username: string;
+    matchPlayers: {
+      id: number;
+      matchId: number;
+      userId: number;
+      minutes: number;
+      available: boolean;
+    }[];
+  }[]
 ): {
   id: number;
   username: string;
@@ -28,13 +38,13 @@ export const mapPlayerStats = (
   absences: number;
 }[] => {
   return players.map((player) => {
-    const matchesPlayed = calculateMatchesPlayed(player.MatchPlayer);
-    const totalMinutesPlayed = calculateTotalMinutesPlayed(player.MatchPlayer);
+    const matchesPlayed = calculateMatchesPlayed(player.matchPlayers);
+    const totalMinutesPlayed = calculateTotalMinutesPlayed(player.matchPlayers);
     const averagePlayingTime = calculateAveragePlayingTime(
       totalMinutesPlayed,
       matchesPlayed
     );
-    const absences = calculateAbsences(player.MatchPlayer);
+    const absences = calculateAbsences(player.matchPlayers);
 
     return {
       id: player.id,
@@ -51,7 +61,7 @@ export const getValidPlayers = (
     id: number;
     username: string | null;
     whatsappNumber: string | null;
-    MatchPlayer?: {
+    matchPlayers?: {
       id: number;
       matchId: number;
       userId: number;
@@ -65,6 +75,7 @@ export const getValidPlayers = (
     .map((player) => ({
       id: player.id,
       username: player.username as string,
-      MatchPlayer: player.MatchPlayer ?? [],
+      // Use the correct field name 'matchPlayers'
+      matchPlayers: player.matchPlayers ?? [],
     }));
 };

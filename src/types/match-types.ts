@@ -55,10 +55,13 @@ export interface MatchFormValues {
 export interface MatchPlayer {
   id: number;
   username: string;
-  MatchPlayer: MatchPlayerInfo[];
+  matchPlayers: MatchPlayerInfo[];
 }
 
 export interface MatchPlayerInfo {
+  id: number;
+  matchId: number;
+  userId: number;
   minutes: number;
   available: boolean;
 }
