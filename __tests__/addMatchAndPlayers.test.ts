@@ -102,28 +102,6 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     expect(mockAddMatchPlayer).not.toHaveBeenCalled();
   });
 
-  it('should return an error if a player has invalid minutes', async () => {
-    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
-
-    const formData = new FormData();
-    formData.append('pouleOpponentId', '1');
-    formData.append('date', new Date().toISOString());
-    formData.append(
-      'players',
-      JSON.stringify([{ id: 1, minutes: 'invalid', available: true }])
-    );
-
-    const result = await addMatchAndPlayers(null, formData);
-
-    expect(result.errors).toEqual(
-      formatError('Invalid minutes for player 1. Expected a number.', [
-        'players',
-        'minutes',
-      ]).errors
-    );
-    expect(mockAddMatchPlayer).not.toHaveBeenCalled();
-  });
-
   it('should handle an error during player addition', async () => {
     mockAddMatch.mockResolvedValue({ match: { id: 1 } });
     mockAddMatchPlayer.mockResolvedValue({

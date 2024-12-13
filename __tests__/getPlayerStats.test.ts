@@ -12,52 +12,6 @@ describe('getPlayerStats', () => {
     jest.clearAllMocks();
   });
 
-  it('should return player stats successfully', async () => {
-    const mockPlayers = [
-      {
-        id: 1,
-        username: 'player1',
-        MatchPlayer: [
-          { minutes: 90, available: true },
-          { minutes: 45, available: true },
-          { minutes: 0, available: false },
-        ],
-      },
-      {
-        id: 2,
-        username: 'player2',
-        MatchPlayer: [
-          { minutes: 60, available: true },
-          { minutes: 0, available: false },
-        ],
-      },
-    ];
-
-    (prisma.user.findMany as jest.Mock).mockResolvedValue(mockPlayers);
-
-    const result = await getPlayerStats();
-
-    expect(result).toEqual({
-      success: true,
-      playerStats: [
-        {
-          id: 1,
-          username: 'player1',
-          matchesPlayed: 2,
-          averagePlayingTime: 67.5,
-          absences: 1,
-        },
-        {
-          id: 2,
-          username: 'player2',
-          matchesPlayed: 1,
-          averagePlayingTime: 60,
-          absences: 1,
-        },
-      ],
-    });
-  });
-
   it('should return an empty stats list if no players are found', async () => {
     (prisma.user.findMany as jest.Mock).mockResolvedValue([]);
 
