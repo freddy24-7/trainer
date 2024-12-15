@@ -131,3 +131,7 @@ export interface SubscribeToPusherEventsParams {
   setLoading: Dispatch<SetStateAction<boolean>>;
   userId?: number;
 }
+
+export interface ChatClientAction {
+  (_prevState: unknown, params: FormData): Promise<ActionResponse>;
+}

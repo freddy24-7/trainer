@@ -9,6 +9,33 @@ import {
 import { PusherEventMessage, Message } from '@/types/message-types';
 import { subscribeToPusherEvents } from '@/utils/chatUtils';
 
+function handleIncomingMessage(
+  data: PusherEventMessage,
+  setMessages: Dispatch<SetStateAction<Message[]>>,
+  trackedMessageIds: Set<number>
+): void {
+  const incomingMessage: Message = {
+    id: data.id,
+    content: data.content,
+    sender: data.sender,
+    createdAt: new Date(data.createdAt),
+    videoUrl: data.videoUrl || null,
+    recipientId: data.recipientId ?? null,
+  };
+
+  setMessages((prevMessages) => {
+    const alreadyExists =
+      prevMessages.some((msg) => msg.id === incomingMessage.id) ||
+      trackedMessageIds.has(incomingMessage.id);
+
+    if (alreadyExists) {
+      return prevMessages;
+    }
+
+    return [...prevMessages, incomingMessage];
+  });
+}
+
 export const useChatMessages = (
   signedInUserId: number,
   initialMessages: Message[],
@@ -67,28 +94,8 @@ export const useChatMessages = (
 
   useEffect(() => {
     const unsubscribe = subscribeToPusherEvents({
-      onMessageReceived: (data: PusherEventMessage) => {
-        const incomingMessage: Message = {
-          id: data.id,
-          content: data.content,
-          sender: data.sender,
-          createdAt: new Date(data.createdAt),
-          videoUrl: data.videoUrl || null,
-          recipientId: data.recipientId ?? null,
-        };
-
-        setMessages((prevMessages) => {
-          const alreadyExists =
-            prevMessages.some((msg) => msg.id === incomingMessage.id) ||
-            trackedMessageIds.has(incomingMessage.id);
-
-          if (alreadyExists) {
-            return prevMessages;
-          }
-
-          return [...prevMessages, incomingMessage];
-        });
-      },
+      onMessageReceived: (data: PusherEventMessage) =>
+        handleIncomingMessage(data, setMessages, trackedMessageIds),
       onDeleteMessage: handleDeleteMessageLocal,
       setLoading,
       userId: signedInUserId,

@@ -1,13 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 
-import { Message } from '@/types/message-types';
-import { ActionResponse } from '@/types/shared-types';
+import { ChatClientAction, Message } from '@/types/message-types';
 import { handleSendMessage as sendMessageHandler } from '@/utils/chatUtils';
-
-type Action = (
-  _prevState: unknown,
-  params: FormData
-) => Promise<ActionResponse>;
 
 export async function handleRecipientChange({
   event,
@@ -97,7 +91,7 @@ export function handleMemoizedSendMessage({
   setIsSending: Dispatch<SetStateAction<boolean>>;
   signedInUserId: number;
   selectedRecipientId: number | null;
-  action: Action;
+  action: ChatClientAction;
   setNewMessage: Dispatch<SetStateAction<string>>;
   setSelectedVideo: Dispatch<SetStateAction<File | null>>;
   setMessages: Dispatch<SetStateAction<Message[]>>;
