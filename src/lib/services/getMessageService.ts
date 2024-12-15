@@ -1,16 +1,17 @@
 import prisma from '@/lib/prisma';
+import { Message } from '@/types/message-types';
 import { formatError } from '@/utils/errorUtils';
 
 export async function fetchMessages(
   signedInUserId: number,
   recipientId?: number
 ): Promise<{
-  messages: unknown[];
+  messages: Message[];
   success: boolean;
   error?: string;
 }> {
   try {
-    const messages = await prisma.message.findMany({
+    const rawMessages = await prisma.message.findMany({
       where: recipientId
         ? {
             OR: [
@@ -22,9 +23,20 @@ export async function fetchMessages(
       orderBy: { createdAt: 'asc' },
       include: {
         sender: { select: { id: true, username: true } },
-        recipient: { select: { id: true, username: true } },
       },
     });
+
+    const messages: Message[] = rawMessages.map((message) => ({
+      id: message.id,
+      content: message.content || null,
+      sender: {
+        id: message.sender.id,
+        username: message.sender.username || 'Unknown',
+      },
+      videoUrl: message.videoUrl || null,
+      createdAt: message.createdAt,
+      recipientId: message.recipientId || null,
+    }));
 
     return { messages, success: true };
   } catch (error) {

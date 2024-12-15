@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 
 import ChatOrganizer from '@/components/helpers/ChatOrganizer';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { ChatClientProps } from '@/types/message-types';
 import {
-  handleOnDeleteMessage,
-  handleOnDeleteVideo,
-  handleSendMessage,
-} from '@/utils/chatUtils';
+  handleMemoizedRecipientChange as recipientChangeHandler,
+  handleMemoizedSendMessage as sendMessageHandler,
+} from '@/utils/chatClientUtils';
+import { handleOnDeleteMessage, handleOnDeleteVideo } from '@/utils/chatUtils';
 
 function ChatClient({
   signedInUser,
@@ -38,64 +38,27 @@ function ChatClient({
     replaceOptimisticMessage,
   } = useChatMessages(signedInUser.id, initialMessages, setLoading);
 
-  const handleRecipientChange = useCallback(
-    async (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const recipientId =
-        event.target.value === 'group' ? null : Number(event.target.value);
+  const memoizedHandleRecipientChange = recipientChangeHandler({
+    signedInUserId: signedInUser.id,
+    getMessages,
+    setMessages,
+    setLoading,
+    setSelectedRecipientId,
+  });
 
-      setSelectedRecipientId(recipientId);
-      setMessages([]);
-      setLoading(true);
-
-      try {
-        const response = await getMessages(
-          signedInUser.id,
-          recipientId ?? undefined
-        );
-
-        if (response.success) {
-          setMessages(response.messages);
-        } else {
-          console.error('Failed to fetch messages:', response.error);
-        }
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [signedInUser.id, getMessages, setMessages]
-  );
-
-  const memoizedHandleSendMessage = useCallback(
-    (e: React.FormEvent) =>
-      handleSendMessage({
-        e,
-        newMessage,
-        selectedVideo,
-        setIsSending,
-        signedInUserId: signedInUser.id,
-        selectedRecipientId,
-        action,
-        setNewMessage,
-        setSelectedVideo,
-        setMessages,
-        addOptimisticMessage,
-        replaceOptimisticMessage,
-      }),
-    [
-      newMessage,
-      selectedVideo,
-      signedInUser.id,
-      selectedRecipientId,
-      action,
-      setNewMessage,
-      setSelectedVideo,
-      setMessages,
-      addOptimisticMessage,
-      replaceOptimisticMessage,
-    ]
-  );
+  const memoizedHandleSendMessage = sendMessageHandler({
+    newMessage,
+    selectedVideo,
+    setIsSending,
+    signedInUserId: signedInUser.id,
+    selectedRecipientId,
+    action,
+    setNewMessage,
+    setSelectedVideo,
+    setMessages,
+    addOptimisticMessage,
+    replaceOptimisticMessage,
+  });
 
   if (loading) {
     return <LoadingSpinner />;
@@ -106,7 +69,7 @@ function ChatClient({
       signedInUser={signedInUser}
       users={users}
       selectedRecipientId={selectedRecipientId}
-      handleRecipientChange={handleRecipientChange}
+      handleRecipientChange={memoizedHandleRecipientChange}
       messages={messages}
       onDeleteVideo={(messageId, removeFromDatabase = true) =>
         handleOnDeleteVideo({
