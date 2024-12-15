@@ -30,8 +30,13 @@ function ChatClient({
     recipientId
   );
 
-  const { messages, setMessages, handleDeleteMessage, addOptimisticMessage } =
-    useChatMessages(signedInUser.id, initialMessages, setLoading);
+  const {
+    messages,
+    setMessages,
+    handleDeleteMessage,
+    addOptimisticMessage,
+    replaceOptimisticMessage,
+  } = useChatMessages(signedInUser.id, initialMessages, setLoading);
 
   const handleRecipientChange = useCallback(
     async (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -39,13 +44,13 @@ function ChatClient({
         event.target.value === 'group' ? null : Number(event.target.value);
 
       setSelectedRecipientId(recipientId);
-      setMessages([]); // Clear old messages
+      setMessages([]);
       setLoading(true);
 
       try {
         const response = await getMessages(
           signedInUser.id,
-          recipientId ?? undefined // Convert null to undefined
+          recipientId ?? undefined
         );
 
         if (response.success) {
@@ -75,7 +80,8 @@ function ChatClient({
         setNewMessage,
         setSelectedVideo,
         setMessages,
-        addOptimisticMessage, // Pass the new function
+        addOptimisticMessage,
+        replaceOptimisticMessage,
       }),
     [
       newMessage,
@@ -87,6 +93,7 @@ function ChatClient({
       setSelectedVideo,
       setMessages,
       addOptimisticMessage,
+      replaceOptimisticMessage,
     ]
   );
 

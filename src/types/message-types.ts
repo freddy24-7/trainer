@@ -110,21 +110,6 @@ export interface HandleOnDeleteMessageParams {
   ) => void;
 }
 
-export interface FetchMessagesForChatParams {
-  recipientId: number | null;
-  signedInUserId: number;
-  getMessages: (
-    userId: number,
-    recipientId?: number
-  ) => Promise<{
-    messages: Message[];
-    success: boolean;
-    error?: string;
-  }>;
-  setMessages: Dispatch<SetStateAction<Message[]>>;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}
-
 export interface HandleSendMessageParams {
   e: React.FormEvent;
   newMessage: string;
@@ -136,7 +121,8 @@ export interface HandleSendMessageParams {
   setNewMessage: Dispatch<SetStateAction<string>>;
   setSelectedVideo: Dispatch<SetStateAction<File | null>>;
   setMessages: Dispatch<SetStateAction<Message[]>>;
-  addOptimisticMessage: (message: Message) => void; // Add this to the params
+  addOptimisticMessage: (message: Message) => void;
+  replaceOptimisticMessage: (temporaryId: number, newMessage: Message) => void;
 }
 
 export interface SubscribeToPusherEventsParams {

@@ -75,7 +75,6 @@ export const getValidPlayers = (
     .map((player) => ({
       id: player.id,
       username: player.username as string,
-      // Use the correct field name 'matchPlayers'
       matchPlayers: player.matchPlayers ?? [],
     }));
 };

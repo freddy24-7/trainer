@@ -18,9 +18,13 @@ export const useChatMessages = (
   setMessages: Dispatch<SetStateAction<Message[]>>;
   handleDeleteMessage: (messageId: number) => void;
   addOptimisticMessage: (message: Message) => void;
+  replaceOptimisticMessage: (
+    temporaryId: number,
+    confirmedMessage: Message
+  ) => void;
 } => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
-  const [optimisticMessages, setOptimisticMessages] = useState<Set<number>>(
+  const [trackedMessageIds, setTrackedMessageIds] = useState<Set<number>>(
     new Set()
   );
 
@@ -28,7 +32,7 @@ export const useChatMessages = (
     setMessages((prevMessages) =>
       prevMessages.filter((msg) => msg.id !== messageId)
     );
-    setOptimisticMessages((prev) => {
+    setTrackedMessageIds((prev) => {
       const newSet = new Set(prev);
       newSet.delete(messageId);
       return newSet;
@@ -37,12 +41,29 @@ export const useChatMessages = (
 
   const addOptimisticMessage = useCallback((message: Message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
-    setOptimisticMessages((prev) => {
+    setTrackedMessageIds((prev) => {
       const newSet = new Set(prev);
       newSet.add(message.id);
       return newSet;
     });
   }, []);
+
+  const replaceOptimisticMessage = useCallback(
+    (temporaryId: number, confirmedMessage: Message) => {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === temporaryId ? confirmedMessage : msg
+        )
+      );
+      setTrackedMessageIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(temporaryId);
+        newSet.add(confirmedMessage.id);
+        return newSet;
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     const unsubscribe = subscribeToPusherEvents({
@@ -56,11 +77,10 @@ export const useChatMessages = (
           recipientId: data.recipientId ?? null,
         };
 
-        // Avoid adding duplicate messages
         setMessages((prevMessages) => {
           const alreadyExists =
             prevMessages.some((msg) => msg.id === incomingMessage.id) ||
-            optimisticMessages.has(incomingMessage.id);
+            trackedMessageIds.has(incomingMessage.id);
 
           if (alreadyExists) {
             return prevMessages;
@@ -77,12 +97,7 @@ export const useChatMessages = (
     return () => {
       unsubscribe();
     };
-  }, [
-    signedInUserId,
-    handleDeleteMessageLocal,
-    setLoading,
-    optimisticMessages,
-  ]);
+  }, [signedInUserId, handleDeleteMessageLocal, setLoading, trackedMessageIds]);
 
   const handleDeleteMessage = useCallback(
     (messageId: number) => {
@@ -91,5 +106,11 @@ export const useChatMessages = (
     [handleDeleteMessageLocal]
   );
 
-  return { messages, setMessages, handleDeleteMessage, addOptimisticMessage };
+  return {
+    messages,
+    setMessages,
+    handleDeleteMessage,
+    addOptimisticMessage,
+    replaceOptimisticMessage,
+  };
 };

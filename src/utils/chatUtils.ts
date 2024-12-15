@@ -3,8 +3,6 @@ import React from 'react';
 import {
   failedToDeleteVideoMessage,
   failedToDeleteMessageMessage,
-  failedToSendMessageErrorsMessage,
-  failedToSendMessageUnknownMessage,
 } from '@/strings/serverStrings';
 import {
   PusherEventMessage,
@@ -16,9 +14,6 @@ import {
 } from '@/types/message-types';
 import { handleInitializePusher } from '@/utils/pusherUtils';
 
-/**
- * Subscribes to Pusher events for real-time updates.
- */
 export const subscribeToPusherEvents = ({
   onMessageReceived,
   onDeleteMessage,
@@ -39,9 +34,6 @@ export const subscribeToPusherEvents = ({
   return cleanup;
 };
 
-/**
- * Deletes a video's URL locally from the message list.
- */
 export const handleDeleteVideoLocal = (
   messageId: number,
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>
@@ -53,9 +45,6 @@ export const handleDeleteVideoLocal = (
   );
 };
 
-/**
- * Handles deleting a video message, with an option to remove it from the database.
- */
 export async function handleOnDeleteVideo({
   messageId,
   removeFromDatabase,
@@ -75,9 +64,6 @@ export async function handleOnDeleteVideo({
   }
 }
 
-/**
- * Handles deleting a message, with an option to remove it from the database.
- */
 export async function handleOnDeleteMessage({
   messageId,
   removeFromDatabase,
@@ -97,9 +83,6 @@ export async function handleOnDeleteMessage({
   }
 }
 
-/**
- * Sends a message with optimistic updates for the UI.
- */
 export async function handleSendMessage({
   e,
   newMessage,
@@ -111,6 +94,7 @@ export async function handleSendMessage({
   setNewMessage,
   setSelectedVideo,
   addOptimisticMessage,
+  replaceOptimisticMessage,
 }: HandleSendMessageParams): Promise<void> {
   e.preventDefault();
 
@@ -120,7 +104,7 @@ export async function handleSendMessage({
 
   setIsSending(true);
 
-  const temporaryId = Date.now(); // Temporary ID for optimistic updates
+  const temporaryId = Date.now();
   const formData = new FormData();
   formData.append('content', newMessage);
   formData.append('senderId', signedInUserId.toString());
@@ -133,37 +117,50 @@ export async function handleSendMessage({
     formData.append('videoFile', selectedVideo);
   }
 
-  const optimisticMessage: Message = {
-    id: temporaryId,
-    content: newMessage,
-    sender: { id: signedInUserId, username: 'You' },
-    createdAt: new Date(),
-    videoUrl: selectedVideo ? URL.createObjectURL(selectedVideo) : null,
-    recipientId: selectedRecipientId,
-  };
+  const isIndividualMessageWithoutVideo =
+    !selectedVideo && selectedRecipientId !== null;
 
-  // Add optimistic message
-  addOptimisticMessage(optimisticMessage);
+  let optimisticMessage: Message | null = null;
+
+  if (isIndividualMessageWithoutVideo) {
+    optimisticMessage = {
+      id: temporaryId,
+      content: newMessage,
+      sender: { id: signedInUserId, username: 'You' },
+      createdAt: new Date(),
+      videoUrl: null,
+      recipientId: selectedRecipientId,
+    };
+
+    addOptimisticMessage(optimisticMessage);
+  }
 
   try {
     const response = await action({}, formData);
 
-    if (response.success && response.messageId) {
-      // Replace temporary ID with server-generated ID
-      addOptimisticMessage({ ...optimisticMessage, id: response.messageId });
-      setNewMessage('');
-      setSelectedVideo(null);
+    if (
+      response.success &&
+      response.messageId &&
+      isIndividualMessageWithoutVideo
+    ) {
+      const confirmedMessage = {
+        ...optimisticMessage!,
+        id: response.messageId,
+      };
+      replaceOptimisticMessage(temporaryId, confirmedMessage);
     } else if (response.errors) {
       const errorMessages = response.errors
         .map((error) => error.message)
         .join(', ');
-      console.error(failedToSendMessageErrorsMessage, errorMessages);
+      console.error('Failed to send message:', errorMessages);
     } else {
-      console.error(failedToSendMessageUnknownMessage);
+      console.error('Unknown error sending message');
     }
   } catch (error) {
     console.error('Error sending message:', error);
   } finally {
+    setNewMessage('');
+    setSelectedVideo(null);
     setIsSending(false);
   }
 }
