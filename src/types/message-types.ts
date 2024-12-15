@@ -1,8 +1,34 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
 import { ActionResponse } from '@/types/shared-types';
 
-import { ChatUser, SignedInUser } from './user-types';
+export interface Sender {
+  id: number;
+  username: string;
+}
+
+export interface ChatUser extends Sender {}
+
+export interface SignedInUser extends Sender {}
+
+export interface Message {
+  id: number;
+  content?: string | null;
+  sender: Sender;
+  videoUrl?: string | null;
+  createdAt: Date;
+  recipientId?: number | null;
+}
+
+export interface PusherEventMessage {
+  id: number;
+  recipientId?: number | null;
+  content: string;
+  sender: Sender;
+  videoUrl?: string | null;
+  createdAt: string;
+  type?: 'delete-message' | 'new-message';
+}
 
 export interface ChatClientProps {
   signedInUser: SignedInUser;
@@ -13,7 +39,7 @@ export interface ChatClientProps {
     userId: number,
     recipientId?: number
   ) => Promise<{
-    messages: unknown[];
+    messages: Message[];
     success: boolean;
     error?: string;
   }>;
@@ -46,62 +72,23 @@ export interface ChatMessageProps {
     removeFromDatabase?: boolean
   ) => Promise<void>;
   isSending: boolean;
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
   newMessage: string;
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+  setNewMessage: Dispatch<SetStateAction<string>>;
   handleSendMessage: (e: React.FormEvent) => Promise<void>;
   selectedVideo: File | null;
 }
 
-export interface Message {
-  id: number;
-  content?: string | null;
-  sender: Sender;
-  videoUrl?: string | null;
-  createdAt: Date;
-  recipientId?: number | null;
-}
-
-export interface MessageListProps {
-  messages: Message[];
-  signedInUser: SignedInUser;
-  onDeleteVideo: (messageId: number, removeFromDatabase?: boolean) => void;
-  onDeleteMessage: (messageId: number, removeFromDatabase?: boolean) => void;
-}
-
-export interface PusherEventMessage {
-  id: number;
-  recipientId?: number | null;
-  content: string;
-  sender: Sender;
-  videoUrl?: string | null;
-  createdAt: string;
-  type?: 'delete-message' | 'new-message';
-}
-
-export interface Sender {
-  id: number;
-  username: string;
-}
-
 export interface MessageInputFormProps {
   newMessage: string;
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+  setNewMessage: Dispatch<SetStateAction<string>>;
   handleSendMessage: (e: React.FormEvent) => void;
   selectedVideo: File | null;
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
 }
 
 export interface VideoDropzoneProps {
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
-}
-
-export interface CreateMessageParams {
-  content: string | null;
-  senderId: number;
-  recipientId?: number;
-  videoUrl?: string | null;
-  videoPublicId?: string | null;
+  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
 }
 
 export interface HandleOnDeleteVideoParams {
@@ -109,7 +96,7 @@ export interface HandleOnDeleteVideoParams {
   removeFromDatabase: boolean;
   deleteVideo: (messageId: number, userId: number) => Promise<ActionResponse>;
   signedInUserId: number;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  setMessages: Dispatch<SetStateAction<Message[]>>;
 }
 
 export interface HandleOnDeleteMessageParams {
@@ -117,7 +104,10 @@ export interface HandleOnDeleteMessageParams {
   removeFromDatabase: boolean;
   deleteMessage: (messageId: number, userId: number) => Promise<ActionResponse>;
   signedInUserId: number;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  handleDeleteMessage: (
+    messageId: number,
+    removeFromDatabase?: boolean
+  ) => void;
 }
 
 export interface FetchMessagesForChatParams {
@@ -127,35 +117,30 @@ export interface FetchMessagesForChatParams {
     userId: number,
     recipientId?: number
   ) => Promise<{
-    messages: unknown[];
+    messages: Message[];
     success: boolean;
     error?: string;
   }>;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setMessages: Dispatch<SetStateAction<Message[]>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface HandleSendMessageParams {
   e: React.FormEvent;
   newMessage: string;
   selectedVideo: File | null;
-  setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsSending: Dispatch<SetStateAction<boolean>>;
   signedInUserId: number;
   selectedRecipientId: number | null;
   action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
+  setNewMessage: Dispatch<SetStateAction<string>>;
+  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
+  setMessages: Dispatch<SetStateAction<Message[]>>;
 }
 
 export interface SubscribeToPusherEventsParams {
   onMessageReceived: (data: PusherEventMessage) => void;
   onDeleteMessage: (messageId: number) => void;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
   userId?: number;
-}
-
-export interface HandleRecipientChangeParams {
-  event: React.ChangeEvent<HTMLSelectElement>;
-  setSelectedRecipientId: React.Dispatch<React.SetStateAction<number | null>>;
-  fetchMessagesForChat: (recipientId: number | null) => Promise<void>;
 }

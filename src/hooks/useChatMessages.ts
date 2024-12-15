@@ -1,18 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useState,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+} from 'react';
 
-import { Message, PusherEventMessage } from '@/types/message-types';
+import { PusherEventMessage, Message } from '@/types/message-types';
 import { subscribeToPusherEvents } from '@/utils/chatUtils';
 
 export const useChatMessages = (
   signedInUserId: number,
   initialMessages: Message[],
-  handleDeleteMessageLocal: (messageId: number) => void,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: Dispatch<SetStateAction<boolean>>
 ): {
   messages: Message[];
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  setMessages: Dispatch<SetStateAction<Message[]>>;
+  handleDeleteMessage: (messageId: number) => void;
 } => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
+
+  const handleDeleteMessageLocal = useCallback((messageId: number) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((msg) => msg.id !== messageId)
+    );
+  }, []);
 
   useEffect(() => {
     const unsubscribe = subscribeToPusherEvents({
@@ -38,5 +50,12 @@ export const useChatMessages = (
     };
   }, [signedInUserId, handleDeleteMessageLocal, setLoading]);
 
-  return { messages, setMessages };
+  const handleDeleteMessage = useCallback(
+    (messageId: number) => {
+      handleDeleteMessageLocal(messageId);
+    },
+    [handleDeleteMessageLocal]
+  );
+
+  return { messages, setMessages, handleDeleteMessage };
 };

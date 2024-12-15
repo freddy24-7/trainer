@@ -3,7 +3,6 @@ import React from 'react';
 import {
   failedToDeleteVideoMessage,
   failedToDeleteMessageMessage,
-  failedToFetchMessagesMessage,
   failedToSendMessageErrorsMessage,
   failedToSendMessageUnknownMessage,
 } from '@/strings/serverStrings';
@@ -12,13 +11,14 @@ import {
   Message,
   HandleOnDeleteVideoParams,
   HandleOnDeleteMessageParams,
-  FetchMessagesForChatParams,
   HandleSendMessageParams,
   SubscribeToPusherEventsParams,
-  HandleRecipientChangeParams,
 } from '@/types/message-types';
 import { handleInitializePusher } from '@/utils/pusherUtils';
 
+/**
+ * Subscribes to Pusher events for real-time updates.
+ */
 export const subscribeToPusherEvents = ({
   onMessageReceived,
   onDeleteMessage,
@@ -39,6 +39,9 @@ export const subscribeToPusherEvents = ({
   return cleanup;
 };
 
+/**
+ * Deletes a video's URL locally from the message list.
+ */
 export const handleDeleteVideoLocal = (
   messageId: number,
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>
@@ -50,15 +53,9 @@ export const handleDeleteVideoLocal = (
   );
 };
 
-export const handleDeleteMessageLocal = (
-  messageId: number,
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
-): void => {
-  setMessages((prevMessages) =>
-    prevMessages.filter((msg) => msg.id !== messageId)
-  );
-};
-
+/**
+ * Handles deleting a video message, with an option to remove it from the database.
+ */
 export async function handleOnDeleteVideo({
   messageId,
   removeFromDatabase,
@@ -78,53 +75,31 @@ export async function handleOnDeleteVideo({
   }
 }
 
+/**
+ * Handles deleting a message, with an option to remove it from the database.
+ */
 export async function handleOnDeleteMessage({
   messageId,
   removeFromDatabase,
   deleteMessage,
   signedInUserId,
-  setMessages,
+  handleDeleteMessage,
 }: HandleOnDeleteMessageParams): Promise<void> {
   if (removeFromDatabase) {
     const response = await deleteMessage(messageId, signedInUserId);
     if (response.success) {
-      handleDeleteMessageLocal(messageId, setMessages);
+      handleDeleteMessage(messageId, true);
     } else {
       console.error(failedToDeleteMessageMessage);
     }
   } else {
-    handleDeleteMessageLocal(messageId, setMessages);
+    handleDeleteMessage(messageId, false);
   }
 }
 
-export async function fetchMessagesForChat({
-  recipientId,
-  signedInUserId,
-  getMessages,
-  setMessages,
-  setLoading,
-}: FetchMessagesForChatParams): Promise<void> {
-  setLoading(true);
-  const response = await getMessages(signedInUserId, recipientId ?? undefined);
-  if (response.success) {
-    setMessages(response.messages as Message[]);
-  } else {
-    console.error(failedToFetchMessagesMessage, response.error);
-  }
-  setLoading(false);
-}
-
-export async function handleRecipientChange({
-  event,
-  setSelectedRecipientId,
-  fetchMessagesForChat,
-}: HandleRecipientChangeParams): Promise<void> {
-  const selectedId =
-    event.target.value === 'group' ? null : Number(event.target.value);
-  setSelectedRecipientId(selectedId);
-  await fetchMessagesForChat(selectedId);
-}
-
+/**
+ * Sends a message with optimistic updates for the UI.
+ */
 export async function handleSendMessage({
   e,
   newMessage,
@@ -135,8 +110,10 @@ export async function handleSendMessage({
   action,
   setNewMessage,
   setSelectedVideo,
+  setMessages,
 }: HandleSendMessageParams): Promise<void> {
   e.preventDefault();
+
   if (!newMessage.trim() && !selectedVideo) {
     return;
   }
@@ -155,19 +132,38 @@ export async function handleSendMessage({
     formData.append('videoFile', selectedVideo);
   }
 
-  const response = await action({}, formData);
+  // Optimistically add the message to the UI
+  const optimisticMessage: Message = {
+    id: Date.now(), // Temporary ID; replace with actual ID from server response if available
+    content: newMessage,
+    sender: { id: signedInUserId, username: 'You' }, // Adjust as necessary
+    createdAt: new Date(),
+    videoUrl: selectedVideo ? URL.createObjectURL(selectedVideo) : null,
+    recipientId: selectedRecipientId,
+  };
 
-  setIsSending(false);
+  setMessages((prev) => [...prev, optimisticMessage]);
 
-  if (response.success) {
-    setNewMessage('');
-    setSelectedVideo(null);
-  } else if (response.errors) {
-    const errorMessages = response.errors
-      .map((error) => error.message)
-      .join(', ');
-    console.error(failedToSendMessageErrorsMessage, errorMessages);
-  } else {
-    console.error(failedToSendMessageUnknownMessage);
+  try {
+    const response = await action({}, formData);
+
+    if (response.success) {
+      setNewMessage('');
+      setSelectedVideo(null);
+    } else if (response.errors) {
+      const errorMessages = response.errors
+        .map((error) => error.message)
+        .join(', ');
+      console.error(failedToSendMessageErrorsMessage, errorMessages);
+      // Optionally handle rollback of optimistic UI here
+    } else {
+      console.error(failedToSendMessageUnknownMessage);
+      // Optionally handle rollback of optimistic UI here
+    }
+  } catch (error) {
+    console.error('Error sending message:', error);
+    // Optionally handle rollback of optimistic UI here
+  } finally {
+    setIsSending(false);
   }
 }
