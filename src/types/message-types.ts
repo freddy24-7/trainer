@@ -136,6 +136,7 @@ export interface HandleSendMessageParams {
   setNewMessage: Dispatch<SetStateAction<string>>;
   setSelectedVideo: Dispatch<SetStateAction<File | null>>;
   setMessages: Dispatch<SetStateAction<Message[]>>;
+  addOptimisticMessage: (message: Message) => void; // Add this to the params
 }
 
 export interface SubscribeToPusherEventsParams {

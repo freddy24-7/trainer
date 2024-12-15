@@ -110,7 +110,7 @@ export async function handleSendMessage({
   action,
   setNewMessage,
   setSelectedVideo,
-  setMessages,
+  addOptimisticMessage,
 }: HandleSendMessageParams): Promise<void> {
   e.preventDefault();
 
@@ -120,6 +120,7 @@ export async function handleSendMessage({
 
   setIsSending(true);
 
+  const temporaryId = Date.now(); // Temporary ID for optimistic updates
   const formData = new FormData();
   formData.append('content', newMessage);
   formData.append('senderId', signedInUserId.toString());
@@ -132,22 +133,24 @@ export async function handleSendMessage({
     formData.append('videoFile', selectedVideo);
   }
 
-  // Optimistically add the message to the UI
   const optimisticMessage: Message = {
-    id: Date.now(), // Temporary ID; replace with actual ID from server response if available
+    id: temporaryId,
     content: newMessage,
-    sender: { id: signedInUserId, username: 'You' }, // Adjust as necessary
+    sender: { id: signedInUserId, username: 'You' },
     createdAt: new Date(),
     videoUrl: selectedVideo ? URL.createObjectURL(selectedVideo) : null,
     recipientId: selectedRecipientId,
   };
 
-  setMessages((prev) => [...prev, optimisticMessage]);
+  // Add optimistic message
+  addOptimisticMessage(optimisticMessage);
 
   try {
     const response = await action({}, formData);
 
-    if (response.success) {
+    if (response.success && response.messageId) {
+      // Replace temporary ID with server-generated ID
+      addOptimisticMessage({ ...optimisticMessage, id: response.messageId });
       setNewMessage('');
       setSelectedVideo(null);
     } else if (response.errors) {
@@ -155,14 +158,11 @@ export async function handleSendMessage({
         .map((error) => error.message)
         .join(', ');
       console.error(failedToSendMessageErrorsMessage, errorMessages);
-      // Optionally handle rollback of optimistic UI here
     } else {
       console.error(failedToSendMessageUnknownMessage);
-      // Optionally handle rollback of optimistic UI here
     }
   } catch (error) {
     console.error('Error sending message:', error);
-    // Optionally handle rollback of optimistic UI here
   } finally {
     setIsSending(false);
   }

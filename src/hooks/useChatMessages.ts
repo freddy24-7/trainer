@@ -17,13 +17,31 @@ export const useChatMessages = (
   messages: Message[];
   setMessages: Dispatch<SetStateAction<Message[]>>;
   handleDeleteMessage: (messageId: number) => void;
+  addOptimisticMessage: (message: Message) => void;
 } => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [optimisticMessages, setOptimisticMessages] = useState<Set<number>>(
+    new Set()
+  );
 
   const handleDeleteMessageLocal = useCallback((messageId: number) => {
     setMessages((prevMessages) =>
       prevMessages.filter((msg) => msg.id !== messageId)
     );
+    setOptimisticMessages((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(messageId);
+      return newSet;
+    });
+  }, []);
+
+  const addOptimisticMessage = useCallback((message: Message) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+    setOptimisticMessages((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(message.id);
+      return newSet;
+    });
   }, []);
 
   useEffect(() => {
@@ -38,7 +56,18 @@ export const useChatMessages = (
           recipientId: data.recipientId ?? null,
         };
 
-        setMessages((prevMessages) => [...prevMessages, incomingMessage]);
+        // Avoid adding duplicate messages
+        setMessages((prevMessages) => {
+          const alreadyExists =
+            prevMessages.some((msg) => msg.id === incomingMessage.id) ||
+            optimisticMessages.has(incomingMessage.id);
+
+          if (alreadyExists) {
+            return prevMessages;
+          }
+
+          return [...prevMessages, incomingMessage];
+        });
       },
       onDeleteMessage: handleDeleteMessageLocal,
       setLoading,
@@ -48,7 +77,12 @@ export const useChatMessages = (
     return () => {
       unsubscribe();
     };
-  }, [signedInUserId, handleDeleteMessageLocal, setLoading]);
+  }, [
+    signedInUserId,
+    handleDeleteMessageLocal,
+    setLoading,
+    optimisticMessages,
+  ]);
 
   const handleDeleteMessage = useCallback(
     (messageId: number) => {
@@ -57,5 +91,5 @@ export const useChatMessages = (
     [handleDeleteMessageLocal]
   );
 
-  return { messages, setMessages, handleDeleteMessage };
+  return { messages, setMessages, handleDeleteMessage, addOptimisticMessage };
 };

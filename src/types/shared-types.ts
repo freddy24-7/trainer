@@ -18,6 +18,7 @@ export interface ActionResponse {
   success: boolean;
   errors?: ZodIssue[];
   videoUrl?: string | null;
+  messageId?: number;
 }
 
 export interface ProtectedLayoutProps {

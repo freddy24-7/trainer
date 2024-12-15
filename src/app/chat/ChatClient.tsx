@@ -17,11 +17,11 @@ function ChatClient({
   messages: initialMessages,
   users,
   action,
+  getMessages,
   deleteVideo,
   deleteMessage,
   recipientId = null,
 }: ChatClientProps): React.ReactElement {
-  // State variables for UI
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -30,36 +30,38 @@ function ChatClient({
     recipientId
   );
 
-  /**
-   * Initialize chat messages and manage state with the custom hook.
-   */
-  const { messages, setMessages, handleDeleteMessage } = useChatMessages(
-    signedInUser.id,
-    initialMessages,
-    setLoading
-  );
+  const { messages, setMessages, handleDeleteMessage, addOptimisticMessage } =
+    useChatMessages(signedInUser.id, initialMessages, setLoading);
 
-  /**
-   * Function to handle recipient change and update messages.
-   */
   const handleRecipientChange = useCallback(
     async (event: React.ChangeEvent<HTMLSelectElement>) => {
       const recipientId =
         event.target.value === 'group' ? null : Number(event.target.value);
+
       setSelectedRecipientId(recipientId);
-      setMessages([]); // Clear messages for a smooth transition
+      setMessages([]); // Clear old messages
       setLoading(true);
-      // Simulate fetching new messages (add actual fetching logic if needed)
-      setTimeout(() => {
+
+      try {
+        const response = await getMessages(
+          signedInUser.id,
+          recipientId ?? undefined // Convert null to undefined
+        );
+
+        if (response.success) {
+          setMessages(response.messages);
+        } else {
+          console.error('Failed to fetch messages:', response.error);
+        }
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      } finally {
         setLoading(false);
-      }, 500); // Mock loading time
+      }
     },
-    [setMessages]
+    [signedInUser.id, getMessages, setMessages]
   );
 
-  /**
-   * Memoized function for sending a message with optimistic UI updates.
-   */
   const memoizedHandleSendMessage = useCallback(
     (e: React.FormEvent) =>
       handleSendMessage({
@@ -73,6 +75,7 @@ function ChatClient({
         setNewMessage,
         setSelectedVideo,
         setMessages,
+        addOptimisticMessage, // Pass the new function
       }),
     [
       newMessage,
@@ -83,40 +86,10 @@ function ChatClient({
       setNewMessage,
       setSelectedVideo,
       setMessages,
+      addOptimisticMessage,
     ]
   );
 
-  /**
-   * Memoized function for deleting a video.
-   */
-  const memoizedHandleDeleteVideo = useCallback(
-    (messageId: number, removeFromDatabase = true) =>
-      handleOnDeleteVideo({
-        messageId,
-        removeFromDatabase,
-        deleteVideo,
-        signedInUserId: signedInUser.id,
-        setMessages,
-      }),
-    [deleteVideo, signedInUser.id, setMessages]
-  );
-
-  /**
-   * Memoized function for deleting a message.
-   */
-  const memoizedHandleDeleteMessage = useCallback(
-    (messageId: number, removeFromDatabase = true) =>
-      handleOnDeleteMessage({
-        messageId,
-        removeFromDatabase,
-        deleteMessage,
-        signedInUserId: signedInUser.id,
-        handleDeleteMessage, // Uses the hook's local deletion logic
-      }),
-    [deleteMessage, signedInUser.id, handleDeleteMessage]
-  );
-
-  // Render loading spinner while fetching messages
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -128,8 +101,24 @@ function ChatClient({
       selectedRecipientId={selectedRecipientId}
       handleRecipientChange={handleRecipientChange}
       messages={messages}
-      onDeleteVideo={memoizedHandleDeleteVideo}
-      onDeleteMessage={memoizedHandleDeleteMessage}
+      onDeleteVideo={(messageId, removeFromDatabase = true) =>
+        handleOnDeleteVideo({
+          messageId,
+          removeFromDatabase,
+          deleteVideo,
+          signedInUserId: signedInUser.id,
+          setMessages,
+        })
+      }
+      onDeleteMessage={(messageId, removeFromDatabase = true) =>
+        handleOnDeleteMessage({
+          messageId,
+          removeFromDatabase,
+          deleteMessage,
+          signedInUserId: signedInUser.id,
+          handleDeleteMessage,
+        })
+      }
       isSending={isSending}
       setSelectedVideo={setSelectedVideo}
       newMessage={newMessage}
