@@ -13,6 +13,11 @@ import {
   SubscribeToPusherEventsParams,
 } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
+import {
+  handlePrepareFormData,
+  createOptimisticMessage,
+  handleValidateMessage,
+} from '@/utils/messageUtils';
 import { handleInitializePusher } from '@/utils/pusherUtils';
 
 export const subscribeToPusherEvents = ({
@@ -84,75 +89,6 @@ export async function handleOnDeleteMessage({
   }
 }
 
-function handlePrepareFormData({
-  newMessage,
-  signedInUserId,
-  selectedRecipientId,
-  selectedVideo,
-}: {
-  newMessage: string;
-  signedInUserId: number;
-  selectedRecipientId: number | null;
-  selectedVideo: File | null;
-}): FormData {
-  const formData = new FormData();
-  formData.append('content', newMessage);
-  formData.append('senderId', signedInUserId.toString());
-
-  if (selectedRecipientId !== null) {
-    formData.append('recipientId', selectedRecipientId.toString());
-  }
-
-  if (selectedVideo) {
-    formData.append('videoFile', selectedVideo);
-  }
-
-  return formData;
-}
-
-function createOptimisticMessage({
-  temporaryId,
-  newMessage,
-  signedInUserId,
-  selectedRecipientId,
-}: {
-  temporaryId: number;
-  newMessage: string;
-  signedInUserId: number;
-  selectedRecipientId: number | null;
-}): Message | null {
-  if (selectedRecipientId !== null) {
-    return {
-      id: temporaryId,
-      content: newMessage,
-      sender: { id: signedInUserId, username: 'You' },
-      createdAt: new Date(),
-      videoUrl: null,
-      recipientId: selectedRecipientId,
-    };
-  }
-  return null;
-}
-
-function handleLogErrors(errors: { message: string }[]): void {
-  const errorMessages = errors.map((error) => error.message).join(', ');
-  console.error('Failed to send message:', errorMessages);
-}
-
-function handleClearForm({
-  setNewMessage,
-  setSelectedVideo,
-  setIsSending,
-}: {
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
-  setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
-}): void {
-  setNewMessage('');
-  setSelectedVideo(null);
-  setIsSending(false);
-}
-
 export async function handleSendMessage({
   e,
   newMessage,
@@ -174,20 +110,18 @@ export async function handleSendMessage({
 
   setIsSending(true);
 
-  const { temporaryId, formData, optimisticMessage } = handlePrepareMessageData(
-    {
-      newMessage,
-      selectedVideo,
-      signedInUserId,
-      selectedRecipientId,
-      addOptimisticMessage,
-    }
-  );
+  const { temporaryId, formData, optimisticMessage } = handlePrepareMessage({
+    newMessage,
+    selectedVideo,
+    signedInUserId,
+    selectedRecipientId,
+    addOptimisticMessage,
+  });
 
   try {
     const response = await action({}, formData);
 
-    await handleProcessServerResponse({
+    handleServerResponse({
       response,
       isIndividualMessageWithoutVideo:
         !selectedVideo && selectedRecipientId !== null,
@@ -196,20 +130,13 @@ export async function handleSendMessage({
       replaceOptimisticMessage,
     });
   } catch (error) {
-    console.error('Error sending message:', error);
+    handleSendMessageError(error);
   } finally {
-    handleClearForm({ setNewMessage, setSelectedVideo, setIsSending });
+    handleResetFormState({ setNewMessage, setSelectedVideo, setIsSending });
   }
 }
 
-function handleValidateMessage(
-  newMessage: string,
-  selectedVideo: File | null
-): boolean {
-  return newMessage.trim() !== '' || selectedVideo !== null;
-}
-
-function handlePrepareMessageData({
+function handlePrepareMessage({
   newMessage,
   selectedVideo,
   signedInUserId,
@@ -251,7 +178,7 @@ function handlePrepareMessageData({
   return { temporaryId, formData, optimisticMessage };
 }
 
-async function handleProcessServerResponse({
+function handleServerResponse({
   response,
   isIndividualMessageWithoutVideo,
   temporaryId,
@@ -266,7 +193,7 @@ async function handleProcessServerResponse({
     temporaryId: number,
     confirmedMessage: Message
   ) => void;
-}): Promise<void> {
+}): void {
   if (
     response.success &&
     response.messageId &&
@@ -282,4 +209,27 @@ async function handleProcessServerResponse({
   } else {
     console.error('Unknown error sending message');
   }
+}
+
+function handleLogErrors(errors: { message: string }[]): void {
+  const errorMessages = errors.map((error) => error.message).join(', ');
+  console.error('Failed to send message:', errorMessages);
+}
+
+function handleSendMessageError(error: unknown): void {
+  console.error('Error sending message:', error);
+}
+
+function handleResetFormState({
+  setNewMessage,
+  setSelectedVideo,
+  setIsSending,
+}: {
+  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
+  setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
+}): void {
+  setNewMessage('');
+  setSelectedVideo(null);
+  setIsSending(false);
 }
