@@ -12,6 +12,7 @@ import {
   HandleSendMessageParams,
   SubscribeToPusherEventsParams,
 } from '@/types/message-types';
+import { ActionResponse } from '@/types/shared-types';
 import { handleInitializePusher } from '@/utils/pusherUtils';
 
 export const subscribeToPusherEvents = ({
@@ -83,6 +84,75 @@ export async function handleOnDeleteMessage({
   }
 }
 
+function handlePrepareFormData({
+  newMessage,
+  signedInUserId,
+  selectedRecipientId,
+  selectedVideo,
+}: {
+  newMessage: string;
+  signedInUserId: number;
+  selectedRecipientId: number | null;
+  selectedVideo: File | null;
+}): FormData {
+  const formData = new FormData();
+  formData.append('content', newMessage);
+  formData.append('senderId', signedInUserId.toString());
+
+  if (selectedRecipientId !== null) {
+    formData.append('recipientId', selectedRecipientId.toString());
+  }
+
+  if (selectedVideo) {
+    formData.append('videoFile', selectedVideo);
+  }
+
+  return formData;
+}
+
+function createOptimisticMessage({
+  temporaryId,
+  newMessage,
+  signedInUserId,
+  selectedRecipientId,
+}: {
+  temporaryId: number;
+  newMessage: string;
+  signedInUserId: number;
+  selectedRecipientId: number | null;
+}): Message | null {
+  if (selectedRecipientId !== null) {
+    return {
+      id: temporaryId,
+      content: newMessage,
+      sender: { id: signedInUserId, username: 'You' },
+      createdAt: new Date(),
+      videoUrl: null,
+      recipientId: selectedRecipientId,
+    };
+  }
+  return null;
+}
+
+function handleLogErrors(errors: { message: string }[]): void {
+  const errorMessages = errors.map((error) => error.message).join(', ');
+  console.error('Failed to send message:', errorMessages);
+}
+
+function handleClearForm({
+  setNewMessage,
+  setSelectedVideo,
+  setIsSending,
+}: {
+  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
+  setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
+}): void {
+  setNewMessage('');
+  setSelectedVideo(null);
+  setIsSending(false);
+}
+
 export async function handleSendMessage({
   e,
   newMessage,
@@ -98,69 +168,118 @@ export async function handleSendMessage({
 }: HandleSendMessageParams): Promise<void> {
   e.preventDefault();
 
-  if (!newMessage.trim() && !selectedVideo) {
+  if (!handleValidateMessage(newMessage, selectedVideo)) {
     return;
   }
 
   setIsSending(true);
 
-  const temporaryId = Date.now();
-  const formData = new FormData();
-  formData.append('content', newMessage);
-  formData.append('senderId', signedInUserId.toString());
-
-  if (selectedRecipientId !== null) {
-    formData.append('recipientId', selectedRecipientId.toString());
-  }
-
-  if (selectedVideo) {
-    formData.append('videoFile', selectedVideo);
-  }
-
-  const isIndividualMessageWithoutVideo =
-    !selectedVideo && selectedRecipientId !== null;
-
-  let optimisticMessage: Message | null = null;
-
-  if (isIndividualMessageWithoutVideo) {
-    optimisticMessage = {
-      id: temporaryId,
-      content: newMessage,
-      sender: { id: signedInUserId, username: 'You' },
-      createdAt: new Date(),
-      videoUrl: null,
-      recipientId: selectedRecipientId,
-    };
-
-    addOptimisticMessage(optimisticMessage);
-  }
+  const { temporaryId, formData, optimisticMessage } = handlePrepareMessageData(
+    {
+      newMessage,
+      selectedVideo,
+      signedInUserId,
+      selectedRecipientId,
+      addOptimisticMessage,
+    }
+  );
 
   try {
     const response = await action({}, formData);
 
-    if (
-      response.success &&
-      response.messageId &&
-      isIndividualMessageWithoutVideo
-    ) {
-      const confirmedMessage = {
-        ...optimisticMessage!,
-        id: response.messageId,
-      };
-      replaceOptimisticMessage(temporaryId, confirmedMessage);
-    } else if (response.errors) {
-      const errorMessages = response.errors
-        .map((error) => error.message)
-        .join(', ');
-      console.error('Failed to send message:', errorMessages);
-    } else {
-      console.error('Unknown error sending message');
-    }
+    await handleProcessServerResponse({
+      response,
+      isIndividualMessageWithoutVideo:
+        !selectedVideo && selectedRecipientId !== null,
+      temporaryId,
+      optimisticMessage,
+      replaceOptimisticMessage,
+    });
   } catch (error) {
     console.error('Error sending message:', error);
   } finally {
-    setNewMessage('');
-    setSelectedVideo(null);
-    setIsSending(false);
+    handleClearForm({ setNewMessage, setSelectedVideo, setIsSending });
+  }
+}
+
+function handleValidateMessage(
+  newMessage: string,
+  selectedVideo: File | null
+): boolean {
+  return newMessage.trim() !== '' || selectedVideo !== null;
+}
+
+function handlePrepareMessageData({
+  newMessage,
+  selectedVideo,
+  signedInUserId,
+  selectedRecipientId,
+  addOptimisticMessage,
+}: {
+  newMessage: string;
+  selectedVideo: File | null;
+  signedInUserId: number;
+  selectedRecipientId: number | null;
+  addOptimisticMessage: (message: Message) => void;
+}): {
+  temporaryId: number;
+  formData: FormData;
+  optimisticMessage: Message | null;
+} {
+  const temporaryId = Date.now();
+  const formData = handlePrepareFormData({
+    newMessage,
+    signedInUserId,
+    selectedRecipientId,
+    selectedVideo,
+  });
+
+  const optimisticMessage =
+    !selectedVideo && selectedRecipientId !== null
+      ? createOptimisticMessage({
+          temporaryId,
+          newMessage,
+          signedInUserId,
+          selectedRecipientId,
+        })
+      : null;
+
+  if (optimisticMessage) {
+    addOptimisticMessage(optimisticMessage);
+  }
+
+  return { temporaryId, formData, optimisticMessage };
+}
+
+async function handleProcessServerResponse({
+  response,
+  isIndividualMessageWithoutVideo,
+  temporaryId,
+  optimisticMessage,
+  replaceOptimisticMessage,
+}: {
+  response: ActionResponse;
+  isIndividualMessageWithoutVideo: boolean;
+  temporaryId: number;
+  optimisticMessage: Message | null;
+  replaceOptimisticMessage: (
+    temporaryId: number,
+    confirmedMessage: Message
+  ) => void;
+}): Promise<void> {
+  if (
+    response.success &&
+    response.messageId &&
+    isIndividualMessageWithoutVideo
+  ) {
+    const confirmedMessage = {
+      ...optimisticMessage!,
+      id: response.messageId,
+    };
+    replaceOptimisticMessage(temporaryId, confirmedMessage);
+  } else if (response.errors) {
+    handleLogErrors(response.errors);
+  } else {
+    console.error('Unknown error sending message');
   }
 }
