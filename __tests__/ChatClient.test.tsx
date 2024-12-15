@@ -23,8 +23,6 @@ jest.mock('@/utils/chatUtils', () => {
     ...actualChatUtils,
     handleOnDeleteMessage: jest.fn(),
     handleOnDeleteVideo: jest.fn(),
-    fetchMessagesForChat: jest.fn(),
-    handleRecipientChange: jest.fn(),
     handleSendMessage: jest.fn(),
   };
 });
@@ -40,7 +38,7 @@ const mockSignedInUser: SignedInUser = {
 };
 
 const mockUsers: ChatUser[] = [
-  { id: 2, username: 'Recipient1', whatsappNumber: '1234567890' },
+  { id: 2, username: 'Recipient1' },
   { id: 3, username: 'Recipient2' },
 ];
 
@@ -92,33 +90,6 @@ describe('ChatClient Component Tests', () => {
     ).toBeInTheDocument();
   });
 
-  it('handles recipient selection change', async () => {
-    const mockHandleRecipientChange = jest.spyOn(
-      chatUtils,
-      'handleRecipientChange'
-    );
-
-    render(
-      <ChatClient
-        signedInUser={mockSignedInUser}
-        messages={mockMessages}
-        users={mockUsers}
-        action={jest.fn()}
-        getMessages={jest.fn()}
-        deleteVideo={jest.fn()}
-        deleteMessage={jest.fn()}
-        recipientId={null}
-      />
-    );
-
-    const recipientSelector = screen.getByRole('combobox');
-    fireEvent.change(recipientSelector, { target: { value: '2' } });
-
-    await waitFor(() => {
-      expect(mockHandleRecipientChange).toHaveBeenCalled();
-    });
-  });
-
   it('handles message deletion', async () => {
     const mockHandleOnDeleteMessage = jest.spyOn(
       chatUtils,
@@ -147,12 +118,12 @@ describe('ChatClient Component Tests', () => {
         removeFromDatabase: true,
         deleteMessage: expect.any(Function),
         signedInUserId: 1,
-        setMessages: expect.any(Function),
+        handleDeleteMessage: expect.any(Function),
       });
     });
   });
 
-  it('handles message sending', async () => {
+  it('handles message sending with optimistic updates', async () => {
     const mockHandleSendMessage = jest.spyOn(chatUtils, 'handleSendMessage');
     const mockAction = jest.fn();
 
@@ -193,6 +164,8 @@ describe('ChatClient Component Tests', () => {
           action: mockAction,
           setNewMessage: expect.any(Function),
           setSelectedVideo: expect.any(Function),
+          addOptimisticMessage: expect.any(Function),
+          replaceOptimisticMessage: expect.any(Function),
         })
       );
     });
