@@ -135,3 +135,18 @@ export interface SubscribeToPusherEventsParams {
 export interface ChatClientAction {
   (_prevState: unknown, params: FormData): Promise<ActionResponse>;
 }
+
+export interface MessageListProps {
+  messages: Message[];
+  signedInUser: SignedInUser;
+  onDeleteVideo: (messageId: number, removeFromDatabase?: boolean) => void;
+  onDeleteMessage: (messageId: number, removeFromDatabase?: boolean) => void;
+}
+
+export interface CreateMessageParams {
+  content: string | null;
+  senderId: number;
+  recipientId?: number;
+  videoUrl?: string | null;
+  videoPublicId?: string | null;
+}
