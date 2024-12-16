@@ -1,31 +1,33 @@
 export const usernameLengthErrorMessage =
-  'Username must be at least 4 characters long';
+  'Gebruikersnaam moet minimaal 4 tekens lang zijn';
 export const passwordLengthErrorMessage =
-  'Password must be at least 8 characters long';
+  'Wachtwoord moet minimaal 8 tekens lang zijn';
 export const passwordUppercaseErrorMessage =
-  'Password must contain at least one uppercase letter';
+  'Wachtwoord moet ten minste één hoofdletter bevatten';
 export const passwordSpecialCharacterErrorMessage =
-  'Password must contain at least one special character';
+  'Wachtwoord moet ten minste één speciaal teken bevatten';
 export const whatsappNumberErrorMessage =
-  'Please enter a valid WhatsApp number (including country code)';
-export const pouleNameRequiredMessage = 'Poule name is required';
-export const mainTeamNameRequiredMessage = 'Main team name is required';
-export const opponentNameRequiredMessage = 'Opponent name is required';
+  'Voer een geldig WhatsApp-nummer in (inclusief landcode)';
+export const pouleNameRequiredMessage = 'Poulennaam is verplicht';
+export const mainTeamNameRequiredMessage =
+  'Naam van het hoofdteam is verplicht';
+export const opponentNameRequiredMessage =
+  'Naam van de tegenstander is verplicht';
 export const minimumOpponentsRequiredMessage =
-  'At least one opponent is required';
-export const invalidPouleOpponentIdMessage = 'Invalid Poule Opponent ID';
-export const invalidDateFormatMessage = 'Invalid date format';
-export const invalidUserIdMessage = 'Invalid User ID';
-export const invalidMatchIdMessage = 'Invalid Match ID';
+  'Er is minimaal één tegenstander vereist';
+export const invalidPouleOpponentIdMessage = 'Ongeldige Poule Tegenstander-ID';
+export const invalidDateFormatMessage = 'Ongeldig datumnotatie';
+export const invalidUserIdMessage = 'Ongeldige Gebruikers-ID';
+export const invalidMatchIdMessage = 'Ongeldige Wedstrijd-ID';
 export const minutesPositiveNumberMessage =
-  'Minutes must be zero or a positive number';
+  'Minuten moeten nul of een positief getal zijn';
 export const minutesWhenAvailableMessage =
-  'Minutes must be a positive number when the player is available.';
-export const emptyMessageErrorMessage = 'Message cannot be empty';
-export const messageTooLongErrorMessage = 'Message too long';
-export const invalidSenderIdMessage = 'Invalid sender ID';
-export const invalidRecipientIdMessage = 'Invalid recipient ID';
-export const clerkIdRequiredMessage = 'clerkId is required';
-export const usernameRequiredMessage = 'Username is required';
-export const unknownPlayerMessage = 'Unknown Player';
-export const unknownOpponentMessage = 'Unknown Opponent';
+  'Minuten moeten een positief getal zijn wanneer de speler beschikbaar is.';
+export const emptyMessageErrorMessage = 'Bericht mag niet leeg zijn';
+export const messageTooLongErrorMessage = 'Bericht is te lang';
+export const invalidSenderIdMessage = 'Ongeldige afzender-ID';
+export const invalidRecipientIdMessage = 'Ongeldige ontvanger-ID';
+export const clerkIdRequiredMessage = 'clerkId is verplicht';
+export const usernameRequiredMessage = 'Gebruikersnaam is verplicht';
+export const unknownPlayerMessage = 'Onbekende Speler';
+export const unknownOpponentMessage = 'Onbekende Tegenstander';

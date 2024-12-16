@@ -97,7 +97,7 @@ describe('addTraining Functionality Tests', () => {
     expect(result).toEqual({
       errors: [
         {
-          message: 'Failed to create training.',
+          message: 'Mislukt om training aan te maken.',
           path: ['addTraining'],
           code: 'custom',
         },

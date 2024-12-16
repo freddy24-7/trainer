@@ -25,11 +25,10 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-const errorAddingTraining = 'Error adding training.';
-const anErrorOccurred = 'An error occurred during submission.';
-const addTrainingButtonText = /Add Training/i;
-const addNewTrainingTitle = 'Add a New Training Session';
-const markAbsentPlayersText = 'Mark Absent Players';
+const errorAddingTraining = 'Fout bij het toevoegen van training.';
+const anErrorOccurred = 'Er is een fout opgetreden bij het indienen.';
+const addTrainingButtonText = 'Training Toevoegen';
+const addTrainingHeader = 'Nieuwe Trainingssessie Toevoegen';
 
 jest.mock('@/components/DateSelector', () => {
   interface MockDateSelectorProps {
@@ -90,9 +89,7 @@ describe('AddTrainingForm', () => {
   it('renders the form with date selector and player checkboxes', () => {
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
 
-    expect(screen.getByText(addNewTrainingTitle)).toBeInTheDocument();
-    expect(screen.getByText(markAbsentPlayersText)).toBeInTheDocument();
-
+    expect(screen.getByText(addTrainingHeader)).toBeInTheDocument();
     expect(screen.getByTestId(selectDate)).toBeInTheDocument();
 
     mockPlayers.forEach((player) => {

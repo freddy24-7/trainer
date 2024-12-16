@@ -78,7 +78,7 @@ describe('addMatchPlayer Functionality Tests', () => {
 
     expect(result).toHaveProperty('errors');
     expect(result.errors).toContainEqual({
-      message: 'Failed to add match player to the database.',
+      message: 'Mislukt om wedstrijdspeler toe te voegen aan de database.',
       path: ['form'],
       code: 'custom',
     });

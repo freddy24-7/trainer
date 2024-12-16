@@ -10,8 +10,10 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
-const pouleAddition = 'Add Poule';
-const opponentName1 = 'Opponent 1';
+const pouleManagementHeading = 'Poulebewerking';
+const addPouleButtonText = 'Poule Toevoegen';
+const cancelText = 'Annuleren';
+const opponentName1 = 'Tegenstander 1';
 
 describe('AddPouleFormValidation', () => {
   const mockAction = jest.fn();
@@ -20,32 +22,39 @@ describe('AddPouleFormValidation', () => {
     jest.clearAllMocks();
   });
 
-  it('should show form when Add Another Poule button is clicked', () => {
+  it('should show form when Add Poule button is clicked and hide it when Cancel is clicked', () => {
     render(<AddPouleForm action={mockAction} />);
 
-    const button = screen.getByText(pouleAddition);
-    fireEvent.click(button);
+    const addButton = screen.getByText(addPouleButtonText);
+    expect(addButton).toBeInTheDocument();
 
-    const formTitle = screen.getByText('Poule Management');
+    fireEvent.click(addButton);
+
+    const formTitle = screen.getByText(pouleManagementHeading);
     expect(formTitle).toBeInTheDocument();
+    const cancelButton = screen.getByText(cancelText);
+    expect(cancelButton).toBeInTheDocument();
+
+    fireEvent.click(cancelButton);
+    expect(screen.queryByText(pouleManagementHeading)).not.toBeInTheDocument();
   });
 
   it('should add an opponent when Enter is pressed', () => {
     render(<AddPouleForm action={mockAction} />);
-    fireEvent.click(screen.getByText(pouleAddition));
+    fireEvent.click(screen.getByText(addPouleButtonText));
 
     const input = screen.getByPlaceholderText('Enter opponent name');
     fireEvent.change(input, { target: { value: opponentName1 } });
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
-    const opponentListItem = screen.getByText('Opponent 1');
+    const opponentListItem = screen.getByText(opponentName1);
     expect(opponentListItem).toBeInTheDocument();
   });
 
   it('should call action on form submission after adding opponent', async () => {
     render(<AddPouleForm action={mockAction} />);
 
-    fireEvent.click(screen.getByText(pouleAddition));
+    fireEvent.click(screen.getByText(addPouleButtonText));
 
     const pouleInput = screen.getByPlaceholderText('Poule Name');
     fireEvent.change(pouleInput, { target: { value: 'Poule Test' } });
@@ -57,7 +66,7 @@ describe('AddPouleFormValidation', () => {
     fireEvent.change(opponentInput, { target: { value: opponentName1 } });
     fireEvent.keyDown(opponentInput, { key: 'Enter', code: 'Enter' });
 
-    const submitButton = screen.getByText('Add Poule');
+    const submitButton = screen.getByText(addPouleButtonText);
     fireEvent.click(submitButton);
 
     await waitFor(() => {

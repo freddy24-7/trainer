@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
+import { errorAddingTraining, anErrorOccurred } from '@/strings/clientStrings';
 import { TrainingFormValues, ErrorDetails } from '@/types/training-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
@@ -28,12 +29,12 @@ export const submitTrainingForm = async (
     const response = await action(formData);
 
     if (response.success) {
-      toast.success('Training added successfully!');
+      toast.success('Training succesvol toegevoegd!');
       router.push('/');
       return;
     }
 
-    const errorMessage = formatError('Error adding training.', ['addTraining']);
+    const errorMessage = formatError(errorAddingTraining, ['addTraining']);
     const message =
       response.errors &&
       response.errors.length > 0 &&
@@ -44,9 +45,7 @@ export const submitTrainingForm = async (
     toast.error(message);
   } catch (error) {
     console.error('Submission error:', error);
-    const errorMessage = formatError('An error occurred during submission.', [
-      'addTraining',
-    ]);
+    const errorMessage = formatError(anErrorOccurred, ['addTraining']);
     toast.error(errorMessage.errors[0].message);
   } finally {
     resetSubmissionState();

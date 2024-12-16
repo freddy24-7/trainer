@@ -56,7 +56,7 @@ describe('getPlayerStats', () => {
 
     expect(result).toEqual({
       success: false,
-      error: 'Failed to fetch player stats.',
+      error: 'Mislukt om spelersstatistieken op te halen.',
     });
   });
 });

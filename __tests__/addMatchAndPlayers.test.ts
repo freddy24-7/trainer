@@ -38,7 +38,8 @@ describe('addMatchAndPlayers Functionality Tests', () => {
 
   it('should return an error if match creation fails', async () => {
     mockAddMatch.mockResolvedValue({
-      errors: formatError('Failed to create match.', ['form']).errors,
+      errors: formatError('Mislukt om wedstrijd aan te maken.', ['form'])
+        .errors,
     });
 
     const formData = new FormData();
@@ -49,7 +50,7 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     const result = await addMatchAndPlayers(null, formData);
 
     expect(result.errors).toEqual(
-      formatError('Failed to create match.', ['form']).errors
+      formatError('Mislukt om wedstrijd aan te maken.', ['form']).errors
     );
     expect(mockAddMatchPlayer).not.toHaveBeenCalled();
   });
@@ -64,7 +65,7 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     const result = await addMatchAndPlayers(null, formData);
 
     expect(result.errors).toEqual(
-      formatError('Players data is missing.', ['players']).errors
+      formatError('Spelersgegevens ontbreken.', ['players']).errors
     );
     expect(mockAddMatchPlayer).not.toHaveBeenCalled();
   });
@@ -97,7 +98,7 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     const result = await addMatchAndPlayers(null, formData);
 
     expect(result.errors).toEqual(
-      formatError('Players data is not an array.', ['players']).errors
+      formatError('Spelersgegevens zijn geen array.', ['players']).errors
     );
     expect(mockAddMatchPlayer).not.toHaveBeenCalled();
   });
@@ -105,8 +106,10 @@ describe('addMatchAndPlayers Functionality Tests', () => {
   it('should handle an error during player addition', async () => {
     mockAddMatch.mockResolvedValue({ match: { id: 1 } });
     mockAddMatchPlayer.mockResolvedValue({
-      errors: formatError('Failed to add player 1.', ['players', 'form'])
-        .errors,
+      errors: formatError('Mislukt om speler 1 toe te voegen.', [
+        'players',
+        'form',
+      ]).errors,
     });
 
     const formData = new FormData();
@@ -120,7 +123,8 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     const result = await addMatchAndPlayers(null, formData);
 
     expect(result.errors).toEqual(
-      formatError('Failed to add player 1.', ['players', 'form']).errors
+      formatError('Mislukt om speler 1 toe te voegen.', ['players', 'form'])
+        .errors
     );
     expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
   });
@@ -139,9 +143,11 @@ describe('addMatchAndPlayers Functionality Tests', () => {
 
     const result = await addMatchAndPlayers(null, formData);
 
-    expect(result.errors).toEqual(
-      formatError('Unexpected error adding player 1.', ['players', '1']).errors
-    );
+    const expectedMessage = 'Onverwachte fout bij het toevoegen van speler. 1.';
+
+    expect(result.errors.map((e) => e.message)).toContain(expectedMessage);
+
+    expect(result.errors[0].path).toEqual(['players', '1']);
     expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
   });
 });

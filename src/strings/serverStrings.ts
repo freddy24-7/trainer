@@ -1,59 +1,63 @@
-export const invalidUserData = 'Invalid user data';
+export const invalidUserData = 'Ongeldige gebruikersgegevens';
 export const errorInteractingWithDatabase =
-  'Error interacting with the database.';
-export const unauthorizedError = 'Unauthorized';
-export const userNotFoundError = 'User not found';
-export const channelAuthorizationError = 'Error authorizing channel';
-export const errorLoadingMessages = 'Error loading messages';
-export const usernameUpdateFailed = 'Failed to update username.';
+  'Fout bij interactie met de database.';
+export const unauthorizedError = 'Ongeautoriseerd';
+export const userNotFoundError = 'Gebruiker niet gevonden';
+export const channelAuthorizationError = 'Fout bij autorisatie van het kanaal';
+export const errorLoadingMessages = 'Fout bij het laden van berichten';
+export const usernameUpdateFailed = 'Gebruikersnaam bijwerken mislukt.';
 export const errorCheckingOrUpdatingUsername =
-  'Error checking or updating username.';
-export const usernameSuccessfullyUpdated = 'Username successfully updated!';
-export const errorLoadingPlayerStatistics = 'Error loading player statistics';
-export const errorLoadingMatchData = 'Error loading match data';
-export const unknownError = 'Unknown error';
-export const errorLoadingData = 'Error loading data';
-export const unknownErrorOccurred = 'An unknown error occurred.';
-export const errorLoadingTrainingData = 'Error loading training data';
-export const errorLoadingAttendanceData = 'Error loading attendance data';
-export const userNotAuthenticatedMessage = 'User is not authenticated';
-export const prismaUserNotFoundMessage = 'Prisma User not found for Clerk ID:';
-export const prismaUserLogMessage = 'Current Prisma username:';
-export const loadPoulesErrorMessage = 'Failed to load poules';
-export const fetchUserErrorMessage = 'Error fetching user from database';
-export const updateUsernameErrorMessage = 'Error updating username';
+  'Fout bij het controleren of bijwerken van de gebruikersnaam.';
+export const usernameSuccessfullyUpdated =
+  'Gebruikersnaam succesvol bijgewerkt!';
+export const errorLoadingPlayerStatistics =
+  'Fout bij het laden van spelersstatistieken';
+export const errorLoadingMatchData = 'Fout bij het laden van wedstrijdgegevens';
+export const unknownError = 'Onbekende fout';
+export const errorLoadingData = 'Fout bij het laden van gegevens';
+export const unknownErrorOccurred = 'Er is een onbekende fout opgetreden.';
+export const errorLoadingTrainingData =
+  'Fout bij het laden van trainingsgegevens';
+export const errorLoadingAttendanceData =
+  'Fout bij het laden van aanwezigheidsgegevens';
+export const userNotAuthenticatedMessage = 'Gebruiker is niet geverifieerd';
+export const prismaUserNotFoundMessage =
+  'Prisma-gebruiker niet gevonden voor Clerk ID:';
+export const prismaUserLogMessage = 'Huidige Prisma-gebruikersnaam:';
+export const loadPoulesErrorMessage = 'Mislukt om poules te laden';
+export const fetchUserErrorMessage =
+  'Fout bij het ophalen van de gebruiker uit de database';
+export const updateUsernameErrorMessage =
+  'Fout bij het bijwerken van de gebruikersnaam';
 export const requiredFieldsErrorMessage =
-  'Username, password, and WhatsApp number are required.';
+  'Gebruikersnaam, wachtwoord en WhatsApp-nummer zijn verplicht.';
 export const usernameAndWhatsappRequiredMessage =
-  'Username and WhatsApp number are required.';
+  'Gebruikersnaam en WhatsApp-nummer zijn verplicht.';
 export const failedToDeleteVideoMessage =
-  'Failed to delete video from the database';
+  'Mislukt om video uit de database te verwijderen';
 export const failedToDeleteMessageMessage =
-  'Failed to delete message from the database';
-export const failedToFetchMessagesMessage = 'Error fetching messages';
-export const failedToSendMessageErrorsMessage = 'Failed to send message:';
-export const failedToSendMessageUnknownMessage =
-  'Failed to send message due to unknown reasons';
-export const defaultErrorMessage = 'An error occurred';
-export const validationFailedMessage = 'Validation failed for match details';
+  'Mislukt om bericht uit de database te verwijderen';
+export const defaultErrorMessage = 'Er is een fout opgetreden';
+export const validationFailedMessage =
+  'Validatie van wedstrijdgegevens mislukt';
 export const invalidPlayerMinutesMessage =
-  'Please enter valid minutes or mark as not available.';
-export const matchAddedSuccessMessage = 'Match added successfully!';
-export const matchAddErrorMessage = 'Error adding match.';
-export const submissionErrorMessage = 'An error occurred during submission.';
+  'Voer geldige minuten in of markeer als niet beschikbaar.';
+export const matchAddedSuccessMessage = 'Wedstrijd succesvol toegevoegd!';
+export const matchAddErrorMessage = 'Fout bij het toevoegen van de wedstrijd.';
+export const submissionErrorMessage =
+  'Er is een fout opgetreden tijdens de inzending.';
 export const invalidWhatsappNumberMessage =
-  "WhatsApp number must start with '06' and be exactly 10 digits long.";
-export const invalidInputMessage = 'Invalid input.';
-export const operationSuccessMessage = 'Operation successful!';
-export const playersDataMissingMessage = 'Players data is missing.';
+  "WhatsApp-nummer moet beginnen met '06' en precies 10 cijfers bevatten.";
+export const invalidInputMessage = 'Ongeldige invoer.';
+export const operationSuccessMessage = 'Handeling succesvol uitgevoerd!';
+export const playersDataMissingMessage = 'Spelersgegevens ontbreken.';
 export const invalidPlayerDataFormatMessage =
-  'Unknown error parsing players data.';
-export const playersDataNotArrayMessage = 'Players data is not an array.';
-export const invalidMinutesMessage =
-  'Invalid minutes for player {id}. Expected a number.';
-export const opponentNameEmptyMessage = 'Opponent name cannot be empty';
+  'Onbekende fout bij het verwerken van spelersgegevens.';
+export const playersDataNotArrayMessage = 'Spelersgegevens zijn geen array.';
+export const opponentNameEmptyMessage =
+  'Naam van de tegenstander mag niet leeg zijn';
 export const failedToAddPouleMessage =
-  'Failed to add poule. Please check your inputs.';
-export const pouleAddedSuccessMessage = 'Poule added successfully!';
-export const failedPusherAuthMessage = 'Failed to authenticate Pusher channel';
-export const pusherAuthorizationErrorMessage = 'Error in Pusher authorization';
+  'Mislukt om poule toe te voegen. Controleer je invoer.';
+export const pouleAddedSuccessMessage = 'Poule succesvol toegevoegd!';
+export const failedPusherAuthMessage = 'Mislukt om Pusher-kanaal te verifiëren';
+export const pusherAuthorizationErrorMessage = 'Fout bij Pusher-autorisatie';

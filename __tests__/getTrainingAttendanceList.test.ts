@@ -92,7 +92,7 @@ describe('getTrainingAttendanceList', () => {
 
     expect(result).toEqual({
       success: false,
-      error: 'Failed to fetch attendance data.',
+      error: 'Mislukt om aanwezigheidsgegevens op te halen.',
     });
   });
 });

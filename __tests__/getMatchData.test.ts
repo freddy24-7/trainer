@@ -80,7 +80,7 @@ describe('getMatchData', () => {
         {
           id: 3,
           date: new Date('2023-09-17'),
-          opponentTeamName: 'Unknown Opponent',
+          opponentTeamName: 'Onbekende Tegenstander',
           absentPlayers: [],
         },
       ],
@@ -107,7 +107,7 @@ describe('getMatchData', () => {
 
     expect(result).toEqual({
       success: false,
-      error: 'Failed to fetch match data.',
+      error: 'Mislukt om wedstrijdgegevens op te halen.',
     });
   });
 });

@@ -78,7 +78,7 @@ describe('addMatch Functionality Tests', () => {
 
     expect(result).toHaveProperty('errors');
     expect(result.errors).toContainEqual({
-      message: 'Selected opponent does not exist.',
+      message: 'Geselecteerde tegenstander bestaat niet.',
       path: ['pouleOpponentId'],
       code: 'custom',
     });

@@ -95,7 +95,7 @@ describe('getTeamsInPoule', () => {
       success: false,
       errors: [
         {
-          message: 'No poules found. Please create a new poule.',
+          message: 'Geen poules gevonden. Maak een nieuwe poule aan.',
           path: ['poules'],
           code: 'custom',
         },
@@ -114,7 +114,7 @@ describe('getTeamsInPoule', () => {
       success: false,
       errors: [
         {
-          message: 'Failed to load teams in the poules.',
+          message: 'Mislukt om teams in de poules te laden.',
           path: ['poules'],
           code: 'custom',
         },

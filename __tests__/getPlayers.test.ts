@@ -4,7 +4,7 @@ import getPlayers from '@/app/actions/getPlayers';
 import prisma from '@/lib/prisma';
 import { formatError } from '@/utils/errorUtils';
 
-const errorMessage = 'Error fetching players.';
+const errorMessage = 'Fout bij het ophalen van spelers.';
 
 jest.mock('@/lib/prisma', () => ({
   user: {

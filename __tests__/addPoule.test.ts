@@ -102,7 +102,7 @@ describe('addPoule', () => {
     if (result && 'errors' in result) {
       expect(result.errors).toEqual([
         {
-          message: 'Validation failed.',
+          message: 'Validatie mislukt.',
           path: ['addPoule'],
           code: 'custom',
         },
@@ -135,7 +135,8 @@ describe('addPoule', () => {
     if (result && 'errors' in result) {
       expect(result.errors).toEqual([
         {
-          message: 'Error creating the poule or linking opponents.',
+          message:
+            'Fout bij het aanmaken van de poule of koppelen van tegenstanders.',
           path: ['form'],
           code: 'custom',
         },

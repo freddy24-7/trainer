@@ -21,24 +21,13 @@ jest.mock('@/utils/playerFormUtils', () => ({
   handlePlayerFormSubmit: jest.fn(),
 }));
 
-const creationError = 'Player creation failed';
+const creationError = 'Speler aanmaken mislukt';
 
 describe('AddPlayerForm', () => {
   const mockAction = jest.fn();
 
   beforeAll(() => {
     jest.spyOn(console, 'log').mockImplementation(() => {});
-    jest.spyOn(console, 'warn').mockImplementation((message: string) => {
-      if (message.includes('punycode')) {
-        return;
-      }
-      console.warn(message);
-    });
-  });
-
-  afterAll(() => {
-    (console.log as jest.Mock).mockRestore();
-    (console.warn as jest.Mock).mockRestore();
   });
 
   beforeEach(() => {
@@ -148,8 +137,8 @@ describe('AddPlayerForm', () => {
 
   const setupMockHandlePlayerFormSubmit = ({
     onSuccessResponse = {
-      username: 'NewPlayer',
-      password: 'NewPassword',
+      username: 'NieuweSpeler',
+      password: 'NieuwWachtwoord',
       whatsappNumber: '+31612345678',
     },
     onErrorResponse,
@@ -178,16 +167,22 @@ describe('AddPlayerForm', () => {
     password: string,
     whatsapp: string
   ): Promise<void> => {
-    await userEventDefault.type(screen.getByLabelText('Username'), username);
-    await userEventDefault.type(screen.getByLabelText('Password'), password);
     await userEventDefault.type(
-      screen.getByLabelText('WhatsApp Number'),
+      screen.getByLabelText('Gebruikersnaam'),
+      username
+    );
+    await userEventDefault.type(screen.getByLabelText('Wachtwoord'), password);
+    await userEventDefault.type(
+      screen.getByLabelText('WhatsApp Nummer'),
       whatsapp
     );
   };
 
   const submitForm = async (): Promise<void> => {
-    await userEventDefault.click(screen.getByText('Add Player'));
+    const submitButton = screen.getByRole('button', {
+      name: 'Speler Toevoegen',
+    });
+    await userEventDefault.click(submitButton);
   };
 
   it('calls action with correct data when form is submitted', async () => {
@@ -197,7 +192,7 @@ describe('AddPlayerForm', () => {
 
     render(<AddPlayerForm action={mockAction} />);
 
-    await fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
+    await fillFormInputs('NieuweSpeler', 'NieuwWachtwoord', '0612345678');
 
     await submitForm();
 
@@ -206,27 +201,29 @@ describe('AddPlayerForm', () => {
     });
 
     const formData = mockAction.mock.calls[0][1] as FormData;
-    expect(formData.get('username')).toBe('NewPlayer');
-    expect(formData.get('password')).toBe('NewPassword');
+    expect(formData.get('username')).toBe('NieuweSpeler');
+    expect(formData.get('password')).toBe('NieuwWachtwoord');
     expect(formData.get('whatsappNumber')).toBe('+31612345678');
   });
 
   it('shows success toast when player is added successfully', async () => {
     setupMockHandlePlayerFormSubmit({
-      toastSuccessMessage: 'Operation successful!',
+      toastSuccessMessage: 'Speler succesvol toegevoegd!',
     });
 
     mockAction.mockResolvedValue({ errors: [] });
 
     render(<AddPlayerForm action={mockAction} />);
 
-    await fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
+    await fillFormInputs('NieuweSpeler', 'NieuwWachtwoord', '0612345678');
 
     await submitForm();
 
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledTimes(1);
-      expect(toast.success).toHaveBeenCalledWith('Operation successful!');
+      expect(toast.success).toHaveBeenCalledWith(
+        'Speler succesvol toegevoegd!'
+      );
     });
   });
 
@@ -242,7 +239,7 @@ describe('AddPlayerForm', () => {
 
     render(<AddPlayerForm action={mockAction} />);
 
-    await fillFormInputs('NewPlayer', 'NewPassword', '0612345678');
+    await fillFormInputs('NieuweSpeler', 'NieuwWachtwoord', '0612345678');
 
     await submitForm();
 

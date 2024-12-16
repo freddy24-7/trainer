@@ -35,7 +35,7 @@ describe('deletePlayer', () => {
 
     expect(result).toEqual({
       success: false,
-      errors: 'Player not found or Clerk ID is missing.',
+      errors: 'Speler niet gevonden of Clerk-ID ontbreekt.',
     });
     expect(users.deleteUser).not.toHaveBeenCalled();
     expect(prisma.user.delete).not.toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('deletePlayer', () => {
 
     expect(result).toEqual({
       success: false,
-      errors: 'Error deleting the player.',
+      errors: 'Fout bij het verwijderen van de speler.',
     });
   });
 
@@ -99,7 +99,7 @@ describe('deletePlayer', () => {
 
     expect(result).toEqual({
       success: false,
-      errors: 'Error deleting the player.',
+      errors: 'Fout bij het verwijderen van de speler.',
     });
   });
 });

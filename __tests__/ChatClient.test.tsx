@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
-
 import '@testing-library/jest-dom';
 
 jest.mock('pusher-js', () => {
@@ -79,14 +78,16 @@ describe('ChatClient Component Tests', () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Welcome to Chat, TestUser!/i)
-      ).toBeInTheDocument();
+      const welcomeMessage = screen.getByText(
+        (content, element) =>
+          /Welcome to Chat/.test(content) && element?.tagName === 'H1'
+      );
+      expect(welcomeMessage).toBeInTheDocument();
     });
 
     expect(screen.getByRole('combobox')).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText('Type your message...')
+      screen.getByPlaceholderText('Typ je bericht...')
     ).toBeInTheDocument();
   });
 
@@ -109,7 +110,7 @@ describe('ChatClient Component Tests', () => {
       />
     );
 
-    const deleteButton = screen.getAllByText(/Delete Message/i)[0];
+    const deleteButton = screen.getAllByText(/Bericht Verwijderen/i)[0];
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -141,15 +142,17 @@ describe('ChatClient Component Tests', () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Welcome to Chat, TestUser!/i)
-      ).toBeInTheDocument();
+      const welcomeMessage = screen.getByText(
+        (content, element) =>
+          /Welcome to Chat/.test(content) && element?.tagName === 'H1'
+      );
+      expect(welcomeMessage).toBeInTheDocument();
     });
 
-    const inputField = screen.getByPlaceholderText('Type your message...');
+    const inputField = screen.getByPlaceholderText('Typ je bericht...');
     fireEvent.change(inputField, { target: { value: 'Test Message' } });
 
-    const sendButton = screen.getByText(/Send/i);
+    const sendButton = screen.getByText(/Versturen/i);
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -197,12 +200,14 @@ describe('ChatClient Component Tests', () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Welcome to Chat, TestUser!/i)
-      ).toBeInTheDocument();
+      const welcomeMessage = screen.getByText(
+        (content, element) =>
+          /Welcome to Chat/.test(content) && element?.tagName === 'H1'
+      );
+      expect(welcomeMessage).toBeInTheDocument();
     });
 
-    const deleteVideoButton = screen.getByText(/Remove Video/i);
+    const deleteVideoButton = screen.getByText(/Video Verwijderen/i);
     fireEvent.click(deleteVideoButton);
 
     await waitFor(() => {

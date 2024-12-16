@@ -110,7 +110,7 @@ describe('addPlayer Functionality Tests', () => {
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors[0].message).toBe(
-      'Please enter a valid WhatsApp number (including country code)'
+      'Voer een geldig WhatsApp-nummer in (inclusief landcode)'
     );
     expect(result.errors[0].path).toContain('whatsappNumber');
   });
@@ -127,7 +127,7 @@ describe('addPlayer Functionality Tests', () => {
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors[0].message).toContain(
-      'Username, password, and WhatsApp number are required.'
+      'Gebruikersnaam, wachtwoord en WhatsApp-nummer zijn verplicht.'
     );
     expect(result.errors[0].path).toContain('form');
   });

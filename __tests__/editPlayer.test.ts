@@ -101,7 +101,8 @@ describe('editPlayer', () => {
     expect(result).toEqual({
       errors: [
         {
-          message: 'Player not found, Clerk ID missing, or username is null.',
+          message:
+            'Speler niet gevonden, Clerk-ID ontbreekt of gebruikersnaam is leeg.',
           path: ['form'],
           code: 'custom',
         },
@@ -193,7 +194,7 @@ describe('editPlayer', () => {
     expect(result).toEqual({
       errors: [
         {
-          message: 'Error updating the player.',
+          message: 'Fout bij het bijwerken van de speler.',
           path: ['form'],
           code: 'custom',
         },

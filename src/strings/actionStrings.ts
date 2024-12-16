@@ -1,38 +1,46 @@
-export const validationFailedMessage = 'Validation failed.';
-export const opponentNotExistMessage = 'Selected opponent does not exist.';
-export const failedToCreateMatchMessage = 'Failed to create match.';
-export const errorAddingPlayer = 'Error adding player';
-export const unexpectedErrorAddingPlayer = 'Unexpected error adding player';
-export const matchIdNotFound = 'Error: Match ID not found.';
+export const validationFailedMessage = 'Validatie mislukt.';
+export const opponentNotExistMessage =
+  'Geselecteerde tegenstander bestaat niet.';
+export const failedToCreateMatchMessage = 'Mislukt om wedstrijd aan te maken.';
+export const errorAddingPlayer = 'Fout bij het toevoegen van speler.';
+export const unexpectedErrorAddingPlayer =
+  'Onverwachte fout bij het toevoegen van speler.';
+export const matchIdNotFound = 'Fout: Wedstrijd-ID niet gevonden.';
 export const failedToAddMatchPlayer =
-  'Failed to add match player to the database.';
-export const errorUploadingVideo = 'Error uploading video.';
+  'Mislukt om wedstrijdspeler toe te voegen aan de database.';
+export const errorUploadingVideo = 'Fout bij het uploaden van video.';
 export const senderNotFoundOrUsernameNull =
-  'Error: Sender not found or username is null.';
-export const errorSendingMessage = 'Error sending the message.';
-export const errorRegisteringPlayer = 'Error registering the player.';
-export const failedToCreateMainTeam = 'Failed to create main team.';
+  'Fout: Afzender niet gevonden of gebruikersnaam is leeg.';
+export const errorSendingMessage = 'Fout bij het verzenden van het bericht.';
+export const errorRegisteringPlayer = 'Fout bij het registreren van de speler.';
+export const failedToCreateMainTeam = 'Mislukt om hoofdteam aan te maken.';
 export const errorCreatingPoule =
-  'Error creating the poule or linking opponents.';
-export const dateCannotBeNull = 'Date cannot be null.';
-export const failedToCreateTraining = 'Failed to create training.';
-export const messageNotFound = 'Message not found.';
+  'Fout bij het aanmaken van de poule of koppelen van tegenstanders.';
+export const dateCannotBeNull = 'Datum mag niet leeg zijn.';
+export const failedToCreateTraining = 'Mislukt om training aan te maken.';
+export const messageNotFound = 'Bericht niet gevonden.';
 export const unauthorizedToDeleteMessage =
-  'Unauthorized to delete this message.';
-export const errorDeletingMessage = 'Error deleting message.';
+  'Geen toestemming om dit bericht te verwijderen.';
+export const errorDeletingMessage = 'Fout bij het verwijderen van bericht.';
 export const playerNotFoundOrMissingClerkId =
-  'Player not found or Clerk ID is missing.';
-export const errorDeletingPlayer = 'Error deleting the player.';
-export const unauthorizedToDeleteVideo = 'Unauthorized to delete this video.';
-export const errorDeletingVideo = 'Error deleting video.';
+  'Speler niet gevonden of Clerk-ID ontbreekt.';
+export const errorDeletingPlayer = 'Fout bij het verwijderen van de speler.';
+export const unauthorizedToDeleteVideo =
+  'Geen toestemming om deze video te verwijderen.';
+export const errorDeletingVideo = 'Fout bij het verwijderen van video.';
 export const playerNotFoundOrInvalid =
-  'Player not found, Clerk ID missing, or username is null.';
-export const errorUpdatingPlayer = 'Error updating the player.';
-export const errorFetchingMatchData = 'Failed to fetch match data.';
-export const errorFetchingPlayers = 'Error fetching players.';
-export const errorFetchingPlayerStats = 'Failed to fetch player stats.';
-export const noPoulesFound = 'No poules found. Please create a new poule.';
-export const failedToLoadTeamsInPoules = 'Failed to load teams in the poules.';
-export const errorFetchingAttendanceData = 'Failed to fetch attendance data.';
-export const errorFetchingTrainingData = 'Failed to fetch training data.';
-export const errorFetchingUsers = 'Error fetching users.';
+  'Speler niet gevonden, Clerk-ID ontbreekt of gebruikersnaam is leeg.';
+export const errorUpdatingPlayer = 'Fout bij het bijwerken van de speler.';
+export const errorFetchingMatchData =
+  'Mislukt om wedstrijdgegevens op te halen.';
+export const errorFetchingPlayers = 'Fout bij het ophalen van spelers.';
+export const errorFetchingPlayerStats =
+  'Mislukt om spelersstatistieken op te halen.';
+export const noPoulesFound = 'Geen poules gevonden. Maak een nieuwe poule aan.';
+export const failedToLoadTeamsInPoules =
+  'Mislukt om teams in de poules te laden.';
+export const errorFetchingAttendanceData =
+  'Mislukt om aanwezigheidsgegevens op te halen.';
+export const errorFetchingTrainingData =
+  'Mislukt om trainingsgegevens op te halen.';
+export const errorFetchingUsers = 'Fout bij het ophalen van gebruikers.';

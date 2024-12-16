@@ -95,7 +95,7 @@ describe('getTrainingData', () => {
 
     expect(result).toEqual({
       success: false,
-      error: 'Failed to fetch training data.',
+      error: 'Mislukt om trainingsgegevens op te halen.',
     });
   });
 });

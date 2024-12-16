@@ -1,29 +1,29 @@
 export const instructionsWelcomeMessage =
-  'Welcome to this app where trainers can communicate with players, and register match and training attendance. All in one place taking away boring excel sheets.';
+  'Welkom bij deze app waar trainers met spelers kunnen communiceren en de aanwezigheid bij wedstrijden en trainingen kunnen registreren. Alles op één plek, zodat saaie Excel-sheets overbodig worden.';
 
 export const instructionsSignUpMessage =
-  'There is no “sign up” for this app. A set number of trainers have been invited to sign in with a username and password provided by an administrator. This way there is no unauthorised access to this app.';
+  'Er is geen "registreren" voor deze app. Een beperkt aantal trainers is uitgenodigd om in te loggen met een gebruikersnaam en wachtwoord dat door een beheerder is verstrekt. Op deze manier is er geen ongeautoriseerde toegang tot de app.';
 
 export const instructionsAccountManagementMessage =
-  'Clicking the user icon to the right you can manage your account and change your username and password if you like. Please keep these new credentials securely as your administrator would not have access to these new credentials for privacy reasons.';
+  'Door op het gebruikerspictogram rechtsboven te klikken, kun je je account beheren en je gebruikersnaam en wachtwoord wijzigen indien gewenst. Bewaar deze nieuwe inloggegevens veilig, aangezien je beheerder om privacyredenen geen toegang heeft tot deze nieuwe inloggegevens.';
 
 export const playerManagementInstructions =
-  'Add players to your team and define their initial username and password. This allows players to log in. You can also send a WhatsApp invitation to players. Players can later change their username and password. Note that players cannot see match or training attendance information.';
+  'Voeg spelers toe aan je team en stel hun eerste gebruikersnaam en wachtwoord in. Hiermee kunnen spelers inloggen. Je kunt ook een WhatsApp-uitnodiging naar spelers sturen. Spelers kunnen later hun gebruikersnaam en wachtwoord wijzigen. Houd er rekening mee dat spelers geen informatie over aanwezigheid bij wedstrijden of trainingen kunnen zien.';
 
 export const pouleManagementInstructions =
-  'Add teams in the poule your team is part of. This is necessary to register matches. Add new poules as needed, and the application will use the latest added poule for new matches.';
+  'Voeg teams toe in de poule waar jouw team deel van uitmaakt. Dit is nodig om wedstrijden te registreren. Voeg nieuwe poules toe indien nodig; de applicatie gebruikt de laatst toegevoegde poule voor nieuwe wedstrijden.';
 
 export const matchManagementInstructions =
-  'Register matches to track minutes played and player attendance. View summary reports of match attendance for all players.';
+  'Registreer wedstrijden om de gespeelde minuten en aanwezigheid van spelers bij te houden. Bekijk samenvattende rapporten over de aanwezigheid bij wedstrijden voor alle spelers.';
 
 export const trainingManagementInstructions =
-  'Register training absences and view summary reports for each player.';
+  'Registreer afwezigheid bij trainingen en bekijk samenvattende rapporten voor elke speler.';
 
 export const chatFunctionInstructions =
-  'Trainers and players can communicate through group or individual chats. Trainers can also send video clips to the group or individual players for feedback.';
+  'Trainers en spelers kunnen communiceren via groeps- of individuele chats. Trainers kunnen ook videoclips naar de groep of individuele spelers sturen voor feedback.';
 
 export const playerAccessInstructions =
-  'Players only have access to the chat function, so you do not need to invite players if you only use the app for training and match registration.';
+  'Spelers hebben alleen toegang tot de chatfunctie, dus je hoeft geen spelers uit te nodigen als je de app alleen gebruikt voor training- en wedstrijdregistratie.';
 
 export const appDesignInstructions =
-  'The app is designed for different screen sizes, including mobile, but registering data or sending videos is easier on a laptop.';
+  'De app is ontworpen voor verschillende schermformaten, inclusief mobiel, maar het registreren van gegevens of het verzenden van video’s gaat makkelijker op een laptop.';
