@@ -17,7 +17,7 @@ function DisplayPlayers({
   players: initialPlayers,
   editPlayerAction,
   deletePlayerAction,
-}: DisplayPlayersProps): React.ReactElement {
+}: DisplayPlayersProps): React.ReactElement<any> {
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

@@ -9,7 +9,7 @@ import { unknownErrorOccurred } from '@/strings/serverStrings';
 import { Poule } from '@/types/poule-types';
 import { GetTeamsInPouleResponse } from '@/types/response-types';
 
-export default async function PouleManagementPage(): Promise<React.ReactElement> {
+export default async function PouleManagementPage(): Promise<React.ReactElement<any>> {
   const pouleResponse: GetTeamsInPouleResponse = await getTeamsInPoule();
 
   const poules: Poule[] = pouleResponse.success ? pouleResponse.poules : [];

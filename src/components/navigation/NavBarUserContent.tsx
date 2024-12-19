@@ -11,7 +11,7 @@ export function NavBarUserContent({
   userId,
   userRole,
   dropdownTextColor,
-}: NavBarUserContentProps): React.ReactElement {
+}: NavBarUserContentProps): React.ReactElement<any> {
   return userId ? (
     <div className="flex gap-4 items-center">
       {userRole === 'TRAINER' && (

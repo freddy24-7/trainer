@@ -17,7 +17,7 @@ const InputField = ({
   onChange,
   required = true,
   placeholder,
-}: PlayerFormInputFieldProps): React.ReactElement => (
+}: PlayerFormInputFieldProps): React.ReactElement<any> => (
   <div>
     <label htmlFor={id} className="block text-brandcolor">
       {label}
@@ -39,7 +39,7 @@ function PlayerForm({
   onSubmit,
   onSubmissionStart,
   submitButtonText,
-}: PlayerFormProps): React.ReactElement {
+}: PlayerFormProps): React.ReactElement<any> {
   const {
     username,
     setUsername,

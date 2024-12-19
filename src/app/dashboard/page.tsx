@@ -49,7 +49,7 @@ async function handleUpdateUsername(
   }
 }
 
-export default async function DashboardPage(): Promise<React.ReactElement> {
+export default async function DashboardPage(): Promise<React.ReactElement<any>> {
   const clerkUser = (await currentUser()) as ClerkUser;
 
   if (!clerkUser) {

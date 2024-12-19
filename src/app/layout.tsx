@@ -20,7 +20,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: Props): React.ReactElement {
+export default function RootLayout({ children }: Props): React.ReactElement<any> {
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning={true}>

@@ -22,7 +22,7 @@ import { submitTrainingForm } from '@/utils/trainingFormUtils';
 const AddTrainingForm = ({
   action,
   players,
-}: TrainingFrontEndProps): React.ReactElement => {
+}: TrainingFrontEndProps): React.ReactElement<any> => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 

@@ -6,7 +6,7 @@ import { formatError } from '@/utils/errorUtils';
 
 export function handleRenderError(response: {
   errors?: (ResponseError | ZodIssue)[];
-}): React.ReactElement | null {
+}): React.ReactElement<any> | null {
   if (response.errors && response.errors.length > 0) {
     const errorMessage = response.errors
       .map(
@@ -24,7 +24,7 @@ export function handleRenderError(response: {
 export function handleChatErrorResponse(
   errorMessage: string = 'An error occurred',
   path: string[] = ['default']
-): React.ReactElement {
+): React.ReactElement<any> {
   const errorResponse = formatError(errorMessage, path, 'custom', false);
 
   return (

@@ -7,7 +7,7 @@ export function PouleFormFields({
   control,
   errors,
   handleAddOpponent,
-}: PouleFormFieldsProps): React.ReactElement {
+}: PouleFormFieldsProps): React.ReactElement<any> {
   return (
     <>
       <InputField

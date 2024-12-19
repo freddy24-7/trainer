@@ -6,7 +6,7 @@ const TrainingPlayersField = ({
   players,
   playerValues,
   setValue,
-}: TrainingPlayersFieldProps): React.ReactElement => {
+}: TrainingPlayersFieldProps): React.ReactElement<any> => {
   const toggleAbsence = (index: number): void => {
     setValue(`players.${index}.absent`, !playerValues[index].absent);
   };

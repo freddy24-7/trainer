@@ -12,7 +12,6 @@
     "clean-code",
     "@typescript-eslint",
     "sonarjs",
-    "immutable",
     "import",
     "jest"
   ],

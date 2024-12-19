@@ -60,7 +60,7 @@ function getErrorMessage(
   }
 }
 
-export default async function MatchManagementPage(): Promise<React.ReactElement> {
+export default async function MatchManagementPage(): Promise<React.ReactElement<any>> {
   const pouleResponse = await getTeamsInPoule();
   const playerResponse = await getPlayers();
 

@@ -11,7 +11,7 @@ import {
 } from '@/strings/serverStrings';
 import { formatError } from '@/utils/errorUtils';
 
-export default async function TrainingsPage(): Promise<React.ReactElement> {
+export default async function TrainingsPage(): Promise<React.ReactElement<any>> {
   const [trainingDataResponse, attendanceDataResponse] = await Promise.all([
     getTrainingData(),
     getTrainingAttendanceList(),

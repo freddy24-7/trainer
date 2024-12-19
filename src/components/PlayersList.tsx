@@ -14,7 +14,7 @@ export default function PlayersList({
   onSelect,
   onEdit,
   onDelete,
-}: ExtendedPlayersListProps): React.ReactElement {
+}: ExtendedPlayersListProps): React.ReactElement<any> {
   return (
     <ul className="space-y-2">
       {showGroupChatOption && (

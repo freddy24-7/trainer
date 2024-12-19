@@ -21,7 +21,7 @@ function ChatClient({
   deleteVideo,
   deleteMessage,
   recipientId = null,
-}: ChatClientProps): React.ReactElement {
+}: ChatClientProps): React.ReactElement<any> {
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);

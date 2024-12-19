@@ -6,7 +6,7 @@ export default function OpponentSelector({
   opponents,
   selectedOpponent,
   onOpponentChange,
-}: OpponentSelectorProps): React.ReactElement {
+}: OpponentSelectorProps): React.ReactElement<any> {
   return (
     <div>
       <label className="block mb-2 mx-auto text-center">

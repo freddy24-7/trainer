@@ -20,7 +20,7 @@ import { ManagementDropdownProps } from '@/types/ui-types';
 
 export function ManagementDropdown({
   dropdownTextColor,
-}: ManagementDropdownProps): React.ReactElement {
+}: ManagementDropdownProps): React.ReactElement<any> {
   return (
     <Dropdown>
       <DropdownTrigger>

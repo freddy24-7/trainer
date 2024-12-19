@@ -14,7 +14,7 @@ export function MobileMenu({
   userId,
   userRole,
   dropdownTextColor,
-}: MobileMenuProps): React.ReactElement {
+}: MobileMenuProps): React.ReactElement<any> {
   const { theme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 import { DateProps } from '@/types/shared-types';
 
-const DateField = ({ errors, onChange }: DateProps): React.ReactElement => (
+const DateField = ({ errors, onChange }: DateProps): React.ReactElement<any> => (
   <FormItem>
     <FormField
       name="date"
