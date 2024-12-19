@@ -11,7 +11,8 @@
     "format-check": "prettier --check .",
     "prepare": "husky install",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "postinstall": "npm install --legacy-peer-deps"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.30.0",
