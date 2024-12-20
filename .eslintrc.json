@@ -12,7 +12,6 @@
     "clean-code",
     "@typescript-eslint",
     "sonarjs",
-    "immutable",
     "import",
     "jest"
   ],
@@ -75,7 +74,6 @@
     "sonarjs/no-collapsible-if": "warn",
     "sonarjs/no-identical-expressions": "warn",
     "sonarjs/no-inverted-boolean-check": "warn",
-    "immutable/no-mutation": "error",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
@@ -258,7 +256,6 @@
     {
       "files": ["src/utils/pusherUtils.ts"],
       "rules": {
-        "immutable/no-mutation": "off",
         "@typescript-eslint/no-explicit-any": "warn"
       }
     },

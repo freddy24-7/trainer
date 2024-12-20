@@ -24,7 +24,7 @@ function AddPlayerForm({
     _prevState: unknown,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
-}): React.ReactElement {
+}): React.ReactElement<any> {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formKey, setFormKey] = useState(0);
   const [playerData, setPlayerData] = useState<PlayerFormData | null>(null);
@@ -51,7 +51,7 @@ function AddPlayerForm({
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10">
+    (<div className="max-w-md mx-auto mt-10">
       <Card>
         <CardHeader>
           <h3 className="text-lg font-semibold">{playerAdditionTitle}</h3>
@@ -82,7 +82,7 @@ function AddPlayerForm({
           )}
         </CardBody>
       </Card>
-    </div>
+    </div>)
   );
 }
 

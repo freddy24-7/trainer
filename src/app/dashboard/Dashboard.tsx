@@ -7,7 +7,7 @@ import { DashboardClientProps } from '@/types/user-types';
 
 export default function Dashboard({
   signedInUser,
-}: DashboardClientProps): React.ReactElement {
+}: DashboardClientProps): React.ReactElement<any> {
   const [loading, setLoading] = useState(true);
   const [showMessage, setShowMessage] = useState(true);
 

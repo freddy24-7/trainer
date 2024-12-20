@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Home(): React.ReactElement {
+export default function Home(): React.ReactElement<any> {
   const cloudinaryBaseURL = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/v1731009654/trainer2/HomePage_Video_yco08j.mp4`;
 
   return (

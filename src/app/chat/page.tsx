@@ -13,11 +13,12 @@ import { errorLoadingMessages } from '@/strings/serverStrings';
 import { Message } from '@/types/message-types';
 import { ChatUser } from '@/types/user-types';
 
-export default async function ChatPage({
-  searchParams,
-}: {
-  searchParams: { recipientId?: string | string[] };
-}): Promise<React.ReactElement> {
+export default async function ChatPage(
+  props: {
+    searchParams: Promise<{ recipientId?: string | string[] }>;
+  }
+): Promise<React.ReactElement<any>> {
+  const searchParams = await props.searchParams;
   const signedInUser = await fetchAndCheckUser();
 
   if (!signedInUser) {

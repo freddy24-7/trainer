@@ -12,7 +12,7 @@ import {
 } from '@/strings/serverStrings';
 import { formatError } from '@/utils/errorUtils';
 
-export default async function MatchStatsPage(): Promise<React.ReactElement> {
+export default async function MatchStatsPage(): Promise<React.ReactElement<any>> {
   try {
     const [playerStatsResponse, matchDataResponse] = await Promise.all([
       getPlayerStats(),

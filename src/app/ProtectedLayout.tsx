@@ -7,7 +7,7 @@ import { ProtectedLayoutProps } from '@/types/shared-types';
 const ProtectedLayout = async ({
   children,
   requiredRole,
-}: ProtectedLayoutProps): Promise<React.ReactElement> => {
+}: ProtectedLayoutProps): Promise<React.ReactElement<any>> => {
   try {
     const user = await fetchAndCheckUser();
 

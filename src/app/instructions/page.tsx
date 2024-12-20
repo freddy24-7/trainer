@@ -17,7 +17,7 @@ import {
   appDesignInstructions,
 } from '@/strings/instructionsStrings';
 
-const Page: React.FC = (): React.ReactElement => {
+const Page: React.FC = (): React.ReactElement<any> => {
   return (
     <ProtectedLayout requiredRole="TRAINER">
       <div className="flex justify-center items-center min-h-screen bg-gray-100">

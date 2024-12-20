@@ -12,7 +12,7 @@ import { cancelButtonText, addPouleButtonText } from '@/strings/clientStrings';
 import { PouleFormValues, PouleProps } from '@/types/poule-types';
 import { handleSubmitPouleForm } from '@/utils/pouleUtils';
 
-function AddPouleForm({ action }: PouleProps): React.ReactElement {
+function AddPouleForm({ action }: PouleProps): React.ReactElement<any> {
   const [showForm, setShowForm] = useState(false);
 
   const methods = useForm<PouleFormValues>({

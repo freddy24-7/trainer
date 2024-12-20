@@ -16,7 +16,7 @@ import { ThemeToggleButton } from './ThemeToggleButton';
 export default function NavBarClient({
   userId,
   userRole,
-}: NavBarClientProps): ReactElement | null {
+}: NavBarClientProps): ReactElement<any> | null {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 

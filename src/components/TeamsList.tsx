@@ -9,7 +9,7 @@ import { TeamsListProps, Team } from '@/types/team-types';
 export default function TeamsList({
   teams,
   pouleName,
-}: TeamsListProps): React.ReactElement {
+}: TeamsListProps): React.ReactElement<any> {
   useEffect(() => {
     console.log('TeamsList Props:', { teams, pouleName });
   }, [teams, pouleName]);

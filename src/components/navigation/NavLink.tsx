@@ -12,7 +12,7 @@ export default function NavLink({
   label,
   children,
   className,
-}: NavLinkProps): React.ReactElement {
+}: NavLinkProps): React.ReactElement<any> {
   const pathname = usePathname();
 
   return (

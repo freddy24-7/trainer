@@ -14,7 +14,7 @@ const PouleField = ({
   selectedPoule,
   errors,
   onChange,
-}: PouleFieldProps): React.ReactElement => (
+}: PouleFieldProps): React.ReactElement<any> => (
   <FormItem>
     <FormField
       name="poule"

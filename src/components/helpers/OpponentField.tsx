@@ -25,7 +25,7 @@ const OpponentField = ({
   selectedOpponent,
   errors,
   onChange,
-}: Props): React.ReactElement | null =>
+}: Props): React.ReactElement<any> | null =>
   selectedPoule && selectedPoule.opponents.length > 0 ? (
     <FormItem>
       <FormField

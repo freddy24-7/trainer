@@ -6,7 +6,7 @@ import { IoFootball } from 'react-icons/io5';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import NavBarClient from '@/components/navigation/NavBarClient';
 
-export default async function NavBar(): Promise<React.ReactElement> {
+export default async function NavBar(): Promise<React.ReactElement<any>> {
   const user = await fetchAndCheckUser();
 
   const { id: userId, role: userRole = null } = user || {

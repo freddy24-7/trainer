@@ -17,7 +17,7 @@ function AddMatchForm({
   action,
   poules,
   players,
-}: MatchFormProps): React.ReactElement {
+}: MatchFormProps): React.ReactElement<any> {
   const [, setSubmitting] = useState<boolean>(false);
   const router = useRouter();
 

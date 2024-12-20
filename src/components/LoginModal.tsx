@@ -11,7 +11,7 @@ import {
   closeButtonLabel,
 } from '@/strings/clientStrings';
 
-export default function LoginModal(): React.ReactElement {
+export default function LoginModal(): React.ReactElement<any> {
   const { isOpen, onOpenChange } = useDisclosure({ defaultOpen: true });
   const router = useRouter();
 

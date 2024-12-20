@@ -14,7 +14,7 @@ function EditPlayerForm({
   onPlayerEdited,
   onSubmissionStart,
   onAbort,
-}: EditPlayerFormProps): React.ReactElement {
+}: EditPlayerFormProps): React.ReactElement<any> {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formKey, setFormKey] = useState(0);
   const [playerData, setPlayerData] = useState<PlayerFormData | null>(null);

@@ -23,7 +23,7 @@ export default function ReusableModal({
   confirmAction,
   cancelLabel = defaultCancelLabel,
   cancelAction,
-}: ReusableModalProps): React.ReactElement {
+}: ReusableModalProps): React.ReactElement<any> {
   const handleClose = useCallback(() => {
     if (cancelAction) cancelAction();
     onClose();

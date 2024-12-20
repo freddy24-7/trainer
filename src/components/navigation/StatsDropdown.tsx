@@ -18,7 +18,7 @@ import { StatsDropdownProps } from '@/types/ui-types';
 
 export function StatsDropdown({
   dropdownTextColor,
-}: StatsDropdownProps): React.ReactElement {
+}: StatsDropdownProps): React.ReactElement<any> {
   return (
     <Dropdown>
       <DropdownTrigger>

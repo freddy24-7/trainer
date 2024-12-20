@@ -11,7 +11,7 @@ import { Player } from '@/types/user-types';
 import { handleMapPlayers } from '@/utils/playerUtils';
 import { handlePlayerResponse } from '@/utils/responseUtils';
 
-export default async function TrainingsPage(): Promise<React.ReactElement> {
+export default async function TrainingsPage(): Promise<React.ReactElement<any>> {
   const response = await getPlayers();
 
   const validatedResponse = handlePlayerResponse({

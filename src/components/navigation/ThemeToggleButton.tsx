@@ -5,7 +5,7 @@ import { FiSun, FiMoon } from 'react-icons/fi';
 
 import { toggleThemeAriaLabel } from '@/strings/clientStrings';
 
-export function ThemeToggleButton(): React.ReactElement {
+export function ThemeToggleButton(): React.ReactElement<any> {
   const { theme, setTheme } = useTheme();
 
   return (
