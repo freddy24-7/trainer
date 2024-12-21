@@ -1,7 +1,9 @@
-import { users } from '@clerk/clerk-sdk-node';
+import { createClerkClient } from '@clerk/backend';
 import { User } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
+
+const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 export async function handleFindPlayerById(
   playerId: number
@@ -21,5 +23,5 @@ export async function deletePlayerFromDatabase(
 }
 
 export async function deleteClerkUser(clerkId: string): Promise<void> {
-  await users.deleteUser(clerkId);
+  await clerk.users.deleteUser(clerkId);
 }

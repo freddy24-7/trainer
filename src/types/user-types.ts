@@ -129,9 +129,9 @@ export interface PlayerStatsTableProps {
 }
 
 export interface SignedInUser {
-  id: number;
+  id: string;
   username: string;
-  role?: string;
+  role: string | null;
 }
 
 export interface PlayersFieldProps {

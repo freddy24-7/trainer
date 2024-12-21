@@ -1,7 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { ZodIssue } from 'zod';
 
 import {
@@ -21,7 +19,7 @@ import { formatError } from '@/utils/errorUtils';
 export default async function addPoule(
   _prevState: unknown,
   params: FormData
-): Promise<{ errors: ZodIssue[] } | void> {
+): Promise<{ errors: ZodIssue[]; redirectPath?: string }> {
   const validation = handleValidatePouleData(params);
 
   if (!validation.success || !validation.data) {
@@ -30,18 +28,14 @@ export default async function addPoule(
 
   const { pouleName, mainTeamName, opponents } =
     validation.data as PouleFormData;
-  let redirectPath: string | null = null;
+
+  let redirectPath: string | undefined;
 
   try {
     const mainTeam = await createMainTeam(mainTeamName);
 
     if (!mainTeam) {
-      return formatError(
-        failedToCreateMainTeam,
-        ['addPoule'],
-        'custom',
-        false
-      ) as { errors: ZodIssue[] };
+      return formatError(failedToCreateMainTeam, ['addPoule'], 'custom', false);
     }
 
     const poule = await createPoule(pouleName, mainTeam.id);
@@ -53,15 +47,8 @@ export default async function addPoule(
     redirectPath = '/poule-management';
   } catch (error) {
     console.error(errorCreatingPoule, error);
-    return formatError(errorCreatingPoule, ['form'], 'custom') as {
-      errors: ZodIssue[];
-    };
-  } finally {
-    if (redirectPath) {
-      revalidatePath(redirectPath);
-      redirect(redirectPath);
-    }
+    return formatError(errorCreatingPoule, ['form'], 'custom');
   }
 
-  return;
+  return { errors: [], redirectPath };
 }

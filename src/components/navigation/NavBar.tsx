@@ -1,14 +1,18 @@
+'use client';
+
 import { Navbar, NavbarBrand } from '@nextui-org/react';
 import Link from 'next/link';
 import React from 'react';
 import { IoFootball } from 'react-icons/io5';
 
-import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import NavBarClient from '@/components/navigation/NavBarClient';
+import { SignedInUser } from '@/types/user-types';
 
-export default async function NavBar(): Promise<React.ReactElement> {
-  const user = await fetchAndCheckUser();
+interface NavBarProps {
+  user: SignedInUser | null;
+}
 
+export default function NavBar({ user }: NavBarProps): React.ReactElement {
   const { id: userId, role: userRole = null } = user || {
     id: null,
     role: null,

@@ -1,32 +1,60 @@
-import { CalendarDate } from '@nextui-org/react';
-import React from 'react';
+'use client';
 
-import DateSelector from '@/components/DateSelector';
+import { DatePicker, CalendarDate } from '@nextui-org/react';
+import React from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
+
 import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form';
+  matchDateLabel,
+  selectMatchDateLabel,
+  futureDateError,
+} from '@/strings/clientStrings';
 import { DateProps } from '@/types/shared-types';
 
-const DateField = ({ errors, onChange }: DateProps): React.ReactElement => (
-  <FormItem>
-    <FormField
+const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
+  const { control } = useFormContext();
+  const today = new Date();
+
+  const isDateValid = (date: CalendarDate): boolean => {
+    const selectedDate = new Date(date.toString());
+    return selectedDate <= today;
+  };
+
+  return (
+    <Controller
       name="date"
+      control={control}
       render={({ field }) => (
-        <>
-          <FormControl>
-            <DateSelector
-              matchDate={field.value as CalendarDate | null}
-              onDateChange={onChange}
+        <div className="w-full max-w-xs mx-auto">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-default-700">
+              {matchDateLabel}
+            </label>
+            <DatePicker
+              disableAnimation={true}
+              classNames={{
+                base: 'w-full',
+                input: errors.date ? 'border-danger' : '',
+              }}
+              isInvalid={!!errors.date}
+              errorMessage={errors.date?.message?.toString()}
+              label={selectMatchDateLabel}
+              value={field.value}
+              onChange={(date) => {
+                if (isDateValid(date as CalendarDate)) {
+                  field.onChange(date);
+                  onChange(date as CalendarDate);
+                } else {
+                  toast.error(futureDateError);
+                }
+              }}
             />
-          </FormControl>
-          <FormMessage>{errors.date?.message}</FormMessage>{' '}
-        </>
+          </div>
+        </div>
       )}
     />
-  </FormItem>
-);
+  );
+};
 
 export default DateField;

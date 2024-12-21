@@ -48,7 +48,7 @@ export async function handleSubmitPouleForm(
   try {
     const result = await action(null, formData);
 
-    if (result?.errors?.length) {
+    if (result && result.errors?.length) {
       toast.error(failedToAddPouleMessage);
       console.error('Submission errors:', result.errors);
     } else {
@@ -58,7 +58,7 @@ export async function handleSubmitPouleForm(
       setShowForm(false);
     }
   } catch (error) {
-    console.error('Error during form submission:', error);
+    console.error('Unexpected error during form submission:', error);
     toast.error(submissionErrorMessage);
   }
 }

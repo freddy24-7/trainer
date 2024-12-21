@@ -1,13 +1,12 @@
 'use client';
 
-import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Button } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
 
 import DateField from '@/components/helpers/DateField';
 import TrainingPlayersField from '@/components/helpers/TrainingPlayersField';
-import { Button } from '@/components/ui/button';
 import {
   submittingButtonText,
   addTrainingButtonText,
@@ -74,8 +73,11 @@ const AddTrainingForm = ({
 
               <Button
                 type="submit"
-                className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800"
-                disabled={isSubmitting}
+                color="primary"
+                size="lg"
+                className="w-full"
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
               >
                 {isSubmitting ? submittingButtonText : addTrainingButtonText}
               </Button>

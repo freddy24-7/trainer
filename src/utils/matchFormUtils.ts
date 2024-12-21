@@ -12,23 +12,15 @@ import { MatchFormValues, SubmitMatchFormOptions } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 
-export const submitMatchForm = async (
-  data: MatchFormValues,
-  options: SubmitMatchFormOptions
-): Promise<boolean> => {
-  const { validatePlayers, setSubmitting, action } = options;
-  const resetSubmissionState = handleSubmissionState(setSubmitting);
-
-  const formData = new FormData();
-  formData.append('pouleOpponentId', data.opponent?.toString() || '');
-  formData.append('date', data.date?.toString() || '');
-
+const validateMatchForm = (
+  formData: FormData,
+  validatePlayers: () => boolean
+): boolean => {
   const matchValidationResult = handleValidateMatchData(formData);
 
   if (!matchValidationResult.success) {
     const errorResponse = formatError(validationFailedMessage, ['form']);
     toast.error(errorResponse.errors[0].message);
-    resetSubmissionState();
     return false;
   }
 
@@ -37,17 +29,20 @@ export const submitMatchForm = async (
       'players',
     ]);
     toast.error(playerErrorResponse.errors[0].message);
-    resetSubmissionState();
     return false;
   }
 
-  formData.append('players', JSON.stringify(data.players));
+  return true;
+};
 
+const handleActionResponse = async (
+  action: SubmitMatchFormOptions['action'],
+  formData: FormData
+): Promise<boolean> => {
   try {
     const response = await action(null, formData);
     if (response.errors.length === 0) {
       toast.success(matchAddedSuccessMessage);
-      resetSubmissionState();
       return true;
     } else {
       const errorResponse = formatError(matchAddErrorMessage, ['form']);
@@ -59,7 +54,28 @@ export const submitMatchForm = async (
     const errorResponse = formatError(submissionErrorMessage, ['form']);
     toast.error(errorResponse.errors[0].message);
     return false;
-  } finally {
-    resetSubmissionState();
   }
+};
+
+export const submitMatchForm = async (
+  data: MatchFormValues,
+  options: SubmitMatchFormOptions
+): Promise<boolean> => {
+  const { validatePlayers, setSubmitting, action } = options;
+  const resetSubmissionState = handleSubmissionState(setSubmitting);
+
+  const formData = new FormData();
+  formData.append('pouleOpponentId', data.opponent?.toString() || '');
+  formData.append('date', data.date?.toString() || '');
+  formData.append('players', JSON.stringify(data.players));
+
+  if (!validateMatchForm(formData, validatePlayers)) {
+    resetSubmissionState();
+    return false;
+  }
+
+  const result = await handleActionResponse(action, formData);
+
+  resetSubmissionState();
+  return result;
 };

@@ -1,40 +1,39 @@
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import { NextUIProvider } from '@nextui-org/react';
 import type { Metadata } from 'next';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 
+import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import NavBar from '@/components/navigation/NavBar';
 import 'react-toastify/dist/ReactToastify.css';
-
-export const runtime = 'nodejs';
 
 export const metadata: Metadata = {
   title: 'ClubTrainer',
   description: 'Trainers app for player feedback',
 };
 
-interface Props {
+export default async function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
+}): Promise<React.ReactElement> {
+  const user = await fetchAndCheckUser();
 
-export default function RootLayout({ children }: Props): React.ReactElement {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/">
       <html lang="en" suppressHydrationWarning={true}>
         <body suppressHydrationWarning={true}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
-            <NextUIProvider>
-              <NavBar />
-              <main className="container mx-auto p-2">{children}</main>
-              <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-              />
-            </NextUIProvider>
+            {/* Pass normalized user data */}
+            <NavBar user={user} />
+            <main className="container mx-auto p-2">{children}</main>
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+            />
           </NextThemesProvider>
         </body>
       </html>

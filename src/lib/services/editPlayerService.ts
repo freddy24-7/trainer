@@ -1,7 +1,9 @@
-import { users } from '@clerk/clerk-sdk-node';
+import { createClerkClient } from '@clerk/backend';
 import { User } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
+
+const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 export async function handleFindPlayerById(
   playerId: number
@@ -22,6 +24,6 @@ export async function updatePlayerInDatabase(
 export async function updateClerkUser(
   clerkId: string,
   data: { username: string; password?: string }
-): Promise<import('@clerk/clerk-sdk-node').User> {
-  return users.updateUser(clerkId, data);
+): Promise<any> {
+  return clerk.users.updateUser(clerkId, data);
 }

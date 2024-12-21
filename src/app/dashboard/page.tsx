@@ -1,4 +1,4 @@
-import { currentUser } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 import React from 'react';
 
 import { updateUsername } from '@/app/actions/updateUsername';

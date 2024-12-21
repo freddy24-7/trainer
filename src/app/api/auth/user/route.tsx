@@ -1,4 +1,4 @@
-import { auth, currentUser } from '@clerk/nextjs';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
@@ -9,7 +9,7 @@ import {
 } from '@/strings/serverStrings';
 
 export async function GET(): Promise<NextResponse> {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return NextResponse.redirect('/sign-in');
@@ -30,6 +30,9 @@ export async function GET(): Promise<NextResponse> {
   console.log('Validating user data with Zod:', userData);
 
   const parsedUser = UserSchema.safeParse(userData);
+
+  const locationUrl =
+    process.env.NEXT_PUBLIC_DASHBOARD_URL || 'http://localhost:3000/dashboard';
 
   if (!parsedUser.success) {
     console.error(parsedUser.error.format());
@@ -58,7 +61,7 @@ export async function GET(): Promise<NextResponse> {
   return new NextResponse(null, {
     status: 302,
     headers: {
-      Location: 'http://localhost:3000/dashboard',
+      Location: locationUrl,
     },
   });
 }

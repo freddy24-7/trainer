@@ -7,7 +7,7 @@ export interface DateSelectorProps {
 }
 
 export interface NavBarClientProps {
-  userId: number | null;
+  userId: string | null;
   userRole: string | null;
 }
 
@@ -34,13 +34,13 @@ export interface ManagementDropdownProps {
 }
 
 export interface MobileMenuProps {
-  userId: number | null;
+  userId: string | null;
   userRole: string | null;
   dropdownTextColor: string;
 }
 
 export interface NavBarUserContentProps {
-  userId: number | null;
+  userId: string | null;
   userRole: string | null;
   dropdownTextColor: string;
 }

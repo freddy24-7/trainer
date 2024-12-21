@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 
 import prisma from '@/lib/prisma';
 import {
@@ -9,7 +9,7 @@ import {
 import { SignedInUser } from '@/types/user-types';
 
 export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     console.log(userNotAuthenticatedMessage);
@@ -26,7 +26,7 @@ export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
   }
 
   const signedInUser: SignedInUser = {
-    id: prismaUser.id,
+    id: prismaUser.id.toString(),
     username: prismaUser.username || 'Unknown',
     role: prismaUser.role || null,
   };

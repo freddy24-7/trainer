@@ -28,7 +28,7 @@ export function NavBarUserContent({
           Info
         </NavLink>
       )}
-      <UserButton afterSignOutUrl="/" />
+      <UserButton />
     </div>
   ) : (
     <div className="flex gap-4 items-center">

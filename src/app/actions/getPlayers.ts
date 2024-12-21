@@ -1,5 +1,3 @@
-import { revalidatePath } from 'next/cache';
-
 import { fetchPlayers } from '@/lib/services/getPlayersService';
 import { errorFetchingPlayers } from '@/strings/actionStrings';
 import { PlayerResponse } from '@/types/user-types';
@@ -12,8 +10,6 @@ export default async function getPlayers(): Promise<{
 }> {
   try {
     const players = await fetchPlayers();
-
-    revalidatePath('/player-management');
 
     return { success: true, players: players as PlayerResponse[] };
   } catch (error) {

@@ -1,13 +1,14 @@
 'use server';
 
-import { users } from '@clerk/clerk-sdk-node';
-import { revalidatePath } from 'next/cache';
+import { createClerkClient } from '@clerk/backend';
 import { ZodIssue } from 'zod';
 
 import { createPlayerInDatabase } from '@/lib/services/createPlayerService';
 import { handleValidatePlayerData } from '@/schemas/validation/createPlayerValidation';
 import { errorRegisteringPlayer } from '@/strings/actionStrings';
 import { formatError } from '@/utils/errorUtils';
+
+const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 export default async function addPlayer(
   _prevState: unknown,
@@ -24,7 +25,7 @@ export default async function addPlayer(
   const { username, password, whatsappNumber } = validation.data;
 
   try {
-    const clerkUser = await users.createUser({
+    const clerkUser = await clerk.users.createUser({
       username,
       password,
     });
@@ -34,8 +35,6 @@ export default async function addPlayer(
       username,
       whatsappNumber,
     });
-
-    revalidatePath('/player-management');
 
     return { errors: [], success: true };
   } catch (error) {
