@@ -23,11 +23,21 @@ export default async function ChatPage(props: {
     return <LoginModal />;
   }
 
+  const userId = Number(signedInUser.id);
+
+  if (isNaN(userId)) {
+    throw new Error('Invalid user ID format from Clerk.');
+  }
+
   const recipientId = searchParams.recipientId
     ? Number(searchParams.recipientId)
     : undefined;
 
-  const response = await getMessages(signedInUser.id, recipientId);
+  if (recipientId && isNaN(recipientId)) {
+    throw new Error('Invalid recipient ID format.');
+  }
+
+  const response = await getMessages(userId, recipientId);
 
   if (!response.success) {
     return handleChatErrorResponse(response.error || errorLoadingMessages, [
@@ -51,7 +61,7 @@ export default async function ChatPage(props: {
 
   return (
     <ChatClient
-      signedInUser={signedInUser}
+      signedInUser={{ ...signedInUser, id: userId }}
       messages={messages}
       action={addMessage}
       getMessages={getMessages}

@@ -194,20 +194,29 @@ function handleServerResponse({
     confirmedMessage: Message
   ) => void;
 }): void {
-  if (
-    response.success &&
-    response.messageId &&
-    isIndividualMessageWithoutVideo
-  ) {
+  if (!response) {
+    console.error('No response from server');
+    return;
+  }
+
+  if (response.messageId && isIndividualMessageWithoutVideo) {
     const confirmedMessage = {
       ...optimisticMessage!,
       id: response.messageId,
     };
     replaceOptimisticMessage(temporaryId, confirmedMessage);
-  } else if (response.errors) {
+    return;
+  }
+
+  if (response.errors && Array.isArray(response.errors)) {
     handleLogErrors(response.errors);
+    return;
+  }
+
+  if (Object.keys(response).length === 0) {
+    console.debug('Received empty response object from server');
   } else {
-    console.error('Unknown error sending message');
+    console.debug('Received response:', response);
   }
 }
 
