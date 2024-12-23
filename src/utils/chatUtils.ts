@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 
 import {
   failedToDeleteVideoMessage,
@@ -221,8 +222,9 @@ function handleServerResponse({
 }
 
 function handleLogErrors(errors: { message: string }[]): void {
-  const errorMessages = errors.map((error) => error.message).join(', ');
-  console.error('Failed to send message:', errorMessages);
+  errors.forEach((error) => {
+    toast.error(error.message);
+  });
 }
 
 function handleSendMessageError(error: unknown): void {

@@ -13,32 +13,67 @@ import { errorLoadingMessages } from '@/strings/serverStrings';
 import { Message } from '@/types/message-types';
 import { ChatUser } from '@/types/user-types';
 
-export default async function ChatPage(props: {
-  searchParams: Promise<{ recipientId?: string | string[] }>;
-}): Promise<React.ReactElement> {
-  const searchParams = await props.searchParams;
-  const signedInUser = await fetchAndCheckUser();
+type ValidatedUser = {
+  signedInUser: ChatUser & { id: number };
+  userId: number;
+} | null;
 
+const getValidatedUser = async (): Promise<ValidatedUser> => {
+  const signedInUser = await fetchAndCheckUser();
   if (!signedInUser) {
-    return <LoginModal />;
+    return null;
   }
 
   const userId = Number(signedInUser.id);
-
   if (isNaN(userId)) {
     throw new Error('Invalid user ID format from Clerk.');
   }
 
-  const recipientId = searchParams.recipientId
-    ? Number(searchParams.recipientId)
-    : undefined;
+  return { signedInUser: { ...signedInUser, id: userId }, userId };
+};
 
-  if (recipientId && isNaN(recipientId)) {
+const getValidatedRecipientId = (
+  recipientIdParam?: string | string[]
+): number | undefined => {
+  if (!recipientIdParam) return undefined;
+
+  const recipientId = Number(
+    Array.isArray(recipientIdParam) ? recipientIdParam[0] : recipientIdParam
+  );
+  if (isNaN(recipientId)) {
     throw new Error('Invalid recipient ID format.');
   }
 
-  const response = await getMessages(userId, recipientId);
+  return recipientId;
+};
 
+const fetchProcessedUsers = async (): Promise<ChatUser[]> => {
+  const usersResponse = await getUsers();
+  if (!usersResponse.success) return [];
+
+  return (
+    usersResponse.users?.map((user) => ({
+      ...user,
+      username: user.username || 'Unknown',
+      whatsappNumber: user.whatsappNumber || '',
+    })) || []
+  );
+};
+
+export default async function ChatPage(props: {
+  searchParams: Promise<{ recipientId?: string | string[] }>;
+}): Promise<React.ReactElement> {
+  const searchParams = await props.searchParams;
+
+  const userData = await getValidatedUser();
+  if (!userData) {
+    return <LoginModal />;
+  }
+  const { signedInUser, userId } = userData;
+
+  const recipientId = getValidatedRecipientId(searchParams.recipientId);
+
+  const response = await getMessages(userId, recipientId);
   if (!response.success) {
     return handleChatErrorResponse(response.error || errorLoadingMessages, [
       'chat',
@@ -46,22 +81,12 @@ export default async function ChatPage(props: {
     ]);
   }
 
-  const usersResponse = await getUsers();
-  const users: ChatUser[] = usersResponse.success
-    ? (usersResponse.users?.map((user) => {
-        return {
-          ...user,
-          username: user.username || 'Unknown',
-          whatsappNumber: user.whatsappNumber || '',
-        };
-      }) ?? [])
-    : [];
-
+  const users = await fetchProcessedUsers();
   const messages = response.messages as Message[];
 
   return (
     <ChatClient
-      signedInUser={{ ...signedInUser, id: userId }}
+      signedInUser={signedInUser}
       messages={messages}
       action={addMessage}
       getMessages={getMessages}
