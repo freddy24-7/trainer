@@ -1,15 +1,16 @@
 import { updateUsername } from '@/app/actions/updateUsername';
+
 import {
   handleFindUserByClerkId,
   updateUserUsername,
-} from '@/lib/services/updateUserService';
+} from '../src/lib/services/updateUserService';
 
-jest.mock('@/lib/services/updateUserService', () => ({
+jest.mock('../src/lib/services/updateUserService', () => ({
   handleFindUserByClerkId: jest.fn(),
   updateUserUsername: jest.fn(),
 }));
 
-jest.mock('@/utils/errorUtils', () => ({
+jest.mock('../src/utils/errorUtils', () => ({
   formatError: jest.fn((message, path, code, includeSuccess) => ({
     success: includeSuccess ? false : undefined,
     errors: [{ message, path, code }],

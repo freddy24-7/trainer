@@ -1,61 +1,65 @@
-import { users } from '@clerk/clerk-sdk-node';
+import handleEditPlayer from '../src/app/actions/editPlayer';
+import {
+  handleFindPlayerById,
+  updatePlayerInDatabase,
+  updateClerkUser,
+} from '../src/lib/services/editPlayerService';
+import { handleValidateEditPlayerData } from '../src/schemas/validation/editPlayerValidation';
+import {
+  playerNotFoundOrInvalid,
+  errorUpdatingPlayer,
+} from '../src/strings/actionStrings';
+import { formatError } from '../src/utils/errorUtils';
 
-import editPlayer from '@/app/actions/editPlayer';
-import prisma from '@/lib/prisma';
-import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
-
-jest.mock('@/lib/prisma', () => ({
-  user: {
-    findUnique: jest.fn(),
-    update: jest.fn(),
-  },
+jest.mock('../src/lib/services/editPlayerService', () => ({
+  handleFindPlayerById: jest.fn(),
+  updatePlayerInDatabase: jest.fn(),
+  updateClerkUser: jest.fn(),
 }));
 
-jest.mock('@clerk/clerk-sdk-node', () => ({
-  users: {
-    updateUser: jest.fn(),
-  },
-}));
-
-jest.mock('@/schemas/validation/editPlayerValidation', () => ({
+jest.mock('../src/schemas/validation/editPlayerValidation', () => ({
   handleValidateEditPlayerData: jest.fn(),
 }));
 
-jest.mock('@/utils/errorUtils', () => ({
+jest.mock('../src/utils/errorUtils', () => ({
   formatError: jest.fn((message) => ({
     errors: [{ message, path: ['form'], code: 'custom' }],
     success: false,
   })),
 }));
 
-interface Player {
-  id: number;
-  clerkId: string;
-  username: string | null;
-}
-
-describe('editPlayer', () => {
+describe('handleEditPlayer', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   const createFormData = (
     username: string,
-    whatsappNumber?: string
+    whatsappNumber?: string,
+    password?: string
   ): FormData => {
     const formData = new FormData();
     formData.append('username', username);
     if (whatsappNumber) {
       formData.append('whatsappNumber', whatsappNumber);
     }
+    if (password) {
+      formData.append('password', password);
+    }
     return formData;
   };
 
+  interface Player {
+    id: number;
+    clerkId: string;
+    username: string | null;
+  }
+
   const mockPlayerData = (player: Player | null): void => {
-    (prisma.user.findUnique as jest.Mock).mockResolvedValue(player);
+    (handleFindPlayerById as jest.Mock).mockResolvedValue(player);
   };
 
-  it('should return an error if username or WhatsApp number is missing', async () => {
+  it('should return an error if validation fails', async () => {
     const formData = createFormData('player1');
 
     (handleValidateEditPlayerData as jest.Mock).mockReturnValue({
@@ -69,7 +73,7 @@ describe('editPlayer', () => {
       ],
     });
 
-    const result = await editPlayer(1, formData);
+    const result = await handleEditPlayer(1, formData);
 
     expect(result).toEqual({
       errors: [
@@ -96,8 +100,10 @@ describe('editPlayer', () => {
       },
     });
 
-    const result = await editPlayer(1, formData);
+    const result = await handleEditPlayer(1, formData);
 
+    expect(handleFindPlayerById).toHaveBeenCalledWith(1);
+    expect(formatError).toHaveBeenCalledWith(playerNotFoundOrInvalid);
     expect(result).toEqual({
       errors: [
         {
@@ -126,7 +132,7 @@ describe('editPlayer', () => {
       ],
     });
 
-    const result = await editPlayer(1, formData);
+    const result = await handleEditPlayer(1, formData);
 
     expect(result).toEqual({
       errors: [
@@ -141,30 +147,33 @@ describe('editPlayer', () => {
   });
 
   it('should update the player successfully if all validation passes', async () => {
-    mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
+    const player: Player = {
+      id: 1,
+      clerkId: 'clerkId123',
+      username: 'player1',
+    };
+    mockPlayerData(player);
     const formData = createFormData('validPlayer', '123456789');
 
     (handleValidateEditPlayerData as jest.Mock).mockReturnValue({
       success: true,
       data: {
         username: 'validPlayer',
+        password: undefined,
         whatsappNumber: '123456789',
       },
     });
 
-    const result = await editPlayer(1, formData);
+    const result = await handleEditPlayer(1, formData);
 
-    expect(users.updateUser).toHaveBeenCalledWith('clerkId123', {
+    expect(handleFindPlayerById).toHaveBeenCalledWith(1);
+    expect(updateClerkUser).toHaveBeenCalledWith('clerkId123', {
       username: 'validPlayer',
       password: undefined,
     });
-
-    expect(prisma.user.update).toHaveBeenCalledWith({
-      where: { id: 1 },
-      data: {
-        username: 'validPlayer',
-        whatsappNumber: '123456789',
-      },
+    expect(updatePlayerInDatabase).toHaveBeenCalledWith(1, {
+      username: 'validPlayer',
+      whatsappNumber: '123456789',
     });
 
     expect(result).toEqual({
@@ -174,23 +183,36 @@ describe('editPlayer', () => {
   });
 
   it('should handle errors during the update process', async () => {
-    mockPlayerData({ id: 1, clerkId: 'clerkId123', username: 'player1' });
+    const player: Player = {
+      id: 1,
+      clerkId: 'clerkId123',
+      username: 'player1',
+    };
+    mockPlayerData(player);
     const formData = createFormData('validPlayer', '123456789');
 
     (handleValidateEditPlayerData as jest.Mock).mockReturnValue({
       success: true,
       data: {
         username: 'validPlayer',
+        password: undefined,
         whatsappNumber: '123456789',
       },
     });
 
-    (users.updateUser as jest.Mock).mockRejectedValue(
+    (updateClerkUser as jest.Mock).mockRejectedValue(
       new Error('User update failed')
     );
 
-    const result = await editPlayer(1, formData);
+    const result = await handleEditPlayer(1, formData);
 
+    expect(handleFindPlayerById).toHaveBeenCalledWith(1);
+    expect(updateClerkUser).toHaveBeenCalledWith('clerkId123', {
+      username: 'validPlayer',
+      password: undefined,
+    });
+    expect(updatePlayerInDatabase).not.toHaveBeenCalled();
+    expect(formatError).toHaveBeenCalledWith(errorUpdatingPlayer);
     expect(result).toEqual({
       errors: [
         {

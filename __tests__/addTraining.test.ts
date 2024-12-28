@@ -1,7 +1,7 @@
-import addTraining from '@/app/actions/addTraining';
-import prisma from '@/lib/prisma';
+import addTraining from '../src/app/actions/addTraining';
+import prisma from '../src/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   __esModule: true,
   default: {
     training: {

@@ -1,10 +1,10 @@
-import addMatch from '@/app/actions/addMatch';
-import addMatchAndPlayers from '@/app/actions/addMatchAndPlayers';
-import addMatchPlayer from '@/app/actions/addMatchPlayer';
-import { formatError } from '@/utils/errorUtils';
+import addMatch from '../src/app/actions/addMatch';
+import addMatchAndPlayers from '../src/app/actions/addMatchAndPlayers';
+import addMatchPlayer from '../src/app/actions/addMatchPlayer';
+import { formatError } from '../src/utils/errorUtils';
 
-jest.mock('@/app/actions/addMatch');
-jest.mock('@/app/actions/addMatchPlayer');
+jest.mock('../src/app/actions/addMatch');
+jest.mock('../src/app/actions/addMatchPlayer');
 
 const mockAddMatch = addMatch as jest.Mock;
 const mockAddMatchPlayer = addMatchPlayer as jest.Mock;

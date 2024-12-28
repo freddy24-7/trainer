@@ -1,7 +1,7 @@
-import addMatch from '@/app/actions/addMatch';
-import prisma from '@/lib/prisma';
+import addMatch from '../src/app/actions/addMatch';
+import prisma from '../src/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   __esModule: true,
   default: {
     pouleOpponents: {

@@ -1,7 +1,7 @@
 import { getTrainingData } from '@/app/actions/getTrainingData';
-import prisma from '@/lib/prisma';
+import prisma from '../src/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   training: {
     findMany: jest.fn(),
   },

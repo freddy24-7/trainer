@@ -1,10 +1,12 @@
+import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEventDefault from '@testing-library/user-event';
 import React from 'react';
 import { toast } from 'react-toastify';
 
 import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
-import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
+
+import { handlePlayerFormSubmit } from '../src/utils/playerFormUtils';
 
 jest.mock('react-toastify', () => ({
   toast: {
@@ -13,11 +15,11 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
-jest.mock('@/utils/phoneNumberUtils', () => ({
+jest.mock('../src/utils/phoneNumberUtils', () => ({
   handleFormatWhatsappNumberToDisplay: jest.fn((number: string) => number),
 }));
 
-jest.mock('@/utils/playerFormUtils', () => ({
+jest.mock('../src/utils/playerFormUtils', () => ({
   handlePlayerFormSubmit: jest.fn(),
 }));
 

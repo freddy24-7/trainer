@@ -1,13 +1,13 @@
-import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
-import prisma from '@/lib/prisma';
+import { getTeamsInPoule } from '../src/app/actions/getTeamsInPoule';
+import prisma from '../src/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   poule: {
     findMany: jest.fn(),
   },
 }));
 
-jest.mock('@/utils/errorUtils', () => ({
+jest.mock('../src//utils/errorUtils', () => ({
   formatError: jest.fn((message, path, code, includeSuccess) => ({
     success: includeSuccess ? false : undefined,
     errors: [{ message, path, code }],

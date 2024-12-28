@@ -1,10 +1,11 @@
 import { v2 as cloudinary } from 'cloudinary';
 
-import { deleteMessage } from '@/app/actions/deleteMessage';
 import prisma from '@/lib/prisma';
 import { formatError } from '@/utils/errorUtils';
 
-jest.mock('@/lib/prisma', () => ({
+import { deleteMessage } from '../src/app/actions/deleteMessage';
+
+jest.mock('../src/lib/prisma', () => ({
   __esModule: true,
   default: {
     message: {
@@ -22,7 +23,7 @@ jest.mock('cloudinary', () => ({
   },
 }));
 
-jest.mock('@/utils/errorUtils', () => ({
+jest.mock('../src/utils/errorUtils', () => ({
   __esModule: true,
   formatError: jest.fn(),
 }));

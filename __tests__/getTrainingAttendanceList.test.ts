@@ -1,7 +1,7 @@
-import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
-import prisma from '@/lib/prisma';
+import { getTrainingAttendanceList } from '../src/app/actions/getTrainingAttendanceList';
+import prisma from '../src/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   user: {
     findMany: jest.fn(),
   },

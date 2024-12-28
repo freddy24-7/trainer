@@ -1,7 +1,7 @@
-import { getMatchData } from '@/app/actions/getMatchData';
-import prisma from '@/lib/prisma';
+import { getMatchData } from '../src/app/actions/getMatchData';
+import prisma from '../src/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   match: {
     findMany: jest.fn(),
   },

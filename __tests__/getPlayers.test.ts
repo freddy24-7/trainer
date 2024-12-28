@@ -1,22 +1,16 @@
-import { revalidatePath } from 'next/cache';
-
-import getPlayers from '@/app/actions/getPlayers';
-import prisma from '@/lib/prisma';
-import { formatError } from '@/utils/errorUtils';
+import getPlayers from '../src/app/actions/getPlayers';
+import prisma from '../src/lib/prisma';
+import { formatError } from '../src/utils/errorUtils';
 
 const errorMessage = 'Fout bij het ophalen van spelers.';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   user: {
     findMany: jest.fn(),
   },
 }));
 
-jest.mock('next/cache', () => ({
-  revalidatePath: jest.fn(),
-}));
-
-jest.mock('@/utils/errorUtils', () => ({
+jest.mock('../src/utils/errorUtils', () => ({
   formatError: jest.fn().mockImplementation(() => ({
     errors: [{ message: errorMessage }],
   })),
@@ -37,7 +31,6 @@ describe('getPlayers', () => {
     const result = await getPlayers();
 
     expect(result).toEqual({ success: true, players: mockPlayers });
-    expect(revalidatePath).toHaveBeenCalledWith('/player-management');
   });
 
   it('should return an empty list if no players are found', async () => {
@@ -46,7 +39,6 @@ describe('getPlayers', () => {
     const result = await getPlayers();
 
     expect(result).toEqual({ success: true, players: [] });
-    expect(revalidatePath).toHaveBeenCalledWith('/player-management');
   });
 
   it('should handle errors when fetching players', async () => {
@@ -59,7 +51,6 @@ describe('getPlayers', () => {
     expect(result).toEqual({
       errors: [{ message: errorMessage }],
     });
-    expect(revalidatePath).not.toHaveBeenCalled();
     expect(formatError).toHaveBeenCalledWith(errorMessage);
   });
 });

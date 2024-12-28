@@ -1,7 +1,7 @@
-import addMatchPlayer from '@/app/actions/addMatchPlayer';
-import prisma from '@/lib/prisma';
+import addMatchPlayer from '../src/app/actions/addMatchPlayer';
+import prisma from '../src/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   __esModule: true,
   default: {
     matchPlayer: {

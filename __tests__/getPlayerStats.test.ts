@@ -1,7 +1,8 @@
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
-import prisma from '@/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+import prisma from '../src/lib/prisma';
+
+jest.mock('../src/lib/prisma', () => ({
   user: {
     findMany: jest.fn(),
   },

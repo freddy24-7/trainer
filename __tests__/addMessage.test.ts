@@ -1,18 +1,18 @@
 import fs from 'fs';
 
-import addMessage from '@/app/actions/addMessage';
-import { handleUploadVideo } from '@/lib/cloudinary';
-import prisma from '@/lib/prisma';
-import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
-import { formatError } from '@/utils/errorUtils';
-import { handleTriggerNewMessageEvent } from '@/utils/pusherUtils';
+import addMessage from '../src/app/actions/addMessage';
+import { handleUploadVideo } from '../src/lib/cloudinary';
+import prisma from '../src/lib/prisma';
+import { validateMessageInput } from '../src/schemas/validation/addMessageValidation';
+import { formatError } from '../src/utils/errorUtils';
+import { handleTriggerNewMessageEvent } from '../src/utils/pusherUtils';
 
 jest.mock('fs', () => ({
   writeFileSync: jest.fn(),
   unlinkSync: jest.fn(),
 }));
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   __esModule: true,
   default: {
     message: {
@@ -24,22 +24,22 @@ jest.mock('@/lib/prisma', () => ({
   },
 }));
 
-jest.mock('@/lib/cloudinary', () => ({
+jest.mock('../src/lib/cloudinary', () => ({
   __esModule: true,
   handleUploadVideo: jest.fn(),
 }));
 
-jest.mock('@/utils/pusherUtils', () => ({
+jest.mock('../src/utils/pusherUtils', () => ({
   __esModule: true,
   handleTriggerNewMessageEvent: jest.fn(),
 }));
 
-jest.mock('@/schemas/validation/addMessageValidation', () => ({
+jest.mock('../src/schemas/validation/addMessageValidation', () => ({
   __esModule: true,
   validateMessageInput: jest.fn(),
 }));
 
-jest.mock('@/utils/errorUtils', () => ({
+jest.mock('../src/utils/errorUtils', () => ({
   __esModule: true,
   formatError: jest.fn(),
 }));

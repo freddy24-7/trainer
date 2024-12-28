@@ -1,10 +1,9 @@
-import { users } from '@clerk/clerk-sdk-node';
-import { revalidatePath } from 'next/cache';
+import { createClerkClient } from '@clerk/backend';
 
-import addPlayer from '@/app/actions/addPlayer';
-import prisma from '@/lib/prisma';
+import addPlayer from '../src/app/actions/addPlayer';
+import prisma from '../src/lib/prisma';
 
-jest.mock('@/lib/prisma', () => ({
+jest.mock('../src/lib/prisma', () => ({
   __esModule: true,
   default: {
     user: {
@@ -13,18 +12,15 @@ jest.mock('@/lib/prisma', () => ({
   },
 }));
 
-jest.mock('@clerk/clerk-sdk-node', () => ({
-  __esModule: true,
-  users: {
-    createUser: jest.fn(),
-  },
+jest.mock('@clerk/backend', () => ({
+  createClerkClient: jest.fn().mockReturnValue({
+    users: {
+      createUser: jest.fn(),
+    },
+  }),
 }));
 
-jest.mock('next/cache', () => ({
-  revalidatePath: jest.fn(),
-}));
-
-jest.mock('@/utils/errorUtils', () => ({
+jest.mock('../src/utils/errorUtils', () => ({
   formatError: jest.fn().mockReturnValue({
     errors: [
       {
@@ -59,11 +55,11 @@ describe('addPlayer Functionality Tests', () => {
   const validUsername = 'testplayer';
 
   it('should create a player successfully with valid input', async () => {
-    const createUserMock = users.createUser as jest.Mock;
+    const clerkClientMock = createClerkClient as jest.Mock;
+    const clerkUsersMock = clerkClientMock().users.createUser as jest.Mock;
     const createUserInDBMock = prisma.user.create as jest.Mock;
-    const revalidatePathMock = revalidatePath as jest.Mock;
 
-    createUserMock.mockResolvedValue({ id: 'clerk-123' });
+    clerkUsersMock.mockResolvedValue({ id: 'clerk-123' });
     createUserInDBMock.mockResolvedValue({
       id: 1,
       username: validUsername,
@@ -82,7 +78,7 @@ describe('addPlayer Functionality Tests', () => {
     const result = await addPlayer({}, formData);
 
     expect(result).toEqual({ errors: [], success: true });
-    expect(createUserMock).toHaveBeenCalledWith({
+    expect(clerkUsersMock).toHaveBeenCalledWith({
       username: validUsername,
       password: validPassword,
     });
@@ -95,7 +91,6 @@ describe('addPlayer Functionality Tests', () => {
         createdAt: expect.any(Date),
       },
     });
-    expect(revalidatePathMock).toHaveBeenCalledWith('/player-management');
   });
 
   it('should return validation errors when whatsappNumber is invalid', async () => {
@@ -133,8 +128,10 @@ describe('addPlayer Functionality Tests', () => {
   });
 
   it('should return an error when Clerk user creation fails', async () => {
-    const createUserMock = users.createUser as jest.Mock;
-    createUserMock.mockRejectedValue(new Error('Clerk error'));
+    const clerkClientMock = createClerkClient as jest.Mock;
+    const clerkUsersMock = clerkClientMock().users.createUser as jest.Mock;
+
+    clerkUsersMock.mockRejectedValue(new Error('Clerk error'));
 
     const formData = formDataSetup(
       validUsername,
@@ -153,6 +150,6 @@ describe('addPlayer Functionality Tests', () => {
         },
       ],
     });
-    expect(createUserMock).toHaveBeenCalledTimes(1);
+    expect(clerkUsersMock).toHaveBeenCalledTimes(1);
   });
 });

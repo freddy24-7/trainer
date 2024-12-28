@@ -23,8 +23,8 @@ export default [{
     ignores: [
         "coverage/**/*",
         "node_modules/**/*",
-        "**/jest.config.js",
-        "**/jest.setup.js",
+        "**/jest.config.ts",
+        "**/jest.setup.ts",
         "src/components/ui**",
         "src/lib/prisma.ts",
         "src/lib/utils.ts",
@@ -281,5 +281,6 @@ export default [{
 
         "max-lines-per-function": "off",
         "jest/no-disabled-tests": "off",
+        "@typescript-eslint/no-explicit-any": "off",
     },
 }];
