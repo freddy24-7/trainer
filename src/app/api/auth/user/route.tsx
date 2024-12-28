@@ -58,10 +58,5 @@ export async function GET(): Promise<NextResponse> {
     await prisma.$disconnect();
   }
 
-  return new NextResponse(null, {
-    status: 302,
-    headers: {
-      Location: locationUrl,
-    },
-  });
+  return NextResponse.redirect(locationUrl);
 }
