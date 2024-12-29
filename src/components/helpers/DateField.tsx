@@ -11,10 +11,15 @@ import {
   futureDateError,
 } from '@/strings/clientStrings';
 import { DateProps } from '@/types/shared-types';
-import { isDateValidForMatch } from '@/utils/dateUtils';
 
 const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
   const { control } = useFormContext();
+  const today = new Date();
+
+  const isDateValid = (date: CalendarDate): boolean => {
+    const selectedDate = new Date(date.year, date.month - 1, date.day);
+    return selectedDate <= today;
+  };
 
   return (
     <Controller
@@ -37,7 +42,7 @@ const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
               label={selectMatchDateLabel}
               value={field.value}
               onChange={(date) => {
-                if (date && isDateValidForMatch(date as CalendarDate)) {
+                if (isDateValid(date as CalendarDate)) {
                   field.onChange(date);
                   onChange(date as CalendarDate);
                 } else {

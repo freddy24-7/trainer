@@ -8,12 +8,18 @@ import {
   futureDateError,
 } from '@/strings/clientStrings';
 import { DateSelectorProps } from '@/types/ui-types';
-import { isDateValidForMatch } from '@/utils/dateUtils';
 
 const DateSelector: React.FC<DateSelectorProps> = ({
   matchDate,
   onDateChange,
 }) => {
+  const today = new Date();
+
+  const isDateValid = (date: CalendarDate): boolean => {
+    const selectedDate = new Date(date.year, date.month - 1, date.day);
+    return selectedDate <= today;
+  };
+
   return (
     <div>
       <label className="block mb-2 mx-auto text-center">{matchDateLabel}</label>
@@ -21,7 +27,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
         label={selectMatchDateLabel}
         className="max-w-[284px]"
         onChange={(date) => {
-          if (date && isDateValidForMatch(date as CalendarDate)) {
+          if (isDateValid(date as CalendarDate)) {
             onDateChange(date as CalendarDate);
           } else {
             toast.error(futureDateError);
