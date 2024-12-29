@@ -1,15 +1,14 @@
 'use client';
 
-import { DatePicker, CalendarDate } from '@nextui-org/react';
-import { toDate } from 'date-fns-tz';
+import { CalendarDate, DatePicker } from '@nextui-org/react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 import {
+  futureDateError,
   matchDateLabel,
   selectMatchDateLabel,
-  futureDateError,
 } from '@/strings/clientStrings';
 import { DateProps } from '@/types/shared-types';
 
@@ -17,12 +16,13 @@ const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
   const { control } = useFormContext();
   const today = new Date();
 
-  const dateTimeRegex =
-    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9](:([0-5][0-9]|60))?(\.[0-9]{1,9})?)?)?([Z+\-]((0[0-9]|1[0-3]):[0-5][0-9]|14:00)?)?)?$/;
+  const dateOnlyRegex =
+    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])))$/;
 
   function handleParseDateString(dateString: string): Date {
-    if (dateTimeRegex.test(dateString)) {
-      return toDate(dateString);
+    if (dateOnlyRegex.test(dateString)) {
+      const utcDate = new Date(dateString);
+      return new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
     }
     return new Date(dateString);
   }
