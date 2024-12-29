@@ -18,12 +18,15 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   const today = new Date();
 
   const convertToDate = (date: CalendarDate): Date => {
-    return new Date(date.year, date.month - 1, date.day);
+    return new Date(Date.UTC(date.year, date.month - 1, date.day));
   };
 
   const isDateValid = (date: CalendarDate): boolean => {
     const selectedDate = convertToDate(date);
-    return selectedDate <= today;
+    const todayUTC = new Date(
+      Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
+    );
+    return selectedDate <= todayUTC;
   };
 
   return (
