@@ -1,5 +1,3 @@
-'use client';
-
 import { DatePicker, CalendarDate } from '@nextui-org/react';
 import React from 'react';
 import { toast } from 'react-toastify';
@@ -10,25 +8,12 @@ import {
   futureDateError,
 } from '@/strings/clientStrings';
 import { DateSelectorProps } from '@/types/ui-types';
+import { isDateValidForMatch } from '@/utils/dateUtils';
 
 const DateSelector: React.FC<DateSelectorProps> = ({
   matchDate,
   onDateChange,
 }) => {
-  const today = new Date();
-
-  const convertToDate = (date: CalendarDate): Date => {
-    return new Date(Date.UTC(date.year, date.month - 1, date.day));
-  };
-
-  const isDateValid = (date: CalendarDate): boolean => {
-    const selectedDate = convertToDate(date);
-    const todayUTC = new Date(
-      Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
-    );
-    return selectedDate <= todayUTC;
-  };
-
   return (
     <div>
       <label className="block mb-2 mx-auto text-center">{matchDateLabel}</label>
@@ -36,7 +21,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
         label={selectMatchDateLabel}
         className="max-w-[284px]"
         onChange={(date) => {
-          if (isDateValid(date as CalendarDate)) {
+          if (date && isDateValidForMatch(date as CalendarDate)) {
             onDateChange(date as CalendarDate);
           } else {
             toast.error(futureDateError);
