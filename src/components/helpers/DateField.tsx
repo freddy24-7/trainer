@@ -1,14 +1,14 @@
 'use client';
 
-import { CalendarDate, DatePicker } from '@nextui-org/react';
+import { DatePicker, CalendarDate } from '@nextui-org/react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 import {
-  futureDateError,
   matchDateLabel,
   selectMatchDateLabel,
+  futureDateError,
 } from '@/strings/clientStrings';
 import { DateProps } from '@/types/shared-types';
 
@@ -16,19 +16,8 @@ const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
   const { control } = useFormContext();
   const today = new Date();
 
-  const dateOnlyRegex =
-    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])))$/;
-
-  function handleParseDateString(dateString: string): Date {
-    if (dateOnlyRegex.test(dateString)) {
-      const utcDate = new Date(dateString);
-      return new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
-    }
-    return new Date(dateString);
-  }
-
   const isDateValid = (date: CalendarDate): boolean => {
-    const selectedDate = handleParseDateString(date.toString());
+    const selectedDate = new Date(date.toDate('CET'));
     return selectedDate <= today;
   };
 
