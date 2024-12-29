@@ -1,3 +1,5 @@
+'use client';
+
 import { DatePicker, CalendarDate } from '@nextui-org/react';
 import React from 'react';
 import { toast } from 'react-toastify';
@@ -15,8 +17,12 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 }) => {
   const today = new Date();
 
+  const convertToDate = (date: CalendarDate): Date => {
+    return new Date(date.year, date.month - 1, date.day);
+  };
+
   const isDateValid = (date: CalendarDate): boolean => {
-    const selectedDate = new Date(date.toString());
+    const selectedDate = convertToDate(date);
     return selectedDate <= today;
   };
 
