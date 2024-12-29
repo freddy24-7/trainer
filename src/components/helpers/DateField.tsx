@@ -17,7 +17,7 @@ const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
   const today = new Date();
 
   const isDateValid = (date: CalendarDate): boolean => {
-    const selectedDate = new Date(date.year, date.month - 1, date.day);
+    const selectedDate = new Date(date.toString());
     return selectedDate <= today;
   };
 
