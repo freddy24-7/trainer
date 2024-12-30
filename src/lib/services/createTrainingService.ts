@@ -8,6 +8,8 @@ export async function createTraining(
   date: string,
   players: PlayerAtTraining[]
 ): Promise<Training> {
+  //This code section below is written to also work in production on vercel, which is given in UTC timezone.
+  //As the user in production is in UTC timezone , we need to add hours to the date to make it work in CET.
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   console.log('User timezone:', userTimezone);
 
