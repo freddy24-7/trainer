@@ -18,6 +18,7 @@ const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
 
   const isDateValid = (date: CalendarDate): boolean => {
     const selectedDate = new Date(date.toDate('CET'));
+    selectedDate.setHours(12, 0, 0, 0);
     return selectedDate <= today;
   };
 
