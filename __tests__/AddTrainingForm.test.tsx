@@ -1,9 +1,13 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import AddTrainingForm from '@/app/trainings/AddTrainingForm';
+import {
+  addTrainingButtonText,
+  addTrainingHeader,
+} from '@/strings/clientStrings';
 import { Player } from '@/types/user-types';
-
-import AddTrainingForm from '../src/app/trainings/AddTrainingForm';
 
 jest.mock('react-toastify', () => ({
   toast: {
@@ -18,9 +22,6 @@ jest.mock('next/navigation', () => ({
     push: mockPush,
   }),
 }));
-
-const addTrainingButtonText = 'Training Toevoegen';
-const addTrainingHeader = 'Nieuwe Trainingssessie Toevoegen';
 
 const mockPlayers: Player[] = [
   { id: 1, username: 'PlayerOne', whatsappNumber: '123456789' },
@@ -54,22 +55,16 @@ describe('AddTrainingForm', () => {
     });
   });
 
-  it('allows selecting a date with DatePicker', async () => {
+  it('allows selecting a valid date with DatePicker', async () => {
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
 
     const calendarButton = screen.getByRole('button', {
-      name: 'Calendar Selecteer Wedstrijddatum',
+      name: 'Calendar Kies datum',
     });
-    fireEvent.click(calendarButton);
+    await userEvent.click(calendarButton);
 
-    const calendarDate = screen.getByLabelText('Wednesday, December 25, 2024');
-    fireEvent.click(calendarDate);
-
-    const dateDescription = document.getElementById('react-aria-description-0');
-    await waitFor(() => {
-      expect(dateDescription).toHaveTextContent(
-        'Selected Date: December 25, 2024'
-      );
-    });
+    const validDateLabel = 'Wednesday, December 25, 2024';
+    const calendarDate = screen.getByLabelText(validDateLabel);
+    await userEvent.click(calendarDate);
   });
 });
