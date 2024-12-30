@@ -27,7 +27,8 @@ export const addPouleButtonText = 'Poule Toevoegen';
 export const noAttendanceDataMessage =
   'Geen aanwezigheidsgegevens van spelers gevonden.';
 export const noTrainingSessionsMessage = 'Geen trainingssessies gevonden.';
-export const trainingDateLabel = 'Trainingsdatum';
+export const dateLabel = 'Datum';
+export const selectDateLabel = 'Kies datum';
 export const absentLabel = 'Afwezig';
 export const allPlayersPresentMessage = 'Alle spelers waren aanwezig.';
 export const onlyVideoFilesMessage = 'Alleen videobestanden zijn toegestaan';
@@ -51,8 +52,6 @@ export const statsOptionsAriaLabel = 'Statistiekopties';
 export const matchStatsText = 'Wedstrijdstatistieken';
 export const trainingStatsText = 'Trainingsstatistieken';
 export const toggleThemeAriaLabel = "Schakel tussen lichte en donkere thema's";
-export const matchDateLabel = 'Wedstrijddatum:';
-export const selectMatchDateLabel = 'Selecteer Wedstrijddatum';
 export const loginRequiredTitle = 'Inloggen Vereist';
 export const loginRequiredBody =
   'Je moet ingelogd zijn om toegang te krijgen tot het dashboard.';
@@ -76,3 +75,5 @@ export const sendWhatsAppMessage = 'WhatsApp-bericht sturen naar speler';
 export const futureDateError = 'Toekomstige datums zijn niet toegestaan!';
 export const errorAddingTraining = 'Fout bij het toevoegen van training.';
 export const anErrorOccurred = 'Er is een fout opgetreden bij het indienen.';
+export const pastDateError =
+  'Je kunt geen dag kiezen die meer dan twee kalendermaanden in het verleden ligt.';

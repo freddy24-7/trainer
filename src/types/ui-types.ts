@@ -1,10 +1,4 @@
-import { CalendarDate } from '@nextui-org/react';
 import { ReactNode } from 'react';
-
-export interface DateSelectorProps {
-  matchDate: CalendarDate | null;
-  onDateChange: (date: CalendarDate | null) => void;
-}
 
 export interface NavBarClientProps {
   userId: string | null;

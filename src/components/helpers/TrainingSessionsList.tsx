@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
   noTrainingSessionsMessage,
-  trainingDateLabel,
+  dateLabel,
   absentLabel,
   allPlayersPresentMessage,
 } from '@/strings/clientStrings';
@@ -23,7 +23,7 @@ const TrainingSessionsList: React.FC<TrainingSessionsListProps> = ({
           className="p-4 bg-white shadow-md rounded-md border"
         >
           <h3 className="text-lg font-semibold text-gray-700">
-            {trainingDateLabel}: {new Date(training.date).toLocaleDateString()}{' '}
+            {dateLabel}: {new Date(training.date).toLocaleDateString()}{' '}
           </h3>
           {training.absentPlayers.length > 0 && (
             <h2 className="text-md font-semibold mt-2 text-gray-800">

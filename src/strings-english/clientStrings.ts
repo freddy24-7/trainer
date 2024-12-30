@@ -26,7 +26,6 @@ export const addOpponentButtonText = 'Add Opponent';
 export const addPouleButtonText = 'Add Poule';
 export const noAttendanceDataMessage = 'No player attendance data found.';
 export const noTrainingSessionsMessage = 'No training sessions found.';
-export const trainingDateLabel = 'Training Date';
 export const absentLabel = 'Absent';
 export const allPlayersPresentMessage = 'All players were present.';
 export const onlyVideoFilesMessage = 'Only video files are accepted';
@@ -50,8 +49,8 @@ export const statsOptionsAriaLabel = 'Stats Options';
 export const matchStatsText = 'Match-Stats';
 export const trainingStatsText = 'Training-Stats';
 export const toggleThemeAriaLabel = 'Toggle between light and dark themes';
-export const matchDateLabel = 'Match Date:';
-export const selectMatchDateLabel = 'Select Match Date';
+export const dateLabel = 'Date:';
+export const ChooseDateLabel = 'Select Date';
 export const loginRequiredTitle = 'Log In Required';
 export const loginRequiredBody =
   'You need to be logged in to access the dashboard.';
@@ -73,3 +72,5 @@ export const submittingText = 'Submitting...';
 export const addPlayerButtonText = 'Add Player';
 export const sendWhatsAppMessage = 'Send WhatsApp Message to Player';
 export const futureDateError = 'Future dates are not allowed!';
+export const pastDateError =
+  'Cannot choose a day more than two calendar months in the past.';
