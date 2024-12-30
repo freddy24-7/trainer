@@ -23,7 +23,7 @@ export async function createMatch(
   let matchDate = endOfDay(parseISO(date));
 
   if (userTimezone === 'UTC') {
-    matchDate = addHours(matchDate, 12);
+    matchDate = addHours(matchDate, 0);
   }
 
   return prisma.match.create({
