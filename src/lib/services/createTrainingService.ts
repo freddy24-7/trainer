@@ -1,6 +1,4 @@
 import { Training } from '@prisma/client';
-import { parseISO, startOfDay } from 'date-fns';
-
 import prisma from '@/lib/prisma';
 import { PlayerAtTraining } from '@/types/user-types';
 
@@ -8,7 +6,7 @@ export async function createTraining(
   date: string,
   players: PlayerAtTraining[]
 ): Promise<Training> {
-  const chosenDate = startOfDay(parseISO(date));
+  const chosenDate = new Date(`${date}T00:00:00Z`);
 
   return prisma.training.create({
     data: {
