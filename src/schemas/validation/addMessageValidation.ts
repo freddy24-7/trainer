@@ -8,7 +8,7 @@ export const validateMessageInput = (
   | {
       success: true;
       data: {
-        content: string;
+        content?: string;
         senderId: number;
         recipientId?: number;
         videoUrl?: string;
