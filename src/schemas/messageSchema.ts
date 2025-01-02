@@ -14,4 +14,5 @@ export const createMessageSchema = z.object({
     .max(1000, messageTooLongErrorMessage),
   senderId: z.number().positive(invalidSenderIdMessage),
   recipientId: z.number().positive(invalidRecipientIdMessage).optional(),
+  videoUrl: z.string().url().optional(),
 });

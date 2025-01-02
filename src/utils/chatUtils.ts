@@ -145,7 +145,7 @@ function handlePrepareMessage({
   addOptimisticMessage,
 }: {
   newMessage: string;
-  selectedVideo: File | null;
+  selectedVideo: File | string | null;
   signedInUserId: number;
   selectedRecipientId: number | null;
   addOptimisticMessage: (message: Message) => void;
@@ -169,6 +169,7 @@ function handlePrepareMessage({
           newMessage,
           signedInUserId,
           selectedRecipientId,
+          selectedVideo: null,
         })
       : null;
 
@@ -237,7 +238,7 @@ function handleResetFormState({
   setIsSending,
 }: {
   setNewMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | null>>;
+  setSelectedVideo: React.Dispatch<React.SetStateAction<File | string | null>>;
   setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
 }): void {
   setNewMessage('');

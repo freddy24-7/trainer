@@ -25,7 +25,9 @@ function ChatClient({
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<File | string | null>(
+    null
+  );
   const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(
     recipientId
   );

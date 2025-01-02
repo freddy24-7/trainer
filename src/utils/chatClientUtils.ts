@@ -87,13 +87,13 @@ export function handleMemoizedSendMessage({
   replaceOptimisticMessage,
 }: {
   newMessage: string;
-  selectedVideo: File | null;
+  selectedVideo: File | string | null;
   setIsSending: Dispatch<SetStateAction<boolean>>;
   signedInUserId: number;
   selectedRecipientId: number | null;
   action: ChatClientAction;
   setNewMessage: Dispatch<SetStateAction<string>>;
-  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
   setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
   replaceOptimisticMessage: (messageId: number, newMessage: Message) => void;

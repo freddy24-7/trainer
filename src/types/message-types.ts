@@ -72,23 +72,23 @@ export interface ChatMessageProps {
     removeFromDatabase?: boolean
   ) => Promise<void>;
   isSending: boolean;
-  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
   newMessage: string;
   setNewMessage: Dispatch<SetStateAction<string>>;
   handleSendMessage: (e: React.FormEvent) => Promise<void>;
-  selectedVideo: File | null;
+  selectedVideo: File | string | null;
 }
 
 export interface MessageInputFormProps {
   newMessage: string;
   setNewMessage: Dispatch<SetStateAction<string>>;
   handleSendMessage: (e: React.FormEvent) => void;
-  selectedVideo: File | null;
-  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
+  selectedVideo: File | string | null;
+  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
 }
 
 export interface VideoDropzoneProps {
-  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
 }
 
 export interface HandleOnDeleteVideoParams {
@@ -113,13 +113,13 @@ export interface HandleOnDeleteMessageParams {
 export interface HandleSendMessageParams {
   e: React.FormEvent;
   newMessage: string;
-  selectedVideo: File | null;
+  selectedVideo: File | string | null;
   setIsSending: Dispatch<SetStateAction<boolean>>;
   signedInUserId: number;
   selectedRecipientId: number | null;
   action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
   setNewMessage: Dispatch<SetStateAction<string>>;
-  setSelectedVideo: Dispatch<SetStateAction<File | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
   setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
   replaceOptimisticMessage: (temporaryId: number, newMessage: Message) => void;

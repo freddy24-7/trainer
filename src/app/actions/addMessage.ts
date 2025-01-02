@@ -1,12 +1,8 @@
 'use server';
 
-import fs from 'fs';
-
-import { handleUploadVideo } from '@/lib/cloudinary';
 import { createMessage, getSenderById } from '@/lib/services/createChatService';
 import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
 import {
-  errorUploadingVideo,
   senderNotFoundOrUsernameNull,
   errorSendingMessage,
 } from '@/strings/actionStrings';
@@ -14,38 +10,6 @@ import { Sender, Message } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleTriggerNewMessageEvent } from '@/utils/pusherUtils';
-
-async function handleProcessVideoFile(
-  params: FormData
-): Promise<{ videoUrl: string | null; videoPublicId: string | null }> {
-  if (!params.has('videoFile')) {
-    return { videoUrl: null, videoPublicId: null };
-  }
-
-  const videoFile = params.get('videoFile') as File;
-  if (!videoFile) {
-    return { videoUrl: null, videoPublicId: null };
-  }
-
-  const filePath = `/tmp/${videoFile.name}`;
-  try {
-    const buffer = await videoFile.arrayBuffer();
-    fs.writeFileSync(filePath, Buffer.from(buffer));
-
-    const { url, publicId } = await handleUploadVideo(filePath);
-    return { videoUrl: url, videoPublicId: publicId };
-  } catch (uploadError) {
-    console.error(errorUploadingVideo, uploadError);
-    throw formatError(
-      errorUploadingVideo,
-      ['upload'],
-      'custom',
-      true
-    ) as ActionResponse;
-  } finally {
-    fs.unlinkSync(filePath);
-  }
-}
 
 async function getSenderData(senderId: number): Promise<Sender> {
   const senderData = await getSenderById(senderId);
@@ -71,18 +35,7 @@ export default async function addMessage(
     return { success: false, errors: validation.error.issues };
   }
 
-  const { content, senderId, recipientId } = validation.data;
-
-  let videoUrl: string | null = null;
-  let videoPublicId: string | null = null;
-
-  try {
-    const videoResult = await handleProcessVideoFile(params);
-    videoUrl = videoResult.videoUrl;
-    videoPublicId = videoResult.videoPublicId;
-  } catch (error) {
-    return error as ActionResponse;
-  }
+  const { content, senderId, recipientId, videoUrl } = validation.data;
 
   try {
     const messageFromCreate = await createMessage({
@@ -90,7 +43,7 @@ export default async function addMessage(
       senderId,
       recipientId,
       videoUrl,
-      videoPublicId,
+      videoPublicId: null,
     });
 
     console.log('Message successfully saved:', messageFromCreate);

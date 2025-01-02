@@ -7,7 +7,12 @@ export const validateMessageInput = (
 ):
   | {
       success: true;
-      data: { content: string; senderId: number; recipientId?: number };
+      data: {
+        content: string;
+        senderId: number;
+        recipientId?: number;
+        videoUrl?: string;
+      };
     }
   | { success: false; error: ZodError } => {
   return createMessageSchema.safeParse({
@@ -16,5 +21,6 @@ export const validateMessageInput = (
     recipientId: params.has('recipientId')
       ? Number(params.get('recipientId'))
       : undefined,
+    videoUrl: params.get('videoUrl') || undefined,
   });
 };
