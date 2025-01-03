@@ -31,6 +31,7 @@ function ChatClient({
   const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(
     recipientId
   );
+  const [videoPublicId, setVideoPublicId] = useState<string | null>(null);
 
   const {
     messages,
@@ -97,6 +98,8 @@ function ChatClient({
       setNewMessage={setNewMessage}
       handleSendMessage={memoizedHandleSendMessage}
       selectedVideo={selectedVideo}
+      videoPublicId={videoPublicId} // Add this line
+      setVideoPublicId={setVideoPublicId} // Add this line
     />
   );
 }

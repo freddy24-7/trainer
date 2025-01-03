@@ -81,10 +81,12 @@ export interface ChatMessageProps {
 
 export interface MessageInputFormProps {
   newMessage: string;
-  setNewMessage: Dispatch<SetStateAction<string>>;
-  handleSendMessage: (e: React.FormEvent) => void;
-  selectedVideo: File | string | null;
-  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setNewMessage: (value: string) => void;
+  handleSendMessage: (formData: FormData) => void;
+  selectedVideo: string | null;
+  setSelectedVideo: (value: string | null) => void;
+  videoPublicId?: string | null;
+  setVideoPublicId?: (value: string | null) => void;
 }
 
 export interface VideoDropzoneProps {
