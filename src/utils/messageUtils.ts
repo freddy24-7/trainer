@@ -5,14 +5,16 @@ export function handlePrepareFormData({
   signedInUserId,
   selectedRecipientId,
   selectedVideo,
+  videoPublicId,
 }: {
   newMessage: string;
   signedInUserId: number;
   selectedRecipientId: number | null;
   selectedVideo: string | File | null;
+  videoPublicId?: string | null;
 }): FormData {
   const formData = new FormData();
-  formData.append('content', newMessage);
+  formData.append('content', newMessage); // Use 'content' instead of 'newMessage'
   formData.append('senderId', signedInUserId.toString());
 
   if (selectedRecipientId !== null) {
@@ -21,6 +23,10 @@ export function handlePrepareFormData({
 
   if (selectedVideo) {
     formData.append('videoUrl', selectedVideo);
+  }
+
+  if (videoPublicId) {
+    formData.append('videoPublicId', videoPublicId);
   }
 
   return formData;
@@ -32,13 +38,14 @@ export function createOptimisticMessage({
   signedInUserId,
   selectedRecipientId,
   videoUrl,
+  videoPublicId,
 }: {
   temporaryId: number;
   newMessage: string;
   signedInUserId: number;
   selectedRecipientId: number | null;
-  selectedVideo: string | null;
   videoUrl?: string | null;
+  videoPublicId?: string | null;
 }): Message | null {
   if (selectedRecipientId !== null) {
     return {
@@ -47,6 +54,7 @@ export function createOptimisticMessage({
       sender: { id: signedInUserId, username: 'You' },
       createdAt: new Date(),
       videoUrl: videoUrl || null,
+      videoPublicId: videoPublicId || null,
       recipientId: selectedRecipientId,
     };
   }

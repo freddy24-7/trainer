@@ -18,6 +18,7 @@ export interface Message {
   videoUrl?: string | null;
   createdAt: Date;
   recipientId?: number | null;
+  videoPublicId?: string | null;
 }
 
 export interface PusherEventMessage {
@@ -82,7 +83,7 @@ export interface ChatMessageProps {
 export interface MessageInputFormProps {
   newMessage: string;
   setNewMessage: Dispatch<SetStateAction<string>>;
-  handleSendMessage: (e: React.FormEvent) => void;
+  handleSendMessage: () => Promise<void>;
   selectedVideo: File | string | null;
   setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
 }
@@ -111,7 +112,6 @@ export interface HandleOnDeleteMessageParams {
 }
 
 export interface HandleSendMessageParams {
-  e: React.FormEvent;
   newMessage: string;
   selectedVideo: File | string | null;
   setIsSending: Dispatch<SetStateAction<boolean>>;
@@ -120,9 +120,10 @@ export interface HandleSendMessageParams {
   action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
   setNewMessage: Dispatch<SetStateAction<string>>;
   setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
-  setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
   replaceOptimisticMessage: (temporaryId: number, newMessage: Message) => void;
+  videoPublicId: string | null;
+  setUploadError: Dispatch<SetStateAction<string | null>>;
 }
 
 export interface SubscribeToPusherEventsParams {

@@ -2,10 +2,6 @@ import React from 'react';
 import { toast } from 'react-toastify';
 
 import {
-  failedToDeleteVideoMessage,
-  failedToDeleteMessageMessage,
-} from '@/strings/serverStrings';
-import {
   PusherEventMessage,
   Message,
   HandleOnDeleteVideoParams,
@@ -64,7 +60,7 @@ export async function handleOnDeleteVideo({
     if (response.success) {
       handleDeleteVideoLocal(messageId, setMessages);
     } else {
-      console.error(failedToDeleteVideoMessage);
+      console.error('Failed to delete video message');
     }
   } else {
     handleDeleteVideoLocal(messageId, setMessages);
@@ -83,7 +79,7 @@ export async function handleOnDeleteMessage({
     if (response.success) {
       handleDeleteMessage(messageId, true);
     } else {
-      console.error(failedToDeleteMessageMessage);
+      console.error('Failed to delete message');
     }
   } else {
     handleDeleteMessage(messageId, false);
@@ -91,7 +87,6 @@ export async function handleOnDeleteMessage({
 }
 
 export async function handleSendMessage({
-  e,
   newMessage,
   selectedVideo,
   setIsSending,
@@ -102,10 +97,16 @@ export async function handleSendMessage({
   setSelectedVideo,
   addOptimisticMessage,
   replaceOptimisticMessage,
+  videoPublicId,
 }: HandleSendMessageParams): Promise<void> {
-  e.preventDefault();
-
   if (!handleValidateMessage(newMessage, selectedVideo)) {
+    // Return early; error handling will be managed in the component
+    return;
+  }
+
+  // Ensure videoPublicId is present if a video is selected
+  if (selectedVideo && !videoPublicId) {
+    // Return early; error handling will be managed in the component
     return;
   }
 
@@ -117,10 +118,11 @@ export async function handleSendMessage({
     signedInUserId,
     selectedRecipientId,
     addOptimisticMessage,
+    videoPublicId,
   });
 
   try {
-    const response = await action({}, formData);
+    const response = await action({}, formData); // Pass FormData correctly
 
     handleServerResponse({
       response,
@@ -143,12 +145,14 @@ function handlePrepareMessage({
   signedInUserId,
   selectedRecipientId,
   addOptimisticMessage,
+  videoPublicId,
 }: {
   newMessage: string;
   selectedVideo: File | string | null;
   signedInUserId: number;
   selectedRecipientId: number | null;
   addOptimisticMessage: (message: Message) => void;
+  videoPublicId?: string | null;
 }): {
   temporaryId: number;
   formData: FormData;
@@ -160,16 +164,18 @@ function handlePrepareMessage({
     signedInUserId,
     selectedRecipientId,
     selectedVideo,
+    videoPublicId,
   });
 
   const optimisticMessage =
-    !selectedVideo && selectedRecipientId !== null
+    selectedRecipientId !== null
       ? createOptimisticMessage({
           temporaryId,
           newMessage,
           signedInUserId,
           selectedRecipientId,
-          selectedVideo: null,
+          videoUrl: typeof selectedVideo === 'string' ? selectedVideo : null,
+          videoPublicId,
         })
       : null;
 
