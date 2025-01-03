@@ -42,6 +42,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
       formData.append('upload_preset', 'trainer2Unsigned');
 
       try {
+        console.log('Starting upload to Cloudinary...');
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
           {
@@ -52,8 +53,13 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
 
         const data = await response.json();
         if (data.secure_url && data.public_id) {
+          console.log('Upload successful:', {
+            secure_url: data.secure_url,
+            public_id: data.public_id,
+          });
           setSelectedVideo(data.secure_url);
           setVideoPublicId(data.public_id); // Set videoPublicId
+          console.log('videoPublicId updated to:', data.public_id); // Log the updated value
         } else {
           console.error('Cloudinary upload failed:', data);
           setUploadError('Failed to upload video. Please try again.');

@@ -29,6 +29,8 @@ export default async function addMessage(
   _prevState: unknown,
   params: FormData
 ): Promise<ActionResponse> {
+  console.log('Raw FormData received:', Array.from(params.entries())); // Log the raw FormData
+
   const validation = validateMessageInput(params);
 
   if (!validation.success) {
@@ -38,7 +40,16 @@ export default async function addMessage(
   const { content, senderId, recipientId, videoUrl, videoPublicId } =
     validation.data;
 
+  console.log('Extracted videoPublicId:', videoPublicId);
+
   try {
+    console.log('Creating message with data:', {
+      content,
+      senderId,
+      recipientId,
+      videoUrl,
+      videoPublicId,
+    });
     const messageFromCreate = await createMessage({
       content: content || null,
       senderId,
