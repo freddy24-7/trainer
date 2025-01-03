@@ -73,15 +73,34 @@ function ChatClient({
       selectedRecipientId={selectedRecipientId}
       handleRecipientChange={memoizedHandleRecipientChange}
       messages={messages}
-      onDeleteVideo={(messageId, removeFromDatabase = true) =>
-        handleOnDeleteVideo({
-          messageId,
-          removeFromDatabase,
-          deleteVideo,
-          signedInUserId: signedInUser.id,
-          setMessages,
-        })
-      }
+      onDeleteVideo={async (messageId) => {
+        try {
+          const response = await fetch('/api/deleteVideo', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messageId, userId: signedInUser.id }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            setMessages((prevMessages) =>
+              prevMessages.map((msg) =>
+                msg.id === messageId
+                  ? { ...msg, videoUrl: null, videoPublicId: null }
+                  : msg
+              )
+            );
+          } else {
+            console.error(
+              'Failed to delete video:',
+              result.error || 'Unknown error'
+            );
+          }
+        } catch (error) {
+          console.error('Error deleting video:', error);
+        }
+      }}
       onDeleteMessage={(messageId, removeFromDatabase = true) =>
         handleOnDeleteMessage({
           messageId,

@@ -55,19 +55,45 @@ export const handleDeleteVideoLocal = (
 export async function handleOnDeleteVideo({
   messageId,
   removeFromDatabase,
-  deleteVideo,
   signedInUserId,
   setMessages,
 }: HandleOnDeleteVideoParams): Promise<void> {
   if (removeFromDatabase) {
-    const response = await deleteVideo(messageId, signedInUserId);
-    if (response.success) {
-      handleDeleteVideoLocal(messageId, setMessages);
-    } else {
-      console.error(failedToDeleteVideoMessage);
+    try {
+      const response = await fetch('/api/deleteVideo', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageId, userId: signedInUserId }),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        // Update local state
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) =>
+            msg.id === messageId
+              ? { ...msg, videoUrl: null, videoPublicId: null }
+              : msg
+          )
+        );
+      } else {
+        console.error(
+          failedToDeleteVideoMessage,
+          result.error || 'Unknown error'
+        );
+      }
+    } catch (error) {
+      console.error(failedToDeleteVideoMessage, error);
     }
   } else {
-    handleDeleteVideoLocal(messageId, setMessages);
+    // Local deletion without hitting the backend
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.id === messageId
+          ? { ...msg, videoUrl: null, videoPublicId: null }
+          : msg
+      )
+    );
   }
 }
 
