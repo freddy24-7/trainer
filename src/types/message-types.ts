@@ -16,6 +16,7 @@ export interface Message {
   content?: string | null;
   sender: Sender;
   videoUrl?: string | null;
+  videoPublicId?: string | null;
   createdAt: Date;
   recipientId?: number | null;
 }
@@ -82,9 +83,11 @@ export interface ChatMessageProps {
 export interface MessageInputFormProps {
   newMessage: string;
   setNewMessage: Dispatch<SetStateAction<string>>;
-  handleSendMessage: (e: React.FormEvent) => void;
+  handleSendMessage: (e: React.FormEvent) => Promise<void>;
   selectedVideo: File | string | null;
   setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  signedInUserId: number;
+  recipientId: number | null;
 }
 
 export interface VideoDropzoneProps {
@@ -123,6 +126,7 @@ export interface HandleSendMessageParams {
   setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
   replaceOptimisticMessage: (temporaryId: number, newMessage: Message) => void;
+  videoPublicId?: string | null;
 }
 
 export interface SubscribeToPusherEventsParams {

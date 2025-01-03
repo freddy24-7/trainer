@@ -12,6 +12,7 @@ export const validateMessageInput = (
         senderId: number;
         recipientId?: number;
         videoUrl?: string;
+        videoPublicId?: string;
       };
     }
   | { success: false; error: ZodError } => {
@@ -22,5 +23,6 @@ export const validateMessageInput = (
       ? Number(params.get('recipientId'))
       : undefined,
     videoUrl: params.get('videoUrl') || undefined,
+    videoPublicId: params.get('videoPublicId') || undefined,
   });
 };

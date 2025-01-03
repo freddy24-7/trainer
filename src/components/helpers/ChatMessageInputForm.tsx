@@ -3,10 +3,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
-import {
-  messagePlaceholderText,
-  sendButtonText,
-} from '@/strings/clientStrings';
 import { MessageInputFormProps } from '@/types/message-types';
 
 const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
@@ -52,30 +48,27 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         if (data.secure_url) {
           setSelectedVideo(data.secure_url);
         } else {
-          console.error('Cloudinary upload failed:', data);
           setUploadError('Failed to upload video. Please try again.');
         }
       } catch (error) {
-        console.error('Error uploading video to Cloudinary:', error);
         setUploadError('An error occurred during upload. Please try again.');
       } finally {
         setIsUploading(false);
-        if (inputFileRef.current) {
-          inputFileRef.current.value = '';
-        }
+        if (inputFileRef.current) inputFileRef.current.value = '';
       }
     },
     [isUploading, setSelectedVideo]
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!newMessage.trim() && !selectedVideo) {
       setUploadError('Please enter a message or upload a video.');
       return;
     }
 
-    handleSendMessage(e);
+    await handleSendMessage(e); // Call parent handler with FormEvent
   };
 
   return (
@@ -84,7 +77,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
       className="flex flex-col sm:flex-row items-center mt-4"
     >
       <div className="flex items-center w-full sm:w-auto">
-        {/* Button to trigger file input */}
         <button
           type="button"
           onClick={triggerFileInput}
@@ -93,22 +85,8 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
             isUploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
           }`}
         >
-          <svg
-            className="w-6 h-6 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M4 6h4m4 0h4M4 6v12m0-12L20 18M4 18h16"
-            />
-          </svg>
+          Upload Video
         </button>
-
-        {/* Hidden File Input */}
         <input
           ref={inputFileRef}
           type="file"
@@ -117,53 +95,24 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
           disabled={isUploading}
           className="hidden"
         />
-
-        {/* Display Uploaded URL or Spinner */}
-        {isUploading ? (
-          <LoadingSpinner
-            label="Uploading..."
-            color="primary"
-            labelColor="primary"
-          />
-        ) : (
-          typeof selectedVideo === 'string' &&
-          selectedVideo && (
-            <span className="text-sm text-gray-600 mr-2 truncate">
-              Uploaded:{' '}
-              <a
-                href={selectedVideo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline"
-              >
-                View Video
-              </a>
-            </span>
-          )
+        {isUploading && <LoadingSpinner label="Uploading..." color="primary" />}
+        {uploadError && (
+          <span className="text-sm text-red-500 mt-2">{uploadError}</span>
         )}
       </div>
-
-      {/* Display Upload Error if Any */}
-      {uploadError && (
-        <span className="text-sm text-red-500 mt-2 sm:mt-0 sm:ml-2">
-          {uploadError}
-        </span>
-      )}
-
       <input
         type="text"
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         className="flex-grow p-2 border border-gray-300 rounded mt-2 sm:mt-0 sm:mx-2"
-        placeholder={messagePlaceholderText}
+        placeholder="Enter your message"
       />
-
       <button
         type="submit"
-        className="p-2 bg-zinc-600 text-white rounded mt-2 sm:mt-0"
+        className="p-2 bg-blue-600 text-white rounded mt-2 sm:mt-0"
         disabled={!newMessage.trim() && !selectedVideo}
       >
-        {sendButtonText}
+        Send
       </button>
     </form>
   );

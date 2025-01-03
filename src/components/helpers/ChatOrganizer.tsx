@@ -58,6 +58,8 @@ const ChatOrganizer: React.FC<ChatMessageProps> = ({
         handleSendMessage={handleSendMessage}
         selectedVideo={selectedVideo}
         setSelectedVideo={setSelectedVideo}
+        signedInUserId={signedInUser.id}
+        recipientId={selectedRecipientId}
       />
     </div>
   );

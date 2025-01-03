@@ -91,7 +91,6 @@ export async function handleOnDeleteMessage({
 }
 
 export async function handleSendMessage({
-  e,
   newMessage,
   selectedVideo,
   setIsSending,
@@ -102,9 +101,8 @@ export async function handleSendMessage({
   setSelectedVideo,
   addOptimisticMessage,
   replaceOptimisticMessage,
+  videoPublicId,
 }: HandleSendMessageParams): Promise<void> {
-  e.preventDefault();
-
   if (!handleValidateMessage(newMessage, selectedVideo)) {
     return;
   }
@@ -117,6 +115,7 @@ export async function handleSendMessage({
     signedInUserId,
     selectedRecipientId,
     addOptimisticMessage,
+    videoPublicId,
   });
 
   try {
@@ -143,12 +142,14 @@ function handlePrepareMessage({
   signedInUserId,
   selectedRecipientId,
   addOptimisticMessage,
+  videoPublicId,
 }: {
   newMessage: string;
   selectedVideo: File | string | null;
   signedInUserId: number;
   selectedRecipientId: number | null;
   addOptimisticMessage: (message: Message) => void;
+  videoPublicId?: string | null;
 }): {
   temporaryId: number;
   formData: FormData;
@@ -160,6 +161,7 @@ function handlePrepareMessage({
     signedInUserId,
     selectedRecipientId,
     selectedVideo,
+    videoPublicId,
   });
 
   const optimisticMessage =
@@ -170,6 +172,7 @@ function handlePrepareMessage({
           signedInUserId,
           selectedRecipientId,
           selectedVideo: null,
+          videoPublicId,
         })
       : null;
 
