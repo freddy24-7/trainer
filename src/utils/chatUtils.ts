@@ -143,12 +143,14 @@ function handlePrepareMessage({
   signedInUserId,
   selectedRecipientId,
   addOptimisticMessage,
+  videoPublicId,
 }: {
   newMessage: string;
   selectedVideo: File | string | null;
   signedInUserId: number;
   selectedRecipientId: number | null;
   addOptimisticMessage: (message: Message) => void;
+  videoPublicId?: string | null;
 }): {
   temporaryId: number;
   formData: FormData;
@@ -160,6 +162,7 @@ function handlePrepareMessage({
     signedInUserId,
     selectedRecipientId,
     selectedVideo,
+    videoPublicId,
   });
 
   const optimisticMessage =

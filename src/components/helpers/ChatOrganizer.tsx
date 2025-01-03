@@ -21,6 +21,8 @@ const ChatOrganizer: React.FC<ChatMessageProps> = ({
   setNewMessage,
   handleSendMessage,
   selectedVideo,
+  videoPublicId, // Add videoPublicId
+  setVideoPublicId, // Add setVideoPublicId
 }) => {
   return (
     <div className="mt-5 max-w-xl mx-auto bg-brandcolor p-6 rounded">
@@ -58,6 +60,8 @@ const ChatOrganizer: React.FC<ChatMessageProps> = ({
         handleSendMessage={handleSendMessage}
         selectedVideo={selectedVideo}
         setSelectedVideo={setSelectedVideo}
+        videoPublicId={videoPublicId ?? null}
+        setVideoPublicId={setVideoPublicId}
       />
     </div>
   );

@@ -35,7 +35,8 @@ export default async function addMessage(
     return { success: false, errors: validation.error.issues };
   }
 
-  const { content, senderId, recipientId, videoUrl } = validation.data;
+  const { content, senderId, recipientId, videoUrl, videoPublicId } =
+    validation.data;
 
   try {
     const messageFromCreate = await createMessage({
@@ -43,7 +44,7 @@ export default async function addMessage(
       senderId,
       recipientId,
       videoUrl,
-      videoPublicId: null,
+      videoPublicId, // Use the validated videoPublicId
     });
 
     console.log('Message successfully saved:', messageFromCreate);

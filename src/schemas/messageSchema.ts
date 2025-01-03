@@ -11,4 +11,5 @@ export const createMessageSchema = z.object({
   senderId: z.number().positive(invalidSenderIdMessage),
   recipientId: z.number().positive(invalidRecipientIdMessage).optional(),
   videoUrl: z.string().url().optional(),
+  videoPublicId: z.string().optional().nullable(),
 });

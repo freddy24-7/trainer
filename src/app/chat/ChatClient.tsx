@@ -28,6 +28,7 @@ function ChatClient({
   const [selectedVideo, setSelectedVideo] = useState<File | string | null>(
     null
   );
+  const [videoPublicId, setVideoPublicId] = useState<string | null>(null); // Added state for videoPublicId
   const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(
     recipientId
   );
@@ -60,6 +61,7 @@ function ChatClient({
     setMessages,
     addOptimisticMessage,
     replaceOptimisticMessage,
+    videoPublicId, // Pass videoPublicId as part of the message data
   });
 
   if (loading) {
@@ -97,6 +99,7 @@ function ChatClient({
       setNewMessage={setNewMessage}
       handleSendMessage={memoizedHandleSendMessage}
       selectedVideo={selectedVideo}
+      setVideoPublicId={setVideoPublicId}
     />
   );
 }
