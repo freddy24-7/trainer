@@ -5,10 +5,10 @@ import React, { useState } from 'react';
 import ChatOrganizer from '@/components/helpers/ChatOrganizer';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useChatMessages } from '@/hooks/useChatMessages';
-import { ChatClientProps } from '@/types/message-types';
+import { ChatClientProps, VideoData } from '@/types/message-types';
 import {
-  handleMemoizedRecipientChange as recipientChangeHandler,
-  handleMemoizedSendMessage as sendMessageHandler,
+  handleMemoizedRecipientChange,
+  handleMemoizedSendMessage,
 } from '@/utils/chatClientUtils';
 import { handleOnDeleteMessage, handleOnDeleteVideo } from '@/utils/chatUtils';
 
@@ -25,9 +25,7 @@ function ChatClient({
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<File | string | null>(
-    null
-  );
+  const [selectedVideo, setSelectedVideo] = useState<VideoData | null>(null);
   const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(
     recipientId
   );
@@ -40,7 +38,7 @@ function ChatClient({
     replaceOptimisticMessage,
   } = useChatMessages(signedInUser.id, initialMessages, setLoading);
 
-  const memoizedHandleRecipientChange = recipientChangeHandler({
+  const memoizedHandleRecipientChange = handleMemoizedRecipientChange({
     signedInUserId: signedInUser.id,
     getMessages,
     setMessages,
@@ -48,7 +46,7 @@ function ChatClient({
     setSelectedRecipientId,
   });
 
-  const memoizedHandleSendMessage = sendMessageHandler({
+  const memoizedHandleSendMessage = handleMemoizedSendMessage({
     newMessage,
     selectedVideo,
     setIsSending,
@@ -95,7 +93,7 @@ function ChatClient({
       setSelectedVideo={setSelectedVideo}
       newMessage={newMessage}
       setNewMessage={setNewMessage}
-      handleSendMessage={memoizedHandleSendMessage}
+      handleSendMessage={memoizedHandleSendMessage} // Using centralized utility
       selectedVideo={selectedVideo}
     />
   );

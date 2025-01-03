@@ -72,23 +72,28 @@ export interface ChatMessageProps {
     removeFromDatabase?: boolean
   ) => Promise<void>;
   isSending: boolean;
-  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  selectedVideo: VideoData | null;
+  setSelectedVideo: React.Dispatch<React.SetStateAction<VideoData | null>>;
+  handleSendMessage: (formData: FormData) => Promise<void>;
   newMessage: string;
-  setNewMessage: Dispatch<SetStateAction<string>>;
-  handleSendMessage: (e: React.FormEvent) => Promise<void>;
-  selectedVideo: File | string | null;
+  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface VideoData {
+  url: string;
+  publicId: string;
 }
 
 export interface MessageInputFormProps {
   newMessage: string;
-  setNewMessage: Dispatch<SetStateAction<string>>;
-  handleSendMessage: (e: React.FormEvent) => void;
-  selectedVideo: File | string | null;
-  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+  handleSendMessage: (formData: FormData) => Promise<void>;
+  selectedVideo: VideoData | null;
+  setSelectedVideo: React.Dispatch<React.SetStateAction<VideoData | null>>;
 }
 
 export interface VideoDropzoneProps {
-  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<VideoData | null>>;
 }
 
 export interface HandleOnDeleteVideoParams {
@@ -111,15 +116,14 @@ export interface HandleOnDeleteMessageParams {
 }
 
 export interface HandleSendMessageParams {
-  e: React.FormEvent;
   newMessage: string;
-  selectedVideo: File | string | null;
+  selectedVideo: VideoData | null;
   setIsSending: Dispatch<SetStateAction<boolean>>;
   signedInUserId: number;
   selectedRecipientId: number | null;
   action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
   setNewMessage: Dispatch<SetStateAction<string>>;
-  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<VideoData | null>>;
   setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
   replaceOptimisticMessage: (temporaryId: number, newMessage: Message) => void;

@@ -12,7 +12,7 @@ import { MessageInputFormProps } from '@/types/message-types';
 const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
   newMessage,
   setNewMessage,
-  handleSendMessage,
+  handleSendMessage, // Expects FormData now
   selectedVideo,
   setSelectedVideo,
 }) => {
@@ -49,8 +49,12 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         );
 
         const data = await response.json();
-        if (data.secure_url) {
-          setSelectedVideo(data.secure_url);
+        if (data.secure_url && data.public_id) {
+          // Update selectedVideo with both the URL and publicId
+          setSelectedVideo({
+            url: data.secure_url,
+            publicId: data.public_id,
+          });
         } else {
           console.error('Cloudinary upload failed:', data);
           setUploadError('Failed to upload video. Please try again.');
@@ -68,14 +72,35 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
     [isUploading, setSelectedVideo]
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!newMessage.trim() && !selectedVideo) {
       setUploadError('Please enter a message or upload a video.');
       return;
     }
 
-    handleSendMessage(e);
+    const formData = new FormData();
+    formData.append('content', newMessage.trim());
+    if (selectedVideo) {
+      formData.append('videoUrl', selectedVideo.url);
+      formData.append('videoPublicId', selectedVideo.publicId);
+    }
+
+    console.log('FormData Keys and Values:');
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+
+    try {
+      await handleSendMessage(formData);
+      // Clear inputs upon successful submission
+      setNewMessage('');
+      setSelectedVideo(null);
+    } catch (err) {
+      console.error('Error in handleSendMessage:', err);
+      setUploadError('An error occurred while sending your message.');
+    }
   };
 
   return (
@@ -84,7 +109,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
       className="flex flex-col sm:flex-row items-center mt-4"
     >
       <div className="flex items-center w-full sm:w-auto">
-        {/* Button to trigger file input */}
         <button
           type="button"
           onClick={triggerFileInput}
@@ -108,7 +132,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
           </svg>
         </button>
 
-        {/* Hidden File Input */}
         <input
           ref={inputFileRef}
           type="file"
@@ -118,7 +141,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
           className="hidden"
         />
 
-        {/* Display Uploaded URL or Spinner */}
         {isUploading ? (
           <LoadingSpinner
             label="Uploading..."
@@ -126,12 +148,11 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
             labelColor="primary"
           />
         ) : (
-          typeof selectedVideo === 'string' &&
           selectedVideo && (
             <span className="text-sm text-gray-600 mr-2 truncate">
               Uploaded:{' '}
               <a
-                href={selectedVideo}
+                href={selectedVideo.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 underline"
@@ -143,7 +164,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         )}
       </div>
 
-      {/* Display Upload Error if Any */}
       {uploadError && (
         <span className="text-sm text-red-500 mt-2 sm:mt-0 sm:ml-2">
           {uploadError}

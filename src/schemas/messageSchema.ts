@@ -9,6 +9,9 @@ import {
 export const createMessageSchema = z.object({
   content: z.string().max(1000, messageTooLongErrorMessage).optional(),
   senderId: z.number().positive(invalidSenderIdMessage),
-  recipientId: z.number().positive(invalidRecipientIdMessage).optional(),
+  recipientId: z
+    .union([z.number().positive(invalidRecipientIdMessage), z.null()])
+    .optional(),
   videoUrl: z.string().url().optional(),
+  videoPublicId: z.string().optional(),
 });

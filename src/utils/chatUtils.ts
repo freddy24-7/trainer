@@ -12,6 +12,7 @@ import {
   HandleOnDeleteMessageParams,
   HandleSendMessageParams,
   SubscribeToPusherEventsParams,
+  VideoData,
 } from '@/types/message-types';
 import { ActionResponse } from '@/types/shared-types';
 import {
@@ -90,20 +91,26 @@ export async function handleOnDeleteMessage({
   }
 }
 
-export async function handleSendMessage({
-  e,
-  newMessage,
-  selectedVideo,
-  setIsSending,
-  signedInUserId,
-  selectedRecipientId,
-  action,
-  setNewMessage,
-  setSelectedVideo,
-  addOptimisticMessage,
-  replaceOptimisticMessage,
-}: HandleSendMessageParams): Promise<void> {
-  e.preventDefault();
+export async function handleSendMessage(
+  params: HandleSendMessageParams,
+  formData: FormData
+): Promise<void> {
+  const {
+    newMessage,
+    selectedVideo,
+    setIsSending,
+    setNewMessage,
+    setSelectedVideo,
+    addOptimisticMessage,
+    replaceOptimisticMessage,
+    action,
+  } = params;
+
+  console.debug('Sending message with parameters:', {
+    newMessage,
+    selectedVideo,
+    formData,
+  });
 
   if (!handleValidateMessage(newMessage, selectedVideo)) {
     return;
@@ -111,29 +118,28 @@ export async function handleSendMessage({
 
   setIsSending(true);
 
-  const { temporaryId, formData, optimisticMessage } = handlePrepareMessage({
+  const { temporaryId, optimisticMessage } = handlePrepareMessage({
     newMessage,
     selectedVideo,
-    signedInUserId,
-    selectedRecipientId,
+    signedInUserId: params.signedInUserId,
+    selectedRecipientId: params.selectedRecipientId,
     addOptimisticMessage,
   });
 
   try {
     const response = await action({}, formData);
+    console.debug('Full server response:', response);
 
     handleServerResponse({
       response,
       isIndividualMessageWithoutVideo:
-        !selectedVideo && selectedRecipientId !== null,
+        !selectedVideo && params.selectedRecipientId !== null,
       temporaryId,
       optimisticMessage,
       replaceOptimisticMessage,
     });
   } catch (error) {
     handleSendMessageError(error);
-  } finally {
-    handleResetFormState({ setNewMessage, setSelectedVideo, setIsSending });
   }
 }
 
@@ -145,7 +151,7 @@ function handlePrepareMessage({
   addOptimisticMessage,
 }: {
   newMessage: string;
-  selectedVideo: File | string | null;
+  selectedVideo: VideoData | null;
   signedInUserId: number;
   selectedRecipientId: number | null;
   addOptimisticMessage: (message: Message) => void;
@@ -155,6 +161,13 @@ function handlePrepareMessage({
   optimisticMessage: Message | null;
 } {
   const temporaryId = Date.now();
+  console.debug('Preparing message with:', {
+    newMessage,
+    selectedVideo,
+    signedInUserId,
+    selectedRecipientId,
+  });
+
   const formData = handlePrepareFormData({
     newMessage,
     signedInUserId,
@@ -172,6 +185,8 @@ function handlePrepareMessage({
           selectedVideo: null,
         })
       : null;
+
+  console.debug('Generated optimistic message:', optimisticMessage);
 
   if (optimisticMessage) {
     addOptimisticMessage(optimisticMessage);
@@ -196,17 +211,38 @@ function handleServerResponse({
     confirmedMessage: Message
   ) => void;
 }): void {
+  console.debug('Handling server response:', {
+    response,
+    isIndividualMessageWithoutVideo,
+    temporaryId,
+    optimisticMessage,
+  });
+
   if (!response) {
     console.error('No response from server');
     return;
   }
 
-  if (response.messageId && isIndividualMessageWithoutVideo) {
-    const confirmedMessage = {
-      ...optimisticMessage!,
-      id: response.messageId,
-    };
-    replaceOptimisticMessage(temporaryId, confirmedMessage);
+  if (
+    isIndividualMessageWithoutVideo &&
+    response.messageId &&
+    optimisticMessage
+  ) {
+    const messageId = Number(response.messageId);
+    console.debug('Parsed messageId:', messageId);
+    if (!isNaN(messageId)) {
+      const confirmedMessage = {
+        ...optimisticMessage,
+        id: messageId,
+      };
+      console.debug('Replacing optimistic message with:', confirmedMessage);
+      replaceOptimisticMessage(temporaryId, confirmedMessage);
+    } else {
+      console.error(
+        'Invalid messageId in server response:',
+        response.messageId
+      );
+    }
     return;
   }
 
@@ -238,7 +274,7 @@ function handleResetFormState({
   setIsSending,
 }: {
   setNewMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedVideo: React.Dispatch<React.SetStateAction<File | string | null>>;
+  setSelectedVideo: React.Dispatch<React.SetStateAction<VideoData | null>>; // Updated type
   setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
 }): void {
   setNewMessage('');

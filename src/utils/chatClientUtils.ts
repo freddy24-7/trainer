@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 
-import { ChatClientAction, Message } from '@/types/message-types';
-import { handleSendMessage as sendMessageHandler } from '@/utils/chatUtils';
+import { ChatClientAction, Message, VideoData } from '@/types/message-types';
+import { handleSendMessage } from '@/utils/chatUtils';
 
 export async function handleRecipientChange({
   event,
@@ -87,31 +87,33 @@ export function handleMemoizedSendMessage({
   replaceOptimisticMessage,
 }: {
   newMessage: string;
-  selectedVideo: File | string | null;
+  selectedVideo: VideoData | null;
   setIsSending: Dispatch<SetStateAction<boolean>>;
   signedInUserId: number;
   selectedRecipientId: number | null;
   action: ChatClientAction;
   setNewMessage: Dispatch<SetStateAction<string>>;
-  setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setSelectedVideo: Dispatch<SetStateAction<VideoData | null>>;
   setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
-  replaceOptimisticMessage: (messageId: number, newMessage: Message) => void;
-}): (e: React.FormEvent) => Promise<void> {
-  return async (e: React.FormEvent) => {
-    await sendMessageHandler({
-      e,
-      newMessage,
-      selectedVideo,
-      setIsSending,
-      signedInUserId,
-      selectedRecipientId,
-      action,
-      setNewMessage,
-      setSelectedVideo,
-      setMessages,
-      addOptimisticMessage,
-      replaceOptimisticMessage,
-    });
+  replaceOptimisticMessage: (temporaryId: number, newMessage: Message) => void;
+}): (formData: FormData) => Promise<void> {
+  return async (formData: FormData) => {
+    await handleSendMessage(
+      {
+        newMessage,
+        selectedVideo,
+        setIsSending,
+        signedInUserId,
+        selectedRecipientId,
+        action,
+        setNewMessage,
+        setSelectedVideo,
+        setMessages,
+        addOptimisticMessage,
+        replaceOptimisticMessage,
+      },
+      formData
+    );
   };
 }

@@ -13,7 +13,7 @@ export async function createMessage(
       senderId,
       recipientId,
       videoUrl,
-      videoPublicId,
+      videoPublicId: videoPublicId || null,
     },
   });
 }
