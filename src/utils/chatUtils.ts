@@ -94,6 +94,7 @@ export async function handleSendMessage({
   e,
   newMessage,
   selectedVideo,
+  selectedVideoPublicId, // Add this
   setIsSending,
   signedInUserId,
   selectedRecipientId,
@@ -114,6 +115,7 @@ export async function handleSendMessage({
   const { temporaryId, formData, optimisticMessage } = handlePrepareMessage({
     newMessage,
     selectedVideo,
+    selectedVideoPublicId, // Add this to handlePrepareMessage
     signedInUserId,
     selectedRecipientId,
     addOptimisticMessage,
@@ -133,19 +135,28 @@ export async function handleSendMessage({
   } catch (error) {
     handleSendMessageError(error);
   } finally {
-    handleResetFormState({ setNewMessage, setSelectedVideo, setIsSending });
+    handleResetFormState({
+      setNewMessage,
+      setSelectedVideo,
+      setSelectedVideoPublicId(
+        value: ((prevState: string | null) => string | null) | string | null
+      ): void {},
+      setIsSending,
+    });
   }
 }
 
 function handlePrepareMessage({
   newMessage,
   selectedVideo,
+  selectedVideoPublicId, // Add this
   signedInUserId,
   selectedRecipientId,
   addOptimisticMessage,
 }: {
   newMessage: string;
   selectedVideo: File | string | null;
+  selectedVideoPublicId: string | null; // Add this
   signedInUserId: number;
   selectedRecipientId: number | null;
   addOptimisticMessage: (message: Message) => void;
@@ -160,6 +171,7 @@ function handlePrepareMessage({
     signedInUserId,
     selectedRecipientId,
     selectedVideo,
+    selectedVideoPublicId, // Add this
   });
 
   const optimisticMessage =
@@ -235,13 +247,16 @@ function handleSendMessageError(error: unknown): void {
 function handleResetFormState({
   setNewMessage,
   setSelectedVideo,
+  setSelectedVideoPublicId, // Add this
   setIsSending,
 }: {
   setNewMessage: React.Dispatch<React.SetStateAction<string>>;
   setSelectedVideo: React.Dispatch<React.SetStateAction<File | string | null>>;
+  setSelectedVideoPublicId: React.Dispatch<React.SetStateAction<string | null>>; // Add this
   setIsSending: React.Dispatch<React.SetStateAction<boolean>>;
 }): void {
   setNewMessage('');
   setSelectedVideo(null);
+  setSelectedVideoPublicId(null); // Reset this value
   setIsSending(false);
 }

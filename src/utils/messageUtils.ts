@@ -5,11 +5,13 @@ export function handlePrepareFormData({
   signedInUserId,
   selectedRecipientId,
   selectedVideo,
+  selectedVideoPublicId, // Add this
 }: {
   newMessage: string;
   signedInUserId: number;
   selectedRecipientId: number | null;
   selectedVideo: string | File | null;
+  selectedVideoPublicId: string | null; // Add this
 }): FormData {
   const formData = new FormData();
   formData.append('content', newMessage);
@@ -20,7 +22,7 @@ export function handlePrepareFormData({
   }
 
   if (selectedVideo) {
-    formData.append('videoUrl', selectedVideo);
+    formData.append('videoPublicId', selectedVideoPublicId); // Add this
   }
 
   return formData;

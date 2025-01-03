@@ -77,6 +77,7 @@ export interface ChatMessageProps {
   setNewMessage: Dispatch<SetStateAction<string>>;
   handleSendMessage: (e: React.FormEvent) => Promise<void>;
   selectedVideo: File | string | null;
+  setSelectedVideoPublicId: Dispatch<SetStateAction<string | null>>; // Add this
 }
 
 export interface MessageInputFormProps {
@@ -85,6 +86,7 @@ export interface MessageInputFormProps {
   handleSendMessage: (e: React.FormEvent) => void;
   selectedVideo: File | string | null;
   setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setSelectedVideoPublicId: Dispatch<SetStateAction<string | null>>;
 }
 
 export interface VideoDropzoneProps {
@@ -114,12 +116,14 @@ export interface HandleSendMessageParams {
   e: React.FormEvent;
   newMessage: string;
   selectedVideo: File | string | null;
+  selectedVideoPublicId: string | null; // Add this
   setIsSending: Dispatch<SetStateAction<boolean>>;
   signedInUserId: number;
   selectedRecipientId: number | null;
   action: (_prevState: unknown, params: FormData) => Promise<ActionResponse>;
   setNewMessage: Dispatch<SetStateAction<string>>;
   setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setSelectedVideoPublicId: Dispatch<SetStateAction<string | null>>;
   setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
   replaceOptimisticMessage: (temporaryId: number, newMessage: Message) => void;

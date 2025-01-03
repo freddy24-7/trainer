@@ -76,24 +76,28 @@ export function handleMemoizedRecipientChange({
 export function handleMemoizedSendMessage({
   newMessage,
   selectedVideo,
+  selectedVideoPublicId, // Add this
   setIsSending,
   signedInUserId,
   selectedRecipientId,
   action,
   setNewMessage,
   setSelectedVideo,
+  setSelectedVideoPublicId, // Add this
   setMessages,
   addOptimisticMessage,
   replaceOptimisticMessage,
 }: {
   newMessage: string;
   selectedVideo: File | string | null;
+  selectedVideoPublicId: string | null; // Add this
   setIsSending: Dispatch<SetStateAction<boolean>>;
   signedInUserId: number;
   selectedRecipientId: number | null;
   action: ChatClientAction;
   setNewMessage: Dispatch<SetStateAction<string>>;
   setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setSelectedVideoPublicId: Dispatch<SetStateAction<string | null>>; // Add this
   setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
   replaceOptimisticMessage: (messageId: number, newMessage: Message) => void;
@@ -103,12 +107,14 @@ export function handleMemoizedSendMessage({
       e,
       newMessage,
       selectedVideo,
+      selectedVideoPublicId, // Pass this to sendMessageHandler
       setIsSending,
       signedInUserId,
       selectedRecipientId,
       action,
       setNewMessage,
       setSelectedVideo,
+      setSelectedVideoPublicId, // Pass this to sendMessageHandler
       setMessages,
       addOptimisticMessage,
       replaceOptimisticMessage,

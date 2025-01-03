@@ -15,6 +15,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
   handleSendMessage,
   selectedVideo,
   setSelectedVideo,
+  setSelectedVideoPublicId,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -51,6 +52,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         const data = await response.json();
         if (data.secure_url) {
           setSelectedVideo(data.secure_url);
+          setSelectedVideoPublicId(data.public_id);
         } else {
           console.error('Cloudinary upload failed:', data);
           setUploadError('Failed to upload video. Please try again.');
@@ -65,7 +67,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         }
       }
     },
-    [isUploading, setSelectedVideo]
+    [isUploading, setSelectedVideo, setSelectedVideoPublicId]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
