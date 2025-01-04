@@ -16,6 +16,7 @@ export interface Message {
   content?: string | null;
   sender: Sender;
   videoUrl?: string | null;
+  videoPublicId?: string | null;
   createdAt: Date;
   recipientId?: number | null;
 }
@@ -87,7 +88,7 @@ export interface MessageInputFormProps {
   handleSendMessage: (e: React.FormEvent) => void;
   selectedVideo: File | string | null;
   setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
-  videoPublicId: string | null; // New prop
+  videoPublicId: string | null;
   setVideoPublicId: Dispatch<SetStateAction<string | null>>;
 }
 

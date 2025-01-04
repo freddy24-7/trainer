@@ -26,7 +26,7 @@ export function handlePrepareFormData({
   }
 
   if (videoPublicId) {
-    formData.append('videoPublicId', videoPublicId); // Add this line
+    formData.append('videoPublicId', videoPublicId);
   }
 
   return formData;

@@ -85,7 +85,7 @@ export function handleMemoizedSendMessage({
   setMessages,
   addOptimisticMessage,
   replaceOptimisticMessage,
-  videoPublicId, // Add videoPublicId here
+  videoPublicId,
 }: {
   newMessage: string;
   selectedVideo: File | string | null;
@@ -98,7 +98,7 @@ export function handleMemoizedSendMessage({
   setMessages: Dispatch<SetStateAction<Message[]>>;
   addOptimisticMessage: (message: Message) => void;
   replaceOptimisticMessage: (messageId: number, newMessage: Message) => void;
-  videoPublicId: string | null; // Add videoPublicId to the type definition
+  videoPublicId: string | null;
 }): (e: React.FormEvent) => Promise<void> {
   return async (e: React.FormEvent) => {
     await sendMessageHandler({
@@ -114,7 +114,7 @@ export function handleMemoizedSendMessage({
       setMessages,
       addOptimisticMessage,
       replaceOptimisticMessage,
-      videoPublicId, // Pass videoPublicId here
+      videoPublicId,
     });
   };
 }

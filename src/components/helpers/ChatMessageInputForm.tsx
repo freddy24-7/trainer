@@ -15,8 +15,7 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
   handleSendMessage,
   selectedVideo,
   setSelectedVideo,
-  videoPublicId, // Add videoPublicId prop
-  setVideoPublicId, // Add setVideoPublicId prop
+  setVideoPublicId,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -58,8 +57,8 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
             public_id: data.public_id,
           });
           setSelectedVideo(data.secure_url);
-          setVideoPublicId(data.public_id); // Set videoPublicId
-          console.log('videoPublicId updated to:', data.public_id); // Log the updated value
+          setVideoPublicId(data.public_id);
+          console.log('videoPublicId updated to:', data.public_id);
         } else {
           console.error('Cloudinary upload failed:', data);
           setUploadError('Failed to upload video. Please try again.');
@@ -93,7 +92,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
       className="flex flex-col sm:flex-row items-center mt-4"
     >
       <div className="flex items-center w-full sm:w-auto">
-        {/* Button to trigger file input */}
         <button
           type="button"
           onClick={triggerFileInput}
@@ -117,7 +115,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
           </svg>
         </button>
 
-        {/* Hidden File Input */}
         <input
           ref={inputFileRef}
           type="file"
@@ -127,7 +124,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
           className="hidden"
         />
 
-        {/* Display Uploaded URL or Spinner */}
         {isUploading ? (
           <LoadingSpinner
             label="Uploading..."
@@ -152,7 +148,6 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
         )}
       </div>
 
-      {/* Display Upload Error if Any */}
       {uploadError && (
         <span className="text-sm text-red-500 mt-2 sm:mt-0 sm:ml-2">
           {uploadError}

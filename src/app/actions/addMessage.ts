@@ -29,7 +29,7 @@ export default async function addMessage(
   _prevState: unknown,
   params: FormData
 ): Promise<ActionResponse> {
-  console.log('Raw FormData received:', Array.from(params.entries())); // Log the raw FormData
+  console.log('Raw FormData received:', Array.from(params.entries()));
 
   const validation = validateMessageInput(params);
 
@@ -55,7 +55,7 @@ export default async function addMessage(
       senderId,
       recipientId,
       videoUrl,
-      videoPublicId, // Use the validated videoPublicId
+      videoPublicId,
     });
 
     console.log('Message successfully saved:', messageFromCreate);

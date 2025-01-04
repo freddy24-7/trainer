@@ -11,6 +11,20 @@ import {
 import { ActionResponse } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
 
+if (
+  !process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
+  !process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY ||
+  !process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET
+) {
+  throw new Error('Missing required Cloudinary environment variables');
+}
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
+});
+
 export async function deleteMessage(
   messageId: number,
   userId: number
@@ -49,7 +63,7 @@ export async function deleteMessage(
 
     return { success: true };
   } catch (error) {
-    console.error(errorDeletingMessage, error);
+    console.error('Error deleting message:', error);
     return {
       success: false,
       ...formatError(errorDeletingMessage, ['database'], 'custom', true),
@@ -59,10 +73,20 @@ export async function deleteMessage(
 
 async function deleteVideoFromCloudinary(videoPublicId: string): Promise<void> {
   try {
-    await cloudinary.uploader.destroy(videoPublicId, {
-      resource_type: 'video',
-    });
+    const cloudinaryResponse = await cloudinary.uploader.destroy(
+      videoPublicId,
+      {
+        resource_type: 'video',
+      }
+    );
+
+    console.log('Cloudinary Deletion Response:', cloudinaryResponse);
+
+    if (cloudinaryResponse.result !== 'ok') {
+      throw new Error(`Failed to delete video: ${cloudinaryResponse.result}`);
+    }
   } catch (cloudinaryError) {
     console.error('Error deleting video from Cloudinary:', cloudinaryError);
+    throw new Error('Failed to delete video from Cloudinary');
   }
 }

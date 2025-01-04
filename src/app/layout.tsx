@@ -28,7 +28,6 @@ export default async function RootLayout({
       <html lang="en" suppressHydrationWarning={true}>
         <body suppressHydrationWarning={true}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
-            {/* Pass normalized user data */}
             <NavBar user={user} />
             <main className="container mx-auto p-2">{children}</main>
             <ToastContainer

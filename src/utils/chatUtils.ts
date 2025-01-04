@@ -102,6 +102,7 @@ export async function handleSendMessage({
   setSelectedVideo,
   addOptimisticMessage,
   replaceOptimisticMessage,
+  videoPublicId,
 }: HandleSendMessageParams): Promise<void> {
   e.preventDefault();
 
@@ -117,6 +118,7 @@ export async function handleSendMessage({
     signedInUserId,
     selectedRecipientId,
     addOptimisticMessage,
+    videoPublicId,
   });
 
   try {
