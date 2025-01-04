@@ -173,10 +173,14 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
 
       <button
         type="submit"
-        className="p-2 bg-zinc-600 text-white rounded mt-2 sm:mt-0"
-        disabled={!newMessage.trim() && !selectedVideo}
+        className={`p-2 rounded mt-2 sm:mt-0 ${
+          isUploading || (!newMessage.trim() && !selectedVideo)
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-zinc-600 text-white hover:bg-zinc-700'
+        }`}
+        disabled={isUploading || (!newMessage.trim() && !selectedVideo)}
       >
-        {sendButtonText}
+        {isUploading ? 'Uploading...' : sendButtonText}
       </button>
     </form>
   );
