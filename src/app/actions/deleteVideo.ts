@@ -1,7 +1,5 @@
 'use server';
 
-import { v2 as cloudinary } from 'cloudinary';
-
 import prisma from '@/lib/prisma';
 import {
   messageNotFound,
@@ -9,21 +7,8 @@ import {
   errorDeletingVideo,
 } from '@/strings/actionStrings';
 import { ActionResponse } from '@/types/shared-types';
+import { deleteVideoFromCloudinary } from '@/utils/cloudinaryUtils';
 import { formatError } from '@/utils/errorUtils';
-
-if (
-  !process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
-  !process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY ||
-  !process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET
-) {
-  throw new Error('Missing required Cloudinary environment variables');
-}
-
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-  api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
-});
 
 export async function deleteVideo(
   messageId: number,
@@ -54,14 +39,7 @@ export async function deleteVideo(
     }
 
     if (message.videoPublicId) {
-      const cloudinaryResponse = await cloudinary.uploader.destroy(
-        message.videoPublicId,
-        { resource_type: 'video' }
-      );
-
-      if (cloudinaryResponse.result !== 'ok') {
-        throw new Error(`Failed to delete video: ${cloudinaryResponse.result}`);
-      }
+      await deleteVideoFromCloudinary(message.videoPublicId);
     }
 
     await prisma.message.update({

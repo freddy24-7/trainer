@@ -38,7 +38,16 @@ const ChatMessageInputForm: React.FC<MessageInputFormProps> = ({
 
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('upload_preset', 'trainer2Unsigned');
+
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+      if (!uploadPreset) {
+        setUploadError(
+          'Missing Cloudinary upload preset. Check your environment variables.'
+        );
+        setIsUploading(false);
+        return;
+      }
+      formData.append('upload_preset', uploadPreset);
 
       try {
         console.log('Starting upload to Cloudinary...');
