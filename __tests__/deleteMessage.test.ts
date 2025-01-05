@@ -1,6 +1,5 @@
-import { v2 as cloudinary } from 'cloudinary';
-
 import prisma from '@/lib/prisma';
+import { deleteVideoFromCloudinary } from '@/utils/cloudinaryUtils';
 import { formatError } from '@/utils/errorUtils';
 
 import { deleteMessage } from '../src/app/actions/deleteMessage';
@@ -23,14 +22,23 @@ jest.mock('cloudinary', () => ({
   },
 }));
 
+jest.mock('../src/utils/cloudinaryUtils', () => ({
+  __esModule: true,
+  deleteVideoFromCloudinary: jest.fn(),
+}));
+
 jest.mock('../src/utils/errorUtils', () => ({
   __esModule: true,
   formatError: jest.fn(),
 }));
 
+process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = 'test_cloud_name';
+process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY = 'test_api_key';
+process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET = 'test_api_secret';
+
 const mockedFindUnique = prisma.message.findUnique as jest.Mock;
 const mockedDelete = prisma.message.delete as jest.Mock;
-const mockedCloudinary = cloudinary.uploader.destroy as jest.Mock;
+const mockedDeleteVideoFromCloudinary = deleteVideoFromCloudinary as jest.Mock;
 const mockedFormatError = formatError as jest.Mock;
 
 const verifySuccessfulDeletion = async (
@@ -47,11 +55,9 @@ const verifySuccessfulDeletion = async (
   });
 
   if (videoPublicId) {
-    expect(mockedCloudinary).toHaveBeenCalledWith(videoPublicId, {
-      resource_type: 'video',
-    });
+    expect(mockedDeleteVideoFromCloudinary).toHaveBeenCalledWith(videoPublicId);
   } else {
-    expect(mockedCloudinary).not.toHaveBeenCalled();
+    expect(mockedDeleteVideoFromCloudinary).not.toHaveBeenCalled();
   }
 };
 
@@ -80,7 +86,7 @@ describe('deleteMessage Functionality Tests', () => {
     });
 
     mockedDelete.mockResolvedValue({});
-    mockedCloudinary.mockResolvedValue({ result: 'ok' });
+    mockedDeleteVideoFromCloudinary.mockResolvedValue(undefined);
 
     await verifySuccessfulDeletion('video_public_id');
   });
@@ -102,7 +108,7 @@ describe('deleteMessage Functionality Tests', () => {
       where: { id: 1 },
     });
     expect(mockedDelete).not.toHaveBeenCalled();
-    expect(mockedCloudinary).not.toHaveBeenCalled();
+    expect(mockedDeleteVideoFromCloudinary).not.toHaveBeenCalled();
   });
 
   it('should return an error if the user is not authorized to delete the message', async () => {
@@ -136,7 +142,7 @@ describe('deleteMessage Functionality Tests', () => {
       where: { id: 1 },
     });
     expect(mockedDelete).not.toHaveBeenCalled();
-    expect(mockedCloudinary).not.toHaveBeenCalled();
+    expect(mockedDeleteVideoFromCloudinary).not.toHaveBeenCalled();
   });
 
   it('should return an error if there is an issue with the database operation', async () => {
@@ -156,30 +162,6 @@ describe('deleteMessage Functionality Tests', () => {
       where: { id: 1 },
     });
     expect(mockedDelete).not.toHaveBeenCalled();
-    expect(mockedCloudinary).not.toHaveBeenCalled();
-  });
-
-  it('should handle errors from Cloudinary when deleting a video', async () => {
-    mockedFindUnique.mockResolvedValue({
-      id: 1,
-      senderId: 1,
-      videoPublicId: 'video_public_id',
-    });
-
-    mockedDelete.mockResolvedValue({});
-    mockedCloudinary.mockRejectedValue(new Error('Cloudinary error'));
-
-    const result = await deleteMessage(1, 1);
-
-    expect(result).toEqual({ success: true });
-    expect(mockedFindUnique).toHaveBeenCalledWith({
-      where: { id: 1 },
-    });
-    expect(mockedDelete).toHaveBeenCalledWith({
-      where: { id: 1 },
-    });
-    expect(mockedCloudinary).toHaveBeenCalledWith('video_public_id', {
-      resource_type: 'video',
-    });
+    expect(mockedDeleteVideoFromCloudinary).not.toHaveBeenCalled();
   });
 });

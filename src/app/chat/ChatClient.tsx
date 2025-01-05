@@ -48,7 +48,6 @@ function ChatClient({
     setLoading,
     setSelectedRecipientId,
   });
-
   const memoizedHandleSendMessage = sendMessageHandler({
     newMessage,
     selectedVideo,

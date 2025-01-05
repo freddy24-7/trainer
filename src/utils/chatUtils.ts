@@ -37,7 +37,6 @@ export const subscribeToPusherEvents = ({
 
   const cleanup = handleInitializePusher(handlePusherEvent, userId || 0);
   setLoading(false);
-
   return cleanup;
 };
 
@@ -181,7 +180,6 @@ function handlePrepareMessage({
   if (optimisticMessage) {
     addOptimisticMessage(optimisticMessage);
   }
-
   return { temporaryId, formData, optimisticMessage };
 }
 

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -58,13 +58,25 @@ describe('AddTrainingForm', () => {
   it('allows selecting a valid date with DatePicker', async () => {
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
 
-    const calendarButton = screen.getByRole('button', {
-      name: 'Calendar Kies datum',
+    const validDate = new Date();
+    validDate.setDate(validDate.getDate() - 1);
+
+    const datePickerInput = screen.getByRole('group', { name: /kies datum/i });
+    expect(datePickerInput).toBeInTheDocument();
+
+    const calendarButton = within(datePickerInput).getByRole('button', {
+      name: /calendar/i,
     });
     await userEvent.click(calendarButton);
 
-    const validDateLabel = 'Wednesday, December 25, 2024';
-    const calendarDate = screen.getByLabelText(validDateLabel);
-    await userEvent.click(calendarDate);
+    const dateToSelect = validDate.getDate().toString();
+    const dateElement = screen.getByText(dateToSelect);
+
+    expect(dateElement).toBeInTheDocument();
+    await userEvent.click(dateElement);
+
+    const formattedDate = `${String(validDate.getMonth() + 1).padStart(2, '0')}/${String(validDate.getDate()).padStart(2, '0')}/${validDate.getFullYear()}`;
+
+    expect(datePickerInput).toHaveTextContent(formattedDate);
   });
 });
