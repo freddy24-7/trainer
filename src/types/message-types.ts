@@ -156,3 +156,17 @@ export interface CreateMessageParams {
   videoUrl?: string | null;
   videoPublicId?: string | null;
 }
+
+export interface UseVideoUploadReturn {
+  isUploading: boolean;
+  uploadError: string | null;
+  inputFileRef: React.RefObject<HTMLInputElement>;
+  triggerFileInput: () => void;
+  handleVideoChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+}
+
+export type SelectedVideo = File | string | null;
+
+export interface SelectedVideoProps {
+  selectedVideo: SelectedVideo;
+}
