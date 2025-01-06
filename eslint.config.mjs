@@ -32,6 +32,7 @@ export default [{
         "src/utils/pusherUtils.ts",
         "src/app/api/pusher/**/*",
         "src/lib/services/editPlayerService.ts",
+        "src/inngest/*",
     ],
 }, ...fixupConfigRules(compat.extends(
     "next/core-web-vitals",
