@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from 'cloudinary';
-
 import { inngest } from './client';
 
 cloudinary.config({
@@ -8,42 +7,53 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET || '',
 });
 
+type CloudinaryVideo = {
+  public_id: string;
+  created_at: string;
+  [key: string]: any;
+};
+
 export const videoAutodeleteJob = inngest.createFunction(
   { id: 'video-autodelete-job' },
-  { event: 'schedule/video-autodelete' },
+  { cron: '0 0 * * 0' },
   async () => {
     console.log('Running video autodelete job...');
 
     try {
-      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); // Change to your desired timeframe
+      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-      // Step 1: Fetch videos from Cloudinary
-      let nextCursor = null;
-      let allVideos = [];
+      const folderPath = process.env.CLOUDINARY_FOLDER_NAME;
+
+      console.log('CLOUDINARY_FOLDER_NAME:', folderPath);
+
+      let nextCursor: string | null = null;
+      let allVideos: CloudinaryVideo[] = [];
 
       do {
-        const response = await cloudinary.api.resources({
+        const response: {
+          resources: CloudinaryVideo[];
+          next_cursor?: string;
+        } = await cloudinary.api.resources({
           resource_type: 'video',
           type: 'upload',
-          max_results: 500, // Adjust as needed
-          next_cursor: nextCursor, // Handle pagination
+          prefix: folderPath,
+          max_results: 500,
+          next_cursor: nextCursor,
         });
 
         allVideos = allVideos.concat(response.resources || []);
-        nextCursor = response.next_cursor;
+        nextCursor = response.next_cursor || null;
       } while (nextCursor);
 
       console.log(`Fetched ${allVideos.length} videos from Cloudinary.`);
 
-      // Step 2: Filter videos older than the specified timeframe
       const oldVideos = allVideos.filter((video) => {
         const videoCreatedAt = new Date(video.created_at);
-        return videoCreatedAt < oneHourAgo; // Compare creation time
+        return videoCreatedAt < oneWeekAgo;
       });
 
-      console.log(`Found ${oldVideos.length} videos older than 1 hour.`);
+      console.log(`Found ${oldVideos.length} videos older than one week.`);
 
-      // Step 3: Delete the old videos
       for (const video of oldVideos) {
         try {
           const result = await cloudinary.uploader.destroy(video.public_id, {
