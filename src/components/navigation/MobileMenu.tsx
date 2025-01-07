@@ -1,14 +1,15 @@
-import { Button } from '@nextui-org/react';
+'use client';
+
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import React, { useState } from 'react';
 import { CiHome } from 'react-icons/ci';
 import { FiMoon, FiSun, FiMenu, FiX } from 'react-icons/fi';
 
-import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
-import { StatsDropdown } from '@/components/navigation/StatsDropdown';
 import { homeLabel } from '@/strings/clientStrings';
 import { MobileMenuProps } from '@/types/ui-types';
+
+import { NavBarUserContent } from './NavBarUserContent';
 
 export function MobileMenu({
   userId,
@@ -18,35 +19,51 @@ export function MobileMenu({
   const { theme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Function to close the menu
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <>
-      <Button
-        variant="bordered"
-        className="text-white"
+      {/* Hamburger Menu Button */}
+      <button
+        className="text-white border border-white rounded p-2"
         onClick={() => setMenuOpen(!menuOpen)}
       >
         {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-      </Button>
+      </button>
 
+      {/* Mobile Menu Content */}
       {menuOpen && (
-        <div className="flex flex-col items-center bg-brandcolor w-auto py-4 mt-12">
-          <Link href="/" className="text-white w-auto my-2 flex items-center">
+        <div
+          className="absolute top-0 bg-brandcolor z-50 flex flex-col items-center space-y-4 py-6 px-6 w-auto rounded-md shadow-lg"
+          style={{ right: '-15px' }} // Explicit pixel positioning
+          onClick={closeMenu} // Close menu on any click inside
+        >
+          {/* Home Link */}
+          <Link
+            href="/"
+            className="text-white text-lg flex items-center space-x-2 w-full justify-start"
+          >
             <CiHome size={24} />
-            <span className="ml-2">{homeLabel}</span>
+            <span>{homeLabel}</span>
           </Link>
-          <Button
-            variant="bordered"
-            className="text-white w-auto my-2"
+
+          {/* Theme Toggle Button */}
+          <button
+            className="text-white border border-white rounded p-2 flex items-center space-x-2 w-full justify-start"
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
           >
             {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
-          </Button>
-          {userId && userRole === 'TRAINER' && (
-            <>
-              <ManagementDropdown dropdownTextColor={dropdownTextColor} />
-              <StatsDropdown dropdownTextColor={dropdownTextColor} />
-            </>
-          )}
+            <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+          </button>
+
+          {/* Reuse NavBarUserContent with stacked layout */}
+          <NavBarUserContent
+            userId={userId}
+            userRole={userRole}
+            dropdownTextColor={dropdownTextColor}
+            stacked={true} // Ensures vertical stacking
+          />
         </div>
       )}
     </>

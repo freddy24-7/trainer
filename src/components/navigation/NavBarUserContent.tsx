@@ -4,16 +4,26 @@ import React from 'react';
 import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
-import { chatLabel, signInLabel } from '@/strings/clientStrings';
-import { NavBarUserContentProps } from '@/types/ui-types';
+
+interface NavBarUserContentProps {
+  userId: string | null;
+  userRole: string | null;
+  dropdownTextColor: string;
+  stacked?: boolean;
+}
 
 export function NavBarUserContent({
   userId,
   userRole,
   dropdownTextColor,
+  stacked = false, // Default to horizontal layout
 }: NavBarUserContentProps): React.ReactElement {
+  const containerClasses = stacked
+    ? 'flex flex-col items-center gap-4' // Vertical stacking
+    : 'flex gap-4 items-center'; // Horizontal layout (default)
+
   return userId ? (
-    <div className="flex gap-4 items-center">
+    <div className={containerClasses}>
       {userRole === 'TRAINER' && (
         <ManagementDropdown dropdownTextColor={dropdownTextColor} />
       )}
@@ -21,7 +31,7 @@ export function NavBarUserContent({
         <StatsDropdown dropdownTextColor={dropdownTextColor} />
       )}
       <NavLink href="/chat" className="text-white">
-        {chatLabel}
+        Chat
       </NavLink>
       {userRole === 'TRAINER' && (
         <NavLink href="/instructions" className="text-white">
@@ -31,9 +41,9 @@ export function NavBarUserContent({
       <UserButton />
     </div>
   ) : (
-    <div className="flex gap-4 items-center">
+    <div className={containerClasses}>
       <NavLink href="/sign-in" className="text-gray-700">
-        {signInLabel}
+        Sign In
       </NavLink>
     </div>
   );
