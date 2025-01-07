@@ -7,6 +7,72 @@ import {
 } from '@/strings/clientStrings';
 import { MessageListProps } from '@/types/message-types';
 
+const handleDownloadVideo = (videoUrl: string, messageId: number): void => {
+  const downloadUrl = `${videoUrl.replace('/upload/', '/upload/fl_attachment/')}`;
+  const link = document.createElement('a');
+  link.href = downloadUrl;
+  link.download = `video_${messageId}.mp4`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const renderVideoControls = (
+  msg: MessageListProps['messages'][number],
+  signedInUser: MessageListProps['signedInUser'],
+  onDeleteVideo: (messageId: number, removeFromDatabase?: boolean) => void
+): React.ReactElement => (
+  <div className="mt-2">
+    <video
+      controls={true}
+      src={msg.videoUrl || ''}
+      className="w-full rounded-lg"
+    />
+    <div className="flex justify-end mt-2">
+      {msg.sender.id !== signedInUser.id && (
+        <button
+          onClick={() => {
+            if (msg.videoUrl) {
+              handleDownloadVideo(msg.videoUrl, msg.id);
+            } else {
+              console.error('Video URL is not available for download.');
+            }
+          }}
+          className="text-blue-500 text-xs"
+        >
+          Download Video
+        </button>
+      )}
+      {msg.sender.id === signedInUser.id && (
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={() =>
+              onDeleteVideo(msg.id, msg.sender.id === signedInUser.id)
+            }
+            className="text-red-500 text-xs"
+          >
+            {removeVideoButtonText}
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+const renderMessageContent = (
+  msg: MessageListProps['messages'][number],
+  signedInUser: MessageListProps['signedInUser'],
+  onDeleteVideo: (messageId: number, removeFromDatabase?: boolean) => void
+): React.ReactElement => (
+  <>
+    <div className="text-sm font-semibold mb-1">
+      {msg.sender.id === signedInUser.id ? youLabel : msg.sender.username}
+    </div>
+    {msg.content && <div className="text-sm">{msg.content}</div>}
+    {msg.videoUrl && renderVideoControls(msg, signedInUser, onDeleteVideo)}
+  </>
+);
+
 const MessageList: React.FC<MessageListProps> = ({
   messages,
   signedInUser,
@@ -29,31 +95,7 @@ const MessageList: React.FC<MessageListProps> = ({
                 : 'bg-gray-200 text-gray-900 self-start'
             }`}
           >
-            <div className="text-sm font-semibold mb-1">
-              {msg.sender.id === signedInUser.id
-                ? youLabel
-                : msg.sender.username}
-            </div>
-            {msg.content && <div className="text-sm">{msg.content}</div>}
-            {msg.videoUrl && (
-              <div className="mt-2">
-                <video
-                  controls={true}
-                  src={msg.videoUrl}
-                  className="w-full rounded-lg"
-                />
-                <div className="flex justify-end mt-2">
-                  <button
-                    onClick={() =>
-                      onDeleteVideo(msg.id, msg.sender.id === signedInUser.id)
-                    }
-                    className="text-red-500 text-xs"
-                  >
-                    {removeVideoButtonText}
-                  </button>
-                </div>
-              </div>
-            )}
+            {renderMessageContent(msg, signedInUser, onDeleteVideo)}
 
             <div className="flex justify-end mt-2">
               <button
