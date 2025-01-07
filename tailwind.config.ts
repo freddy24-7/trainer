@@ -7,15 +7,26 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    './src/styles/**/*.{css}',
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '475px',
+      },
+      fontSize: {
+        '2xs': '0.625rem',
+      },
       backgroundImage: {
         'dark-gradient':
           'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
       },
       colors: {
-        brandcolor: '#EE8300',
+        brandcolor: {
+          light: '#EE8300',
+          dark: '#FF9F43',
+          DEFAULT: '#EE8300',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -72,6 +83,16 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      spacing: {
+        'extra-tight': '0.125rem',
+        'extra-loose': '3rem',
+      },
+      width: {
+        'full-screen': '100vw',
+      },
+      height: {
+        'full-screen': '100vh',
+      },
       keyframes: {
         'accordion-down': {
           from: {
@@ -89,14 +110,25 @@ const config: Config = {
             height: '0',
           },
         },
+        slideIn: {
+          from: { transform: 'translateX(-100%)' },
+          to: { transform: 'translateX(0)' },
+        },
+        slideOut: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-100%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        slideIn: 'slideIn 0.3s ease-out',
+        slideOut: 'slideOut 0.3s ease-in',
       },
     },
   },
   darkMode: ['class', 'class'],
   plugins: [nextui(), require('tailwindcss-animate')],
 };
+
 export default config;

@@ -70,7 +70,8 @@ function AddPlayerForm({
           {playerData?.whatsappNumber && (
             <a
               href={`https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}/?text=${encodeURIComponent(
-                `Hallo ${playerData.username}, je account is aangemaakt. Gebruikersnaam: ${playerData.username}, Wachtwoord: ${playerData.password}. Log alstublieft in en wijzig je wachtwoord naar een eigen wachtwoord.`
+                `Hallo ${playerData.username}, je account is aangemaakt. Gebruikersnaam: ${playerData.username}, Wachtwoord: ${playerData.password}. 
+                Log alstublieft in en wijzig je wachtwoord naar een eigen wachtwoord. Het websiteadres wordt door je trainers in een apart bericht aan je verstrekt.`
               )}`}
               target="_blank"
               rel="noopener noreferrer"
