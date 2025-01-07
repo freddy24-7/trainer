@@ -43,18 +43,14 @@ const renderVideoControls = (
           Download Video
         </button>
       )}
-      {msg.sender.id === signedInUser.id && (
-        <div className="flex justify-end mt-2">
-          <button
-            onClick={() =>
-              onDeleteVideo(msg.id, msg.sender.id === signedInUser.id)
-            }
-            className="text-red-500 text-xs"
-          >
-            {removeVideoButtonText}
-          </button>
-        </div>
-      )}
+      <div className="flex justify-end ml-2">
+        <button
+          onClick={() => onDeleteVideo(msg.id, true)}
+          className="text-red-500 text-xs"
+        >
+          {removeVideoButtonText}
+        </button>
+      </div>
     </div>
   </div>
 );

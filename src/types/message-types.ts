@@ -94,6 +94,7 @@ export interface MessageInputFormProps {
 
 export interface VideoDropzoneProps {
   setSelectedVideo: Dispatch<SetStateAction<File | string | null>>;
+  setVideoPublicId: Dispatch<SetStateAction<string | null>>;
 }
 
 export interface HandleOnDeleteVideoParams {

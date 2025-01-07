@@ -52,7 +52,10 @@ const ChatOrganizer: React.FC<ChatMessageProps> = ({
         />
       )}
 
-      <VideoDropzone setSelectedVideo={setSelectedVideo} />
+      <VideoDropzone
+        setSelectedVideo={setSelectedVideo}
+        setVideoPublicId={setVideoPublicId}
+      />
 
       <ChatMessageInputForm
         newMessage={newMessage}
