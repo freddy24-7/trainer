@@ -5,7 +5,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from '@nextui-org/react';
-import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
+import Link from 'next/link';
 import React from 'react';
 
 import {
@@ -18,13 +18,8 @@ import { StatsDropdownProps } from '@/types/ui-types';
 
 export function StatsDropdown({
   dropdownTextColor,
+  closeMenu,
 }: StatsDropdownProps): React.ReactElement {
-  const router = useRouter(); // Use router for navigation
-
-  const handleNavigation = (path: string) => {
-    router.push(path); // Navigate programmatically
-  };
-
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -36,17 +31,23 @@ export function StatsDropdown({
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label={statsOptionsAriaLabel} variant="light">
-        <DropdownItem
-          key="match-stats"
-          onClick={() => handleNavigation('/match-stats')} // Navigate to match stats
-        >
-          <span className={dropdownTextColor}>{matchStatsText}</span>
+        <DropdownItem key="match-stats">
+          <Link
+            href="/match-stats"
+            className={dropdownTextColor}
+            onClick={closeMenu}
+          >
+            {matchStatsText}
+          </Link>
         </DropdownItem>
-        <DropdownItem
-          key="training-stats"
-          onClick={() => handleNavigation('/training-stats')} // Navigate to training stats
-        >
-          <span className={dropdownTextColor}>{trainingStatsText}</span>
+        <DropdownItem key="training-stats">
+          <Link
+            href="/training-stats"
+            className={dropdownTextColor}
+            onClick={closeMenu}
+          >
+            {trainingStatsText}
+          </Link>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

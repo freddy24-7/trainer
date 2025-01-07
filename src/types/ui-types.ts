@@ -10,6 +10,7 @@ export interface NavLinkProps {
   label?: string;
   children?: ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 export interface ReusableModalProps {
@@ -25,6 +26,7 @@ export interface ReusableModalProps {
 
 export interface ManagementDropdownProps {
   dropdownTextColor: string;
+  closeMenu: () => void;
 }
 
 export interface MobileMenuProps {
@@ -37,8 +39,11 @@ export interface NavBarUserContentProps {
   userId: string | null;
   userRole: string | null;
   dropdownTextColor: string;
+  stacked?: boolean;
+  closeMenu?: () => void;
 }
 
 export interface StatsDropdownProps {
   dropdownTextColor: string;
+  closeMenu: () => void;
 }

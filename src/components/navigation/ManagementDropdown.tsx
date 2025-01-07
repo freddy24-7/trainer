@@ -5,7 +5,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from '@nextui-org/react';
-import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
+import Link from 'next/link';
 import React from 'react';
 
 import {
@@ -20,13 +20,8 @@ import { ManagementDropdownProps } from '@/types/ui-types';
 
 export function ManagementDropdown({
   dropdownTextColor,
+  closeMenu,
 }: ManagementDropdownProps): React.ReactElement {
-  const router = useRouter(); // Use router for navigation
-
-  const handleNavigation = (path: string) => {
-    router.push(path); // Navigate programmatically
-  };
-
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -38,29 +33,41 @@ export function ManagementDropdown({
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label={managementOptionsAriaLabel} variant="light">
-        <DropdownItem
-          key="player-management"
-          onClick={() => handleNavigation('/player-management')} // Navigate to player management
-        >
-          <span className={dropdownTextColor}>{playerManagementText}</span>
+        <DropdownItem key="player-management">
+          <Link
+            href="/player-management"
+            className={dropdownTextColor}
+            onClick={closeMenu}
+          >
+            {playerManagementText}
+          </Link>
         </DropdownItem>
-        <DropdownItem
-          key="poule-management"
-          onClick={() => handleNavigation('/poule-management')} // Navigate to poule management
-        >
-          <span className={dropdownTextColor}>{pouleManagementText}</span>
+        <DropdownItem key="poule-management">
+          <Link
+            href="/poule-management"
+            className={dropdownTextColor}
+            onClick={closeMenu}
+          >
+            {pouleManagementText}
+          </Link>
         </DropdownItem>
-        <DropdownItem
-          key="match-management"
-          onClick={() => handleNavigation('/matches')} // Navigate to matches
-        >
-          <span className={dropdownTextColor}>{matchManagementText}</span>
+        <DropdownItem key="match-management">
+          <Link
+            href="/matches"
+            className={dropdownTextColor}
+            onClick={closeMenu}
+          >
+            {matchManagementText}
+          </Link>
         </DropdownItem>
-        <DropdownItem
-          key="training-management"
-          onClick={() => handleNavigation('/trainings')} // Navigate to trainings
-        >
-          <span className={dropdownTextColor}>{trainingManagementText}</span>
+        <DropdownItem key="training-management">
+          <Link
+            href="/trainings"
+            className={dropdownTextColor}
+            onClick={closeMenu}
+          >
+            {trainingManagementText}
+          </Link>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

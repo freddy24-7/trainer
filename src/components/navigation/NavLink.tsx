@@ -12,6 +12,7 @@ export default function NavLink({
   label,
   children,
   className,
+  onClick,
 }: NavLinkProps): React.ReactElement {
   const pathname = usePathname();
 
@@ -21,6 +22,7 @@ export default function NavLink({
       isActive={pathname === href}
       as={Link}
       className={className}
+      onClick={onClick}
     >
       {children || label}
     </NavbarItem>

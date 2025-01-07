@@ -4,37 +4,42 @@ import React from 'react';
 import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
-
-interface NavBarUserContentProps {
-  userId: string | null;
-  userRole: string | null;
-  dropdownTextColor: string;
-  stacked?: boolean;
-}
+import { NavBarUserContentProps } from '@/types/ui-types';
 
 export function NavBarUserContent({
   userId,
   userRole,
   dropdownTextColor,
-  stacked = false, // Default to horizontal layout
+  stacked = false,
+  closeMenu = () => {},
 }: NavBarUserContentProps): React.ReactElement {
   const containerClasses = stacked
-    ? 'flex flex-col items-center gap-4' // Vertical stacking
-    : 'flex gap-4 items-center'; // Horizontal layout (default)
+    ? 'flex flex-col items-center gap-4'
+    : 'flex gap-4 items-center';
 
   return userId ? (
     <div className={containerClasses}>
       {userRole === 'TRAINER' && (
-        <ManagementDropdown dropdownTextColor={dropdownTextColor} />
+        <ManagementDropdown
+          dropdownTextColor={dropdownTextColor}
+          closeMenu={closeMenu}
+        />
       )}
       {userRole === 'TRAINER' && (
-        <StatsDropdown dropdownTextColor={dropdownTextColor} />
+        <StatsDropdown
+          dropdownTextColor={dropdownTextColor}
+          closeMenu={closeMenu}
+        />
       )}
-      <NavLink href="/chat" className="text-white">
+      <NavLink href="/chat" className="text-white" onClick={closeMenu}>
         Chat
       </NavLink>
       {userRole === 'TRAINER' && (
-        <NavLink href="/instructions" className="text-white">
+        <NavLink
+          href="/instructions"
+          className="text-white"
+          onClick={closeMenu}
+        >
           Info
         </NavLink>
       )}
@@ -42,7 +47,7 @@ export function NavBarUserContent({
     </div>
   ) : (
     <div className={containerClasses}>
-      <NavLink href="/sign-in" className="text-gray-700">
+      <NavLink href="/sign-in" className="text-gray-700" onClick={closeMenu}>
         Sign In
       </NavLink>
     </div>
