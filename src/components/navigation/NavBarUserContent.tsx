@@ -31,6 +31,11 @@ export function NavBarUserContent({
           closeMenu={closeMenu}
         />
       )}
+      {userRole === 'PLAYER' && (
+        <NavLink href="/my-stats" className="text-white" onClick={closeMenu}>
+          My Stats
+        </NavLink>
+      )}
       <NavLink href="/chat" className="text-white" onClick={closeMenu}>
         Chat
       </NavLink>
