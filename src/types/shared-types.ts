@@ -33,6 +33,7 @@ export interface DateFieldValues {
 export interface DateProps {
   errors: FieldErrors<DateFieldValues>;
   onChange: (date: CalendarDate | null) => void;
+  label?: string;
 }
 
 export interface InputFieldProps {

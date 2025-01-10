@@ -2,8 +2,7 @@ import React from 'react';
 
 import { getMatchData } from '@/app/actions/getMatchData';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
-import MatchOpponents from '@/app/match-stats/MatchOpponents';
-import MatchStats from '@/app/match-stats/MatchStats';
+import MatchStatsWrapper from '@/app/match-stats/MatchStatsWrapper';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import {
   errorLoadingPlayerStatistics,
@@ -52,9 +51,14 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
 
     return (
       <ProtectedLayout requiredRole="TRAINER">
-        <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
-          <MatchStats playerStats={playerStats} />
-          <MatchOpponents matchData={matchData} />
+        <div className="p-6">
+          <h1 className="text-2xl font-bold text-center mb-4">
+            Match Statistics
+          </h1>
+          <MatchStatsWrapper
+            initialPlayerStats={playerStats}
+            initialMatchData={matchData}
+          />
         </div>
       </ProtectedLayout>
     );

@@ -3,8 +3,7 @@ import React from 'react';
 import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
 import { getTrainingData } from '@/app/actions/getTrainingData';
 import ProtectedLayout from '@/app/ProtectedLayout';
-import AttendanceTraining from '@/app/training-stats/AttendanceTraining';
-import DataTrainingClient from '@/app/training-stats/DataTrainingClient';
+import FilterableTrainingListWrapper from '@/app/training-stats/FilterableTrainingListWrapper';
 import {
   errorLoadingTrainingData,
   errorLoadingAttendanceData,
@@ -54,11 +53,10 @@ export default async function TrainingsPage(): Promise<React.ReactElement> {
         <h1 className="text-2xl font-bold text-center mb-4">
           Training Sessions
         </h1>
-        <DataTrainingClient trainingData={trainingData} />
-        <h2 className="text-xl font-semibold text-center mt-6 mb-4">
-          Player Attendance
-        </h2>
-        <AttendanceTraining attendanceList={attendanceList} />
+        <FilterableTrainingListWrapper
+          trainingData={trainingData}
+          attendanceList={attendanceList}
+        />
       </div>
     </ProtectedLayout>
   );
