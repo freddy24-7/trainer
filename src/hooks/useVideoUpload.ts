@@ -18,19 +18,32 @@ export const useVideoUpload = (
 
   const validateEnv = useCallback((): string | null => {
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-    if (!uploadPreset) {
-      return 'Missing Cloudinary upload preset. Check your environment variables.';
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+    if (!uploadPreset || !cloudName) {
+      return 'Missing Cloudinary configuration. Check your environment variables.';
     }
     return null;
   }, []);
 
-  const prepareFormData = useCallback((file: File): FormData => {
+  const prepareFormData = useCallback(async (file: File): Promise<FormData> => {
+    const response = await fetch('/api/signature');
+    if (!response.ok) {
+      throw new Error('Failed to fetch upload signature from the server.');
+    }
+
+    const { signature, timestamp, apiKey } = await response.json();
+
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('api_key', apiKey);
+    formData.append('timestamp', timestamp);
     formData.append(
       'upload_preset',
       process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
     );
+    formData.append('signature', signature);
+
     return formData;
   }, []);
 
@@ -63,9 +76,9 @@ export const useVideoUpload = (
         return;
       }
 
-      const formData = prepareFormData(file);
-
       try {
+        const formData = await prepareFormData(file);
+
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
           { method: 'POST', body: formData }
