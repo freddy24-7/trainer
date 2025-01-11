@@ -6,6 +6,47 @@ import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
 import { NavBarUserContentProps } from '@/types/ui-types';
 
+function RoleSpecificLinks({
+  userRole,
+  dropdownTextColor,
+  closeMenu,
+}: {
+  userRole: 'TRAINER' | 'PLAYER' | null;
+  dropdownTextColor?: string;
+  closeMenu: () => void;
+}): React.ReactElement | null {
+  switch (userRole) {
+    case 'TRAINER':
+      return (
+        <>
+          <ManagementDropdown
+            dropdownTextColor={dropdownTextColor || ''}
+            closeMenu={closeMenu}
+          />
+          <StatsDropdown
+            dropdownTextColor={dropdownTextColor || ''}
+            closeMenu={closeMenu}
+          />
+          <NavLink
+            href="/instructions"
+            className="text-white"
+            onClick={closeMenu}
+          >
+            Info
+          </NavLink>
+        </>
+      );
+    case 'PLAYER':
+      return (
+        <NavLink href="/my-stats" className="text-white" onClick={closeMenu}>
+          My Stats
+        </NavLink>
+      );
+    default:
+      return null;
+  }
+}
+
 export function NavBarUserContent({
   userId,
   userRole,
@@ -17,44 +58,30 @@ export function NavBarUserContent({
     ? 'flex flex-col items-center gap-4'
     : 'flex gap-4 items-center';
 
-  return userId ? (
-    <div className={containerClasses}>
-      {userRole === 'TRAINER' && (
-        <ManagementDropdown
-          dropdownTextColor={dropdownTextColor}
-          closeMenu={closeMenu}
-        />
-      )}
-      {userRole === 'TRAINER' && (
-        <StatsDropdown
-          dropdownTextColor={dropdownTextColor}
-          closeMenu={closeMenu}
-        />
-      )}
-      {userRole === 'PLAYER' && (
-        <NavLink href="/my-stats" className="text-white" onClick={closeMenu}>
-          My Stats
+  const validUserRole =
+    userRole === 'TRAINER' || userRole === 'PLAYER' ? userRole : null;
+
+  if (!userId) {
+    return (
+      <div className={containerClasses}>
+        <NavLink href="/sign-in" className="text-gray-700" onClick={closeMenu}>
+          Sign In
         </NavLink>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className={containerClasses}>
+      <RoleSpecificLinks
+        userRole={validUserRole}
+        dropdownTextColor={dropdownTextColor}
+        closeMenu={closeMenu}
+      />
       <NavLink href="/chat" className="text-white" onClick={closeMenu}>
         Chat
       </NavLink>
-      {userRole === 'TRAINER' && (
-        <NavLink
-          href="/instructions"
-          className="text-white"
-          onClick={closeMenu}
-        >
-          Info
-        </NavLink>
-      )}
       <UserButton />
-    </div>
-  ) : (
-    <div className={containerClasses}>
-      <NavLink href="/sign-in" className="text-gray-700" onClick={closeMenu}>
-        Sign In
-      </NavLink>
     </div>
   );
 }

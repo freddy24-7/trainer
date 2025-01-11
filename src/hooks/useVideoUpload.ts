@@ -2,6 +2,52 @@ import React, { useState, useCallback, useRef } from 'react';
 
 import { UseVideoUploadReturn } from '@/types/message-types';
 
+const validateEnv = (): string | null => {
+  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+  if (!uploadPreset || !cloudName) {
+    return 'Missing Cloudinary configuration. Check your environment variables.';
+  }
+  return null;
+};
+
+const prepareFormData = async (file: File): Promise<FormData> => {
+  const response = await fetch('/api/signature');
+  if (!response.ok) {
+    throw new Error('Failed to fetch upload signature from the server.');
+  }
+
+  const { signature, timestamp, apiKey } = await response.json();
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('api_key', apiKey);
+  formData.append('timestamp', timestamp);
+  formData.append(
+    'upload_preset',
+    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
+  );
+  formData.append('signature', signature);
+
+  return formData;
+};
+
+const handleResponse = async (
+  response: Response,
+  setSelectedVideo: (url: string) => void,
+  setVideoPublicId: (id: string) => void,
+  setUploadError: (error: string | null) => void
+): Promise<void> => {
+  const data = await response.json();
+  if (data.secure_url && data.public_id) {
+    setSelectedVideo(data.secure_url);
+    setVideoPublicId(data.public_id);
+  } else {
+    setUploadError('Failed to upload video. Please try again.');
+  }
+};
+
 export const useVideoUpload = (
   setSelectedVideo: (url: string) => void,
   setVideoPublicId: (id: string) => void
@@ -15,50 +61,6 @@ export const useVideoUpload = (
       inputFileRef.current.click();
     }
   }, [isUploading]);
-
-  const validateEnv = useCallback((): string | null => {
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-
-    if (!uploadPreset || !cloudName) {
-      return 'Missing Cloudinary configuration. Check your environment variables.';
-    }
-    return null;
-  }, []);
-
-  const prepareFormData = useCallback(async (file: File): Promise<FormData> => {
-    const response = await fetch('/api/signature');
-    if (!response.ok) {
-      throw new Error('Failed to fetch upload signature from the server.');
-    }
-
-    const { signature, timestamp, apiKey } = await response.json();
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('api_key', apiKey);
-    formData.append('timestamp', timestamp);
-    formData.append(
-      'upload_preset',
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
-    );
-    formData.append('signature', signature);
-
-    return formData;
-  }, []);
-
-  const handleResponse = useCallback(
-    async (response: Response): Promise<void> => {
-      const data = await response.json();
-      if (data.secure_url && data.public_id) {
-        setSelectedVideo(data.secure_url);
-        setVideoPublicId(data.public_id);
-      } else {
-        setUploadError('Failed to upload video. Please try again.');
-      }
-    },
-    [setSelectedVideo, setVideoPublicId, setUploadError]
-  );
 
   const handleVideoChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -78,12 +80,16 @@ export const useVideoUpload = (
 
       try {
         const formData = await prepareFormData(file);
-
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
           { method: 'POST', body: formData }
         );
-        await handleResponse(response);
+        await handleResponse(
+          response,
+          setSelectedVideo,
+          setVideoPublicId,
+          setUploadError
+        );
       } catch (error) {
         console.error('Video upload error:', error);
         setUploadError('An error occurred during upload. Please try again.');
@@ -92,7 +98,7 @@ export const useVideoUpload = (
         if (inputFileRef.current) inputFileRef.current.value = '';
       }
     },
-    [isUploading, validateEnv, prepareFormData, handleResponse]
+    [isUploading, setSelectedVideo, setVideoPublicId]
   );
 
   return {
