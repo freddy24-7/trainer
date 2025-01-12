@@ -1,85 +1,90 @@
 'use client';
 
-import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { UseFormReturn } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import MatchForm from '@/components/helpers/MatchFormFieldHelpers';
-import { useMatchFormConfig } from '@/hooks/useMatchFormConfig';
-import { usePouleState } from '@/hooks/usePouleState';
 import { MatchFormProps } from '@/types/match-types';
 import { FormValues } from '@/types/user-types';
-import { submitMatchForm } from '@/utils/matchFormUtils';
-import { validateAllPlayers } from '@/utils/playerUtils';
 
 function AddMatchForm({
   action,
   poules,
   players,
 }: MatchFormProps): React.ReactElement {
-  const [, setSubmitting] = useState<boolean>(false);
+  const [matchType, setMatchType] = useState<'PRACTICE' | 'COMPETITION' | null>(
+    null
+  );
   const router = useRouter();
 
-  const methods: UseFormReturn<FormValues> = useMatchFormConfig(
-    poules,
-    players
-  );
-  const {
-    watch,
-    setValue,
-    formState: { errors },
-  } = methods;
-
-  const selectedPouleId = watch('poule');
-  const playerValues = watch('players');
-
-  const { selectedPoule, selectedOpponent } = usePouleState(
-    poules,
-    selectedPouleId,
-    setValue
-  );
-
-  const validatePlayers = (): boolean => {
-    return validateAllPlayers(playerValues, selectedPouleId);
-  };
+  const methods = useForm<FormValues>();
 
   const onSubmit = async (data: FormValues): Promise<void> => {
-    const success = await submitMatchForm(data, {
-      validatePlayers,
-      setSubmitting,
-      action,
-    });
+    if (!matchType) {
+      console.error('Match type is not set.');
+      return;
+    }
 
-    if (success) {
+    const formData = new FormData();
+
+    formData.append('matchType', matchType);
+    formData.append('date', data.date ? data.date.toString() : '');
+    formData.append('poule', data.poule?.toString() || '');
+    formData.append('opponent', data.opponent?.toString() || '');
+    formData.append('players', JSON.stringify(data.players));
+    if (data.events) {
+      formData.append('events', JSON.stringify(data.events));
+    }
+
+    const success = await action(null, formData);
+
+    if (success?.errors?.length) {
+      console.error('Submission failed:', success.errors);
+    } else {
       router.push('/');
     }
   };
 
+  if (!matchType) {
+    return (
+      <div className="w-full max-w-md mx-auto mt-10">
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={() => setMatchType('PRACTICE')}
+            className="p-4 bg-blue-500 text-white rounded"
+          >
+            Practice Match
+          </button>
+          <button
+            onClick={() => setMatchType('COMPETITION')}
+            className="p-4 bg-green-500 text-white rounded"
+          >
+            Competition Match
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full max-w-md mx-auto mt-10">
-      <Card>
-        <CardHeader>
-          <h3 className="text-lg font-semibold mx-auto text-center">
-            Add a New Match
-          </h3>
-        </CardHeader>
-        <CardBody>
-          <MatchForm
-            methods={methods}
-            poules={poules}
-            players={players}
-            selectedPoule={selectedPoule}
-            selectedOpponent={selectedOpponent}
-            playerValues={playerValues}
-            errors={errors}
-            onSubmit={onSubmit}
-            setValue={setValue}
-          />
-        </CardBody>
-      </Card>
-    </div>
+    <FormProvider {...methods}>
+      <div className="w-full max-w-md mx-auto mt-10">
+        <MatchForm
+          methods={methods}
+          poules={poules}
+          players={players}
+          selectedPoule={null}
+          selectedOpponent={null}
+          playerValues={[]}
+          errors={{}}
+          onSubmit={onSubmit}
+          setValue={methods.setValue}
+          matchType={matchType}
+        />
+      </div>
+    </FormProvider>
   );
 }
 
-export { AddMatchForm };
+export default AddMatchForm;

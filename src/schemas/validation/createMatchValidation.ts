@@ -8,10 +8,16 @@ export function handleValidateMatchData(params: FormData): {
   data?: MatchFormData;
   errors?: ZodIssue[];
 } {
-  const validation = createMatchSchema.safeParse({
-    pouleOpponentId: parseInt(params.get('pouleOpponentId') as string, 10),
+  const data = {
+    matchType: params.get('matchType') as 'PRACTICE' | 'COMPETITION',
+    pouleOpponentId: params.get('pouleOpponentId')
+      ? parseInt(params.get('pouleOpponentId') as string, 10)
+      : undefined,
+    practiceOpponent: params.get('practiceOpponent'),
     date: params.get('date') as string | null,
-  });
+  };
+
+  const validation = createMatchSchema.safeParse(data);
 
   if (!validation.success) {
     return {

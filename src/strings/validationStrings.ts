@@ -23,7 +23,6 @@ export const minutesPositiveNumberMessage =
   'Minuten moeten nul of een positief getal zijn';
 export const minutesWhenAvailableMessage =
   'Minuten moeten een positief getal zijn wanneer de speler beschikbaar is.';
-export const emptyMessageErrorMessage = 'Bericht mag niet leeg zijn';
 export const messageTooLongErrorMessage = 'Bericht is te lang';
 export const invalidSenderIdMessage = 'Ongeldige afzender-ID';
 export const invalidRecipientIdMessage = 'Ongeldige ontvanger-ID';
@@ -31,3 +30,11 @@ export const clerkIdRequiredMessage = 'clerkId is verplicht';
 export const usernameRequiredMessage = 'Gebruikersnaam is verplicht';
 export const unknownPlayerMessage = 'Onbekende Speler';
 export const unknownOpponentMessage = 'Onbekende Tegenstander';
+export const invalidMinuteValueMessage =
+  'De opgegeven minuutwaarde is ongeldig. Het moet een niet-negatief geheel getal zijn.';
+export const invalidEventTypeMessage =
+  'Het opgegeven type evenement is ongeldig. Selecteer een geldig type evenement.';
+export const invalidSubstitutionReasonMessage =
+  'De opgegeven wisselreden is ongeldig. Selecteer een geldige reden.';
+export const invalidPlayerInIdMessage = "Invalid Player In ID";
+export const invalidPlayerOutIdMessage = "Invalid Player Out ID";

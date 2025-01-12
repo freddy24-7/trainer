@@ -12,6 +12,7 @@ import {
   opponentNotExistMessage,
   failedToCreateMatchMessage,
 } from '@/strings/actionStrings';
+import { MatchData } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function addMatch(
@@ -24,19 +25,54 @@ export default async function addMatch(
     return formatError(validationFailedMessage, ['form']);
   }
 
-  const { pouleOpponentId, date } = validation.data;
+  const { matchType, pouleOpponentId, practiceOpponent, date } =
+    validation.data as MatchData;
+
+  let parsedDate: Date;
+  if (typeof date === 'string') {
+    parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return formatError('Invalid date format.', ['date']);
+    }
+  } else {
+    parsedDate = date;
+  }
 
   try {
-    const opponentExists = await handleFindOpponentById(pouleOpponentId);
+    if (matchType === 'COMPETITION') {
+      if (!pouleOpponentId) {
+        return formatError('Poule opponent ID is required for competition.', [
+          'pouleOpponentId',
+        ]);
+      }
 
-    if (!opponentExists) {
-      return formatError(opponentNotExistMessage, ['pouleOpponentId']);
-    }
+      const opponentExists = await handleFindOpponentById(pouleOpponentId);
 
-    const match = await createMatch(pouleOpponentId, date ?? '');
+      if (!opponentExists) {
+        return formatError(opponentNotExistMessage, ['pouleOpponentId']);
+      }
+    } else
+      switch ('PRACTICE') {
+        case matchType:
+          if (!practiceOpponent) {
+            return formatError('Practice opponent name is required.', [
+              'practiceOpponent',
+            ]);
+          }
+          break;
+      }
+
+    const match = await createMatch({
+      matchType,
+      pouleOpponentId:
+        matchType === 'COMPETITION' ? pouleOpponentId : undefined,
+      practiceOpponent: matchType === 'PRACTICE' ? practiceOpponent : undefined,
+      date: parsedDate,
+    });
 
     return { match: { id: match.id } };
-  } catch {
+  } catch (error) {
+    console.error(failedToCreateMatchMessage, error);
     return formatError(failedToCreateMatchMessage, ['form']);
   }
 }

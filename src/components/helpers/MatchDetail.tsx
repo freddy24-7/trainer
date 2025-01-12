@@ -4,6 +4,8 @@ import React from 'react';
 import { MatchDetailProps } from '@/types/match-types';
 
 const MatchDetail: React.FC<MatchDetailProps> = ({ match }) => {
+  const absentPlayers = match.absentPlayers || [];
+
   return (
     <div className="mb-6 border-b pb-4">
       <h3 className="text-xl font-semibold mb-2">
@@ -16,9 +18,9 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match }) => {
       <p className="mb-2">
         <strong>Afwezige spelers:</strong>
       </p>
-      {match.absentPlayers.length > 0 ? (
+      {absentPlayers.length > 0 ? (
         <ul className="list-disc list-inside">
-          {match.absentPlayers.map((player, index) => (
+          {absentPlayers.map((player, index) => (
             <li key={index}>{player}</li>
           ))}
         </ul>

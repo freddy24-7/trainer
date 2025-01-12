@@ -29,3 +29,11 @@ export const clerkIdRequiredMessage = 'clerkId is required';
 export const usernameRequiredMessage = 'Username is required';
 export const unknownPlayerMessage = 'Unknown Player';
 export const unknownOpponentMessage = 'Unknown Opponent';
+export const invalidMinuteValueMessage =
+  'The provided minute value is invalid. It must be a non-negative integer.';
+export const invalidEventTypeMessage =
+  'The provided event type is invalid. Please select a valid event type.';
+export const invalidSubstitutionReasonMessage =
+  'The provided substitution reason is invalid. Please select a valid reason.';
+export const invalidPlayerInIdMessage = 'Invalid Player In ID';
+export const invalidPlayerOutIdMessage = 'Invalid Player Out ID';

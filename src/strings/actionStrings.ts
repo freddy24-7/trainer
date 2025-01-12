@@ -8,7 +8,6 @@ export const unexpectedErrorAddingPlayer =
 export const matchIdNotFound = 'Fout: Wedstrijd-ID niet gevonden.';
 export const failedToAddMatchPlayer =
   'Mislukt om wedstrijdspeler toe te voegen aan de database.';
-export const errorUploadingVideo = 'Fout bij het uploaden van video.';
 export const senderNotFoundOrUsernameNull =
   'Fout: Afzender niet gevonden of gebruikersnaam is leeg.';
 export const errorSendingMessage = 'Fout bij het verzenden van het bericht.';
@@ -44,3 +43,9 @@ export const errorFetchingAttendanceData =
 export const errorFetchingTrainingData =
   'Mislukt om trainingsgegevens op te halen.';
 export const errorFetchingUsers = 'Fout bij het ophalen van gebruikers.';
+export const errorAddingMatchEvent =
+  'Het toevoegen van de wedstrijdevenement is mislukt. Controleer de ingevoerde gegevens en probeer het opnieuw.';
+export const unexpectedErrorAddingMatchEvent =
+  'Er is een onverwachte fout opgetreden bij het toevoegen van het wedstrijdevenement. Neem contact op met de ondersteuning als het probleem zich blijft voordoen.';
+export const failedToAddMatchEvent =
+  'Het toevoegen van het wedstrijdevenement is mislukt. Probeer het later opnieuw.';

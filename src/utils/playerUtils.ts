@@ -9,6 +9,7 @@ import {
 } from '@/strings/serverStrings';
 import { MatchFormValues, PlayerInMatch } from '@/types/match-types';
 import { Player, PlayerResponseData } from '@/types/user-types';
+import { MatchEventData } from '@/types/validation-types';
 import { formatError } from '@/utils/errorUtils';
 
 export function handleMapPlayers(
@@ -59,10 +60,13 @@ export const validateAllPlayers = (
 
 export const getPlayerMinutes = (
   players: MatchFormValues['players']
-): Record<number, number | ''> => {
+): Record<number, number> => {
   return players.reduce(
-    (acc, player) => ({ ...acc, [player.id]: player.minutes }),
-    {} as Record<number, number | ''>
+    (acc, player) => ({
+      ...acc,
+      [player.id]: typeof player.minutes === 'number' ? player.minutes : 0,
+    }),
+    {} as Record<number, number>
   );
 };
 
@@ -157,4 +161,48 @@ export function handleValidatePlayerData(player: PlayerInMatch): {
   }
 
   return { isValid: true, parsedMinutes, errors: [] };
+}
+
+export function handleParseEventsData(eventsString: string | null): {
+  matchEvents?: MatchEventData[];
+  parsingEventErrors?: ZodIssue[];
+} {
+  if (!eventsString) {
+    return { matchEvents: [] };
+  }
+
+  try {
+    const parsedEvents = JSON.parse(eventsString) as MatchEventData[];
+    if (!Array.isArray(parsedEvents)) {
+      return {
+        parsingEventErrors: formatError('Match Events data is not an array.', [
+          'matchEvents',
+        ]).errors,
+      };
+    }
+    return { matchEvents: parsedEvents };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Invalid data format';
+    return {
+      parsingEventErrors: formatError(
+        `Invalid match events data: ${errorMessage}`,
+        ['matchEvents']
+      ).errors,
+    };
+  }
+}
+
+export function handleSubstitution(
+  outgoingId: number,
+  incomingId: number,
+  setPlayerStates: React.Dispatch<
+    React.SetStateAction<Record<number, 'playing' | 'bench' | 'absent'>>
+  >
+) {
+  setPlayerStates((prev) => ({
+    ...prev,
+    [outgoingId]: 'bench',
+    [incomingId]: 'playing',
+  }));
 }

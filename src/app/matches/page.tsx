@@ -4,7 +4,7 @@ import { ZodIssue } from 'zod';
 import addMatchAndPlayers from '@/app/actions/addMatchAndPlayers';
 import getPlayers from '@/app/actions/getPlayers';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
-import { AddMatchForm } from '@/app/matches/AddMatchForm';
+import AddMatchForm from '@/app/matches/AddMatchForm';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { unknownError, errorLoadingData } from '@/strings/serverStrings';
 import {

@@ -19,6 +19,6 @@ export function handleValidateMatchPlayerData(data: MatchPlayerData): {
 
   return {
     success: true,
-    data: validation.data as MatchPlayerData,
+    data: validation.data,
   };
 }

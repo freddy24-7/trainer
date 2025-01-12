@@ -34,11 +34,27 @@ export interface EditPlayerFormProps {
   onCloseModal: () => void;
 }
 
+export enum SubstitutionReason {
+  TACTICAL = 'TACTICAL',
+  FITNESS = 'FITNESS',
+  INJURY = 'INJURY',
+  OTHER = 'OTHER',
+}
+
 export interface FormValues {
-  poule: number | undefined;
-  opponent: number | undefined;
-  date: CalendarDate | null;
-  players: { id: number; minutes: number | ''; available: boolean }[];
+  poule: number | undefined; // Selected poule ID
+  opponent: number | undefined; // Selected opponent ID
+  date: CalendarDate | null; // Match date
+  players: {
+    id: number; // Player ID
+    minutes: number | ''; // Minutes played by the player
+    available: boolean; // Player availability for the match
+  }[]; // List of players
+  events?: {
+    minute: number | ''; // Minute of the substitution
+    playerId: number | ''; // Player ID involved in the substitution
+    substitutionReason: SubstitutionReason | ''; // Reason for the substitution
+  }[]; // List of substitution events
 }
 
 export interface DashboardClientProps {

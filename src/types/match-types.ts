@@ -1,4 +1,3 @@
-import { CalendarDate } from '@nextui-org/react';
 import { FieldErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
@@ -20,10 +19,13 @@ export interface MatchClientProps {
 }
 
 export interface MatchData {
-  id: number;
-  date: Date;
-  opponentTeamName: string;
-  absentPlayers: string[];
+  matchType: 'PRACTICE' | 'COMPETITION';
+  date: string | Date;
+  pouleOpponentId?: number;
+  practiceOpponent?: string;
+  id?: number;
+  opponentTeamName?: string;
+  absentPlayers?: string[];
 }
 
 export interface MatchDataHelper {
@@ -44,11 +46,19 @@ export interface MatchDataHelper {
 export interface MatchFormValues {
   poule: number | undefined;
   opponent: number | undefined;
-  date: CalendarDate | null;
+  date: string | null;
   players: {
     id: number;
     minutes: number | '';
     available: boolean;
+  }[];
+  matchEvents?: {
+    matchId: number;
+    userId: number;
+    minute: number;
+    eventType: string;
+    substitutionReason?: string;
+    description?: string;
   }[];
 }
 
@@ -86,6 +96,7 @@ export interface MatchFormFieldProps {
   errors: FieldErrors<FormValues>;
   onSubmit: (data: FormValues) => Promise<void>;
   setValue: UseFormSetValue<FormValues>;
+  matchType: 'PRACTICE' | 'COMPETITION';
 }
 
 export interface ObtainMatchData {

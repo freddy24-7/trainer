@@ -68,6 +68,7 @@ export const submitMatchForm = async (
   formData.append('pouleOpponentId', data.opponent?.toString() || '');
   formData.append('date', data.date?.toString() || '');
   formData.append('players', JSON.stringify(data.players));
+  formData.append('matchEvents', JSON.stringify(data.matchEvents || []));
 
   if (!validateMatchForm(formData, validatePlayers)) {
     resetSubmissionState();

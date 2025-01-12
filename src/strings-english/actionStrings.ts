@@ -36,3 +36,9 @@ export const failedToLoadTeamsInPoules = 'Failed to load teams in the poules.';
 export const errorFetchingAttendanceData = 'Failed to fetch attendance data.';
 export const errorFetchingTrainingData = 'Failed to fetch training data.';
 export const errorFetchingUsers = 'Error fetching users.';
+export const errorAddingMatchEvent =
+  'Failed to add match event. Please check the provided data and try again.';
+export const unexpectedErrorAddingMatchEvent =
+  'An unexpected error occurred while adding the match event. Please contact support if the issue persists.';
+export const failedToAddMatchEvent =
+  'Failed to add the match event. Please try again later.';

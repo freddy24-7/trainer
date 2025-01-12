@@ -3,6 +3,7 @@
 import { ZodIssue } from 'zod';
 
 import addMatch from '@/app/actions/addMatch';
+import addMatchEvent from '@/app/actions/addMatchEvent';
 import addMatchPlayer from '@/app/actions/addMatchPlayer';
 import {
   errorAddingPlayer,
@@ -10,11 +11,13 @@ import {
   failedToCreateMatchMessage,
   matchIdNotFound,
 } from '@/strings/actionStrings';
-import { PlayerInMatch } from '@/types/match-types';
+import { PlayerInMatch, MatchData } from '@/types/match-types';
+import { MatchEventData } from '@/types/validation-types';
 import { formatError } from '@/utils/errorUtils';
 import {
   handleParsePlayersData,
   handleValidatePlayerData,
+  handleParseEventsData,
 } from '@/utils/playerUtils';
 
 async function handleProcessPlayers(
@@ -74,11 +77,88 @@ async function handleProcessSinglePlayer(
   return null;
 }
 
+async function handleProcessMatchEvents(
+  events: MatchEventData[],
+  matchId: number
+): Promise<ZodIssue[]> {
+  const eventErrors: ZodIssue[] = [];
+
+  for (const event of events) {
+    const eventError = await handleProcessSingleEvent({
+      ...event,
+      matchId,
+    });
+    if (eventError) {
+      eventErrors.push(...eventError);
+    }
+  }
+
+  return eventErrors;
+}
+
+async function handleProcessSingleEvent(
+  event: MatchEventData
+): Promise<ZodIssue[] | null> {
+  try {
+    const response = await addMatchEvent(event);
+
+    if (!response.success) {
+      return (
+        response.errors ||
+        formatError(`Failed to add event for user ${event.userId}`, ['form'])
+          .errors
+      );
+    }
+  } catch (error) {
+    console.error(`Error adding match event for user ${event.userId}:`, error);
+    return formatError(
+      `Unexpected error while adding match event for user ${event.userId}`,
+      ['events', String(event.userId)]
+    ).errors;
+  }
+
+  return null;
+}
+
 export default async function addMatchAndPlayers(
   _prevState: unknown,
   params: FormData
 ): Promise<{ errors: ZodIssue[] }> {
-  const matchResponse = await addMatch(null, params);
+  const matchType = params.get('matchType');
+  if (
+    typeof matchType !== 'string' ||
+    !['PRACTICE', 'COMPETITION'].includes(matchType)
+  ) {
+    return formatError('Invalid match type', ['form']);
+  }
+
+  const matchData: MatchData = {
+    matchType: matchType as 'PRACTICE' | 'COMPETITION',
+    date: params.get('date') as string,
+  };
+
+  if (matchType === 'PRACTICE') {
+    const practiceOpponent = params.get('practiceOpponent') as string;
+    if (!practiceOpponent) {
+      return formatError('Practice opponent name is required.', ['form']);
+    }
+    matchData.practiceOpponent = practiceOpponent;
+  } else if (matchType === 'COMPETITION') {
+    const pouleOpponentId = params.get('pouleOpponentId');
+    if (!pouleOpponentId || isNaN(Number(pouleOpponentId))) {
+      return formatError('Poule opponent ID is required.', ['form']);
+    }
+    matchData.pouleOpponentId = Number(pouleOpponentId);
+  }
+
+  const formData = new FormData();
+  Object.entries(matchData).forEach(([key, value]) => {
+    if (value !== undefined) {
+      formData.append(key, String(value));
+    }
+  });
+
+  const matchResponse = await addMatch(null, formData);
 
   if (matchResponse.errors) {
     return formatError(failedToCreateMatchMessage, ['form']);
@@ -90,16 +170,29 @@ export default async function addMatchAndPlayers(
   }
 
   const playersString = params.get('players') as string | null;
-  const { players, errors: parsingErrors } =
+  const { players, errors: parsingPlayerErrors } =
     handleParsePlayersData(playersString);
 
-  if (parsingErrors) {
-    return { errors: parsingErrors };
+  if (parsingPlayerErrors) {
+    return { errors: parsingPlayerErrors };
   }
 
   const playerErrors = players
     ? await handleProcessPlayers(players, createdMatchId)
     : [];
 
-  return { errors: playerErrors };
+  const matchEventsString = params.get('matchEvents') as string | null;
+  const { matchEvents, parsingEventErrors } =
+    handleParseEventsData(matchEventsString);
+
+  if (parsingEventErrors) {
+    return { errors: parsingEventErrors };
+  }
+
+  const eventErrors = matchEvents
+    ? await handleProcessMatchEvents(matchEvents, createdMatchId)
+    : [];
+
+  const combinedErrors = [...playerErrors, ...eventErrors];
+  return { errors: combinedErrors };
 }
