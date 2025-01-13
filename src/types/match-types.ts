@@ -1,3 +1,4 @@
+import { CalendarDate } from '@nextui-org/react';
 import { FieldErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
@@ -40,25 +41,6 @@ export interface MatchDataHelper {
     user: {
       username: string | null;
     };
-  }[];
-}
-
-export interface MatchFormValues {
-  poule: number | undefined;
-  opponent: number | undefined;
-  date: string | null;
-  players: {
-    id: number;
-    minutes: number | '';
-    available: boolean;
-  }[];
-  matchEvents?: {
-    matchId: number;
-    userId: number;
-    minute: number;
-    eventType: string;
-    substitutionReason?: string;
-    description?: string;
   }[];
 }
 
@@ -139,4 +121,46 @@ export interface SubmitMatchFormOptions {
     _prevState: unknown,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
+}
+
+export type MatchEvent = GoalEvent | AssistEvent | SubstitutionEvent;
+
+export interface BaseEvent {
+  minute: number; // Common to all events
+}
+
+export interface GoalEvent extends BaseEvent {
+  type: 'GOAL';
+  scorerId: number; // Required for goals
+  assisterId?: number; // Optional for assists
+}
+
+export interface AssistEvent extends BaseEvent {
+  type: 'ASSIST';
+  scorerId: number; // Required to link assist to a goal
+  assisterId: number; // Required for assists
+}
+
+export interface SubstitutionEvent extends BaseEvent {
+  type: 'SUBSTITUTION';
+  playerInId: number;
+  playerOutId: number;
+  reason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER';
+}
+
+export interface MatchFormValues {
+  poule?: number; // Optional for practice matches
+  opponent?: {
+    id?: number; // Used for competition matches
+    name?: string; // Used for practice matches
+  };
+  date: CalendarDate | null; // Match date
+  players: {
+    userId: number;
+    minutes: number;
+    available: boolean;
+    status: 'playing' | 'bench' | 'absent';
+  }[];
+  matchEvents: MatchEvent[];
+  matchType: 'PRACTICE' | 'COMPETITION';
 }
