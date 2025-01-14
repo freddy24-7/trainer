@@ -29,3 +29,7 @@ export const clerkIdRequiredMessage = 'clerkId is required';
 export const usernameRequiredMessage = 'Username is required';
 export const unknownPlayerMessage = 'Unknown Player';
 export const unknownOpponentMessage = 'Unknown Opponent';
+export const invalidOpponentNameMessage =
+  'Opponent name must be provided for training matches.';
+export const missingOpponentOrPouleMessage =
+  'Either pouleOpponentId or opponentName must be provided';

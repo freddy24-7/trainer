@@ -1,4 +1,3 @@
-import { CalendarDate } from '@nextui-org/react';
 import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
@@ -35,9 +34,11 @@ export interface EditPlayerFormProps {
 }
 
 export interface FormValues {
+  matchType: 'competition' | 'practice';
   poule: number | undefined;
   opponent: number | undefined;
-  date: CalendarDate | null;
+  opponentName: string;
+  date: string | null;
   players: { id: number; minutes: number | ''; available: boolean }[];
 }
 

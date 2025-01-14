@@ -15,15 +15,12 @@ export const opponentNameRequiredMessage =
   'Naam van de tegenstander is verplicht';
 export const minimumOpponentsRequiredMessage =
   'Er is minimaal één tegenstander vereist';
-export const invalidPouleOpponentIdMessage = 'Ongeldige Poule Tegenstander-ID';
-export const invalidDateFormatMessage = 'Ongeldig datumnotatie';
 export const invalidUserIdMessage = 'Ongeldige Gebruikers-ID';
 export const invalidMatchIdMessage = 'Ongeldige Wedstrijd-ID';
 export const minutesPositiveNumberMessage =
   'Minuten moeten nul of een positief getal zijn';
 export const minutesWhenAvailableMessage =
   'Minuten moeten een positief getal zijn wanneer de speler beschikbaar is.';
-export const emptyMessageErrorMessage = 'Bericht mag niet leeg zijn';
 export const messageTooLongErrorMessage = 'Bericht is te lang';
 export const invalidSenderIdMessage = 'Ongeldige afzender-ID';
 export const invalidRecipientIdMessage = 'Ongeldige ontvanger-ID';

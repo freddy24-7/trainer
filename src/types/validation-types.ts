@@ -6,6 +6,13 @@ export interface MatchPlayerData {
 }
 
 export interface MatchFormData {
-  pouleOpponentId: number;
+  trainingMatch: boolean;
+  pouleOpponentId: number | null;
+  opponentName: string | null;
   date: string | null;
+  players: {
+    id: number;
+    minutes: number;
+    available: boolean;
+  }[];
 }

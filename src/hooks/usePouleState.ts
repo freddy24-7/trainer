@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { UseFormSetValue } from 'react-hook-form';
+import { UseFormSetValue, UseFormWatch } from 'react-hook-form';
 
+import { MatchFormValues } from '@/types/match-types';
 import { Poule, PouleOpponent } from '@/types/poule-types';
-import { FormValues } from '@/types/user-types';
 
 export const usePouleState = (
   poules: Poule[],
   selectedPouleId: number | undefined,
-  setValue: UseFormSetValue<FormValues>
+  watch: UseFormWatch<MatchFormValues>,
+  setValue: UseFormSetValue<MatchFormValues>
 ): {
   selectedPoule: Poule | null;
   selectedOpponent: PouleOpponent | null;
@@ -19,15 +20,24 @@ export const usePouleState = (
   const [selectedPoule, setSelectedPoule] = useState<Poule | null>(null);
   const [selectedOpponent, setSelectedOpponent] =
     useState<PouleOpponent | null>(null);
+  const opponentId = watch('opponent');
 
   useEffect(() => {
     const poule = poules.find((p) => p.id === selectedPouleId) || null;
     setSelectedPoule(poule);
-    setSelectedOpponent(poule?.opponents[0] || null);
     if (poule) {
-      setValue('opponent', poule.opponents[0]?.id || 0);
+      const currentOpponent = poule.opponents.find((o) => o.id === opponentId);
+      if (currentOpponent) {
+        setSelectedOpponent(currentOpponent);
+      } else {
+        const firstOpponent = poule.opponents[0] || null;
+        setSelectedOpponent(firstOpponent);
+        setValue('opponent', firstOpponent?.id || 0);
+      }
+    } else {
+      setSelectedOpponent(null);
     }
-  }, [selectedPouleId, poules, setValue]);
+  }, [selectedPouleId, poules, opponentId, setValue]);
 
   return {
     selectedPoule,

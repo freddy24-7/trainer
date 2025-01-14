@@ -1,5 +1,3 @@
-'use client';
-
 import { DatePicker, CalendarDate } from '@nextui-org/react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -13,15 +11,20 @@ import {
 } from '@/strings/clientStrings';
 import { DateProps } from '@/types/shared-types';
 
-const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
+const DateField = ({ errors }: DateProps): React.ReactElement => {
   const { control } = useFormContext();
   const today = new Date();
   const twoMonthsAgo = new Date(today);
   twoMonthsAgo.setMonth(today.getMonth() - 2);
 
   const isDateValid = (date: CalendarDate): boolean => {
-    const selectedDate = new Date(date.toString());
+    const selectedDate = new Date(date.year, date.month - 1, date.day);
     return selectedDate <= today && selectedDate >= twoMonthsAgo;
+  };
+
+  const convertToISOString = (date: CalendarDate): string => {
+    const { year, month, day } = date;
+    return new Date(year, month - 1, day).toISOString();
   };
 
   return (
@@ -46,8 +49,12 @@ const DateField = ({ errors, onChange }: DateProps): React.ReactElement => {
               value={field.value}
               onChange={(date) => {
                 if (isDateValid(date as CalendarDate)) {
-                  field.onChange(date);
-                  onChange(date as CalendarDate);
+                  const calendarDate = date as CalendarDate;
+                  field.onChange(calendarDate);
+                  console.log(
+                    'ISO date for backend:',
+                    convertToISOString(calendarDate)
+                  );
                 } else {
                   const selectedDate = new Date(
                     (date as CalendarDate).toString()

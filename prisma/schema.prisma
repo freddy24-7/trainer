@@ -50,11 +50,13 @@ model PouleOpponents {
 }
 
 model Match {
-  id              Int            @id @default(autoincrement())
-  pouleOpponentId Int
+  id              Int             @id @default(autoincrement())
+  pouleOpponentId Int?
+  trainingMatch   Boolean
+  opponentName    String?
   date            DateTime
-  createdAt       DateTime       @default(now())
-  pouleOpponent   PouleOpponents @relation(fields: [pouleOpponentId], references: [id])
+  createdAt       DateTime        @default(now())
+  pouleOpponent   PouleOpponents? @relation(fields: [pouleOpponentId], references: [id])
   matchPlayers    MatchPlayer[]
 }
 

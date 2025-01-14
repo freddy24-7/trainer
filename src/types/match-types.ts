@@ -4,7 +4,7 @@ import { ZodIssue } from 'zod';
 
 import { Poule, PouleOpponent } from '@/types/poule-types';
 
-import { FormValues, Player, PlayerStat } from './user-types';
+import { Player, PlayerStat } from './user-types';
 
 export interface MatchFormProps {
   poules: Poule[];
@@ -42,8 +42,10 @@ export interface MatchDataHelper {
 }
 
 export interface MatchFormValues {
+  matchType: 'competition' | 'practice';
   poule: number | undefined;
   opponent: number | undefined;
+  opponentName: string;
   date: CalendarDate | null;
   players: {
     id: number;
@@ -77,15 +79,15 @@ export interface MatchDetailProps {
 }
 
 export interface MatchFormFieldProps {
-  methods: UseFormReturn<FormValues>;
+  methods: UseFormReturn<MatchFormValues>;
   poules: Poule[];
   players: Player[];
   selectedPoule: Poule | null;
   selectedOpponent: PouleOpponent | null;
-  playerValues: FormValues['players'];
-  errors: FieldErrors<FormValues>;
-  onSubmit: (data: FormValues) => Promise<void>;
-  setValue: UseFormSetValue<FormValues>;
+  playerValues: MatchFormValues['players'];
+  errors: FieldErrors<MatchFormValues>;
+  onSubmit: (data: MatchFormValues) => Promise<void>;
+  setValue: UseFormSetValue<MatchFormValues>;
 }
 
 export interface ObtainMatchData {

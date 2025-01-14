@@ -10,13 +10,24 @@ export async function handleFindOpponentById(
   });
 }
 
-export async function createMatch(
-  pouleOpponentId: number,
-  date: string
-): Promise<Match> {
+export async function createMatch({
+  trainingMatch,
+  pouleOpponentId,
+  opponentName,
+  date,
+}: {
+  trainingMatch: boolean;
+  pouleOpponentId: number | null;
+  opponentName: string | null;
+  date: string;
+}): Promise<Match> {
   return prisma.match.create({
     data: {
-      pouleOpponentId,
+      trainingMatch,
+      pouleOpponentId: trainingMatch
+        ? undefined
+        : (pouleOpponentId ?? undefined),
+      opponentName: trainingMatch ? opponentName : undefined,
       date: new Date(date),
       createdAt: new Date(),
     },
