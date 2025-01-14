@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { Control, FieldErrors } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
-import { MatchData, MatchFormValues } from '@/types/match-types';
+import { MatchData } from '@/types/match-types';
 import { PouleFormValues } from '@/types/poule-types';
 
 export interface OpponentClientProps {
@@ -27,8 +27,11 @@ export interface ProtectedLayoutProps {
 }
 
 export interface DateProps {
-  errors: FieldErrors<MatchFormValues>;
+  errors: {
+    date?: { message?: string };
+  };
   onChange: (date: CalendarDate | null) => void;
+  label: string;
 }
 
 export interface InputFieldProps {

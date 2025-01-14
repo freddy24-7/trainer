@@ -62,6 +62,7 @@ const AddTrainingForm = ({
             >
               <DateField
                 errors={errors as FieldErrors<TrainingFormValues>}
+                label="Training Date"
                 onChange={(date) => setValue('date', date)}
               />
 

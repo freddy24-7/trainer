@@ -38,6 +38,7 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
 
         <DateField
           errors={errors}
+          label="Match Date"
           onChange={(date) => setValue('date', date)}
         />
 
