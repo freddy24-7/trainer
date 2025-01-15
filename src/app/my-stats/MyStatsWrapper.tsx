@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
-import DateFilter from '@/components/helpers/DateFilter';
+import DateFilter from '@/components/DateFilter';
 import MatchStatsTable from '@/components/helpers/MyMatchStatsTable';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
 import { PlayerStat, SignedInUser } from '@/types/user-types';

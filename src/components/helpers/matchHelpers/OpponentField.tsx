@@ -1,6 +1,6 @@
 import React from 'react';
 
-import OpponentSelector from '@/components/helpers/OpponentSelector';
+import OpponentSelector from '@/components/helpers/matchHelpers/OpponentSelector';
 import {
   FormControl,
   FormField,

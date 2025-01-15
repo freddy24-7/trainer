@@ -1,19 +1,25 @@
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-} from '@nextui-org/react';
+import { Button, useDisclosure } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { FieldErrors, UseFormSetValue } from 'react-hook-form';
 
-import OpponentField from '@/components/helpers/OpponentField';
-import PouleField from '@/components/helpers/PouleField';
+import OpponentField from '@/components/helpers/matchHelpers/OpponentField';
+import PouleField from '@/components/helpers/matchHelpers/PouleField';
+import StrengthModal from '@/components/helpers/matchHelpers/StrengthModal';
 import { MatchFormValues } from '@/types/match-types';
 import { Poule, PouleOpponent } from '@/types/poule-types';
+
+const handleConfirmStrength = (
+  selectedStrength: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null,
+  setValue: UseFormSetValue<MatchFormValues>,
+  setIsButtonVisible: React.Dispatch<React.SetStateAction<boolean>>,
+  onConfirmChange: () => void
+): void => {
+  if (selectedStrength) {
+    setValue('opponentStrength', selectedStrength);
+    setIsButtonVisible(false);
+    onConfirmChange();
+  }
+};
 
 interface OpponentLogicProps {
   matchType: 'competition' | 'practice';
@@ -40,20 +46,10 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
     onOpen: onConfirmOpen,
     onOpenChange: onConfirmChange,
   } = useDisclosure();
-
   const [selectedStrength, setSelectedStrength] = useState<
     'STRONGER' | 'SIMILAR' | 'WEAKER' | null
   >(opponentStrength || null);
-
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-
-  const handleConfirmStrength = () => {
-    if (selectedStrength) {
-      setValue('opponentStrength', selectedStrength);
-      setIsButtonVisible(false);
-      onConfirmChange();
-    }
-  };
 
   return (
     <>
@@ -90,7 +86,6 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
           )}
         </div>
       )}
-
       {matchType === 'competition' && (
         <PouleField
           poules={poules}
@@ -99,77 +94,28 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
           onChange={(pouleId) => setValue('poule', pouleId)}
         />
       )}
-
       {isButtonVisible && (
         <>
           <Button color="primary" onPress={onOpen} className="mt-4">
             Insert Opponent Strength
           </Button>
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader>Select Opponent Strength</ModalHeader>
-                  <ModalBody>
-                    <div className="flex flex-col gap-4">
-                      <Button onPress={() => setSelectedStrength('STRONGER')}>
-                        Stronger
-                      </Button>
-                      <Button onPress={() => setSelectedStrength('SIMILAR')}>
-                        Similar
-                      </Button>
-                      <Button onPress={() => setSelectedStrength('WEAKER')}>
-                        Weaker
-                      </Button>
-                    </div>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" onPress={onClose}>
-                      Cancel
-                    </Button>
-                    <Button
-                      color="primary"
-                      onPress={() => {
-                        onClose();
-                        if (selectedStrength) {
-                          onConfirmOpen();
-                        }
-                      }}
-                    >
-                      Confirm
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
-          <Modal isOpen={isConfirmOpen} onOpenChange={onConfirmChange}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader>Confirm Strength Selection</ModalHeader>
-                  <ModalBody>
-                    Are you sure you want to select &quot;{selectedStrength}
-                    &quot; as the opponent&apos;s strength?
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" onPress={onClose}>
-                      Cancel
-                    </Button>
-                    <Button
-                      color="primary"
-                      onPress={() => {
-                        handleConfirmStrength();
-                        onClose();
-                      }}
-                    >
-                      Confirm
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
+          <StrengthModal
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            isConfirmOpen={isConfirmOpen}
+            onConfirmOpen={onConfirmOpen}
+            onConfirmChange={onConfirmChange}
+            selectedStrength={selectedStrength}
+            setSelectedStrength={setSelectedStrength}
+            handleConfirmStrength={() =>
+              handleConfirmStrength(
+                selectedStrength,
+                setValue,
+                setIsButtonVisible,
+                onConfirmChange
+              )
+            }
+          />
         </>
       )}
     </>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormProvider } from 'react-hook-form';
 
-import DateField from '@/components/helpers/DateField';
+import DateField from '@/components/DateField';
 import PlayerManagement from '@/components/helpers/matchHelpers/MatchPlayerManagement';
 import MatchTypeSelection from '@/components/helpers/matchHelpers/MatchTypeSelection';
 import OpponentLogic from '@/components/helpers/matchHelpers/OpponentLogic';

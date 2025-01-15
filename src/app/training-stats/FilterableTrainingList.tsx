@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 import AttendanceTraining from '@/app/training-stats/AttendanceTraining';
 import DataTrainingClient from '@/app/training-stats/DataTrainingClient';
-import DateFilter from '@/components/helpers/DateFilter';
+import DateFilter from '@/components/DateFilter';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
 
 interface FilterableTrainingListProps {

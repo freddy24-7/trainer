@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
 
-import DateField from '@/components/helpers/DateField';
+import DateField from '@/components/DateField';
 import TrainingPlayersField from '@/components/helpers/TrainingPlayersField';
 import {
   submittingButtonText,

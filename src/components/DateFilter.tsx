@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import DateField from '@/components/helpers/DateField';
+import DateField from '@/components/DateField';
 
 interface DateFilterProps {
   onFilter: (startDate: Date | null, endDate: Date | null) => void;

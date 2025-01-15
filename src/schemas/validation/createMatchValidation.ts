@@ -19,47 +19,56 @@ export function handleValidateMatchData(params: FormData): {
       return defaultValue;
     }
   };
-
-  console.log('pouleOpponentId raw:', params.get('pouleOpponentId'));
-  console.log(
-    'pouleOpponentId parsed:',
-    parseInt(getStringValue(params.get('pouleOpponentId')) ?? '', 10)
-  );
-
-  const trainingMatch = getStringValue(params.get('matchType')) === 'practice';
-
-  const pouleOpponentIdValue = getStringValue(params.get('pouleOpponentId'));
-  const pouleOpponentId = pouleOpponentIdValue
-    ? parseInt(pouleOpponentIdValue, 10)
-    : null;
-
-  const opponentNameValue = getStringValue(params.get('opponentName'));
-  const opponentName =
-    pouleOpponentId === null
-      ? opponentNameValue && opponentNameValue.trim() !== ''
-        ? opponentNameValue.trim()
-        : null
+  const extractOpponentData = (): {
+    pouleOpponentId: number | null;
+    opponentName: string | null;
+  } => {
+    const pouleOpponentIdValue = getStringValue(params.get('pouleOpponentId'));
+    const pouleOpponentId = pouleOpponentIdValue
+      ? parseInt(pouleOpponentIdValue, 10)
       : null;
+    const opponentNameValue = getStringValue(params.get('opponentName'));
+    const opponentName =
+      pouleOpponentId === null &&
+      opponentNameValue &&
+      opponentNameValue.trim() !== ''
+        ? opponentNameValue.trim()
+        : null;
+    return { pouleOpponentId, opponentName };
+  };
 
-  const date = getStringValue(params.get('date'));
+  const extractMatchData = (): Omit<MatchFormData, 'players'> => {
+    const trainingMatch =
+      getStringValue(params.get('matchType')) === 'practice';
+    const date = getStringValue(params.get('date'));
+    const opponentStrengthValue = getStringValue(
+      params.get('opponentStrength')
+    );
+    const opponentStrength =
+      opponentStrengthValue === 'null' ||
+      opponentStrengthValue === null ||
+      opponentStrengthValue === ''
+        ? null
+        : (opponentStrengthValue as 'STRONGER' | 'SIMILAR' | 'WEAKER');
+
+    const { pouleOpponentId, opponentName } = extractOpponentData();
+
+    return {
+      trainingMatch,
+      date,
+      opponentStrength,
+      pouleOpponentId,
+      opponentName,
+    };
+  };
+
+  const matchData = extractMatchData();
 
   const players = getParsedJSON(getStringValue(params.get('players')), []);
 
-  const opponentStrengthValue = getStringValue(params.get('opponentStrength'));
-  const opponentStrength =
-    opponentStrengthValue === 'null' ||
-    opponentStrengthValue === null ||
-    opponentStrengthValue === ''
-      ? null
-      : (opponentStrengthValue as 'STRONGER' | 'SIMILAR' | 'WEAKER');
-
   const parsedInput: MatchFormData = {
-    trainingMatch,
-    pouleOpponentId,
-    opponentName,
-    date,
+    ...matchData,
     players,
-    opponentStrength,
   };
 
   console.log('Validation Input:', JSON.stringify(parsedInput, null, 2));

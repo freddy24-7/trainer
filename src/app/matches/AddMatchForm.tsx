@@ -35,21 +35,18 @@ function AddMatchForm({
   const selectedPouleId = watch('poule');
   const playerValues = watch('players');
   const opponentStrength = watch('opponentStrength');
-
   const { selectedPoule, selectedOpponent } = usePouleState(
     poules,
     selectedPouleId,
     watch,
     setValue
   );
-
   const validatePlayers = (): boolean => {
     if (matchType === 'practice' && !watch('opponentName')) {
       return false;
     }
     return validateAllPlayers(playerValues, selectedPouleId);
   };
-
   const onSubmit = async (data: MatchFormValues): Promise<void> => {
     console.log('Raw Form Data:', data);
 

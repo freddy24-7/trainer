@@ -68,29 +68,44 @@ export const submitMatchForm = async (
   const { validatePlayers, setSubmitting, action } = options;
   const resetSubmissionState = handleSubmissionState(setSubmitting);
 
+  try {
+    const formData = createFormData(data);
+
+    if (!validateMatchForm(formData, validatePlayers)) {
+      console.error(validationFailedMessage);
+      return false;
+    }
+
+    return await handleActionResponse(action, formData);
+  } catch (error) {
+    console.error(
+      formatError(submissionErrorMessage, ['form']).errors[0].message,
+      error
+    );
+    toast.error(
+      formatError(submissionErrorMessage, ['form']).errors[0].message
+    );
+    return false;
+  } finally {
+    resetSubmissionState();
+  }
+};
+
+const createFormData = (data: FormValues): FormData => {
   const formData = new FormData();
 
   formData.append('matchType', data.matchType);
 
-  if (data.matchType === 'competition') {
-    formData.append('pouleOpponentId', data.opponent?.toString() || 'null');
-  } else if (data.matchType === 'practice') {
-    formData.append('opponentName', data.opponentName || '');
-  }
+  appendMatchTypeSpecificData(formData, data);
 
-  if (data.opponentStrength) {
-    formData.append('opponentStrength', data.opponentStrength);
-  } else {
-    formData.append('opponentStrength', 'null');
-  }
+  formData.append('opponentStrength', data.opponentStrength || 'null');
 
-  if (data.date) {
-    formData.append('date', data.date);
-  } else {
-    console.error('Date is missing in the form data.');
-    resetSubmissionState();
-    return false;
+  if (!data.date) {
+    const errorResponse = formatError(submissionErrorMessage, ['date']);
+    toast.error(errorResponse.errors[0].message);
+    throw new Error(errorResponse.errors[0].message);
   }
+  formData.append('date', data.date);
 
   formData.append(
     'players',
@@ -102,14 +117,16 @@ export const submitMatchForm = async (
     )
   );
 
-  if (!validateMatchForm(formData, validatePlayers)) {
-    console.error('Validation failed:', formData);
-    resetSubmissionState();
-    return false;
+  return formData;
+};
+
+const appendMatchTypeSpecificData = (
+  formData: FormData,
+  data: FormValues
+): void => {
+  if (data.matchType === 'competition') {
+    formData.append('pouleOpponentId', data.opponent?.toString() || 'null');
+  } else if (data.matchType === 'practice') {
+    formData.append('opponentName', data.opponentName || '');
   }
-
-  const result = await handleActionResponse(action, formData);
-
-  resetSubmissionState();
-  return result;
 };
