@@ -45,12 +45,21 @@ export function handleValidateMatchData(params: FormData): {
 
   const players = getParsedJSON(getStringValue(params.get('players')), []);
 
+  const opponentStrengthValue = getStringValue(params.get('opponentStrength'));
+  const opponentStrength =
+    opponentStrengthValue === 'null' ||
+    opponentStrengthValue === null ||
+    opponentStrengthValue === ''
+      ? null
+      : (opponentStrengthValue as 'STRONGER' | 'SIMILAR' | 'WEAKER');
+
   const parsedInput: MatchFormData = {
     trainingMatch,
     pouleOpponentId,
     opponentName,
     date,
     players,
+    opponentStrength,
   };
 
   console.log('Validation Input:', JSON.stringify(parsedInput, null, 2));

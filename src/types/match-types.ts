@@ -52,6 +52,7 @@ export interface MatchFormValues {
     minutes: number | '';
     available: boolean;
   }[];
+  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
 }
 
 export interface MatchPlayer {
@@ -88,6 +89,7 @@ export interface MatchFormFieldProps {
   errors: FieldErrors<MatchFormValues>;
   onSubmit: (data: MatchFormValues) => Promise<void>;
   setValue: UseFormSetValue<MatchFormValues>;
+  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
 }
 
 export interface ObtainMatchData {

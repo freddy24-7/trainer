@@ -31,6 +31,10 @@ export const createMatchSchema = z
         })
       )
       .nonempty('At least one player must be present'),
+    opponentStrength: z
+      .enum(['STRONGER', 'SIMILAR', 'WEAKER'])
+      .nullable()
+      .optional(),
   })
   .refine(
     (data) => {

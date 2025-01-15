@@ -18,6 +18,7 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   errors,
   onSubmit,
   setValue,
+  opponentStrength,
 }) => {
   const { watch, handleSubmit } = methods;
   const matchType = watch('matchType') as 'competition' | 'practice';
@@ -34,6 +35,7 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
           errors={errors}
           setValue={setValue}
           poules={poules}
+          opponentStrength={opponentStrength}
         />
 
         <DateField

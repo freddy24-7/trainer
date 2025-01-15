@@ -15,4 +15,5 @@ export interface MatchFormData {
     minutes: number;
     available: boolean;
   }[];
+  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
 }

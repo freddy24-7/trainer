@@ -78,6 +78,12 @@ export const submitMatchForm = async (
     formData.append('opponentName', data.opponentName || '');
   }
 
+  if (data.opponentStrength) {
+    formData.append('opponentStrength', data.opponentStrength);
+  } else {
+    formData.append('opponentStrength', 'null');
+  }
+
   if (data.date) {
     formData.append('date', data.date);
   } else {

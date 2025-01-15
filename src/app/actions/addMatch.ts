@@ -16,7 +16,8 @@ import { formatError } from '@/utils/errorUtils';
 
 async function handleValidateAndHandleCompetitionMatch(
   trainingMatch: boolean,
-  pouleOpponentId: number | null
+  pouleOpponentId: number | null,
+  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null
 ): Promise<{ errors?: ZodIssue[] } | null> {
   if (trainingMatch) return null;
 
@@ -29,6 +30,13 @@ async function handleValidateAndHandleCompetitionMatch(
     return formatError(opponentNotExistMessage, ['pouleOpponentId']);
   }
 
+  if (
+    opponentStrength &&
+    !['STRONGER', 'SIMILAR', 'WEAKER'].includes(opponentStrength)
+  ) {
+    return formatError(validationFailedMessage, ['opponentStrength']);
+  }
+
   return null;
 }
 
@@ -37,6 +45,7 @@ async function handleProcessMatchCreation(data: {
   pouleOpponentId: number | null;
   opponentName: string | null;
   date: string;
+  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
 }): Promise<{ match: { id: number } } | { errors: ZodIssue[] }> {
   try {
     const match = await createMatch(data);
@@ -55,8 +64,13 @@ export default async function addMatch(
     return formatError(validationFailedMessage, ['form']);
   }
 
-  const { trainingMatch, pouleOpponentId, opponentName, date } =
-    validation.data;
+  const {
+    trainingMatch,
+    pouleOpponentId,
+    opponentName,
+    date,
+    opponentStrength,
+  } = validation.data;
 
   const competitionValidationError =
     await handleValidateAndHandleCompetitionMatch(
@@ -72,5 +86,6 @@ export default async function addMatch(
     pouleOpponentId: trainingMatch ? null : pouleOpponentId,
     opponentName: trainingMatch ? opponentName : null,
     date: date ?? '',
+    opponentStrength: opponentStrength ?? null,
   });
 }

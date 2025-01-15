@@ -34,6 +34,8 @@ function AddMatchForm({
   const matchType = watch('matchType');
   const selectedPouleId = watch('poule');
   const playerValues = watch('players');
+  const opponentStrength = watch('opponentStrength');
+
   const { selectedPoule, selectedOpponent } = usePouleState(
     poules,
     selectedPouleId,
@@ -96,6 +98,7 @@ function AddMatchForm({
               errors={errors}
               onSubmit={onSubmit}
               setValue={setValue}
+              opponentStrength={opponentStrength}
             />
           </CardBody>
         </Card>

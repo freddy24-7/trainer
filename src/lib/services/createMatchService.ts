@@ -15,11 +15,13 @@ export async function createMatch({
   pouleOpponentId,
   opponentName,
   date,
+  opponentStrength,
 }: {
   trainingMatch: boolean;
   pouleOpponentId: number | null;
   opponentName: string | null;
   date: string;
+  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
 }): Promise<Match> {
   return prisma.match.create({
     data: {
@@ -30,6 +32,7 @@ export async function createMatch({
       opponentName: trainingMatch ? opponentName : undefined,
       date: new Date(date),
       createdAt: new Date(),
+      opponentStrength: opponentStrength ?? null,
     },
   });
 }

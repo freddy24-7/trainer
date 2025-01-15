@@ -40,6 +40,7 @@ export interface FormValues {
   opponentName: string;
   date: string | null;
   players: { id: number; minutes: number | ''; available: boolean }[];
+  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
 }
 
 export interface DashboardClientProps {
