@@ -19,61 +19,60 @@ export function handleValidateMatchData(params: FormData): {
       return defaultValue;
     }
   };
+
   const extractOpponentData = (): {
     pouleOpponentId: number | null;
     opponentName: string | null;
   } => {
-    const pouleOpponentIdValue = getStringValue(params.get('pouleOpponentId'));
-    const pouleOpponentId = pouleOpponentIdValue
-      ? parseInt(pouleOpponentIdValue, 10)
-      : null;
-    const opponentNameValue = getStringValue(params.get('opponentName'));
-    const opponentName =
-      pouleOpponentId === null &&
-      opponentNameValue &&
-      opponentNameValue.trim() !== ''
-        ? opponentNameValue.trim()
-        : null;
+    const pouleOpponentId =
+      parseInt(getStringValue(params.get('pouleOpponentId')) || '', 10) || null;
+    const opponentName = pouleOpponentId
+      ? null
+      : getStringValue(params.get('opponentName'))?.trim() || null;
     return { pouleOpponentId, opponentName };
   };
 
-  const extractMatchData = (): Omit<MatchFormData, 'players'> => {
+  const extractMatchMetadata = (): {
+    trainingMatch: boolean;
+    date: string | null;
+    opponentStrength: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+  } => {
     const trainingMatch =
       getStringValue(params.get('matchType')) === 'practice';
     const date = getStringValue(params.get('date'));
-    const opponentStrengthValue = getStringValue(
-      params.get('opponentStrength')
-    );
-    const opponentStrength =
-      opponentStrengthValue === 'null' ||
-      opponentStrengthValue === null ||
-      opponentStrengthValue === ''
-        ? null
-        : (opponentStrengthValue as 'STRONGER' | 'SIMILAR' | 'WEAKER');
+    const opponentStrength = getStringValue(params.get('opponentStrength')) as
+      | 'STRONGER'
+      | 'SIMILAR'
+      | 'WEAKER'
+      | null;
 
-    const { pouleOpponentId, opponentName } = extractOpponentData();
-
-    return {
-      trainingMatch,
-      date,
-      opponentStrength,
-      pouleOpponentId,
-      opponentName,
-    };
+    return { trainingMatch, date, opponentStrength };
   };
 
-  const matchData = extractMatchData();
+  const extractPlayers = (): {
+    id: number;
+    minutes: number;
+    available: boolean;
+  }[] => getParsedJSON(getStringValue(params.get('players')), []);
 
-  const players = getParsedJSON(getStringValue(params.get('players')), []);
+  const extractEvents = (): {
+    playerInId?: number | null;
+    playerOutId?: number | null;
+    minute: number;
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  }[] => getParsedJSON(getStringValue(params.get('events')), []);
 
-  const parsedInput: MatchFormData = {
-    ...matchData,
-    players,
+  const matchData = {
+    ...extractMatchMetadata(),
+    ...extractOpponentData(),
+    players: extractPlayers(),
+    events: extractEvents(),
   };
 
-  console.log('Validation Input:', JSON.stringify(parsedInput, null, 2));
+  console.log('Validation Input:', JSON.stringify(matchData, null, 2));
 
-  const validation = createMatchSchema.safeParse(parsedInput);
+  const validation = createMatchSchema.safeParse(matchData);
 
   if (!validation.success) {
     console.error(

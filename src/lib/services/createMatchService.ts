@@ -16,12 +16,21 @@ export async function createMatch({
   opponentName,
   date,
   opponentStrength,
+  events,
 }: {
   trainingMatch: boolean;
   pouleOpponentId: number | null;
   opponentName: string | null;
   date: string;
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+  events?: {
+    matchId?: number;
+    playerInId?: number | null;
+    playerOutId?: number | null;
+    minute: number;
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  }[];
 }): Promise<Match> {
   return prisma.match.create({
     data: {
@@ -33,6 +42,18 @@ export async function createMatch({
       date: new Date(date),
       createdAt: new Date(),
       opponentStrength: opponentStrength ?? null,
+      matchEvents:
+        events && events.length > 0
+          ? {
+              create: events.map((event) => ({
+                playerInId: event.playerInId,
+                playerOutId: event.playerOutId,
+                minute: event.minute,
+                eventType: event.eventType,
+                substitutionReason: event.substitutionReason ?? null,
+              })),
+            }
+          : undefined,
     },
   });
 }

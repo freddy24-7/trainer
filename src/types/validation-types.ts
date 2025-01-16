@@ -16,4 +16,12 @@ export interface MatchFormData {
     available: boolean;
   }[];
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+  events?: {
+    matchId: number;
+    playerInId?: number | null;
+    playerOutId?: number | null;
+    minute: number;
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  }[];
 }

@@ -2,10 +2,20 @@ import { z } from 'zod';
 
 import {
   invalidUserIdMessage,
-  invalidMatchIdMessage,
   minutesPositiveNumberMessage,
   minutesWhenAvailableMessage,
 } from '@/strings/validationStrings';
+
+export const matchEventSchema = z.object({
+  playerInId: z.number().min(1, 'Invalid player-in ID').nullable().optional(),
+  playerOutId: z.number().min(1, 'Invalid player-out ID').nullable().optional(),
+  minute: z.number().min(0, 'Minute must be non-negative'),
+  eventType: z.enum(['SUBSTITUTION_IN', 'SUBSTITUTION_OUT']),
+  substitutionReason: z
+    .enum(['TACTICAL', 'FITNESS', 'INJURY', 'OTHER'])
+    .nullable()
+    .optional(),
+});
 
 export const createMatchSchema = z
   .object({
@@ -35,6 +45,7 @@ export const createMatchSchema = z
       .enum(['STRONGER', 'SIMILAR', 'WEAKER'])
       .nullable()
       .optional(),
+    events: z.array(matchEventSchema).optional(),
   })
   .refine(
     (data) => {
@@ -70,7 +81,6 @@ export const createMatchSchema = z
 export const addMatchPlayerSchema = z
   .object({
     userId: z.number().min(1, invalidUserIdMessage),
-    matchId: z.number().min(1, invalidMatchIdMessage),
     available: z.boolean(),
     minutes: z.number().min(0, minutesPositiveNumberMessage),
   })

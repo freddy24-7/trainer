@@ -41,6 +41,13 @@ export interface FormValues {
   date: string | null;
   players: { id: number; minutes: number | ''; available: boolean }[];
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+  events?: {
+    playerInId?: number | null;
+    playerOutId?: number | null;
+    minute: number;
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  }[];
 }
 
 export interface DashboardClientProps {

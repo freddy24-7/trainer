@@ -46,6 +46,13 @@ async function handleProcessMatchCreation(data: {
   opponentName: string | null;
   date: string;
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+  events?: {
+    playerInId?: number | null;
+    playerOutId?: number | null;
+    minute: number;
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  }[];
 }): Promise<{ match: { id: number } } | { errors: ZodIssue[] }> {
   try {
     const match = await createMatch(data);
@@ -70,6 +77,7 @@ export default async function addMatch(
     opponentName,
     date,
     opponentStrength,
+    events,
   } = validation.data;
 
   const competitionValidationError =
@@ -87,5 +95,6 @@ export default async function addMatch(
     opponentName: trainingMatch ? opponentName : null,
     date: date ?? '',
     opponentStrength: opponentStrength ?? null,
+    events: events ?? [],
   });
 }

@@ -35,6 +35,7 @@ function AddMatchForm({
   const selectedPouleId = watch('poule');
   const playerValues = watch('players');
   const opponentStrength = watch('opponentStrength');
+  const events = watch('events');
   const { selectedPoule, selectedOpponent } = usePouleState(
     poules,
     selectedPouleId,
@@ -49,21 +50,25 @@ function AddMatchForm({
   };
   const onSubmit = async (data: MatchFormValues): Promise<void> => {
     console.log('Raw Form Data:', data);
-
     if (!data.date) {
       console.error('Date is missing in the form data.');
       return;
     }
     const transformedData: FormValues = {
       ...data,
+      players: data.players.map((player) => ({
+        id: player.id,
+        minutes: player.minutes || 0,
+        available: player.available ?? true,
+      })),
       date: new Date(
         data.date.year,
         data.date.month - 1,
         data.date.day
       ).toISOString(),
+      events: data.events,
     };
     console.log('Transformed Form Data:', transformedData);
-
     const success = await submitMatchForm(transformedData, {
       validatePlayers,
       setSubmitting,
@@ -96,6 +101,7 @@ function AddMatchForm({
               onSubmit={onSubmit}
               setValue={setValue}
               opponentStrength={opponentStrength}
+              events={events}
             />
           </CardBody>
         </Card>

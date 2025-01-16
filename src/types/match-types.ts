@@ -49,10 +49,17 @@ export interface MatchFormValues {
   date: CalendarDate | null;
   players: {
     id: number;
-    minutes: number | '';
+    minutes: number;
     available: boolean;
   }[];
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+  events?: {
+    playerInId?: number | null;
+    playerOutId?: number | null;
+    minute: number;
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  }[];
 }
 
 export interface MatchPlayer {
@@ -90,6 +97,13 @@ export interface MatchFormFieldProps {
   onSubmit: (data: MatchFormValues) => Promise<void>;
   setValue: UseFormSetValue<MatchFormValues>;
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+  events?: {
+    playerInId?: number | null;
+    playerOutId?: number | null;
+    minute: number;
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  }[];
 }
 
 export interface ObtainMatchData {

@@ -17,6 +17,8 @@ model User {
   teamId           Int?
   whatsappNumber   String?
   matchPlayers     MatchPlayer[]
+  substitutedIn    MatchEvent[]     @relation("PlayerInUser")
+  substitutedOut   MatchEvent[]     @relation("PlayerOutUser")
   messagesReceived Message[]        @relation("Recipient")
   messagesSent     Message[]        @relation("Sender")
   trainingPlayers  TrainingPlayer[]
@@ -59,6 +61,7 @@ model Match {
   createdAt        DateTime          @default(now())
   pouleOpponent    PouleOpponents?   @relation(fields: [pouleOpponentId], references: [id])
   matchPlayers     MatchPlayer[]
+  matchEvents      MatchEvent[]
 }
 
 model MatchPlayer {
@@ -71,6 +74,20 @@ model MatchPlayer {
   user      User    @relation(fields: [userId], references: [id])
 
   @@unique([matchId, userId])
+}
+
+model MatchEvent {
+  id                 Int                 @id @default(autoincrement())
+  matchId            Int
+  playerInId         Int?
+  playerOutId        Int?
+  minute             Int
+  eventType          EventType
+  substitutionReason SubstitutionReason?
+
+  match     Match @relation(fields: [matchId], references: [id])
+  playerIn  User? @relation("PlayerInUser", fields: [playerInId], references: [id])
+  playerOut User? @relation("PlayerOutUser", fields: [playerOutId], references: [id])
 }
 
 model Training {
@@ -112,4 +129,16 @@ enum OpponentStrength {
   STRONGER
   SIMILAR
   WEAKER
+}
+
+enum EventType {
+  SUBSTITUTION_IN
+  SUBSTITUTION_OUT
+}
+
+enum SubstitutionReason {
+  TACTICAL
+  FITNESS
+  INJURY
+  OTHER
 }

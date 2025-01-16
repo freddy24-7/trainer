@@ -23,6 +23,7 @@ export const useMatchFormConfig = (
         minutes: '',
         available: true,
       })),
+      events: [],
     },
   });
 };

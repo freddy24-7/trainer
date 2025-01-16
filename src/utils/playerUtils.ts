@@ -47,66 +47,9 @@ export const validateAllPlayers = (
       handleValidateMatchPlayerData({
         userId: player.id,
         matchId: selectedPouleId ?? 0,
-        minutes: player.available
-          ? typeof player.minutes === 'number'
-            ? player.minutes
-            : 0
-          : 0,
+        minutes: player.available ? player.minutes : 0,
         available: player.available,
       }).success
-  );
-};
-
-export const getPlayerMinutes = (
-  players: MatchFormValues['players']
-): Record<number, number | ''> => {
-  return players.reduce(
-    (acc, player) => ({ ...acc, [player.id]: player.minutes }),
-    {} as Record<number, number | ''>
-  );
-};
-
-export const getPlayerAvailability = (
-  players: MatchFormValues['players']
-): Record<number, boolean> => {
-  return players.reduce(
-    (acc, player) => ({ ...acc, [player.id]: player.available }),
-    {} as Record<number, boolean>
-  );
-};
-
-export const updatePlayerMinutes = (
-  players: MatchFormValues['players'],
-  playerId: number,
-  minutes: string | number
-): MatchFormValues['players'] => {
-  const parsedMinutes =
-    typeof minutes === 'string' ? parseInt(minutes, 10) : minutes;
-
-  const validatedMinutes: number | '' =
-    typeof minutes === 'string'
-      ? isNaN(parsedMinutes)
-        ? ''
-        : parsedMinutes
-      : minutes;
-
-  return players.map((player) =>
-    player.id === playerId
-      ? {
-          ...player,
-          minutes: validatedMinutes,
-        }
-      : player
-  );
-};
-
-export const updatePlayerAvailability = (
-  players: MatchFormValues['players'],
-  playerId: number,
-  available: boolean
-): MatchFormValues['players'] => {
-  return players.map((player) =>
-    player.id === playerId ? { ...player, available } : player
   );
 };
 
