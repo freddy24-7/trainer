@@ -78,22 +78,30 @@ export default async function addMatchAndPlayers(
   _prevState: unknown,
   params: FormData
 ): Promise<{ errors: ZodIssue[] }> {
+  console.log('Starting match and players creation with params:', params);
+
   const matchResponse = await addMatch(null, params);
+  console.log('AddMatch response:', matchResponse);
 
   if (matchResponse.errors) {
+    console.log('AddMatch errors:', matchResponse.errors);
     return formatError(failedToCreateMatchMessage, ['form']);
   }
 
   const createdMatchId = matchResponse.match?.id;
   if (!createdMatchId) {
+    console.log('Error: Match ID not found in response');
     return formatError(matchIdNotFound, ['form']);
   }
+
+  console.log('Match created with ID:', createdMatchId);
 
   const playersString = params.get('players') as string | null;
   const { players, errors: parsingErrors } =
     handleParsePlayersData(playersString);
 
   if (parsingErrors) {
+    console.log('Player parsing errors:', parsingErrors);
     return { errors: parsingErrors };
   }
 
@@ -101,5 +109,6 @@ export default async function addMatchAndPlayers(
     ? await handleProcessPlayers(players, createdMatchId)
     : [];
 
+  console.log('Player processing errors:', playerErrors);
   return { errors: playerErrors };
 }

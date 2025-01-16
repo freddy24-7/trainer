@@ -8,12 +8,10 @@ export async function addMatchPlayerToDatabase(data: {
   minutes: number;
   available: boolean;
 }): Promise<MatchPlayer> {
-  try {
-    // Log the data object to understand what is being passed
-    console.log('Attempting to create MatchPlayer with data:', data);
+  console.log('Adding MatchPlayer to database with data:', data);
 
-    // Call Prisma to create the MatchPlayer
-    return await prisma.matchPlayer.create({
+  try {
+    const matchPlayer = await prisma.matchPlayer.create({
       data: {
         userId: data.userId,
         matchId: data.matchId,
@@ -21,9 +19,11 @@ export async function addMatchPlayerToDatabase(data: {
         available: data.available,
       },
     });
+
+    console.log('MatchPlayer created successfully:', matchPlayer);
+    return matchPlayer;
   } catch (error) {
-    // Log any errors that occur during the database operation
     console.error('Error while creating MatchPlayer:', error);
-    throw error; // Rethrow the error so it can be handled upstream
+    throw error;
   }
 }

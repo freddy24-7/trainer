@@ -32,28 +32,45 @@ export async function createMatch({
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   }[];
 }): Promise<Match> {
-  return prisma.match.create({
-    data: {
-      trainingMatch,
-      pouleOpponentId: trainingMatch
-        ? undefined
-        : (pouleOpponentId ?? undefined),
-      opponentName: trainingMatch ? opponentName : undefined,
-      date: new Date(date),
-      createdAt: new Date(),
-      opponentStrength: opponentStrength ?? null,
-      matchEvents:
-        events && events.length > 0
-          ? {
-              create: events.map((event) => ({
-                playerInId: event.playerInId,
-                playerOutId: event.playerOutId,
-                minute: event.minute,
-                eventType: event.eventType,
-                substitutionReason: event.substitutionReason ?? null,
-              })),
-            }
-          : undefined,
-    },
+  console.log('Creating match with data:', {
+    trainingMatch,
+    pouleOpponentId,
+    opponentName,
+    date,
+    opponentStrength,
+    events,
   });
+
+  try {
+    const match = await prisma.match.create({
+      data: {
+        trainingMatch,
+        pouleOpponentId: trainingMatch
+          ? undefined
+          : (pouleOpponentId ?? undefined),
+        opponentName: trainingMatch ? opponentName : undefined,
+        date: new Date(date),
+        createdAt: new Date(),
+        opponentStrength: opponentStrength ?? null,
+        matchEvents:
+          events && events.length > 0
+            ? {
+                create: events.map((event) => ({
+                  playerInId: event.playerInId,
+                  playerOutId: event.playerOutId,
+                  minute: event.minute,
+                  eventType: event.eventType,
+                  substitutionReason: event.substitutionReason ?? null,
+                })),
+              }
+            : undefined,
+      },
+    });
+
+    console.log('Match created successfully:', match);
+    return match;
+  } catch (error) {
+    console.error('Error creating match:', error);
+    throw error;
+  }
 }
