@@ -19,7 +19,7 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   onSubmit,
   setValue,
   opponentStrength,
-  events,
+  matchEvents,
 }) => {
   const { watch, handleSubmit } = methods;
   const matchType = watch('matchType') as 'competition' | 'practice';
@@ -50,7 +50,7 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
             players={players}
             playerValues={playerValues}
             setValue={setValue}
-            events={events || []}
+            matchEvents={matchEvents || []}
           />
         )}
 

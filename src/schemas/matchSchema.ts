@@ -45,7 +45,7 @@ export const createMatchSchema = z
       .enum(['STRONGER', 'SIMILAR', 'WEAKER'])
       .nullable()
       .optional(),
-    events: z.array(matchEventSchema).optional(),
+    matchEvents: z.array(matchEventSchema).default([]),
   })
   .refine(
     (data) => {
@@ -81,6 +81,7 @@ export const createMatchSchema = z
 export const addMatchPlayerSchema = z
   .object({
     userId: z.number().min(1, invalidUserIdMessage),
+    matchId: z.number().min(1, 'Invalid matchId'),
     available: z.boolean(),
     minutes: z.number().min(0, minutesPositiveNumberMessage),
   })

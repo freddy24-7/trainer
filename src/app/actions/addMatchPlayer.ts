@@ -17,24 +17,41 @@ export default async function addMatchPlayer(data: {
   minutes: number;
   available: boolean;
 }): Promise<{ success?: boolean; errors?: ZodIssue[] }> {
+  console.log('addMatchPlayer called with data:', data);
+
   const validation = handleValidateMatchPlayerData(data);
+  console.log('Validation result:', validation);
 
   if (!validation.success || !validation.data) {
+    console.error('Validation failed:', validation.errors);
     return formatError(validationFailedMessage, ['form']);
   }
 
   const { userId, matchId, minutes, available } =
     validation.data as MatchPlayerData;
+  console.log('Adding MatchPlayer to database with:', {
+    userId,
+    matchId,
+    minutes,
+    available,
+  });
 
   try {
     await addMatchPlayerToDatabase({ userId, matchId, minutes, available });
-
+    console.log('MatchPlayer added successfully');
     return {
       success: true,
     };
   } catch (error) {
-    console.error(failedToAddMatchPlayer, error);
+    let errorMessage = failedToAddMatchPlayer;
 
-    return formatError(failedToAddMatchPlayer, ['form']);
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      console.error('Detailed error stack:', error.stack);
+    } else {
+      console.error('Unknown error occurred:', error);
+    }
+
+    return formatError(errorMessage, ['form']);
   }
 }

@@ -21,15 +21,27 @@ async function handleProcessPlayers(
   players: PlayerInMatch[],
   matchId: number
 ): Promise<ZodIssue[]> {
+  console.log('Processing players with matchId:', matchId, 'players:', players);
+
+  if (!matchId) {
+    console.error('Error: matchId is undefined in handleProcessPlayers');
+    throw new Error('matchId is required but was undefined');
+  }
+
   const playerErrors: ZodIssue[] = [];
 
   for (const player of players) {
+    console.log('Validating player:', player);
+
     const { isValid, parsedMinutes, errors } = handleValidatePlayerData(player);
 
     if (!isValid) {
+      console.log('Player validation failed:', errors);
       playerErrors.push(...errors);
       continue;
     }
+
+    console.log('Player validation passed:', { player, parsedMinutes });
 
     const playerError = await handleProcessSinglePlayer(
       player,
@@ -37,6 +49,7 @@ async function handleProcessPlayers(
       parsedMinutes
     );
     if (playerError) {
+      console.log('Player processing error:', playerError);
       playerErrors.push(...playerError);
     }
   }
@@ -49,6 +62,17 @@ async function handleProcessSinglePlayer(
   matchId: number,
   parsedMinutes: number
 ): Promise<ZodIssue[] | null> {
+  console.log('Processing single player:', {
+    player,
+    matchId,
+    parsedMinutes,
+  });
+
+  if (!matchId) {
+    console.error('Error: matchId is undefined in handleProcessSinglePlayer');
+    throw new Error('matchId is required but was undefined');
+  }
+
   try {
     const response = await addMatchPlayer({
       matchId,
@@ -56,6 +80,8 @@ async function handleProcessSinglePlayer(
       minutes: parsedMinutes,
       available: player.available,
     });
+
+    console.log('addMatchPlayer response:', response);
 
     if (!response.success) {
       return (
@@ -89,17 +115,20 @@ export default async function addMatchAndPlayers(
   }
 
   const createdMatchId = matchResponse.match?.id;
+  console.log('Created Match ID:', createdMatchId);
+
   if (!createdMatchId) {
-    console.log('Error: Match ID not found in response');
+    console.error('Error: Match ID not found in response');
     return formatError(matchIdNotFound, ['form']);
   }
 
-  console.log('Match created with ID:', createdMatchId);
-
   const playersString = params.get('players') as string | null;
+  console.log('Raw players string:', playersString);
+
   const { players, errors: parsingErrors } =
     handleParsePlayersData(playersString);
 
+  console.log('Parsed players:', players);
   if (parsingErrors) {
     console.log('Player parsing errors:', parsingErrors);
     return { errors: parsingErrors };

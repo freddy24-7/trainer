@@ -41,7 +41,7 @@ export interface FormValues {
   date: string | null;
   players: { id: number; minutes: number | ''; available: boolean }[];
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  events?: {
+  matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
     minute: number;
@@ -89,7 +89,7 @@ export interface PlayerInputProps {
   player: Player;
   minutes: number;
   available: boolean;
-  onMinutesChange: (playerId: number, minutes: string) => void;
+  onMinutesChange: (playerId: number, minutes: number) => void;
   onAvailabilityChange: (playerId: number, available: boolean) => void;
 }
 
@@ -97,7 +97,7 @@ export interface PlayerListProps {
   players: Player[];
   playerMinutes: { [key: number]: number };
   playerAvailability: { [key: number]: boolean };
-  onMinutesChange: (playerId: number, minutes: string) => void;
+  onMinutesChange: (playerId: number, minutes: number) => void;
   onAvailabilityChange: (playerId: number, available: boolean) => void;
 }
 

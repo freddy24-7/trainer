@@ -10,6 +10,11 @@ export async function addMatchPlayerToDatabase(data: {
 }): Promise<MatchPlayer> {
   console.log('Adding MatchPlayer to database with data:', data);
 
+  if (!data.matchId) {
+    console.error('Error: matchId is undefined or invalid:', data);
+    throw new Error('matchId is required but was undefined');
+  }
+
   try {
     const matchPlayer = await prisma.matchPlayer.create({
       data: {

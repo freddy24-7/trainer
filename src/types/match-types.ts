@@ -53,7 +53,7 @@ export interface MatchFormValues {
     available: boolean;
   }[];
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  events?: {
+  matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
     minute: number;
@@ -97,7 +97,7 @@ export interface MatchFormFieldProps {
   onSubmit: (data: MatchFormValues) => Promise<void>;
   setValue: UseFormSetValue<MatchFormValues>;
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  events?: {
+  matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
     minute: number;

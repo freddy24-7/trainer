@@ -20,10 +20,10 @@ export const useMatchFormConfig = (
       date: null,
       players: players.map((player) => ({
         id: player.id,
-        minutes: '',
+        minutes: 0,
         available: true,
       })),
-      events: [],
+      matchEvents: [],
     },
   });
 };

@@ -19,13 +19,13 @@ interface PlayerManagementProps {
   players: Player[];
   playerValues: MatchFormValues['players'];
   setValue: UseFormSetValue<MatchFormValues>;
-  events: MatchFormValues['events'];
+  matchEvents: MatchFormValues['matchEvents'];
 }
 
 const PlayerManagement: React.FC<PlayerManagementProps> = ({
   players,
   setValue,
-  events,
+  matchEvents,
 }) => {
   const [playerStates, setPlayerStates] = useState<
     Record<number, 'playing' | 'bench' | 'absent'>
@@ -38,7 +38,7 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
     onOpenChange: onSubstitutionModalClose,
   } = useDisclosure();
 
-  const [minute, setMinute] = useState<number | ''>(''); // Updated type
+  const [minute, setMinute] = useState<number | ''>('');
   const [playerOutId, setPlayerOutId] = useState<number | null>(null);
   const [playerInId, setPlayerInId] = useState<number | null>(null);
   const [startingLineup, setStartingLineup] = useState<number[]>([]);
@@ -63,14 +63,14 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
       return;
     }
 
-    const newEvent = {
+    const newMatchEvent = {
       playerInId,
       playerOutId,
-      minute, // Now guaranteed to be a number
+      minute,
       eventType: 'SUBSTITUTION_IN' as const,
     };
 
-    setValue('events', [...(events || []), newEvent]);
+    setValue('matchEvents', [...(matchEvents || []), newMatchEvent]);
 
     setPlayerStates((prev) => ({
       ...prev,
@@ -79,7 +79,7 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
     }));
 
     onSubstitutionModalClose();
-    setMinute(''); // Reset minute to empty string
+    setMinute('');
     setPlayerOutId(null);
     setPlayerInId(null);
   };
@@ -92,61 +92,52 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
       playerId: number;
     }[] = [];
 
-    // Generate 'in' and 'out' events from substitutions
-    (events || []).forEach((event) => {
-      if (event.eventType === 'SUBSTITUTION_IN') {
-        if (event.playerInId) {
+    (matchEvents || []).forEach((matchEvent) => {
+      if (matchEvent.eventType === 'SUBSTITUTION_IN') {
+        if (matchEvent.playerInId) {
           substitutionEvents.push({
-            minute: event.minute,
+            minute: matchEvent.minute,
             type: 'in',
-            playerId: event.playerInId,
+            playerId: matchEvent.playerInId,
           });
         }
-        if (event.playerOutId) {
+        if (matchEvent.playerOutId) {
           substitutionEvents.push({
-            minute: event.minute,
+            minute: matchEvent.minute,
             type: 'out',
-            playerId: event.playerOutId,
+            playerId: matchEvent.playerOutId,
           });
         }
       }
     });
 
-    // Sort events by minute
     substitutionEvents.sort((a, b) => a.minute - b.minute);
 
-    // Calculate minutes for each player
     players.forEach((player) => {
       let totalMinutes = 0;
       let lastInMinute: number | null = null;
 
-      // Initialize for players starting the match
       if (startingLineup.includes(player.id)) {
-        lastInMinute = 0; // Player starts the match on the field
+        lastInMinute = 0;
       }
 
-      // Process substitution events
-      substitutionEvents.forEach((event) => {
-        if (event.playerId === player.id) {
-          if (event.type === 'in') {
-            // Player comes in: set their entry minute
-            lastInMinute = event.minute;
-          } else if (event.type === 'out') {
-            // Player goes out: calculate time played
+      substitutionEvents.forEach((matchEvent) => {
+        if (matchEvent.playerId === player.id) {
+          if (matchEvent.type === 'in') {
+            lastInMinute = matchEvent.minute;
+          } else if (matchEvent.type === 'out') {
             if (lastInMinute !== null) {
-              totalMinutes += event.minute - lastInMinute;
+              totalMinutes += matchEvent.minute - lastInMinute;
             }
-            lastInMinute = null; // Reset after substitution out
+            lastInMinute = null;
           }
         }
       });
 
-      // Add remaining time if player is still on the field at the end
       if (lastInMinute !== null) {
         totalMinutes += matchDuration - lastInMinute;
       }
 
-      // Ensure players who never entered are explicitly set to 0 minutes
       playerMinutes[player.id] = totalMinutes;
     });
 
@@ -155,23 +146,21 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
 
   const playerMinutes = useMemo(
     () => calculatePlayerMinutes(),
-    [events, startingLineup, matchDuration]
+    [matchEvents, startingLineup, matchDuration]
   );
 
-  // Sync playerMinutes to form state (players)
   useEffect(() => {
     const updatedPlayers = players.map((player) => ({
       id: player.id,
       minutes: playerMinutes[player.id] || 0,
-      available: true, // Set a default value for 'available'
+      available: true,
     }));
 
-    setValue('players', updatedPlayers); // Update the form state
+    setValue('players', updatedPlayers);
   }, [playerMinutes, players, setValue]);
 
   return (
     <div>
-      {/* Match Duration */}
       <div className="mb-4">
         <label className="block font-semibold mb-1">Match Duration:</label>
         <input
@@ -188,7 +177,6 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
         />
       </div>
 
-      {/* Select Line-up */}
       <div>
         <h4 className="text-lg font-semibold mb-2">Select Line-up</h4>
         {players.map((player) => (
@@ -231,7 +219,6 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
         ))}
       </div>
 
-      {/* Substitution Management */}
       <Button
         className="mt-4 bg-primary text-white"
         onPress={onSubstitutionModalOpen}
@@ -310,9 +297,10 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
         </ModalContent>
       </Modal>
 
-      {/* Player Minutes Display */}
       <div className="mt-6">
-        <h4 className="text-lg font-semibold mb-2">Player Minutes</h4>
+        <h4 className="text-lg font-semibold mb-2">
+          Player Minutes (updates on substitutions)
+        </h4>
         {players.map((player) => (
           <p key={player.id}>
             {player.username}: {playerMinutes[player.id]} minutes

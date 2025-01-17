@@ -16,8 +16,7 @@ export interface MatchFormData {
     available: boolean;
   }[];
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  events?: {
-    matchId: number;
+  matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
     minute: number;

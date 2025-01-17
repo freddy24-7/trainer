@@ -16,15 +16,14 @@ export async function createMatch({
   opponentName,
   date,
   opponentStrength,
-  events,
+  matchEvents,
 }: {
   trainingMatch: boolean;
   pouleOpponentId: number | null;
   opponentName: string | null;
   date: string;
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  events?: {
-    matchId?: number;
+  matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
     minute: number;
@@ -38,7 +37,7 @@ export async function createMatch({
     opponentName,
     date,
     opponentStrength,
-    events,
+    matchEvents,
   });
 
   try {
@@ -53,14 +52,14 @@ export async function createMatch({
         createdAt: new Date(),
         opponentStrength: opponentStrength ?? null,
         matchEvents:
-          events && events.length > 0
+          matchEvents && matchEvents.length > 0
             ? {
-                create: events.map((event) => ({
-                  playerInId: event.playerInId,
-                  playerOutId: event.playerOutId,
-                  minute: event.minute,
-                  eventType: event.eventType,
-                  substitutionReason: event.substitutionReason ?? null,
+                create: matchEvents.map((matchEvent) => ({
+                  playerInId: matchEvent.playerInId,
+                  playerOutId: matchEvent.playerOutId,
+                  minute: matchEvent.minute,
+                  eventType: matchEvent.eventType,
+                  substitutionReason: matchEvent.substitutionReason ?? null,
                 })),
               }
             : undefined,

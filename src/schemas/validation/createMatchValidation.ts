@@ -40,11 +40,15 @@ export function handleValidateMatchData(params: FormData): {
     const trainingMatch =
       getStringValue(params.get('matchType')) === 'practice';
     const date = getStringValue(params.get('date'));
-    const opponentStrength = getStringValue(params.get('opponentStrength')) as
-      | 'STRONGER'
-      | 'SIMILAR'
-      | 'WEAKER'
-      | null;
+    const opponentStrengthValue = getStringValue(
+      params.get('opponentStrength')
+    );
+    const opponentStrength =
+      opponentStrengthValue === 'null' ||
+      opponentStrengthValue === null ||
+      opponentStrengthValue === ''
+        ? null
+        : (opponentStrengthValue as 'STRONGER' | 'SIMILAR' | 'WEAKER');
 
     return { trainingMatch, date, opponentStrength };
   };
@@ -61,13 +65,19 @@ export function handleValidateMatchData(params: FormData): {
     minute: number;
     eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-  }[] => getParsedJSON(getStringValue(params.get('events')), []);
+  }[] => {
+    const matchEvents = getParsedJSON(
+      getStringValue(params.get('matchEvents')),
+      []
+    );
+    return Array.isArray(matchEvents) ? matchEvents : [];
+  };
 
   const matchData = {
     ...extractMatchMetadata(),
     ...extractOpponentData(),
     players: extractPlayers(),
-    events: extractEvents(),
+    matchEvents: extractEvents(),
   };
 
   console.log('Validation Input:', JSON.stringify(matchData, null, 2));

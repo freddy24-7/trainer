@@ -117,6 +117,8 @@ const createFormData = (data: FormValues): FormData => {
     )
   );
 
+  formData.append('matchEvents', JSON.stringify(data.matchEvents || []));
+
   return formData;
 };
 
