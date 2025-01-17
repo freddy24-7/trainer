@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { InputField } from '@/components/helpers/FormFields';
+import { InputField } from '@/components/helpers/pouleHelpers/FormFields';
 import { PouleFormFieldsProps } from '@/types/poule-types';
 
 export function PouleFormFields({

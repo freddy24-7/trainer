@@ -1,9 +1,9 @@
 import React from 'react';
 
-import ChatMessageInputForm from '@/components/helpers/ChatMessageInputForm';
-import MessageList from '@/components/helpers/ChatMessageList';
-import ChatRecipientSelector from '@/components/helpers/ChatRecipientSelector';
-import VideoDropzone from '@/components/helpers/VideoDropzone';
+import ChatMessageInputForm from '@/components/helpers/chatHelpers/ChatMessageInputForm';
+import MessageList from '@/components/helpers/chatHelpers/ChatMessageList';
+import ChatRecipientSelector from '@/components/helpers/chatHelpers/ChatRecipientSelector';
+import VideoDropzone from '@/components/helpers/chatHelpers/VideoDropzone';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { ChatMessageProps } from '@/types/message-types';
 

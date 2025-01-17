@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
-import { PouleFormContent } from '@/components/helpers/PouleFormContent';
+import { PouleFormContent } from '@/components/helpers/pouleHelpers/PouleFormContent';
 import { Button } from '@/components/ui/button';
 import { useOpponentManagement } from '@/hooks/useOpponentManagement';
 import { createPouleSchema } from '@/schemas/createPouleSchema';

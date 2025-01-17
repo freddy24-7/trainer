@@ -53,6 +53,14 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
 
   return (
     <>
+      {matchType === 'competition' && (
+        <PouleField
+          poules={poules}
+          selectedPoule={selectedPoule}
+          errors={{ poule: errors.poule }}
+          onChange={(pouleId) => setValue('poule', pouleId)}
+        />
+      )}
       {matchType === 'competition' ? (
         <div>
           <OpponentField
@@ -85,14 +93,6 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
             </p>
           )}
         </div>
-      )}
-      {matchType === 'competition' && (
-        <PouleField
-          poules={poules}
-          selectedPoule={selectedPoule}
-          errors={{ poule: errors.poule }}
-          onChange={(pouleId) => setValue('poule', pouleId)}
-        />
       )}
       {isButtonVisible && (
         <>

@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
 
 import DateField from '@/components/DateField';
-import TrainingPlayersField from '@/components/helpers/TrainingPlayersField';
+import TrainingPlayersField from '@/components/helpers/trainingHelpers/TrainingPlayersField';
 import {
   submittingButtonText,
   addTrainingButtonText,

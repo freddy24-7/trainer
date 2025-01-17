@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PouleSelector from '@/components/helpers/PouleSelector';
+import PouleSelector from '@/components/helpers/pouleHelpers/PouleSelector';
 import {
   FormControl,
   FormField,

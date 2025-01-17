@@ -8,7 +8,7 @@ import getPlayers from '@/app/actions/getPlayers';
 import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
 import { DisplayPlayers } from '@/app/player-management/DisplayPlayers';
 import ProtectedLayout from '@/app/ProtectedLayout';
-import { handleRenderError } from '@/components/helpers/RenderError';
+import { handleRenderError } from '@/components/RenderError';
 import { ResponseError } from '@/types/shared-types';
 import { Player } from '@/types/user-types';
 import { handleMapPlayers } from '@/utils/playerUtils';

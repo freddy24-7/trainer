@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 import {
   handleEditPlayer,
   handleDeletePlayer,
-} from '@/components/helpers/PlayerManagementHelper';
-import PlayerModal from '@/components/helpers/PlayerModal';
+} from '@/components/helpers/playerHelpers/PlayerManagementHelper';
+import PlayerModal from '@/components/helpers/playerHelpers/PlayerModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import PlayersList from '@/components/PlayersList';
 import { Player, DisplayPlayersProps } from '@/types/user-types';

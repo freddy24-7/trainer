@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
 import React, { useState } from 'react';
 
-import { renderPlayerFormWithWhatsAppLink } from '@/components/helpers/RenderPlayerFormWithWhatsAppLink';
+import { renderPlayerFormWithWhatsAppLink } from '@/components/helpers/playerHelpers/RenderPlayerFormWithWhatsAppLink';
 import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
 import { PlayerFormData, EditPlayerFormProps } from '@/types/user-types';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';

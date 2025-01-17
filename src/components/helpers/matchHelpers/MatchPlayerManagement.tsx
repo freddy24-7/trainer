@@ -38,6 +38,10 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
     onOpenChange: onSubstitutionModalClose,
   } = useDisclosure();
 
+  const [isLineupModalOpen, setLineupModalOpen] = useState(false);
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [finalized, setFinalized] = useState(false);
+
   const [minute, setMinute] = useState<number | ''>('');
   const [playerOutId, setPlayerOutId] = useState<number | null>(null);
   const [playerInId, setPlayerInId] = useState<number | null>(null);
@@ -159,6 +163,35 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
     setValue('players', updatedPlayers);
   }, [playerMinutes, players, setValue]);
 
+  const handleOpenLineupModal = () => setLineupModalOpen(true);
+
+  const handleConfirmLineup = () => {
+    const allPlayersCategorized = players.every(
+      (player) => playerStates[player.id] !== undefined
+    );
+    if (!allPlayersCategorized) {
+      alert('Please categorize all players before confirming.');
+      return;
+    }
+    setLineupModalOpen(false);
+    setConfirmModalOpen(true);
+  };
+
+  const handleFinalConfirmation = () => {
+    setFinalized(true);
+    setConfirmModalOpen(false);
+
+    setValue(
+      'players',
+      players.map((player) => ({
+        id: player.id,
+        state: playerStates[player.id],
+        minutes: 0, // Default value or calculate as needed
+        available: true, // Default value
+      }))
+    );
+  };
+
   return (
     <div>
       <div className="mb-4">
@@ -177,47 +210,102 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
         />
       </div>
 
-      <div>
-        <h4 className="text-lg font-semibold mb-2">Select Line-up</h4>
-        {players.map((player) => (
-          <div
-            key={player.id}
-            className="grid grid-cols-4 items-center gap-4 mb-2"
-          >
-            <p className="col-span-1">{player.username}</p>
-            <label className="flex items-center gap-2 col-span-1">
-              <input
-                type="radio"
-                name={`player-${player.id}`}
-                value="playing"
-                checked={playerStates[player.id] === 'playing'}
-                onChange={() => handlePlayerStateChange(player.id, 'playing')}
-              />
-              Playing
-            </label>
-            <label className="flex items-center gap-2 col-span-1">
-              <input
-                type="radio"
-                name={`player-${player.id}`}
-                value="bench"
-                checked={playerStates[player.id] === 'bench'}
-                onChange={() => handlePlayerStateChange(player.id, 'bench')}
-              />
-              Bench
-            </label>
-            <label className="flex items-center gap-2 col-span-1">
-              <input
-                type="radio"
-                name={`player-${player.id}`}
-                value="absent"
-                checked={playerStates[player.id] === 'absent'}
-                onChange={() => handlePlayerStateChange(player.id, 'absent')}
-              />
-              Absent
-            </label>
-          </div>
-        ))}
-      </div>
+      {!finalized && (
+        <Button
+          className="bg-primary text-white"
+          onPress={handleOpenLineupModal}
+        >
+          Set Line-up
+        </Button>
+      )}
+
+      {/* Line-up Selection Modal */}
+      <Modal isOpen={isLineupModalOpen} onOpenChange={setLineupModalOpen}>
+        <ModalContent>
+          <ModalHeader>Select Line-up</ModalHeader>
+          <ModalBody>
+            {players.map((player) => (
+              <div
+                key={player.id}
+                className="grid grid-cols-4 items-center gap-4 mb-2"
+              >
+                <p className="col-span-1">{player.username}</p>
+                <label className="flex items-center gap-2 col-span-1">
+                  <input
+                    type="radio"
+                    name={`player-${player.id}`}
+                    value="playing"
+                    checked={playerStates[player.id] === 'playing'}
+                    onChange={() =>
+                      handlePlayerStateChange(player.id, 'playing')
+                    }
+                  />
+                  Playing
+                </label>
+                <label className="flex items-center gap-2 col-span-1">
+                  <input
+                    type="radio"
+                    name={`player-${player.id}`}
+                    value="bench"
+                    checked={playerStates[player.id] === 'bench'}
+                    onChange={() => handlePlayerStateChange(player.id, 'bench')}
+                  />
+                  Bench
+                </label>
+                <label className="flex items-center gap-2 col-span-1">
+                  <input
+                    type="radio"
+                    name={`player-${player.id}`}
+                    value="absent"
+                    checked={playerStates[player.id] === 'absent'}
+                    onChange={() =>
+                      handlePlayerStateChange(player.id, 'absent')
+                    }
+                  />
+                  Absent
+                </label>
+              </div>
+            ))}
+          </ModalBody>
+          <ModalFooter>
+            <Button onPress={() => setLineupModalOpen(false)} color="danger">
+              Cancel
+            </Button>
+            <Button onPress={handleConfirmLineup} color="primary">
+              Confirm
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Confirmation Modal */}
+      <Modal isOpen={isConfirmModalOpen} onOpenChange={setConfirmModalOpen}>
+        <ModalContent>
+          <ModalHeader>Confirm Line-up</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to confirm this line-up?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onPress={() => setConfirmModalOpen(false)} color="danger">
+              Cancel
+            </Button>
+            <Button onPress={handleFinalConfirmation} color="primary">
+              Confirm
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {finalized && (
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-2">Finalized Line-up</h4>
+          {players.map((player) => (
+            <p key={player.id}>
+              {player.username}: {playerStates[player.id]}
+            </p>
+          ))}
+        </div>
+      )}
 
       <Button
         className="mt-4 bg-primary text-white"

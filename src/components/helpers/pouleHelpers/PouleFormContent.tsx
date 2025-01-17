@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { OpponentsList } from '@/components/helpers/OpponentsList';
-import { PouleFormFields } from '@/components/helpers/PouleFormFields';
+import { OpponentsList } from '@/components/helpers/pouleHelpers/OpponentsList';
+import { PouleFormFields } from '@/components/helpers/pouleHelpers/PouleFormFields';
 import { Button } from '@/components/ui/button';
 import {
   pouleManagementHeading,

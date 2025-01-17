@@ -5,7 +5,7 @@ import addTraining from '@/app/actions/addTraining';
 import getPlayers from '@/app/actions/getPlayers';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import AddTrainingForm from '@/app/trainings/AddTrainingForm';
-import { handleRenderError } from '@/components/helpers/RenderError';
+import { handleRenderError } from '@/components/RenderError';
 import { ResponseError } from '@/types/shared-types';
 import { Player } from '@/types/user-types';
 import { handleMapPlayers } from '@/utils/playerUtils';

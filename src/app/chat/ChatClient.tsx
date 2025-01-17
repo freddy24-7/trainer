@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import ChatOrganizer from '@/components/helpers/ChatOrganizer';
+import ChatOrganizer from '@/components/helpers/chatHelpers/ChatOrganizer';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { ChatClientProps } from '@/types/message-types';

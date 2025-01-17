@@ -7,7 +7,7 @@ import getMessages from '@/app/actions/getMessages';
 import getUsers from '@/app/actions/getUsers';
 import ChatClient from '@/app/chat/ChatClient';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
-import { handleChatErrorResponse } from '@/components/helpers/RenderError';
+import { handleChatErrorResponse } from '@/components/RenderError';
 import LoginModal from '@/components/LoginModal';
 import { errorLoadingMessages } from '@/strings/serverStrings';
 import { Message } from '@/types/message-types';

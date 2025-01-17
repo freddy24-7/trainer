@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PouleItem from '@/components/helpers/PouleItem';
+import PouleItem from '@/components/helpers/pouleHelpers/PouleItem';
 import { PouleManagementClientProps } from '@/types/poule-types';
 
 const Mapper: React.FC<PouleManagementClientProps> = ({ poules }) => {
