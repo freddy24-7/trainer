@@ -96,9 +96,11 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
       )}
       {isButtonVisible && (
         <>
-          <Button color="primary" onPress={onOpen} className="mt-4">
-            Insert Opponent Strength
-          </Button>
+          <div className="flex flex-col items-center space-y-4 mt-4">
+            <Button color="primary" onPress={onOpen} className="mt-4">
+              Insert Opponent Strength
+            </Button>
+          </div>
           <StrengthModal
             isOpen={isOpen}
             onOpenChange={onOpenChange}

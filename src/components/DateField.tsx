@@ -29,7 +29,7 @@ const DateField: React.FC<DateProps> = ({ errors, label }) => {
       render={({ field }) => (
         <div className="w-full max-w-xs mx-auto">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-default-700">
+            <label className="block text-center font-medium text-default-700">
               {label}
             </label>
             <DatePicker

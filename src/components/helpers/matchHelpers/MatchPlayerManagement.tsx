@@ -186,15 +186,15 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
       players.map((player) => ({
         id: player.id,
         state: playerStates[player.id],
-        minutes: 0, // Default value or calculate as needed
-        available: true, // Default value
+        minutes: 0,
+        available: true,
       }))
     );
   };
 
   return (
     <div>
-      <div className="mb-4">
+      <div className="mb-4 flex justify-center items-center space-x-2">
         <label className="block font-semibold mb-1">Match Duration:</label>
         <input
           type="number"
@@ -211,15 +211,17 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
       </div>
 
       {!finalized && (
-        <Button
-          className="bg-primary text-white"
-          onPress={handleOpenLineupModal}
-        >
-          Set Line-up
-        </Button>
+        <div className="flex flex-col items-center space-y-4 mt-4">
+          <Button
+            className="bg-primary"
+            color="primary"
+            onPress={handleOpenLineupModal}
+          >
+            Set Line-up
+          </Button>
+        </div>
       )}
 
-      {/* Line-up Selection Modal */}
       <Modal isOpen={isLineupModalOpen} onOpenChange={setLineupModalOpen}>
         <ModalContent>
           <ModalHeader>Select Line-up</ModalHeader>
@@ -278,7 +280,6 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
         </ModalContent>
       </Modal>
 
-      {/* Confirmation Modal */}
       <Modal isOpen={isConfirmModalOpen} onOpenChange={setConfirmModalOpen}>
         <ModalContent>
           <ModalHeader>Confirm Line-up</ModalHeader>
@@ -306,13 +307,15 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
           ))}
         </div>
       )}
-
-      <Button
-        className="mt-4 bg-primary text-white"
-        onPress={onSubstitutionModalOpen}
-      >
-        Manage Substitutions
-      </Button>
+      <div className="flex flex-col items-center space-y-4 mt-4">
+        <Button
+          className="mt-4 bg-primary"
+          color="primary"
+          onPress={onSubstitutionModalOpen}
+        >
+          Manage Substitutions
+        </Button>
+      </div>
 
       <Modal
         isOpen={isSubstitutionModalOpen}
@@ -385,15 +388,18 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
         </ModalContent>
       </Modal>
 
-      <div className="mt-6">
+      <div className="mt-6 ">
         <h4 className="text-lg font-semibold mb-2">
           Player Minutes (updates on substitutions)
         </h4>
-        {players.map((player) => (
-          <p key={player.id}>
-            {player.username}: {playerMinutes[player.id]} minutes
-          </p>
-        ))}
+        <div className="grid grid-cols-2 items-center justify-items-start">
+          {players.map((player) => (
+            <React.Fragment key={player.id}>
+              <p className="text-left">{player.username}</p>
+              <p className="text-right">{playerMinutes[player.id]} minutes</p>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -14,7 +14,9 @@ const MatchTypeSelection: React.FC<MatchTypeSelectionProps> = ({
 }) => {
   return (
     <div>
-      <label className="block mb-2 text-sm font-medium">Match Type</label>
+      <div className="flex flex-col items-center space-y-4 mt-4">
+        <label className="block mb-2 text-sm font-medium">Match Type</label>
+      </div>
       <select
         className="w-full p-2 border rounded"
         value={matchType}

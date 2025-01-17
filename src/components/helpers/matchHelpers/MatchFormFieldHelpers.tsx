@@ -1,12 +1,19 @@
-import React from 'react';
-import { FormProvider } from 'react-hook-form';
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from '@nextui-org/react';
+import React, { useState } from 'react';
+import { FormProvider, SubmitHandler } from 'react-hook-form';
 
 import DateField from '@/components/DateField';
 import PlayerManagement from '@/components/helpers/matchHelpers/MatchPlayerManagement';
 import MatchTypeSelection from '@/components/helpers/matchHelpers/MatchTypeSelection';
 import OpponentLogic from '@/components/helpers/matchHelpers/OpponentLogic';
-import { Button } from '@/components/ui/button';
-import { MatchFormFieldProps } from '@/types/match-types';
+import { MatchFormFieldProps, MatchFormValues } from '@/types/match-types';
 
 const MatchForm: React.FC<MatchFormFieldProps> = ({
   methods,
@@ -24,9 +31,35 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   const { watch, handleSubmit } = methods;
   const matchType = watch('matchType') as 'competition' | 'practice';
 
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+
+  const [formData, setFormData] = useState<MatchFormValues | null>(null);
+
+  const handleFormSubmit: SubmitHandler<MatchFormValues> = (data) => {
+    setFormData(data);
+    setConfirmationModalOpen(true);
+  };
+
+  const handleConfirmSubmission = async () => {
+    setConfirmationModalOpen(false);
+
+    if (formData) {
+      try {
+        await onSubmit(formData);
+        console.log('Match submitted successfully!');
+      } catch (error) {
+        console.error('Error submitting match data:', error);
+      }
+    }
+  };
+
+  const handleCancelModal = () => {
+    setConfirmationModalOpen(false);
+  };
+
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
         <MatchTypeSelection matchType={matchType} setValue={setValue} />
 
         <OpponentLogic
@@ -38,10 +71,9 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
           poules={poules}
           opponentStrength={opponentStrength}
         />
-
         <DateField
           errors={errors}
-          label="Match Date"
+          label="Match date"
           onChange={(date) => setValue('date', date)}
         />
 
@@ -61,6 +93,26 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
           Add Match
         </Button>
       </form>
+
+      <Modal
+        isOpen={isConfirmationModalOpen}
+        onOpenChange={setConfirmationModalOpen}
+      >
+        <ModalContent>
+          <ModalHeader>Confirm Submission</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to submit this match data?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onPress={handleCancelModal} color="danger">
+              Cancel
+            </Button>
+            <Button onPress={handleConfirmSubmission} color="primary">
+              Submit
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </FormProvider>
   );
 };
