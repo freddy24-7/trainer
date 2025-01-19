@@ -64,6 +64,12 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
 
   const handleConfirmSubstitution = () => {
     if (minute === '' || !playerInId || !playerOutId) {
+      alert('Please complete all substitution fields.');
+      return;
+    }
+
+    if (playerOutId === playerInId) {
+      alert('A player cannot be both going out and coming in.');
       return;
     }
 
@@ -341,39 +347,41 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
             </div>
 
             <div className="mb-4">
-              <label className="block font-semibold mb-1">Player Out:</label>
-              <select
-                className="border rounded p-2 w-full"
-                value={playerOutId ?? ''}
-                onChange={(e) => setPlayerOutId(Number(e.target.value))}
-              >
-                <option value="">Select Player</option>
-                {players
-                  .filter((p) => playerStates[p.id] === 'playing')
-                  .map((player) => (
-                    <option key={player.id} value={player.id}>
-                      {player.username}
-                    </option>
-                  ))}
-              </select>
-            </div>
-
-            <div className="mb-4">
-              <label className="block font-semibold mb-1">Player In:</label>
-              <select
-                className="border rounded p-2 w-full"
-                value={playerInId ?? ''}
-                onChange={(e) => setPlayerInId(Number(e.target.value))}
-              >
-                <option value="">Select Player</option>
-                {players
-                  .filter((p) => playerStates[p.id] === 'bench')
-                  .map((player) => (
-                    <option key={player.id} value={player.id}>
-                      {player.username}
-                    </option>
-                  ))}
-              </select>
+              <h4 className="text-lg font-semibold mb-2">
+                Select Substitutions
+              </h4>
+              {players.map((player) => (
+                <div
+                  key={player.id}
+                  className="grid grid-cols-4 items-center gap-4 mb-2"
+                >
+                  <p className="col-span-1">{player.username}</p>
+                  {playerStates[player.id] === 'playing' && (
+                    <label className="flex items-center gap-2 col-span-1">
+                      <input
+                        type="radio"
+                        name={`substitution-${player.id}`}
+                        value="out"
+                        checked={playerOutId === player.id}
+                        onChange={() => setPlayerOutId(player.id)}
+                      />
+                      Goes Out
+                    </label>
+                  )}
+                  {playerStates[player.id] === 'bench' && (
+                    <label className="flex items-center gap-2 col-span-1">
+                      <input
+                        type="radio"
+                        name={`substitution-${player.id}`}
+                        value="in"
+                        checked={playerInId === player.id}
+                        onChange={() => setPlayerInId(player.id)}
+                      />
+                      Comes In
+                    </label>
+                  )}
+                </div>
+              ))}
             </div>
           </ModalBody>
 
