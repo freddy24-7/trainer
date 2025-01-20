@@ -19,7 +19,6 @@ export function handleValidateMatchData(params: FormData): {
       return defaultValue;
     }
   };
-
   const extractOpponentData = (): {
     pouleOpponentId: number | null;
     opponentName: string | null;
@@ -31,7 +30,6 @@ export function handleValidateMatchData(params: FormData): {
       : getStringValue(params.get('opponentName'))?.trim() || null;
     return { pouleOpponentId, opponentName };
   };
-
   const extractMatchMetadata = (): {
     trainingMatch: boolean;
     date: string | null;
@@ -49,16 +47,13 @@ export function handleValidateMatchData(params: FormData): {
       opponentStrengthValue === ''
         ? null
         : (opponentStrengthValue as 'STRONGER' | 'SIMILAR' | 'WEAKER');
-
     return { trainingMatch, date, opponentStrength };
   };
-
   const extractPlayers = (): {
     id: number;
     minutes: number;
     available: boolean;
   }[] => getParsedJSON(getStringValue(params.get('players')), []);
-
   const extractEvents = (): {
     playerInId?: number | null;
     playerOutId?: number | null;
@@ -79,11 +74,8 @@ export function handleValidateMatchData(params: FormData): {
     players: extractPlayers(),
     matchEvents: extractEvents(),
   };
-
   console.log('Validation Input:', JSON.stringify(matchData, null, 2));
-
   const validation = createMatchSchema.safeParse(matchData);
-
   if (!validation.success) {
     console.error(
       'Validation Issues:',
@@ -94,7 +86,6 @@ export function handleValidateMatchData(params: FormData): {
       errors: validation.error.issues,
     };
   }
-
   console.log('Validation Passed:', JSON.stringify(validation.data, null, 2));
 
   return {

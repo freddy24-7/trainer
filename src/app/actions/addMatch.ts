@@ -14,6 +14,14 @@ import {
 } from '@/strings/actionStrings';
 import { formatError } from '@/utils/errorUtils';
 
+interface MatchEvent {
+  playerInId?: number | null;
+  playerOutId?: number | null;
+  minute: number;
+  eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+  substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+}
+
 async function handleValidateAndHandleCompetitionMatch(
   trainingMatch: boolean,
   pouleOpponentId: number | null,
@@ -58,13 +66,7 @@ async function handleProcessMatchCreation(data: {
   opponentName: string | null;
   date: string;
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  matchEvents?: {
-    playerInId?: number | null;
-    playerOutId?: number | null;
-    minute: number;
-    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
-    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-  }[];
+  matchEvents?: MatchEvent[];
 }): Promise<{ match: { id: number } } | { errors: ZodIssue[] }> {
   console.log('Processing match creation with data:', data);
 
@@ -85,13 +87,10 @@ export default async function addMatch(
 ): Promise<{ match?: { id: number }; errors?: ZodIssue[] }> {
   console.log('Starting match creation with params:', params);
 
-  const validation = handleValidateMatchData(params);
-  if (!validation.success || !validation.data) {
-    console.log('Validation failed:', validation);
-    return formatError(validationFailedMessage, ['form']);
+  const formDataResult = handleValidateFormData(params);
+  if ('errors' in formDataResult) {
+    return formDataResult;
   }
-
-  console.log('Validation passed. Match data:', validation.data);
 
   const {
     trainingMatch,
@@ -99,31 +98,68 @@ export default async function addMatch(
     opponentName,
     date,
     opponentStrength,
-    matchEvents = [],
-  } = validation.data;
+    matchEvents,
+  } = formDataResult;
 
-  const competitionValidationError =
-    await handleValidateAndHandleCompetitionMatch(
-      trainingMatch,
-      pouleOpponentId
-    );
-  if (competitionValidationError) {
-    console.log(
-      'Competition match validation failed:',
-      competitionValidationError
-    );
-    return competitionValidationError;
+  const competitionError = await handleValidateCompetitionMatch(
+    trainingMatch,
+    pouleOpponentId
+  );
+  if (competitionError) {
+    return competitionError;
   }
 
-  const matchResponse = await handleProcessMatchCreation({
+  return await handleProcessMatchCreation({
     trainingMatch,
     pouleOpponentId: trainingMatch ? null : pouleOpponentId,
     opponentName: trainingMatch ? opponentName : null,
-    date: date ?? '',
+    date,
     opponentStrength: opponentStrength ?? null,
     matchEvents: matchEvents ?? [],
   });
+}
 
-  console.log('Match creation response:', matchResponse);
-  return matchResponse;
+function handleValidateFormData(params: FormData):
+  | { errors: ZodIssue[] }
+  | {
+      trainingMatch: boolean;
+      pouleOpponentId: number | null;
+      opponentName: string | null;
+      date: string;
+      opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+      matchEvents?: MatchEvent[];
+    } {
+  const validation = handleValidateMatchData(params);
+  if (!validation.success || !validation.data) {
+    console.log('Validation failed:', validation);
+    return formatError(validationFailedMessage, ['form']);
+  }
+
+  const {
+    trainingMatch,
+    pouleOpponentId,
+    opponentName,
+    date,
+    opponentStrength,
+    matchEvents,
+  } = validation.data;
+
+  return {
+    trainingMatch,
+    pouleOpponentId,
+    opponentName,
+    date: date ?? '',
+    opponentStrength,
+    matchEvents,
+  };
+}
+
+async function handleValidateCompetitionMatch(
+  trainingMatch: boolean,
+  pouleOpponentId: number | null
+): Promise<{ errors?: ZodIssue[] } | null> {
+  return await handleValidateAndHandleCompetitionMatch(
+    trainingMatch,
+    pouleOpponentId
+  );
 }

@@ -1,15 +1,9 @@
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-} from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { FormProvider, SubmitHandler } from 'react-hook-form';
 
 import DateField from '@/components/DateField';
+import ConfirmationModal from '@/components/helpers/matchHelpers/ConfirmationModal';
 import PlayerManagement from '@/components/helpers/matchHelpers/MatchPlayerManagement';
 import MatchTypeSelection from '@/components/helpers/matchHelpers/MatchTypeSelection';
 import OpponentLogic from '@/components/helpers/matchHelpers/OpponentLogic';
@@ -32,7 +26,6 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   const matchType = watch('matchType') as 'competition' | 'practice';
 
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
-
   const [formData, setFormData] = useState<MatchFormValues | null>(null);
 
   const handleFormSubmit: SubmitHandler<MatchFormValues> = (data) => {
@@ -40,7 +33,7 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
     setConfirmationModalOpen(true);
   };
 
-  const handleConfirmSubmission = async () => {
+  const handleConfirmSubmission: () => Promise<void> = async () => {
     setConfirmationModalOpen(false);
 
     if (formData) {
@@ -51,10 +44,6 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
         console.error('Error submitting match data:', error);
       }
     }
-  };
-
-  const handleCancelModal = () => {
-    setConfirmationModalOpen(false);
   };
 
   return (
@@ -94,25 +83,13 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
         </Button>
       </form>
 
-      <Modal
+      <ConfirmationModal
         isOpen={isConfirmationModalOpen}
-        onOpenChange={setConfirmationModalOpen}
-      >
-        <ModalContent>
-          <ModalHeader>Confirm Submission</ModalHeader>
-          <ModalBody>
-            <p>Are you sure you want to submit this match data?</p>
-          </ModalBody>
-          <ModalFooter>
-            <Button onPress={handleCancelModal} color="danger">
-              Cancel
-            </Button>
-            <Button onPress={handleConfirmSubmission} color="primary">
-              Submit
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        onClose={() => setConfirmationModalOpen(false)}
+        onConfirm={handleConfirmSubmission}
+        title="Confirm Submission"
+        message="Are you sure you want to submit this match data?"
+      />
     </FormProvider>
   );
 };
