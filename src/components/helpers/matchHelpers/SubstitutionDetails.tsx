@@ -43,7 +43,7 @@ const SubstitutionDetails: React.FC<SubstitutionDetailsProps> = ({
         }
       >
         <option value="" disabled={true}>
-          Comes In
+          In
         </option>
         {players
           .filter((p) => playerStates[p.id] === 'bench')

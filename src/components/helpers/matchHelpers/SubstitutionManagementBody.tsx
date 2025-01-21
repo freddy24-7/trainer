@@ -29,6 +29,10 @@ const SubstitutionManagementBody: React.FC<SubstitutionManagementBodyProps> = ({
   substitutions,
   setSubstitutions,
 }) => {
+  const playersOnPitch = players.filter(
+    (player) => playerStates[player.id] === 'playing'
+  );
+
   return (
     <>
       <input
@@ -36,10 +40,10 @@ const SubstitutionManagementBody: React.FC<SubstitutionManagementBodyProps> = ({
         placeholder="Minute"
         value={minute}
         onChange={(e) => setMinute(Number(e.target.value))}
-        className="border rounded w-full p-2 mb-4"
+        className="border rounded w-32 p-2 mb-4 mx-auto"
       />
 
-      {players.map((player) => {
+      {playersOnPitch.map((player) => {
         const isOut = substitutions.some(
           (sub) => sub.playerOutId === player.id
         );
@@ -49,28 +53,23 @@ const SubstitutionManagementBody: React.FC<SubstitutionManagementBodyProps> = ({
             key={player.id}
             className="grid grid-cols-5 items-center gap-4 mb-2"
           >
-            {/* Show player's name */}
             <p>{player.username}</p>
 
-            {/* Display checkbox only if player is currently 'playing' */}
-            {playerStates[player.id] === 'playing' && (
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={isOut}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      handleAddSubstitution(setSubstitutions, player.id);
-                    } else {
-                      handleRemoveSubstitution(setSubstitutions, player.id);
-                    }
-                  }}
-                />
-                Goes Out
-              </label>
-            )}
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={isOut}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    handleAddSubstitution(setSubstitutions, player.id);
+                  } else {
+                    handleRemoveSubstitution(setSubstitutions, player.id);
+                  }
+                }}
+              />
+              Goes Out
+            </label>
 
-            {/* If the player is marked as 'going out', show additional fields */}
             {isOut && (
               <SubstitutionDetails
                 player={player}
