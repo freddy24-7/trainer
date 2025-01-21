@@ -11,8 +11,8 @@ import {
   calculatePlayerMinutes,
   updatePlayerValues,
   handlePlayerStateChange,
-  handleSubstitution,
 } from '@/utils/playerManagementUtils';
+import { processSubstitution } from '@/utils/substitutionUtils';
 
 interface PlayerManagementProps {
   players: Player[];
@@ -29,10 +29,10 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
   const [playerStates, setPlayerStates] = useState<
     Record<number, 'playing' | 'bench' | 'absent'>
   >(players.reduce((acc, player) => ({ ...acc, [player.id]: 'absent' }), {}));
-
   const [matchDuration, setMatchDuration] = useState(70);
   const [startingLineup, setStartingLineup] = useState<number[]>([]);
   const [lineupFinalized, setLineupFinalized] = useState(false);
+
   const onPlayerStateChange = (
     playerId: number,
     newState: 'playing' | 'bench' | 'absent'
@@ -45,19 +45,20 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
   const onSubstitution = (
     minute: number,
     playerInId: number,
-    playerOutId: number
+    playerOutId: number,
+    substitutionReason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null
   ): void => {
-    const { updatedMatchEvents, updatedPlayerStates } = handleSubstitution(
+    const substitutionData = {
       minute,
       playerInId,
       playerOutId,
-      {
-        matchEvents,
-        playerStates,
-      }
-    );
-    setValue('matchEvents', updatedMatchEvents);
-    setPlayerStates(updatedPlayerStates);
+      substitutionReason,
+    };
+    const gameState = {
+      matchEvents,
+      playerStates,
+    };
+    processSubstitution(substitutionData, gameState, setValue, setPlayerStates);
   };
   const playerMinutes = useMemo(
     () =>
@@ -69,7 +70,6 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
       ),
     [matchEvents, startingLineup, matchDuration, players]
   );
-
   useEffect(() => {
     const updatedPlayers = updatePlayerValues(players, playerMinutes);
     setValue('players', updatedPlayers);

@@ -49,6 +49,7 @@ async function handleAddMatchFormSubmit(
         playerOutId: matchEvent.playerOutId,
         minute: matchEvent.minute,
         eventType: matchEvent.eventType,
+        substitutionReason: matchEvent.substitutionReason || null,
       })) || [],
   };
 
@@ -133,7 +134,7 @@ function AddMatchForm({
               onSubmit={onSubmit}
               setValue={setValue}
               opponentStrength={opponentStrength}
-              matchEvents={matchEvents}
+              matchEvents={matchEvents || []}
             />
           </CardBody>
         </Card>

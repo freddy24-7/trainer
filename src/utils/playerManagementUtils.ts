@@ -103,9 +103,12 @@ export const handlePlayerStateChange = (
 };
 
 export const handleSubstitution = (
-  minute: number,
-  playerInId: number,
-  playerOutId: number,
+  substitutionData: {
+    minute: number;
+    playerInId: number;
+    playerOutId: number;
+    substitutionReason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  },
   gameState: {
     matchEvents: MatchFormValues['matchEvents'];
     playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
@@ -114,6 +117,8 @@ export const handleSubstitution = (
   updatedMatchEvents: MatchFormValues['matchEvents'];
   updatedPlayerStates: Record<number, 'playing' | 'bench' | 'absent'>;
 } => {
+  const { minute, playerInId, playerOutId, substitutionReason } =
+    substitutionData;
   const { matchEvents = [], playerStates } = gameState;
 
   const newMatchEvent = {
@@ -121,6 +126,7 @@ export const handleSubstitution = (
     playerOutId,
     minute,
     eventType: 'SUBSTITUTION_IN' as const,
+    substitutionReason,
   };
 
   const updatedMatchEvents = [...matchEvents, newMatchEvent];

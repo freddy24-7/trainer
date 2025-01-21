@@ -117,7 +117,18 @@ const createFormData = (data: FormValues): FormData => {
     )
   );
 
-  formData.append('matchEvents', JSON.stringify(data.matchEvents || []));
+  formData.append(
+    'matchEvents',
+    JSON.stringify(
+      (data.matchEvents || []).map((matchEvent) => ({
+        playerInId: matchEvent.playerInId,
+        playerOutId: matchEvent.playerOutId,
+        minute: matchEvent.minute,
+        eventType: matchEvent.eventType,
+        substitutionReason: matchEvent.substitutionReason || null,
+      }))
+    )
+  );
 
   return formData;
 };
