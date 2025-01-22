@@ -26,8 +26,9 @@ export async function createMatch({
   matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
+    playerId?: number | null;
     minute: number;
-    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   }[];
 }): Promise<Match> {
@@ -57,6 +58,7 @@ export async function createMatch({
                 create: matchEvents.map((matchEvent) => ({
                   playerInId: matchEvent.playerInId,
                   playerOutId: matchEvent.playerOutId,
+                  playerId: matchEvent.playerId ?? null,
                   minute: matchEvent.minute,
                   eventType: matchEvent.eventType,
                   substitutionReason: matchEvent.substitutionReason ?? null,

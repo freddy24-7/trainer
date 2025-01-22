@@ -19,8 +19,9 @@ export interface MatchFormData {
   matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
+    playerId?: number | null;
     minute: number;
-    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   }[];
 }

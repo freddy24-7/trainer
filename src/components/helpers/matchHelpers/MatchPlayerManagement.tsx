@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 
+import GoalAssistModal from '@/components/helpers/matchHelpers/GoalAssistModal';
 import LineupManagement from '@/components/helpers/matchHelpers/LineupManagement';
 import MatchDurationInput from '@/components/helpers/matchHelpers/MatchDurationInput';
 import PlayerMinutes from '@/components/helpers/matchHelpers/PlayerMinutes';
 import SubstitutionManagement from '@/components/helpers/matchHelpers/SubstitutionManagement';
+import { Button } from '@/components/ui/button';
 import { MatchFormValues } from '@/types/match-types';
 import { Player } from '@/types/user-types';
 import {
@@ -32,6 +34,7 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
   const [matchDuration, setMatchDuration] = useState(70);
   const [startingLineup, setStartingLineup] = useState<number[]>([]);
   const [lineupFinalized, setLineupFinalized] = useState(false);
+  const [isGoalAssistModalOpen, setGoalAssistModalOpen] = useState(false);
 
   const onPlayerStateChange = (
     playerId: number,
@@ -42,6 +45,7 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
     setPlayerStates(updatedPlayerStates);
     setStartingLineup(updatedStartingLineup);
   };
+
   const onSubstitution = (
     minute: number,
     playerInId: number,
@@ -60,6 +64,22 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
     };
     processSubstitution(substitutionData, gameState, setValue, setPlayerStates);
   };
+
+  const onGoalOrAssist = (
+    playerId: number,
+    eventType: 'GOAL' | 'ASSIST'
+  ): void => {
+    const newEvent = {
+      playerId,
+      eventType,
+      minute: 0,
+      playerInId: null,
+      playerOutId: null,
+      substitutionReason: undefined,
+    };
+    setValue('matchEvents', [...(matchEvents || []), newEvent]);
+  };
+
   const playerMinutes = useMemo(
     () =>
       calculatePlayerMinutes(
@@ -70,6 +90,7 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
       ),
     [matchEvents, startingLineup, matchDuration, players]
   );
+
   useEffect(() => {
     const updatedPlayers = updatePlayerValues(players, playerMinutes);
     setValue('players', updatedPlayers);
@@ -105,6 +126,24 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
           players={players}
           playerStates={playerStates}
           onSubstitution={onSubstitution}
+        />
+        <Button
+          onClick={() => setGoalAssistModalOpen(true)}
+          color="primary"
+          className="mt-4"
+          type="button"
+        >
+          Record Goal/Assist
+        </Button>
+
+        <GoalAssistModal
+          isOpen={isGoalAssistModalOpen}
+          onOpenChange={(open) => setGoalAssistModalOpen(open)}
+          players={players}
+          playerStates={playerStates}
+          onConfirm={(playerId, eventType) => {
+            onGoalOrAssist(playerId, eventType);
+          }}
         />
       </div>
       <PlayerMinutes players={players} playerMinutes={playerMinutes} />

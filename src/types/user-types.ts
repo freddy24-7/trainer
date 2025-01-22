@@ -1,5 +1,4 @@
 import React from 'react';
-import { UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
 import { ResponseError } from './shared-types';
@@ -44,8 +43,9 @@ export interface FormValues {
   matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
+    playerId?: number | null;
     minute: number;
-    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   }[];
 }
@@ -83,22 +83,6 @@ export interface PlayerFormProps {
   onSubmissionStart: () => void;
   onAbort: () => void;
   submitButtonText: string;
-}
-
-export interface PlayerInputProps {
-  player: Player;
-  minutes: number;
-  available: boolean;
-  onMinutesChange: (playerId: number, minutes: number) => void;
-  onAvailabilityChange: (playerId: number, available: boolean) => void;
-}
-
-export interface PlayerListProps {
-  players: Player[];
-  playerMinutes: { [key: number]: number };
-  playerAvailability: { [key: number]: boolean };
-  onMinutesChange: (playerId: number, minutes: number) => void;
-  onAvailabilityChange: (playerId: number, available: boolean) => void;
 }
 
 export interface PlayerManagementClientProps {
@@ -141,12 +125,6 @@ export interface SignedInUser {
   id: string;
   username: string;
   role: string | null;
-}
-
-export interface PlayersFieldProps {
-  players: Player[];
-  playerValues: FormValues['players'];
-  setValue: UseFormSetValue<FormValues>;
 }
 
 export interface HandlePlayerFormSubmitParams {

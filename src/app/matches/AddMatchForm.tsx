@@ -47,6 +47,7 @@ async function handleAddMatchFormSubmit(
       data.matchEvents?.map((matchEvent) => ({
         playerInId: matchEvent.playerInId,
         playerOutId: matchEvent.playerOutId,
+        playerId: matchEvent.playerId ?? null,
         minute: matchEvent.minute,
         eventType: matchEvent.eventType,
         substitutionReason: matchEvent.substitutionReason || null,

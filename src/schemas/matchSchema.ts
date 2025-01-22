@@ -6,16 +6,39 @@ import {
   minutesWhenAvailableMessage,
 } from '@/strings/validationStrings';
 
-export const matchEventSchema = z.object({
-  playerInId: z.number().min(1, 'Invalid player-in ID').nullable().optional(),
-  playerOutId: z.number().min(1, 'Invalid player-out ID').nullable().optional(),
-  minute: z.number().min(0, 'Minute must be non-negative'),
-  eventType: z.enum(['SUBSTITUTION_IN', 'SUBSTITUTION_OUT']),
-  substitutionReason: z
-    .enum(['TACTICAL', 'FITNESS', 'INJURY', 'OTHER'])
-    .nullable()
-    .optional(),
-});
+export const matchEventSchema = z
+  .object({
+    playerInId: z.number().min(1, 'Invalid player-in ID').nullable().optional(),
+    playerOutId: z
+      .number()
+      .min(1, 'Invalid player-out ID')
+      .nullable()
+      .optional(),
+    minute: z
+      .number()
+      .min(0, 'Minute must be non-negative')
+      .nullable()
+      .optional(),
+    eventType: z.enum([
+      'SUBSTITUTION_IN',
+      'SUBSTITUTION_OUT',
+      'GOAL',
+      'ASSIST',
+    ]),
+    substitutionReason: z
+      .enum(['TACTICAL', 'FITNESS', 'INJURY', 'OTHER'])
+      .nullable()
+      .optional(),
+  })
+  .refine(
+    (data) =>
+      !['SUBSTITUTION_IN', 'SUBSTITUTION_OUT'].includes(data.eventType) ||
+      (data.minute !== null && data.minute !== undefined),
+    {
+      message: 'Minutes are required for substitutions',
+      path: ['minute'],
+    }
+  );
 
 export const createMatchSchema = z
   .object({
@@ -45,7 +68,7 @@ export const createMatchSchema = z
       .enum(['STRONGER', 'SIMILAR', 'WEAKER'])
       .nullable()
       .optional(),
-    matchEvents: z.array(matchEventSchema).default([]),
+    matchEvents: z.array(matchEventSchema).optional().default([]),
   })
   .refine(
     (data) => {
@@ -87,7 +110,7 @@ export const addMatchPlayerSchema = z
   })
   .refine(
     (data) => {
-      return !(data.available && data.minutes <= 0);
+      return !(data.available && data.minutes < 0);
     },
     {
       message: minutesWhenAvailableMessage,

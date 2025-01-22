@@ -56,8 +56,9 @@ export interface MatchFormValues {
   matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
+    playerId?: number | null;
     minute: number;
-    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   }[];
 }
@@ -96,12 +97,13 @@ export interface MatchFormFieldProps {
   errors: FieldErrors<MatchFormValues>;
   onSubmit: (data: MatchFormValues) => Promise<void>;
   setValue: UseFormSetValue<MatchFormValues>;
+  playerId?: number | null;
   opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
   matchEvents?: {
     playerInId?: number | null;
     playerOutId?: number | null;
     minute: number;
-    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT';
+    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   }[];
 }
