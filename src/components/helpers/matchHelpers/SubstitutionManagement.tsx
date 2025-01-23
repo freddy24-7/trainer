@@ -7,10 +7,12 @@ import {
   Button,
 } from '@nextui-org/react';
 import React, { useState } from 'react';
+import { UseFormSetValue } from 'react-hook-form';
 
 import SubstitutionManagementBody from '@/components/helpers/matchHelpers/SubstitutionManagementBody';
+import { MatchFormValues } from '@/types/match-types';
 import {
-  handleConfirm,
+  handleConfirmAllAtOnce,
   Substitution,
   SubstitutionReason,
 } from '@/utils/substitutionUtils';
@@ -23,18 +25,25 @@ interface Player {
 interface SubstitutionManagementProps {
   players: Player[];
   playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
+  matchEvents: MatchFormValues['matchEvents'];
   onSubstitution: (
     minute: number,
     playerInId: number,
     playerOutId: number,
     substitutionReason: SubstitutionReason
   ) => void;
+  setValue: UseFormSetValue<MatchFormValues>;
+  setPlayerStates: React.Dispatch<
+    React.SetStateAction<Record<number, 'playing' | 'bench' | 'absent'>>
+  >;
 }
 
 const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
   players,
   playerStates,
-  onSubstitution,
+  matchEvents,
+  setValue,
+  setPlayerStates,
 }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [minute, setMinute] = useState<number | ''>('');
@@ -62,15 +71,15 @@ const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
           </ModalBody>
 
           <ModalFooter>
-            <Button onPress={() => setOpen(false)} color="danger">
-              Cancel
-            </Button>
             <Button
               onPress={() =>
-                handleConfirm({
+                handleConfirmAllAtOnce({
                   minute,
                   substitutions,
-                  onSubstitution,
+                  matchEvents,
+                  playerStates,
+                  setValue,
+                  setPlayerStates,
                   setOpen,
                   setMinute,
                   setSubstitutions,

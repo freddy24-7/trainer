@@ -11,20 +11,6 @@ interface SubstitutionData {
   substitutionReason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
 }
 
-interface HandleConfirmParams {
-  minute: number | '';
-  substitutions: Substitution[];
-  onSubstitution: (
-    minute: number,
-    playerInId: number,
-    playerOutId: number,
-    substitutionReason: SubstitutionReason
-  ) => void;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setMinute: React.Dispatch<React.SetStateAction<number | ''>>;
-  setSubstitutions: React.Dispatch<React.SetStateAction<Substitution[]>>;
-}
-
 interface GameState {
   matchEvents: MatchFormValues['matchEvents'];
   playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
@@ -95,14 +81,29 @@ export function handleRemoveSubstitution(
   );
 }
 
-export function handleConfirm({
+export function handleConfirmAllAtOnce({
   minute,
   substitutions,
-  onSubstitution,
+  matchEvents,
+  playerStates,
+  setValue,
+  setPlayerStates,
   setOpen,
   setMinute,
   setSubstitutions,
-}: HandleConfirmParams): void {
+}: {
+  minute: number | '';
+  substitutions: Substitution[];
+  matchEvents: MatchFormValues['matchEvents'];
+  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
+  setValue: UseFormSetValue<MatchFormValues>;
+  setPlayerStates: React.Dispatch<
+    React.SetStateAction<Record<number, 'playing' | 'bench' | 'absent'>>
+  >;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setMinute: React.Dispatch<React.SetStateAction<number | ''>>;
+  setSubstitutions: React.Dispatch<React.SetStateAction<Substitution[]>>;
+}): void {
   if (
     !minute ||
     substitutions.some((sub) => !sub.playerInId || !sub.substitutionReason)
@@ -111,14 +112,23 @@ export function handleConfirm({
     return;
   }
 
-  substitutions.forEach((sub) => {
-    onSubstitution(
-      minute as number,
-      sub.playerInId as number,
-      sub.playerOutId,
-      sub.substitutionReason
-    );
-  });
+  const newEvents = substitutions.map((sub) => ({
+    minute: minute as number,
+    playerInId: sub.playerInId as number,
+    playerOutId: sub.playerOutId,
+    eventType: 'SUBSTITUTION_IN' as const,
+    substitutionReason: sub.substitutionReason,
+  }));
+
+  const updatedMatchEvents = [...(matchEvents || []), ...newEvents];
+  setValue('matchEvents', updatedMatchEvents);
+
+  const updatedPlayerStates = { ...playerStates };
+  for (const event of newEvents) {
+    updatedPlayerStates[event.playerOutId] = 'bench';
+    updatedPlayerStates[event.playerInId] = 'playing';
+  }
+  setPlayerStates(updatedPlayerStates);
 
   setOpen(false);
   setMinute('');

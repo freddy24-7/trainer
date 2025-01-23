@@ -131,6 +131,9 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
         <SubstitutionManagement
           players={players}
           playerStates={playerStates}
+          matchEvents={matchEvents}
+          setValue={setValue}
+          setPlayerStates={setPlayerStates}
           onSubstitution={onSubstitution}
         />
         <Button
