@@ -8,6 +8,9 @@ import {
 } from '@nextui-org/react';
 import React, { useState } from 'react';
 
+import GoalAssistModalBody from '@/components/helpers/matchHelpers/GoalAssistModalBody';
+import { resetState } from '@/utils/goalAssistUtils';
+
 interface Player {
   id: number;
   username: string;
@@ -28,20 +31,15 @@ const GoalAssistModal: React.FC<GoalAssistModalProps> = ({
   playerStates,
   onConfirm,
 }) => {
-  const [selectedPlayer, setSelectedPlayer] = useState<number | null>(null);
-  const [eventType, setEventType] = useState<'GOAL' | 'ASSIST'>('GOAL');
+  const [goalScorer, setGoalScorer] = useState<number | null>(null);
+  const [assistProvider, setAssistProvider] = useState<number | null>(null);
 
   const playersOnPitch = players.filter(
     (player) => playerStates[player.id] === 'playing'
   );
 
-  const handleConfirm = () => {
-    if (selectedPlayer) {
-      onConfirm(selectedPlayer, eventType);
-      setSelectedPlayer(null);
-      setEventType('GOAL');
-      onOpenChange(false);
-    }
+  const handleConfirm = (): void => {
+    resetState({ setGoalScorer, setAssistProvider, onOpenChange, onConfirm });
   };
 
   return (
@@ -50,39 +48,18 @@ const GoalAssistModal: React.FC<GoalAssistModalProps> = ({
         {(onClose) => (
           <>
             <ModalHeader>
-              Record {eventType === 'GOAL' ? 'Goal' : 'Assist'}
+              {goalScorer ? 'Record Assist' : 'Record Goal'}
             </ModalHeader>
             <ModalBody>
-              <div className="flex flex-col gap-4">
-                <select
-                  value={selectedPlayer || ''}
-                  onChange={(e) => setSelectedPlayer(Number(e.target.value))}
-                  className="border rounded p-2"
-                >
-                  <option value="" disabled={true}>
-                    Select Player
-                  </option>
-                  {playersOnPitch.map((player) => (
-                    <option key={player.id} value={player.id}>
-                      {player.username}
-                    </option>
-                  ))}
-                </select>
-                <div className="flex gap-4">
-                  <Button
-                    onPress={() => setEventType('GOAL')}
-                    color={eventType === 'GOAL' ? 'primary' : 'default'}
-                  >
-                    Goal
-                  </Button>
-                  <Button
-                    onPress={() => setEventType('ASSIST')}
-                    color={eventType === 'ASSIST' ? 'primary' : 'default'}
-                  >
-                    Assist
-                  </Button>
-                </div>
-              </div>
+              <GoalAssistModalBody
+                goalScorer={goalScorer}
+                setGoalScorer={setGoalScorer}
+                assistProvider={assistProvider}
+                setAssistProvider={setAssistProvider}
+                playersOnPitch={playersOnPitch}
+                onConfirm={onConfirm}
+                onOpenChange={onOpenChange}
+              />
             </ModalBody>
             <ModalFooter>
               <Button color="danger" onPress={onClose}>
@@ -91,7 +68,7 @@ const GoalAssistModal: React.FC<GoalAssistModalProps> = ({
               <Button
                 color="primary"
                 onPress={handleConfirm}
-                disabled={!selectedPlayer}
+                disabled={!goalScorer}
               >
                 Confirm
               </Button>

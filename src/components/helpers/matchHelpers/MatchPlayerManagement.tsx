@@ -1,3 +1,4 @@
+import { Button } from '@nextui-org/react';
 import React, { useState, useEffect, useMemo } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 
@@ -6,7 +7,6 @@ import LineupManagement from '@/components/helpers/matchHelpers/LineupManagement
 import MatchDurationInput from '@/components/helpers/matchHelpers/MatchDurationInput';
 import PlayerMinutes from '@/components/helpers/matchHelpers/PlayerMinutes';
 import SubstitutionManagement from '@/components/helpers/matchHelpers/SubstitutionManagement';
-import { Button } from '@/components/ui/button';
 import { MatchFormValues } from '@/types/match-types';
 import { Player } from '@/types/user-types';
 import {
@@ -69,6 +69,7 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
     playerId: number,
     eventType: 'GOAL' | 'ASSIST'
   ): void => {
+    const currentEvents = matchEvents || [];
     const newEvent = {
       playerId,
       eventType,
@@ -77,7 +78,8 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
       playerOutId: null,
       substitutionReason: undefined,
     };
-    setValue('matchEvents', [...(matchEvents || []), newEvent]);
+
+    setValue('matchEvents', [...currentEvents, newEvent]);
   };
 
   const playerMinutes = useMemo(
@@ -95,6 +97,10 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
     const updatedPlayers = updatePlayerValues(players, playerMinutes);
     setValue('players', updatedPlayers);
   }, [playerMinutes, players, setValue]);
+
+  useEffect(() => {
+    console.log('Updated matchEvents:', matchEvents);
+  }, [matchEvents]);
 
   return (
     <div>
@@ -128,7 +134,7 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
           onSubstitution={onSubstitution}
         />
         <Button
-          onClick={() => setGoalAssistModalOpen(true)}
+          onPress={() => setGoalAssistModalOpen(true)}
           color="primary"
           className="mt-4"
           type="button"

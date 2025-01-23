@@ -3,95 +3,95 @@ import { ZodIssue } from 'zod';
 import { createMatchSchema } from '@/schemas/matchSchema';
 import { MatchFormData } from '@/types/validation-types';
 
-export function handleValidateMatchData(params: FormData): {
-  success: boolean;
-  data?: MatchFormData;
-  errors?: ZodIssue[];
+function getStringValue(value: FormDataEntryValue | null): string | null {
+  return typeof value === 'string' ? value : null;
+}
+
+function getParsedJSON<T>(value: string | null, defaultValue: T): T {
+  try {
+    return value ? JSON.parse(value) : defaultValue;
+  } catch (error) {
+    console.error(`Failed to parse JSON for value: ${value}`, error);
+    return defaultValue;
+  }
+}
+
+function handleExtractOpponentData(params: FormData): {
+  pouleOpponentId: number | null;
+  opponentName: string | null;
 } {
-  const getStringValue = (value: FormDataEntryValue | null): string | null =>
-    typeof value === 'string' ? value : null;
+  const pouleOpponentId =
+    parseInt(getStringValue(params.get('pouleOpponentId')) || '', 10) || null;
+  const opponentName = pouleOpponentId
+    ? null
+    : getStringValue(params.get('opponentName'))?.trim() || null;
+  return { pouleOpponentId, opponentName };
+}
 
-  const getParsedJSON = <T>(value: string | null, defaultValue: T): T => {
-    try {
-      return value ? JSON.parse(value) : defaultValue;
-    } catch (error) {
-      console.error(`Failed to parse JSON for value: ${value}`, error);
-      return defaultValue;
-    }
-  };
-
-  const extractOpponentData = (): {
-    pouleOpponentId: number | null;
-    opponentName: string | null;
-  } => {
-    const pouleOpponentId =
-      parseInt(getStringValue(params.get('pouleOpponentId')) || '', 10) || null;
-    const opponentName = pouleOpponentId
+function handleExtractMatchMetadata(params: FormData): {
+  trainingMatch: boolean;
+  date: string | null;
+  opponentStrength: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+} {
+  const trainingMatch = getStringValue(params.get('matchType')) === 'practice';
+  const date = getStringValue(params.get('date'));
+  const opponentStrengthValue = getStringValue(params.get('opponentStrength'));
+  const opponentStrength =
+    opponentStrengthValue === 'null' ||
+    opponentStrengthValue === null ||
+    opponentStrengthValue === ''
       ? null
-      : getStringValue(params.get('opponentName'))?.trim() || null;
-    return { pouleOpponentId, opponentName };
-  };
+      : (opponentStrengthValue as 'STRONGER' | 'SIMILAR' | 'WEAKER');
+  return { trainingMatch, date, opponentStrength };
+}
 
-  const extractMatchMetadata = (): {
-    trainingMatch: boolean;
-    date: string | null;
-    opponentStrength: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  } => {
-    const trainingMatch =
-      getStringValue(params.get('matchType')) === 'practice';
-    const date = getStringValue(params.get('date'));
-    const opponentStrengthValue = getStringValue(
-      params.get('opponentStrength')
-    );
-    const opponentStrength =
-      opponentStrengthValue === 'null' ||
-      opponentStrengthValue === null ||
-      opponentStrengthValue === ''
-        ? null
-        : (opponentStrengthValue as 'STRONGER' | 'SIMILAR' | 'WEAKER');
-    return { trainingMatch, date, opponentStrength };
-  };
+function handleExtractPlayers(params: FormData): {
+  id: number;
+  minutes: number;
+  available: boolean;
+}[] {
+  return getParsedJSON(getStringValue(params.get('players')), []);
+}
 
-  const extractPlayers = (): {
-    id: number;
-    minutes: number;
-    available: boolean;
-  }[] => getParsedJSON(getStringValue(params.get('players')), []);
-
-  const extractMatchEvents = (): {
+function handleExtractMatchEvents(params: FormData): {
+  playerInId?: number | null;
+  playerOutId?: number | null;
+  playerId?: number | null;
+  minute: number | null;
+  eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
+  substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+}[] {
+  const matchEvents: {
     playerInId?: number | null;
     playerOutId?: number | null;
     playerId?: number | null;
     minute: number | null;
     eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-  }[] => {
-    const matchEvents: {
-      playerInId?: number | null;
-      playerOutId?: number | null;
-      playerId?: number | null;
-      minute: number | null;
-      eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
-      substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-    }[] = getParsedJSON(getStringValue(params.get('matchEvents')), []);
+  }[] = getParsedJSON(getStringValue(params.get('matchEvents')), []);
 
-    return Array.isArray(matchEvents)
-      ? matchEvents.map((matchEvent) => ({
-          playerInId: matchEvent.playerInId ?? null,
-          playerOutId: matchEvent.playerOutId ?? null,
-          playerId: matchEvent.playerId ?? null,
-          minute: matchEvent.minute ?? null,
-          eventType: matchEvent.eventType,
-          substitutionReason: matchEvent.substitutionReason ?? null,
-        }))
-      : [];
-  };
+  return Array.isArray(matchEvents)
+    ? matchEvents.map((matchEvent) => ({
+        playerInId: matchEvent.playerInId ?? null,
+        playerOutId: matchEvent.playerOutId ?? null,
+        playerId: matchEvent.playerId ?? null,
+        minute: matchEvent.minute ?? null,
+        eventType: matchEvent.eventType,
+        substitutionReason: matchEvent.substitutionReason ?? null,
+      }))
+    : [];
+}
 
+export function handleValidateMatchData(params: FormData): {
+  success: boolean;
+  data?: MatchFormData;
+  errors?: ZodIssue[];
+} {
   const matchData = {
-    ...extractMatchMetadata(),
-    ...extractOpponentData(),
-    players: extractPlayers(),
-    matchEvents: extractMatchEvents(),
+    ...handleExtractMatchMetadata(params),
+    ...handleExtractOpponentData(params),
+    players: handleExtractPlayers(params),
+    matchEvents: handleExtractMatchEvents(params),
   };
 
   console.log('Validation Input:', JSON.stringify(matchData, null, 2));
