@@ -14,6 +14,7 @@ export const matchEventSchema = z
       .min(1, 'Invalid player-out ID')
       .nullable()
       .optional(),
+    playerId: z.number().min(1, 'Invalid player ID').nullable(), // Add playerId validation
     minute: z
       .number()
       .min(0, 'Minute must be non-negative')
@@ -30,6 +31,14 @@ export const matchEventSchema = z
       .nullable()
       .optional(),
   })
+  .refine(
+    (data) =>
+      !['GOAL', 'ASSIST'].includes(data.eventType) || data.playerId !== null,
+    {
+      message: 'playerId is required for GOAL and ASSIST events',
+      path: ['playerId'],
+    }
+  )
   .refine(
     (data) =>
       !['SUBSTITUTION_IN', 'SUBSTITUTION_OUT'].includes(data.eventType) ||
