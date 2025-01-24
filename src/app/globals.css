@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --brandcolor: #ee8300; /* Brand color */
+  --brandcolor: #ee8300;
 }
 
 @layer base {

@@ -17,6 +17,8 @@ const InputField = ({
   onChange,
   required = true,
   placeholder,
+  name,
+  autocomplete,
 }: PlayerFormInputFieldProps): React.ReactElement => (
   <div>
     <label htmlFor={id} className="block text-brandcolor">
@@ -24,11 +26,13 @@ const InputField = ({
     </label>
     <input
       id={id}
+      name={name}
       type={type}
       value={value}
       onChange={onChange}
       required={required}
       placeholder={placeholder}
+      autoComplete={autocomplete}
       className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500"
     />
   </div>
@@ -72,9 +76,11 @@ function PlayerForm({
         onChange={(e) => setUsername(e.target.value)}
       />
       <InputField
-        id="password"
+        id="password-field"
         label={passwordLabel}
         type="password"
+        name="password"
+        autocomplete="current-password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />

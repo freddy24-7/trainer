@@ -200,6 +200,8 @@ export interface PlayerFormInputFieldProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   placeholder?: string;
+  name?: string;
+  autocomplete?: string;
 }
 
 export interface ExtendedPlayersListProps {

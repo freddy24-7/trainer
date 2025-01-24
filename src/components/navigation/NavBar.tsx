@@ -32,7 +32,7 @@ export default function NavBar({ user }: NavBarProps): React.ReactElement {
         <NavBarClient userId={userId} userRole={userRole} />
       ) : (
         <div className="flex items-center space-x-4">
-          <Link href="/sign-in" className="text-white text-xl">
+          <Link href="/sign-in" prefetch={false} className="text-white text-xl">
             Sign In
           </Link>
         </div>
