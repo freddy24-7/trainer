@@ -46,7 +46,18 @@ const SubstitutionDetails: React.FC<SubstitutionDetailsProps> = ({
           In
         </option>
         {players
-          .filter((p) => playerStates[p.id] === 'bench')
+          .filter(
+            (p) =>
+              playerStates[p.id] === 'bench' || p.id === currentSub?.playerInId
+          )
+          .filter(
+            (benchPlayer) =>
+              !substitutions.some(
+                (sub) =>
+                  sub.playerInId === benchPlayer.id &&
+                  sub.playerInId !== currentSub?.playerInId
+              )
+          )
           .map((benchPlayer) => (
             <option key={benchPlayer.id} value={benchPlayer.id}>
               {benchPlayer.username}
