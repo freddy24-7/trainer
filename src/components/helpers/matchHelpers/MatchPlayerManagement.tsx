@@ -1,5 +1,5 @@
 import { Button } from '@nextui-org/react';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 
 import GoalAssistModal from '@/components/helpers/matchHelpers/GoalAssistModal';
@@ -7,14 +7,9 @@ import LineupManagement from '@/components/helpers/matchHelpers/LineupManagement
 import MatchDurationInput from '@/components/helpers/matchHelpers/MatchDurationInput';
 import PlayerMinutes from '@/components/helpers/matchHelpers/PlayerMinutes';
 import SubstitutionManagement from '@/components/helpers/matchHelpers/SubstitutionManagement';
+import { usePlayerManagement } from '@/hooks/usePlayerManagement';
 import { MatchFormValues } from '@/types/match-types';
 import { Player } from '@/types/user-types';
-import {
-  calculatePlayerMinutes,
-  updatePlayerValues,
-  handlePlayerStateChange,
-} from '@/utils/playerManagementUtils';
-import { processSubstitution } from '@/utils/substitutionUtils';
 
 interface PlayerManagementProps {
   players: Player[];
@@ -28,75 +23,31 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
   setValue,
   matchEvents,
 }) => {
-  const [playerStates, setPlayerStates] = useState<
-    Record<number, 'playing' | 'bench' | 'absent'>
-  >(players.reduce((acc, player) => ({ ...acc, [player.id]: 'absent' }), {}));
-  const [matchDuration, setMatchDuration] = useState(70);
-  const [startingLineup, setStartingLineup] = useState<number[]>([]);
+  const {
+    playerStates,
+    setPlayerStates,
+    matchDuration,
+    setMatchDuration,
+    onPlayerStateChange,
+    onSubstitution,
+    onGoalOrAssist,
+    playerMinutes,
+  } = usePlayerManagement({ players, matchEvents, setValue });
+
   const [lineupFinalized, setLineupFinalized] = useState(false);
   const [isGoalAssistModalOpen, setGoalAssistModalOpen] = useState(false);
 
-  const onPlayerStateChange = (
-    playerId: number,
-    newState: 'playing' | 'bench' | 'absent'
-  ): void => {
-    const { updatedPlayerStates, updatedStartingLineup } =
-      handlePlayerStateChange(playerId, newState, playerStates, startingLineup);
-    setPlayerStates(updatedPlayerStates);
-    setStartingLineup(updatedStartingLineup);
-  };
-
-  const onSubstitution = (
-    minute: number,
-    playerInId: number,
-    playerOutId: number,
-    substitutionReason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null
-  ): void => {
-    const substitutionData = {
-      minute,
-      playerInId,
-      playerOutId,
-      substitutionReason,
-    };
-    const gameState = {
-      matchEvents,
-      playerStates,
-    };
-    processSubstitution(substitutionData, gameState, setValue, setPlayerStates);
-  };
-
-  const onGoalOrAssist = (
-    playerId: number,
-    eventType: 'GOAL' | 'ASSIST'
-  ): void => {
-    const currentEvents = matchEvents || [];
-    const newEvent = {
-      playerId,
-      eventType,
-      minute: 0,
-      playerInId: null,
-      playerOutId: null,
-      substitutionReason: undefined,
-    };
-
-    setValue('matchEvents', [...currentEvents, newEvent]);
-  };
-
-  const playerMinutes = useMemo(
-    () =>
-      calculatePlayerMinutes(
-        players,
-        matchEvents,
-        startingLineup,
-        matchDuration
-      ),
-    [matchEvents, startingLineup, matchDuration, players]
-  );
-
   useEffect(() => {
-    const updatedPlayers = updatePlayerValues(players, playerMinutes);
-    setValue('players', updatedPlayers);
-  }, [playerMinutes, players, setValue]);
+    setValue(
+      'players',
+      players.map((player) => ({
+        id: player.id,
+        state: playerStates[player.id],
+        minutes: 0,
+        available: true,
+      }))
+    );
+  }, [lineupFinalized, playerStates, players, setValue]);
 
   useEffect(() => {
     console.log('Updated matchEvents:', matchEvents);
@@ -114,18 +65,7 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
             players={players}
             playerStates={playerStates}
             onPlayerStateChange={onPlayerStateChange}
-            onConfirm={() => {
-              setValue(
-                'players',
-                players.map((player) => ({
-                  id: player.id,
-                  state: playerStates[player.id],
-                  minutes: 0,
-                  available: true,
-                }))
-              );
-              setLineupFinalized(true);
-            }}
+            onConfirm={() => setLineupFinalized(true)}
           />
         )}
         <SubstitutionManagement
