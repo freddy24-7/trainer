@@ -29,7 +29,6 @@ export default [{
         "src/lib/prisma.ts",
         "src/lib/utils.ts",
         "src/app/not-found.js",
-        "src/utils/pusherUtils.ts",
         "src/app/api/pusher/**/*",
         "src/lib/services/editPlayerService.ts",
         "src/inngest/*",
@@ -268,7 +267,7 @@ export default [{
     files: ["src/utils/pusherUtils.ts"],
 
     rules: {
-        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-explicit-any": "off",
     },
 }, {
     files: ["__tests__/**/*.ts", "__tests__/**/*.tsx"],

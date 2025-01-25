@@ -21,7 +21,7 @@ export default function PlayersList({
         <li>
           <Card
             className="max-w-md mx-auto mb-4 cursor-pointer"
-            onClick={() => onSelect?.(null)}
+            onPress={() => onSelect?.(null)}
           >
             <CardHeader>
               <span className="text-md font-bold">{groupChatLabel}</span>
@@ -34,7 +34,7 @@ export default function PlayersList({
         <Card
           key={player.id}
           className="max-w-md mx-auto mb-4 cursor-pointer"
-          onClick={() => onSelect?.(player.id)}
+          onPress={() => onSelect?.(player.id)}
         >
           <CardHeader className="flex justify-between items-center">
             <span className="text-md">{player.username}</span>
@@ -46,10 +46,7 @@ export default function PlayersList({
                 {onEdit && (
                   <Button
                     color="primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEdit(player);
-                    }}
+                    onPress={() => onEdit?.(player)}
                     className="text-sm px-2 py-1"
                   >
                     {editButtonLabel}
@@ -58,10 +55,7 @@ export default function PlayersList({
                 {onDelete && (
                   <Button
                     color="danger"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete(player.id);
-                    }}
+                    onPress={() => onDelete?.(player.id)}
                     className="text-sm px-2 py-1"
                   >
                     {deleteButtonLabel}

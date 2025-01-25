@@ -1,11 +1,11 @@
 import Pusher, { Channel } from 'pusher-js';
 
 import pusher from '@/lib/pusher';
-import { PusherEventMessage, Message, Sender } from '@/types/message-types';
 import {
   failedPusherAuthMessage,
   pusherAuthorizationErrorMessage,
 } from '@/strings/serverStrings';
+import { PusherEventMessage, Message, Sender } from '@/types/message-types';
 
 export async function handleTriggerNewMessageEvent(
   message: Message,
@@ -46,11 +46,14 @@ export function handleInitializePusher(
       },
     },
     authorizer: (channel) => {
+      // noinspection JSUnusedGlobalSymbols
       return {
         authorize: (
           socketId: string,
           callback: (error: any, authData: any) => void
         ) => {
+          // Confirming that authorize function is being invoked
+          console.log('authorize function is being invoked');
           fetch('/api/pusher/auth', {
             method: 'POST',
             credentials: 'include',
@@ -105,6 +108,5 @@ export function handleInitializePusher(
       privateChannel.unbind(newMessage, onMessageReceived);
       pusher.unsubscribe(`private-chat-${userId}`);
     }
-    pusher.disconnect();
   };
 }

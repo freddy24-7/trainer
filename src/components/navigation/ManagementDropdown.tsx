@@ -33,7 +33,7 @@ export function ManagementDropdown({
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label={managementOptionsAriaLabel} variant="light">
-        <DropdownItem key="player-management">
+        <DropdownItem key="player-management" textValue={playerManagementText}>
           <Link
             href="/player-management"
             className={dropdownTextColor}
@@ -42,7 +42,7 @@ export function ManagementDropdown({
             {playerManagementText}
           </Link>
         </DropdownItem>
-        <DropdownItem key="poule-management">
+        <DropdownItem key="poule-management" textValue={pouleManagementText}>
           <Link
             href="/poule-management"
             className={dropdownTextColor}
@@ -51,7 +51,7 @@ export function ManagementDropdown({
             {pouleManagementText}
           </Link>
         </DropdownItem>
-        <DropdownItem key="match-management">
+        <DropdownItem key="match-management" textValue={matchManagementText}>
           <Link
             href="/matches"
             className={dropdownTextColor}
@@ -60,7 +60,10 @@ export function ManagementDropdown({
             {matchManagementText}
           </Link>
         </DropdownItem>
-        <DropdownItem key="training-management">
+        <DropdownItem
+          key="training-management"
+          textValue={trainingManagementText}
+        >
           <Link
             href="/trainings"
             className={dropdownTextColor}
