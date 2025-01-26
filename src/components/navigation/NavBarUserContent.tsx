@@ -38,9 +38,18 @@ function RoleSpecificLinks({
       );
     case 'PLAYER':
       return (
-        <NavLink href="/my-stats" className="text-white" onClick={closeMenu}>
-          My Stats
-        </NavLink>
+        <>
+          <NavLink href="/my-stats" className="text-white" onClick={closeMenu}>
+            My Stats
+          </NavLink>
+          <NavLink
+            href="/my-instructions"
+            className="text-white"
+            onClick={closeMenu}
+          >
+            Info
+          </NavLink>
+        </>
       );
     default:
       return null;
