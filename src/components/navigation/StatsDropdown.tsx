@@ -4,7 +4,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import Link from 'next/link';
 import React from 'react';
 

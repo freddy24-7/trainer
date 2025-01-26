@@ -1,6 +1,6 @@
 'use client';
 
-import { Navbar, NavbarBrand } from '@nextui-org/react';
+import { Navbar, NavbarBrand } from '@heroui/react';
 import Link from 'next/link';
 import React from 'react';
 import { IoFootball } from 'react-icons/io5';

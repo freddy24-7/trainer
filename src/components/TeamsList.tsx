@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import { Card, CardHeader, CardBody } from '@heroui/react';
 import React, { useEffect } from 'react';
 
 import { teamsInPouleLabel } from '@/strings/clientStrings';

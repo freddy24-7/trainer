@@ -7,7 +7,7 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import React, { useState } from 'react';
 
 import { Player } from '@/types/user-types';

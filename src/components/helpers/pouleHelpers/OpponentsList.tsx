@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardBody, Button } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Button } from '@heroui/react';
 import React from 'react';
 
 import { OpponentsListProps } from '@/types/shared-types';

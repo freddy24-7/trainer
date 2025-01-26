@@ -1,4 +1,4 @@
-import { CalendarDate } from '@nextui-org/react';
+import { CalendarDate } from '@heroui/react';
 import { FieldErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 

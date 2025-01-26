@@ -1,6 +1,6 @@
 'use client';
 
-import { NavbarContent } from '@nextui-org/react';
+import { NavbarContent } from '@heroui/react';
 import { useTheme } from 'next-themes';
 import React, { useState, useEffect, ReactElement } from 'react';
 import { CiHome } from 'react-icons/ci';

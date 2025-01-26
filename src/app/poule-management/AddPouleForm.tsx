@@ -1,7 +1,7 @@
 'use client';
 
+import { Button } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 

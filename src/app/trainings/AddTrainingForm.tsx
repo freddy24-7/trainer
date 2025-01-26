@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardHeader, CardBody, Button } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Button } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm, FormProvider, FieldErrors } from 'react-hook-form';

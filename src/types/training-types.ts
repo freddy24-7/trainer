@@ -1,4 +1,4 @@
-import { CalendarDate } from '@nextui-org/react';
+import { CalendarDate } from '@internationalized/date';
 import { UseFormSetValue } from 'react-hook-form';
 
 import { formatError } from '@/utils/errorUtils';

@@ -1,4 +1,4 @@
-import { DatePicker, CalendarDate } from '@nextui-org/react';
+import { DatePicker, CalendarDate } from '@heroui/react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
