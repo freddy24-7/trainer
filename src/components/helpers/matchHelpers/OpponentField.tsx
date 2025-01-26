@@ -1,12 +1,6 @@
 import React from 'react';
 
 import OpponentSelector from '@/components/helpers/matchHelpers/OpponentSelector';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form';
 import { Poule, PouleOpponent } from '@/types/poule-types';
 
 interface FieldError {
@@ -27,23 +21,28 @@ const OpponentField = ({
   onChange,
 }: Props): React.ReactElement | null =>
   selectedPoule && selectedPoule.opponents.length > 0 ? (
-    <FormItem>
-      <FormField
-        name="opponent"
-        render={() => (
-          <>
-            <FormControl>
-              <OpponentSelector
-                opponents={selectedPoule.opponents}
-                selectedOpponent={selectedOpponent}
-                onOpponentChange={onChange}
-              />
-            </FormControl>
-            <FormMessage>{errors.opponent?.message}</FormMessage>{' '}
-          </>
+    <div className="space-y-4">
+      <div className="flex flex-col">
+        <label
+          htmlFor="opponent"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Opponent
+        </label>
+        <div className="relative">
+          <OpponentSelector
+            opponents={selectedPoule.opponents}
+            selectedOpponent={selectedOpponent}
+            onOpponentChange={onChange}
+          />
+        </div>
+        {errors.opponent?.message && (
+          <span className="text-danger text-sm mt-1">
+            {errors.opponent.message}
+          </span>
         )}
-      />
-    </FormItem>
+      </div>
+    </div>
   ) : null;
 
 export default OpponentField;

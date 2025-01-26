@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 
+import DateFilter from '@/components/DateFilter';
 import MatchOpponents from '@/components/helpers/statsHelpers/MatchOpponents';
 import MatchStats from '@/components/helpers/statsHelpers/MatchStats';
-import DateFilter from '@/components/DateFilter';
 import { MatchData } from '@/types/match-types';
 import { PlayerMatchStat } from '@/types/user-types';
 

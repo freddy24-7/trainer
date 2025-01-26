@@ -2,8 +2,8 @@ import React from 'react';
 
 import { getMatchData } from '@/app/actions/getMatchData';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
-import MatchStatsWrapper from '@/components/helpers/statsHelpers/MatchStatsWrapper';
 import ProtectedLayout from '@/app/ProtectedLayout';
+import MatchStatsWrapper from '@/components/helpers/statsHelpers/MatchStatsWrapper';
 import {
   errorLoadingPlayerStatistics,
   errorLoadingMatchData,

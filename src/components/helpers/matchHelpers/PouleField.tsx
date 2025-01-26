@@ -1,12 +1,6 @@
 import React from 'react';
 
 import PouleSelector from '@/components/helpers/pouleHelpers/PouleSelector';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form';
 import { PouleFieldProps } from '@/types/poule-types';
 
 const PouleField = ({
@@ -15,23 +9,26 @@ const PouleField = ({
   errors,
   onChange,
 }: PouleFieldProps): React.ReactElement => (
-  <FormItem>
-    <FormField
-      name="poule"
-      render={() => (
-        <>
-          <FormControl>
-            <PouleSelector
-              poules={poules}
-              selectedPoule={selectedPoule}
-              onPouleChange={onChange}
-            />
-          </FormControl>
-          <FormMessage>{errors.poule?.message}</FormMessage>{' '}
-        </>
-      )}
-    />
-  </FormItem>
+  <div className="space-y-4">
+    {' '}
+    <div className="relative">
+      {' '}
+      <label
+        htmlFor="poule"
+        className="block text-sm font-medium text-gray-700"
+      >
+        Poule
+      </label>
+      <PouleSelector
+        poules={poules}
+        selectedPoule={selectedPoule}
+        onPouleChange={onChange}
+      />
+    </div>
+    {errors.poule?.message && (
+      <span className="text-danger text-sm mt-1">{errors.poule.message}</span>
+    )}
+  </div>
 );
 
 export default PouleField;

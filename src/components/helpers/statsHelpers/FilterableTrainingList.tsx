@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 
+import DateFilter from '@/components/DateFilter';
 import AttendanceTraining from '@/components/helpers/statsHelpers/AttendanceTraining';
 import DataTrainingClient from '@/components/helpers/statsHelpers/DataTrainingClient';
-import DateFilter from '@/components/DateFilter';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
 
 interface FilterableTrainingListProps {

@@ -2,8 +2,8 @@ import { currentUser } from '@clerk/nextjs/server';
 import React from 'react';
 
 import { updateUsername } from '@/app/actions/updateUsername';
-import Dashboard from '@/components/helpers/dashboardHelpers/Dashboard';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
+import Dashboard from '@/components/helpers/dashboardHelpers/Dashboard';
 import LoginModal from '@/components/LoginModal';
 import {
   usernameUpdateFailed,
