@@ -4,7 +4,10 @@
 
 :root {
   --brandcolor: #ee8300;
+  --brandcolor-light: #ffb347;
+  --brandcolor-dark: #b35b00;
 }
+
 
 @layer base {
   :root {

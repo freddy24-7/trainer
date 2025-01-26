@@ -6,7 +6,7 @@ import deletePlayer from '@/app/actions/deletePlayer';
 import editPlayer from '@/app/actions/editPlayer';
 import getPlayers from '@/app/actions/getPlayers';
 import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
-import { DisplayPlayers } from '@/app/player-management/DisplayPlayers';
+import { DisplayPlayers } from '@/components/helpers/playerHelpers/DisplayPlayers';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { handleRenderError } from '@/components/RenderError';
 import { ResponseError } from '@/types/shared-types';

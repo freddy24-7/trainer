@@ -3,7 +3,7 @@ import React from 'react';
 import addPoule from '@/app/actions/addPoule';
 import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import { AddPouleForm } from '@/app/poule-management/AddPouleForm';
-import Mapper from '@/app/poule-management/Mapper';
+import Mapper from '@/components/helpers/pouleHelpers/Mapper';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { unknownErrorOccurred } from '@/strings/serverStrings';
 import { Poule } from '@/types/poule-types';

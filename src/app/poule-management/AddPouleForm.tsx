@@ -1,11 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import { PouleFormContent } from '@/components/helpers/pouleHelpers/PouleFormContent';
-import { Button } from '@/components/ui/button';
 import { useOpponentManagement } from '@/hooks/useOpponentManagement';
 import { createPouleSchema } from '@/schemas/createPouleSchema';
 import { cancelButtonText, addPouleButtonText } from '@/strings/clientStrings';
@@ -55,7 +55,7 @@ function AddPouleForm({ action }: PouleProps): React.ReactElement {
   return (
     <div className="mt-4">
       <Button
-        onClick={() => setShowForm((prev) => !prev)}
+        onPress={() => setShowForm((prev) => !prev)}
         className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
         {showForm ? cancelButtonText : addPouleButtonText}

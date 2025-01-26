@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 
-import MatchOpponents from '@/app/match-stats/MatchOpponents';
-import MatchStats from '@/app/match-stats/MatchStats';
+import MatchOpponents from '@/components/helpers/statsHelpers/MatchOpponents';
+import MatchStats from '@/components/helpers/statsHelpers/MatchStats';
 import DateFilter from '@/components/DateFilter';
 import { MatchData } from '@/types/match-types';
 import { PlayerMatchStat } from '@/types/user-types';

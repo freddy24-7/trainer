@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { fetchMyStatsData } from '@/app/my-stats/fetchMyStatsData';
-import MyStatsWrapper from '@/app/my-stats/MyStatsWrapper';
+import { fetchMyStatsData } from '@/components/helpers/statsHelpers/fetchMyStatsData';
+import MyStatsWrapper from '@/components/helpers/statsHelpers/MyStatsWrapper';
 import ProtectedLayout from '@/app/ProtectedLayout';
 
 const MyStatsPage = async (): Promise<React.ReactElement> => {

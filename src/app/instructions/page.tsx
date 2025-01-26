@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Instructions from '@/app/instructions/Instructions';
+import Instructions from '@/components/helpers/instructionsHelpers/Instructions';
 import ProtectedLayout from '@/app/ProtectedLayout';
 
 export const dynamic = 'force-dynamic';

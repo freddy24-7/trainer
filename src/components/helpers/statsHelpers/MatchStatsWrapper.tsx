@@ -3,7 +3,7 @@
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
-import FilteredMatchStatsPage from '@/app/match-stats/FilteredMatchStatsPage';
+import FilteredMatchStatsPage from '@/components/helpers/statsHelpers/FilteredMatchStatsPage';
 import { MatchData } from '@/types/match-types';
 import { PlayerMatchStat } from '@/types/user-types';
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
 import { getTrainingData } from '@/app/actions/getTrainingData';
 import ProtectedLayout from '@/app/ProtectedLayout';
-import FilterableTrainingListWrapper from '@/app/training-stats/FilterableTrainingListWrapper';
+import FilterableTrainingListWrapper from '@/components/helpers/statsHelpers/FilterableTrainingListWrapper';
 import {
   errorLoadingTrainingData,
   errorLoadingAttendanceData,

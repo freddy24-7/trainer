@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { EditPlayerForm } from '@/app/player-management/EditPlayerForm';
+import { EditPlayerForm } from '@/components/helpers/playerHelpers/EditPlayerForm';
 import ReusableModal from '@/components/ReusableModal';
 import { PlayerModalProps } from '@/types/user-types';
 import { handleSubmissionState } from '@/utils/submissionUtils';

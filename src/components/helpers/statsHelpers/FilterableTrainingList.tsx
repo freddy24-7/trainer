@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 
-import AttendanceTraining from '@/app/training-stats/AttendanceTraining';
-import DataTrainingClient from '@/app/training-stats/DataTrainingClient';
+import AttendanceTraining from '@/components/helpers/statsHelpers/AttendanceTraining';
+import DataTrainingClient from '@/components/helpers/statsHelpers/DataTrainingClient';
 import DateFilter from '@/components/DateFilter';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
 

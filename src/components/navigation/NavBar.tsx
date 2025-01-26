@@ -19,7 +19,10 @@ export default function NavBar({ user }: NavBarProps): React.ReactElement {
   };
 
   return (
-    <Navbar maxWidth="full" className="bg-brandcolor px-4 py-2">
+    <Navbar
+      maxWidth="full"
+      className="bg-gradient-to-br from-[var(--brandcolor-light)] via-[var(--brandcolor)] to-[var(--brandcolor-dark)] px-4 py-2"
+    >
       <NavbarBrand as={Link} href="/" className="flex items-center space-x-2">
         <IoFootball size={28} className="text-gray-700" />
         <div className="hidden sm:flex font-bold text-lg">

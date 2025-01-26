@@ -1,8 +1,8 @@
+import { Button } from '@nextui-org/react';
 import React from 'react';
 
 import { OpponentsList } from '@/components/helpers/pouleHelpers/OpponentsList';
 import { PouleFormFields } from '@/components/helpers/pouleHelpers/PouleFormFields';
-import { Button } from '@/components/ui/button';
 import {
   pouleManagementHeading,
   addOpponentButtonText,
@@ -31,7 +31,7 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
 
       <Button
         type="button"
-        onClick={handleAddOpponent}
+        onPress={handleAddOpponent}
         className="mt-2 bg-blue-500 text-white p-1 rounded"
       >
         {addOpponentButtonText}

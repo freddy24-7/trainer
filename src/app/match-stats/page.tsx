@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getMatchData } from '@/app/actions/getMatchData';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
-import MatchStatsWrapper from '@/app/match-stats/MatchStatsWrapper';
+import MatchStatsWrapper from '@/components/helpers/statsHelpers/MatchStatsWrapper';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import {
   errorLoadingPlayerStatistics,

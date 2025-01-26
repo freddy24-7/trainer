@@ -1,7 +1,6 @@
-import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Button } from '@nextui-org/react';
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
 import { OpponentsListProps } from '@/types/shared-types';
 
 export const OpponentsList: React.FC<OpponentsListProps> = ({
@@ -19,7 +18,7 @@ export const OpponentsList: React.FC<OpponentsListProps> = ({
             <span>{opponent}</span>
             <Button
               type="button"
-              onClick={() => onRemove(index)}
+              onPress={() => onRemove(index)}
               className="text-red-500 ml-2"
               variant="ghost"
               size="sm"
