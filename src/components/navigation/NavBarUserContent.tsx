@@ -73,14 +73,14 @@ export function NavBarUserContent({
 
   return (
     <div className={containerClasses}>
+      <NavLink href="/chat" className="text-white" onClick={closeMenu}>
+        Chat
+      </NavLink>
       <RoleSpecificLinks
         userRole={validUserRole}
         dropdownTextColor={dropdownTextColor}
         closeMenu={closeMenu}
       />
-      <NavLink href="/chat" className="text-white" onClick={closeMenu}>
-        Chat
-      </NavLink>
       <UserButton />
     </div>
   );

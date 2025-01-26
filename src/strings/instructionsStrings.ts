@@ -8,7 +8,7 @@ export const instructionsAccountManagementMessage =
   'Door op het gebruikerspictogram rechtsboven te klikken, kun je je account beheren en je gebruikersnaam en wachtwoord wijzigen indien gewenst. Bewaar deze nieuwe inloggegevens veilig, aangezien je beheerder om privacyredenen geen toegang heeft tot deze nieuwe inloggegevens.';
 
 export const playerManagementInstructions =
-  'Voeg spelers toe aan je team en stel hun eerste gebruikersnaam en wachtwoord in. Hiermee kunnen spelers inloggen. Je kunt ook een WhatsApp-uitnodiging naar spelers sturen. Spelers kunnen later hun gebruikersnaam en wachtwoord wijzigen. Houd er rekening mee dat spelers geen informatie over aanwezigheid bij wedstrijden of trainingen kunnen zien.';
+  'Voeg spelers toe aan je team en stel hun eerste gebruikersnaam en wachtwoord in. Hiermee kunnen spelers inloggen. Je kunt ook een WhatsApp-uitnodiging naar spelers sturen. Spelers kunnen later hun gebruikersnaam en wachtwoord wijzigen.';
 
 export const pouleManagementInstructions =
   'Voeg teams toe in de poule waar jouw team deel van uitmaakt. Dit is nodig om wedstrijden te registreren. Voeg nieuwe poules toe indien nodig; de applicatie gebruikt de laatst toegevoegde poule voor nieuwe wedstrijden.';
@@ -23,7 +23,7 @@ export const chatFunctionInstructions =
   'Trainers en spelers kunnen communiceren via groeps- of individuele chats. Trainers kunnen ook videoclips naar de groep of individuele spelers sturen voor feedback.';
 
 export const playerAccessInstructions =
-  'Spelers hebben alleen toegang tot de chatfunctie, dus je hoeft geen spelers uit te nodigen als je de app alleen gebruikt voor training- en wedstrijdregistratie.';
+  'Spelers hebben toegang tot de chatfunctie en kunnen rapporten bekijken over hun eigen trainings- en wedstrijddeelname, maar niet die van andere spelers.';
 
 export const appDesignInstructions =
   'De app is ontworpen voor verschillende schermformaten, inclusief mobiel, maar het registreren van gegevens of het verzenden van video’s gaat makkelijker op een laptop.';
