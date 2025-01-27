@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TeamsList from '@/components/TeamsList';
+import TeamsList from '@/components/helpers/pouleHelpers/TeamsList';
 import { PouleItemProps } from '@/types/poule-types';
 
 const PouleItem: React.FC<PouleItemProps> = ({ poule }) => {

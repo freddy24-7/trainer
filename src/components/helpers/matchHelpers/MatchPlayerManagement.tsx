@@ -18,11 +18,9 @@ interface PlayerManagementProps {
   matchEvents: MatchFormValues['matchEvents'];
 }
 
-const PlayerManagement: React.FC<PlayerManagementProps> = ({
-  players,
-  setValue,
-  matchEvents,
-}) => {
+const PlayerManagement: React.FC<
+  PlayerManagementProps & { onLineupFinalized: (finalized: boolean) => void }
+> = ({ players, setValue, matchEvents, onLineupFinalized }) => {
   const {
     playerStates,
     setPlayerStates,
@@ -50,8 +48,8 @@ const PlayerManagement: React.FC<PlayerManagementProps> = ({
   }, [lineupFinalized, playerStates, players, setValue]);
 
   useEffect(() => {
-    console.log('Updated matchEvents:', matchEvents);
-  }, [matchEvents]);
+    onLineupFinalized(lineupFinalized);
+  }, [lineupFinalized, onLineupFinalized]);
 
   return (
     <div>

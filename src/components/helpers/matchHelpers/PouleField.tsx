@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PouleSelector from '@/components/helpers/pouleHelpers/PouleSelector';
+import PouleSelector from '@/components/helpers/playerHelpers/PouleSelector';
 import { PouleFieldProps } from '@/types/poule-types';
 
 const PouleField = ({

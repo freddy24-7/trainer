@@ -23,6 +23,10 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   matchEvents = [],
 }) => {
   const { watch, handleSubmit } = methods;
+
+  const [lineupFinalized, setLineupFinalized] = useState(false);
+
+  const date = watch('date');
   const matchType = watch('matchType') as 'competition' | 'practice';
 
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
@@ -45,6 +49,8 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
       }
     }
   };
+
+  const isFormValid = date && lineupFinalized;
 
   return (
     <FormProvider {...methods}>
@@ -72,12 +78,18 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
             playerValues={playerValues}
             setValue={setValue}
             matchEvents={matchEvents || []}
+            onLineupFinalized={setLineupFinalized}
           />
         )}
 
         <Button
           type="submit"
-          className="mt-4 w-full p-2 bg-black text-white rounded hover:bg-gray-800"
+          className={`mt-4 w-full p-2 rounded ${
+            isFormValid
+              ? 'bg-black text-white hover:bg-gray-800'
+              : 'bg-gray-400 text-gray-700 cursor-not-allowed'
+          }`}
+          disabled={!isFormValid}
         >
           Add Match
         </Button>
