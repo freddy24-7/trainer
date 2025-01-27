@@ -1,3 +1,4 @@
+import { Button } from '@heroui/react';
 import React from 'react';
 
 import {
@@ -30,8 +31,8 @@ const renderVideoControls = (
     />
     <div className="flex justify-end mt-2">
       {msg.sender.id !== signedInUser.id && (
-        <button
-          onClick={() => {
+        <Button
+          onPress={() => {
             if (msg.videoUrl) {
               handleDownloadVideo(msg.videoUrl, msg.id);
             } else {
@@ -41,15 +42,15 @@ const renderVideoControls = (
           className="text-blue-500 text-xs"
         >
           Download Video
-        </button>
+        </Button>
       )}
       <div className="flex justify-end ml-2">
-        <button
-          onClick={() => onDeleteVideo(msg.id, true)}
+        <Button
+          onPress={() => onDeleteVideo(msg.id, true)}
           className="text-red-500 text-xs"
         >
           {removeVideoButtonText}
-        </button>
+        </Button>
       </div>
     </div>
   </div>
@@ -94,14 +95,14 @@ const MessageList: React.FC<MessageListProps> = ({
             {renderMessageContent(msg, signedInUser, onDeleteVideo)}
 
             <div className="flex justify-end mt-2">
-              <button
-                onClick={() =>
+              <Button
+                onPress={() =>
                   onDeleteMessage(msg.id, msg.sender.id === signedInUser.id)
                 }
                 className="text-red-500 text-xs"
               >
                 {deleteMessageButtonText}
-              </button>
+              </Button>
             </div>
 
             <div className="text-xs text-gray-400 mt-1">

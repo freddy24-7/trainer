@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@heroui/react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import React, { useState } from 'react';
@@ -23,12 +24,12 @@ export function MobileMenu({
 
   return (
     <>
-      <button
+      <Button
         className="text-white border border-white rounded p-2"
-        onClick={() => setMenuOpen(!menuOpen)}
+        onPress={() => setMenuOpen(!menuOpen)}
       >
         {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-      </button>
+      </Button>
 
       {menuOpen && (
         <div
@@ -44,16 +45,16 @@ export function MobileMenu({
             <span>{homeLabel}</span>
           </Link>
 
-          <button
+          <Button
             className="text-white border border-white rounded p-2 flex items-center space-x-2 w-full justify-start"
-            onClick={() => {
+            onPress={() => {
               setTheme(theme === 'light' ? 'dark' : 'light');
               closeMenu();
             }}
           >
             {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
             <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-          </button>
+          </Button>
 
           <NavBarUserContent
             userId={userId}

@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@heroui/react';
 import React from 'react';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -30,9 +31,9 @@ const VideoUploader: React.FC<
   selectedVideo,
 }) => (
   <div className="flex items-center w-full sm:w-auto">
-    <button
+    <Button
       type="button"
-      onClick={triggerFileInput}
+      onPress={triggerFileInput}
       disabled={isUploading}
       className={`cursor-pointer mr-2 flex items-center p-2 border border-gray-300 rounded ${
         isUploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
@@ -51,7 +52,7 @@ const VideoUploader: React.FC<
           d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M4 6h4m4 0h4M4 6v12m0-12L20 18M4 18h16"
         />
       </svg>
-    </button>
+    </Button>
 
     <input
       ref={inputFileRef}
@@ -118,7 +119,7 @@ const SubmitButton: React.FC<
     newMessage: string;
   } & SelectedVideoProps
 > = ({ isUploading, newMessage, selectedVideo }) => (
-  <button
+  <Button
     type="submit"
     className={`p-2 rounded mt-2 sm:mt-0 ${
       isUploading || (!newMessage.trim() && !selectedVideo)
@@ -128,7 +129,7 @@ const SubmitButton: React.FC<
     disabled={isUploading || (!newMessage.trim() && !selectedVideo)}
   >
     {isUploading ? 'Uploading...' : sendButtonText}
-  </button>
+  </Button>
 );
 
 const ChatMessageInputForm: React.FC<

@@ -1,3 +1,4 @@
+import { Button } from '@heroui/react';
 import React, { useEffect, useState } from 'react';
 
 import { usePlayerFormState } from '@/hooks/usePlayerFormState';
@@ -110,7 +111,7 @@ function PlayerForm({
         placeholder={whatsappNumberPlaceholder}
       />
 
-      <button
+      <Button
         type="submit"
         disabled={!isFormValid || isSubmitting}
         className={`w-full py-2 px-4 rounded-lg shadow focus:outline-none focus:ring ${
@@ -120,7 +121,7 @@ function PlayerForm({
         }`}
       >
         {isSubmitting ? 'Submitting...' : submitButtonText}
-      </button>
+      </Button>
     </form>
   );
 }

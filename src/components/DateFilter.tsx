@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@heroui/react';
 import React, { useState } from 'react';
 
 import DateField from '@/components/DateField';
@@ -25,12 +26,12 @@ const DateFilter: React.FC<DateFilterProps> = ({
   return (
     <div>
       <div className="text-right mb-4">
-        <button
+        <Button
           className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={() => setShowFilters(!showFilters)}
+          onPress={() => setShowFilters(!showFilters)}
         >
           {showFilters ? 'Hide Filters' : label}
-        </button>
+        </Button>
       </div>
 
       {showFilters && (
@@ -49,12 +50,12 @@ const DateFilter: React.FC<DateFilterProps> = ({
             errors={{}}
             label="End Date"
           />
-          <button
+          <Button
             className="bg-green-500 text-white px-4 py-2 rounded"
-            onClick={handleFilter}
+            onPress={handleFilter}
           >
             Apply Filter
-          </button>
+          </Button>
         </div>
       )}
     </div>
