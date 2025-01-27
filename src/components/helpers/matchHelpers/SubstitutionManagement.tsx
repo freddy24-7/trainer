@@ -49,6 +49,33 @@ const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
   const [minute, setMinute] = useState<number | ''>('');
   const [substitutions, setSubstitutions] = useState<Substitution[]>([]);
 
+  const isValid =
+    minute !== '' &&
+    substitutions.length > 0 &&
+    substitutions.some((sub) => sub.playerInId !== null) &&
+    substitutions.some((sub) => sub.playerOutId !== null);
+
+  const handleConfirmClick = (): void => {
+    if (!isValid) {
+      console.error(
+        'Validation failed: Select a minute, at least one incoming player, and at least one outgoing player.'
+      );
+      return;
+    }
+
+    handleConfirmAllAtOnce({
+      minute,
+      substitutions,
+      matchEvents,
+      playerStates,
+      setValue,
+      setPlayerStates,
+      setOpen,
+      setMinute,
+      setSubstitutions,
+    });
+  };
+
   return (
     <>
       <Button onPress={() => setOpen(true)} color="primary">
@@ -72,20 +99,9 @@ const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
 
           <ModalFooter>
             <Button
-              onPress={() =>
-                handleConfirmAllAtOnce({
-                  minute,
-                  substitutions,
-                  matchEvents,
-                  playerStates,
-                  setValue,
-                  setPlayerStates,
-                  setOpen,
-                  setMinute,
-                  setSubstitutions,
-                })
-              }
+              onPress={handleConfirmClick}
               color="primary"
+              isDisabled={!isValid}
             >
               Confirm
             </Button>

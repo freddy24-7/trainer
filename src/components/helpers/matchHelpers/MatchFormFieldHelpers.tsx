@@ -1,13 +1,12 @@
 import { Button } from '@heroui/react';
 import React, { useState } from 'react';
-import { FormProvider, SubmitHandler } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 
-import DateField from '@/components/DateField';
 import ConfirmationModal from '@/components/helpers/matchHelpers/ConfirmationModal';
-import PlayerManagement from '@/components/helpers/matchHelpers/MatchPlayerManagement';
-import MatchTypeSelection from '@/components/helpers/matchHelpers/MatchTypeSelection';
-import OpponentLogic from '@/components/helpers/matchHelpers/OpponentLogic';
-import { MatchFormFieldProps, MatchFormValues } from '@/types/match-types';
+import { useMatchFormHandlers } from '@/hooks/useMatchFormHandlers';
+import { MatchFormFieldProps } from '@/types/match-types';
+
+import MatchFormFields from './MatchFormFields';
 
 const MatchForm: React.FC<MatchFormFieldProps> = ({
   methods,
@@ -23,68 +22,37 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   matchEvents = [],
 }) => {
   const { watch, handleSubmit } = methods;
-
   const [lineupFinalized, setLineupFinalized] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [formData, setFormData] = useState<MatchFormValues | null>(null);
+
+  const {
+    handleFormSubmit,
+    handleConfirmSubmission,
+    isSubmitting,
+    isConfirmationModalOpen,
+    setConfirmationModalOpen,
+  } = useMatchFormHandlers({ onSubmit });
 
   const date = watch('date');
   const matchType = watch('matchType') as 'competition' | 'practice';
-
-  const handleFormSubmit: SubmitHandler<MatchFormValues> = (data) => {
-    setFormData(data);
-    setConfirmationModalOpen(true);
-  };
-
-  const handleConfirmSubmission: () => Promise<void> = async () => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    setConfirmationModalOpen(false);
-
-    if (formData) {
-      try {
-        await onSubmit(formData);
-        console.log('Match submitted successfully!');
-      } catch (error) {
-        console.error('Error submitting match data:', error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
-  };
 
   const isFormValid = date && lineupFinalized;
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-        <MatchTypeSelection matchType={matchType} setValue={setValue} />
-
-        <OpponentLogic
+        <MatchFormFields
           matchType={matchType}
-          selectedPoule={selectedPoule}
-          selectedOpponent={selectedOpponent}
+          poules={poules}
+          players={players}
           errors={errors}
           setValue={setValue}
-          poules={poules}
           opponentStrength={opponentStrength}
+          matchEvents={matchEvents}
+          playerValues={playerValues}
+          selectedPoule={selectedPoule}
+          selectedOpponent={selectedOpponent}
+          setLineupFinalized={setLineupFinalized}
         />
-        <DateField
-          errors={errors}
-          label="Match date"
-          onChange={(date) => setValue('date', date)}
-        />
-
-        {players.length > 0 && (
-          <PlayerManagement
-            players={players}
-            playerValues={playerValues}
-            setValue={setValue}
-            matchEvents={matchEvents || []}
-            onLineupFinalized={setLineupFinalized}
-          />
-        )}
 
         <Button
           type="submit"

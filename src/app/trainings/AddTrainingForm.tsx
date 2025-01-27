@@ -4,24 +4,19 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Button,
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Button,
 } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { useForm, FormProvider, FieldErrors } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 
-import DateField from '@/components/DateField';
-import TrainingPlayersField from '@/components/helpers/trainingHelpers/TrainingPlayersField';
-import {
-  submittingButtonText,
-  addTrainingButtonText,
-  addTrainingHeader,
-} from '@/strings/clientStrings';
+import TrainingFormBody from '@/components/helpers/trainingHelpers/TrainingFormBody';
+import { addTrainingHeader } from '@/strings/clientStrings';
 import {
   TrainingFormValues,
   TrainingFrontEndProps,
@@ -36,21 +31,18 @@ const AddTrainingForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [formData, setFormData] = useState<TrainingFormValues | null>(null);
-
   const methods = useForm<TrainingFormValues>({
     defaultValues: {
       date: null,
       players: players.map((player) => ({ userId: player.id, absent: false })),
     },
   });
-
   const {
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
   } = methods;
-
   const date = watch('date');
   const playerData = watch('players');
 
@@ -87,37 +79,18 @@ const AddTrainingForm = ({
         </CardHeader>
         <CardBody>
           <FormProvider {...methods}>
-            <form
+            <TrainingFormBody
+              players={players}
+              playerValues={playerData}
+              setValue={setValue}
+              errors={errors}
+              date={date}
+              isSubmitting={isSubmitting}
               onSubmit={handleSubmit(handleFormSubmit)}
-              className="space-y-4 text-center"
-            >
-              <DateField
-                errors={errors as FieldErrors<TrainingFormValues>}
-                label="Training Date"
-                onChange={(date) => setValue('date', date)}
-              />
-
-              <TrainingPlayersField
-                players={players}
-                playerValues={playerData}
-                setValue={setValue}
-              />
-
-              <Button
-                type="submit"
-                color="primary"
-                size="lg"
-                className="w-full"
-                isDisabled={!date || isSubmitting}
-                isLoading={isSubmitting}
-              >
-                {isSubmitting ? submittingButtonText : addTrainingButtonText}
-              </Button>
-            </form>
+            />
           </FormProvider>
         </CardBody>
       </Card>
-
       <Modal isOpen={isConfirmationModalOpen} backdrop="transparent">
         <ModalContent>
           <ModalHeader>Submit Training?</ModalHeader>
