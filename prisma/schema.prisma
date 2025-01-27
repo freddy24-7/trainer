@@ -135,8 +135,7 @@ enum OpponentStrength {
 }
 
 enum EventType {
-  SUBSTITUTION_IN
-  SUBSTITUTION_OUT
+  SUBSTITUTION
   GOAL
   ASSIST
 }

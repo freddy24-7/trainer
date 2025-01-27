@@ -58,7 +58,7 @@ function handleExtractMatchEvents(params: FormData): {
   playerOutId?: number | null;
   playerId?: number | null;
   minute: number | null;
-  eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
+  eventType: 'SUBSTITUTION' | 'GOAL' | 'ASSIST';
   substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
 }[] {
   const matchEvents: {
@@ -66,7 +66,7 @@ function handleExtractMatchEvents(params: FormData): {
     playerOutId?: number | null;
     playerId?: number | null;
     minute: number | null;
-    eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
+    eventType: 'SUBSTITUTION' | 'GOAL' | 'ASSIST';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   }[] = getParsedJSON(getStringValue(params.get('matchEvents')), []);
 

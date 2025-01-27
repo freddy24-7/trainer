@@ -15,7 +15,7 @@ export const calculatePlayerMinutes = (
   }[] = [];
 
   (matchEvents || []).forEach((matchEvent) => {
-    if (matchEvent.eventType === 'SUBSTITUTION_IN') {
+    if (matchEvent.eventType === 'SUBSTITUTION') {
       if (matchEvent.playerInId) {
         substitutionEvents.push({
           minute: matchEvent.minute,
@@ -67,17 +67,6 @@ export const calculatePlayerMinutes = (
   return playerMinutes;
 };
 
-export const updatePlayerValues = (
-  players: Player[],
-  playerMinutes: Record<number, number>
-): MatchFormValues['players'] => {
-  return players.map((player) => ({
-    id: player.id,
-    minutes: playerMinutes[player.id] || 0,
-    available: true,
-  }));
-};
-
 export const handlePlayerStateChange = (
   playerId: number,
   newState: 'playing' | 'bench' | 'absent',
@@ -125,7 +114,7 @@ export const handleSubstitution = (
     playerInId,
     playerOutId,
     minute,
-    eventType: 'SUBSTITUTION_IN' as const,
+    eventType: 'SUBSTITUTION' as const,
     substitutionReason,
   };
 

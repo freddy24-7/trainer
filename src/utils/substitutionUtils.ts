@@ -116,7 +116,7 @@ export function handleConfirmAllAtOnce({
     minute: minute as number,
     playerInId: sub.playerInId as number,
     playerOutId: sub.playerOutId,
-    eventType: 'SUBSTITUTION_IN' as const,
+    eventType: 'SUBSTITUTION' as const,
     substitutionReason: sub.substitutionReason,
   }));
 

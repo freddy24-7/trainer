@@ -19,7 +19,7 @@ interface MatchEvent {
   playerOutId?: number | null;
   playerId?: number | null;
   minute: number;
-  eventType: 'SUBSTITUTION_IN' | 'SUBSTITUTION_OUT' | 'GOAL' | 'ASSIST';
+  eventType: 'SUBSTITUTION' | 'GOAL' | 'ASSIST';
   substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
 }
 

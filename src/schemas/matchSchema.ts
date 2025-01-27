@@ -14,18 +14,13 @@ export const matchEventSchema = z
       .min(1, 'Invalid player-out ID')
       .nullable()
       .optional(),
-    playerId: z.number().min(1, 'Invalid player ID').nullable(), // Add playerId validation
+    playerId: z.number().min(1, 'Invalid player ID').nullable(),
     minute: z
       .number()
       .min(0, 'Minute must be non-negative')
       .nullable()
       .optional(),
-    eventType: z.enum([
-      'SUBSTITUTION_IN',
-      'SUBSTITUTION_OUT',
-      'GOAL',
-      'ASSIST',
-    ]),
+    eventType: z.enum(['SUBSTITUTION', 'GOAL', 'ASSIST']),
     substitutionReason: z
       .enum(['TACTICAL', 'FITNESS', 'INJURY', 'OTHER'])
       .nullable()
@@ -41,7 +36,7 @@ export const matchEventSchema = z
   )
   .refine(
     (data) =>
-      !['SUBSTITUTION_IN', 'SUBSTITUTION_OUT'].includes(data.eventType) ||
+      !['SUBSTITUTION'].includes(data.eventType) ||
       (data.minute !== null && data.minute !== undefined),
     {
       message: 'Minutes are required for substitutions',
