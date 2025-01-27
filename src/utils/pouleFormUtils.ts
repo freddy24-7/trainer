@@ -11,8 +11,8 @@ export const addOpponent = (
   setOpponents: React.Dispatch<React.SetStateAction<string[]>>,
   setValue: UseFormSetValue<PouleFormValues>
 ): void => {
-  if (opponentName.trim()) {
-    const trimmedName = opponentName.trim();
+  const trimmedName = opponentName.trim();
+  if (trimmedName) {
     const updatedOpponents = [...opponents, trimmedName];
     setOpponents(updatedOpponents);
     setValue('opponents', updatedOpponents);

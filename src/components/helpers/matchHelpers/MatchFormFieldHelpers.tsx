@@ -25,12 +25,12 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   const { watch, handleSubmit } = methods;
 
   const [lineupFinalized, setLineupFinalized] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [formData, setFormData] = useState<MatchFormValues | null>(null);
 
   const date = watch('date');
   const matchType = watch('matchType') as 'competition' | 'practice';
-
-  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [formData, setFormData] = useState<MatchFormValues | null>(null);
 
   const handleFormSubmit: SubmitHandler<MatchFormValues> = (data) => {
     setFormData(data);
@@ -38,6 +38,8 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   };
 
   const handleConfirmSubmission: () => Promise<void> = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     setConfirmationModalOpen(false);
 
     if (formData) {
@@ -46,6 +48,8 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
         console.log('Match submitted successfully!');
       } catch (error) {
         console.error('Error submitting match data:', error);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -85,13 +89,13 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
         <Button
           type="submit"
           className={`mt-4 w-full p-2 rounded ${
-            isFormValid
+            isFormValid && !isSubmitting
               ? 'bg-black text-white hover:bg-gray-800'
               : 'bg-gray-400 text-gray-700 cursor-not-allowed'
           }`}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
         >
-          Add Match
+          {isSubmitting ? 'Submitting...' : 'Add Match'}
         </Button>
       </form>
 

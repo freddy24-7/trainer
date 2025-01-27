@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { usePlayerFormState } from '@/hooks/usePlayerFormState';
 import {
@@ -55,14 +55,31 @@ function PlayerForm({
     initialData ?? { username: '', password: '', whatsappNumber: '' }
   );
 
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const isValid =
+      username.trim() !== '' &&
+      password.trim() !== '' &&
+      whatsappNumber.trim() !== '';
+    setIsFormValid(isValid);
+  }, [username, password, whatsappNumber]);
+
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     onSubmissionStart();
 
     try {
       await onSubmit({ username, password, whatsappNumber });
     } catch (error) {
       console.error('Error during submission:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -95,9 +112,14 @@ function PlayerForm({
 
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring"
+        disabled={!isFormValid || isSubmitting}
+        className={`w-full py-2 px-4 rounded-lg shadow focus:outline-none focus:ring ${
+          isFormValid && !isSubmitting
+            ? 'bg-blue-500 text-white hover:bg-blue-600'
+            : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+        }`}
       >
-        {submitButtonText}
+        {isSubmitting ? 'Submitting...' : submitButtonText}
       </button>
     </form>
   );
