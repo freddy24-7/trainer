@@ -41,11 +41,11 @@ const PlayerManagement: React.FC<
       players.map((player) => ({
         id: player.id,
         state: playerStates[player.id],
-        minutes: 0,
-        available: true,
+        minutes: playerMinutes[player.id],
+        available: playerStates[player.id] !== 'absent',
       }))
     );
-  }, [lineupFinalized, playerStates, players, setValue]);
+  }, [lineupFinalized, playerStates, players, setValue, playerMinutes]);
 
   useEffect(() => {
     onLineupFinalized(lineupFinalized);
