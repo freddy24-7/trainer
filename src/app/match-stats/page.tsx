@@ -3,7 +3,7 @@ import React from 'react';
 import { getMatchData } from '@/app/actions/getMatchData';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
 import ProtectedLayout from '@/app/ProtectedLayout';
-import MatchStatsWrapper from '@/components/helpers/statsHelpers/MatchStatsWrapper';
+import MatchStatsWrapper from '@/components/helpers/matchStatsHelpers/MatchStatsWrapper';
 import {
   errorLoadingPlayerStatistics,
   errorLoadingMatchData,

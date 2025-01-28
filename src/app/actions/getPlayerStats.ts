@@ -8,10 +8,13 @@ import { mapPlayerStats, getValidPlayers } from '@/utils/matchPlayerUtils';
 
 export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
   try {
+    // This will fetch `MatchEvent` now as well
     const players = await fetchPlayers(true);
 
+    // Ensure each player object has a username, etc.
     const validPlayers = getValidPlayers(players);
 
+    // `mapPlayerStats` now returns { goals, assists } too
     const playerStats = mapPlayerStats(validPlayers);
 
     return { success: true, playerStats };

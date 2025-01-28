@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 
 import DateFilter from '@/components/DateFilter';
-import AttendanceTraining from '@/components/helpers/statsHelpers/AttendanceTraining';
-import DataTrainingClient from '@/components/helpers/statsHelpers/DataTrainingClient';
+import AttendanceTraining from '@/components/helpers/trainingStatsHelpers/AttendanceTraining';
+import DataTrainingClient from '@/components/helpers/trainingStatsHelpers/DataTrainingClient';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
 
 interface FilterableTrainingListProps {

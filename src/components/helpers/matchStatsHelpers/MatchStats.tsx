@@ -3,7 +3,7 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-import PlayerStatsTable from '@/components/helpers/statsHelpers/PlayerStatsTable';
+import PlayerStatsTable from '@/components/helpers/matchStatsHelpers/PlayerStatsTable';
 import { MatchClientProps } from '@/types/match-types';
 
 const MatchStats: React.FC<MatchClientProps> = ({ playerStats }) => {

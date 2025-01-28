@@ -3,7 +3,7 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-import MatchDetail from '@/components/helpers/statsHelpers/MatchDetail';
+import MatchDetail from '@/components/helpers/matchStatsHelpers/MatchDetail';
 import { OpponentClientProps } from '@/types/shared-types';
 
 const MatchOpponents: React.FC<OpponentClientProps> = ({ matchData }) => {

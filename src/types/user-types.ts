@@ -95,6 +95,8 @@ export interface PlayerMatchStat {
   matchesPlayed: number;
   averagePlayingTime: number;
   absences: number;
+  goals: number;
+  assists: number;
 }
 
 export interface PlayerResponse {
@@ -115,6 +117,8 @@ export interface PlayerStat {
   matchesPlayed: number;
   averagePlayingTime: number;
   absences: number;
+  goals: number;
+  assists: number;
 }
 
 export interface PlayerStatsTableProps {

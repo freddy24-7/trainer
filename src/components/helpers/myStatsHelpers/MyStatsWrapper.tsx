@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import DateFilter from '@/components/DateFilter';
-import MatchStatsTable from '@/components/helpers/statsHelpers/MyMatchStatsTable';
+import MatchStatsTable from '@/components/helpers/myStatsHelpers/MyMatchStatsTable';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
 import { PlayerStat, SignedInUser } from '@/types/user-types';
 import {

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
-import FilterableTrainingList from '@/components/helpers/statsHelpers/FilterableTrainingList';
+import FilterableTrainingList from '@/components/helpers/trainingStatsHelpers/FilterableTrainingList';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
 
 interface FilterableTrainingListWrapperProps {

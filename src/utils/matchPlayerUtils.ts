@@ -1,4 +1,4 @@
-import { MatchPlayerInfo, MatchPlayer } from '@/types/match-types';
+import { MatchPlayerInfo } from '@/types/match-types';
 
 export const calculateMatchesPlayed = (
   matchPlayers: MatchPlayerInfo[] = []
@@ -29,15 +29,15 @@ export const mapPlayerStats = (
       minutes: number;
       available: boolean;
     }[];
+    MatchEvent?: {
+      id: number;
+      eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
+      minute: number;
+    }[];
   }[]
-): {
-  id: number;
-  username: string;
-  matchesPlayed: number;
-  averagePlayingTime: number;
-  absences: number;
-}[] => {
+) => {
   return players.map((player) => {
+    // Existing stats
     const matchesPlayed = calculateMatchesPlayed(player.matchPlayers);
     const totalMinutesPlayed = calculateTotalMinutesPlayed(player.matchPlayers);
     const averagePlayingTime = calculateAveragePlayingTime(
@@ -46,12 +46,22 @@ export const mapPlayerStats = (
     );
     const absences = calculateAbsences(player.matchPlayers);
 
+    // NEW: goals & assists
+    const goals = player.MatchEvent
+      ? player.MatchEvent.filter((evt) => evt.eventType === 'GOAL').length
+      : 0;
+    const assists = player.MatchEvent
+      ? player.MatchEvent.filter((evt) => evt.eventType === 'ASSIST').length
+      : 0;
+
     return {
       id: player.id,
       username: player.username,
       matchesPlayed,
       averagePlayingTime,
       absences,
+      goals,
+      assists,
     };
   });
 };
@@ -68,13 +78,20 @@ export const getValidPlayers = (
       minutes: number;
       available: boolean;
     }[];
+    MatchEvent?: {
+      id: number;
+      eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
+      minute: number;
+    }[];
   }[]
-): MatchPlayer[] => {
+) => {
   return players
     .filter((player) => player.username !== null)
     .map((player) => ({
       id: player.id,
       username: player.username as string,
       matchPlayers: player.matchPlayers ?? [],
+      // Keep the events if present
+      MatchEvent: player.MatchEvent ?? [],
     }));
 };
