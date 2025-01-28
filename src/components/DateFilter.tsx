@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@heroui/react';
 import React, { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import DateField from '@/components/DateField';
 
@@ -14,11 +14,12 @@ const DateFilter: React.FC<DateFilterProps> = ({
   onFilter,
   label = 'Change Dates',
 }) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const { getValues } = useFormContext();
 
-  const handleFilter = (): void => {
+  const applyFilter = () => {
+    const startDate = getValues('startDate');
+    const endDate = getValues('endDate');
     onFilter(startDate, endDate);
     setShowFilters(false);
   };
@@ -26,36 +27,24 @@ const DateFilter: React.FC<DateFilterProps> = ({
   return (
     <div>
       <div className="text-right mb-4">
-        <Button
+        <button
           className="bg-blue-500 text-white px-4 py-2 rounded"
-          onPress={() => setShowFilters(!showFilters)}
+          onClick={() => setShowFilters(!showFilters)}
         >
           {showFilters ? 'Hide Filters' : label}
-        </Button>
+        </button>
       </div>
 
       {showFilters && (
-        <div className="flex justify-center space-x-4 mb-6">
-          <DateField
-            onChange={(date) =>
-              setStartDate(date ? new Date(date.toString()) : null)
-            }
-            errors={{}}
-            label="Start Date"
-          />
-          <DateField
-            onChange={(date) =>
-              setEndDate(date ? new Date(date.toString()) : null)
-            }
-            errors={{}}
-            label="End Date"
-          />
-          <Button
+        <div className="flex flex-col items-center space-y-4 mb-6">
+          <DateField name="startDate" label="Start Date" errors={{}} />
+          <DateField name="endDate" label="End Date" errors={{}} />
+          <button
             className="bg-green-500 text-white px-4 py-2 rounded"
-            onPress={handleFilter}
+            onClick={applyFilter}
           >
             Apply Filter
-          </Button>
+          </button>
         </div>
       )}
     </div>

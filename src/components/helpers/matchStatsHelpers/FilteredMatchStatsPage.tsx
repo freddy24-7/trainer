@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 
 import DateFilter from '@/components/DateFilter';
 import MatchOpponents from '@/components/helpers/matchStatsHelpers/MatchOpponents';
@@ -28,36 +29,39 @@ const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
   initialMatchData,
   initialOpponentStats,
 }) => {
-  const [filteredPlayerStats, setFilteredPlayerStats] =
-    useState<PlayerMatchStat[]>(initialPlayerStats);
-  const [filteredMatchData, setFilteredMatchData] =
-    useState<MatchData[]>(initialMatchData);
+  const methods = useForm();
+  const { watch, setValue } = methods;
 
-  const handleFilter = (startDate: Date | null, endDate: Date | null): void => {
-    if (!startDate || !endDate) return;
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
 
-    const filteredMatches = initialMatchData.filter((match) => {
-      const matchDate = new Date(match.date);
-      return matchDate >= startDate && matchDate <= endDate;
-    });
+  const filteredMatches = initialMatchData.filter((match) => {
+    const matchDate = new Date(match.date);
+    return startDate && endDate
+      ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+      : true;
+  });
 
-    const filteredStats = initialPlayerStats.filter((player) => {
-      return player.matchesPlayed > 0;
-    });
-
-    setFilteredMatchData(filteredMatches);
-    setFilteredPlayerStats(filteredStats);
-  };
+  const filteredPlayerStats = initialPlayerStats.filter(
+    (playerStat) => playerStat.matchesPlayed > 0
+  );
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
-      <DateFilter onFilter={handleFilter} />
-      <MatchStats playerStats={filteredPlayerStats} />
-      <MatchOpponents matchData={filteredMatchData} />
-      <div className="mt-8 w-full max-w-4xl">
-        <PlayerOpponentStatsTable playerStats={initialOpponentStats} />
+    <FormProvider {...methods}>
+      <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
+        <DateFilter
+          onFilter={(startDate, endDate) => {
+            setValue('startDate', startDate);
+            setValue('endDate', endDate);
+          }}
+        />
+        <MatchStats playerStats={filteredPlayerStats} />
+        <MatchOpponents matchData={filteredMatches} />
+        <div className="mt-8 w-full max-w-4xl">
+          <PlayerOpponentStatsTable playerStats={initialOpponentStats} />
+        </div>
       </div>
-    </div>
+    </FormProvider>
   );
 };
 

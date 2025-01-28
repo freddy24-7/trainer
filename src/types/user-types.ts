@@ -97,6 +97,7 @@ export interface PlayerMatchStat {
   absences: number;
   goals: number;
   assists: number;
+  matchIds: number[];
 }
 
 export interface PlayerResponse {

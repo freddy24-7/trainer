@@ -1,66 +1,41 @@
-import { DatePicker, CalendarDate } from '@heroui/react';
+'use client';
+
+import { DatePicker } from '@heroui/react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { toast } from 'react-toastify';
 
-import { futureDateError, pastDateError } from '@/strings/clientStrings';
-import { DateProps } from '@/types/shared-types';
+interface DateFieldProps {
+  name: string;
+  label: string;
+  errors?: Record<string, unknown>;
+}
 
-const DateField: React.FC<DateProps> = ({ errors, label }) => {
+const DateField: React.FC<DateFieldProps> = ({ name, label, errors }) => {
   const { control } = useFormContext();
-  const today = new Date();
-  const twoMonthsAgo = new Date(today);
-  twoMonthsAgo.setMonth(today.getMonth() - 2);
-
-  const isDateValid = (date: CalendarDate): boolean => {
-    const selectedDate = new Date(date.year, date.month - 1, date.day);
-    return selectedDate <= today && selectedDate >= twoMonthsAgo;
-  };
-
-  const convertToISOString = (date: CalendarDate): string => {
-    const { year, month, day } = date;
-    return new Date(year, month - 1, day).toISOString();
-  };
 
   return (
     <Controller
-      name="date"
+      name={name}
       control={control}
       render={({ field }) => (
         <div className="w-full max-w-xs mx-auto">
           <div className="space-y-2">
-            <label className="block text-center font-medium text-default-700">
+            <label className="block text-sm font-medium text-default-700">
               {label}
             </label>
             <DatePicker
-              disableAnimation={true}
-              classNames={{
-                base: 'w-full',
-                input: errors.date ? 'border-danger' : '',
-              }}
-              isInvalid={!!errors.date}
-              errorMessage={errors.date?.message?.toString()}
+              className="w-full"
               label={label}
               value={field.value}
               onChange={(date) => {
-                if (isDateValid(date as CalendarDate)) {
-                  const calendarDate = date as CalendarDate;
-                  field.onChange(calendarDate);
-                  console.log(
-                    'ISO date for backend:',
-                    convertToISOString(calendarDate)
-                  );
-                } else {
-                  const selectedDate = new Date(
-                    (date as CalendarDate).toString()
-                  );
-                  if (selectedDate > today) {
-                    toast.error(futureDateError);
-                  } else {
-                    toast.error(pastDateError);
-                  }
-                }
+                field.onChange(date);
               }}
+              classNames={{
+                base: 'w-full',
+                input: errors && errors[name] ? 'border-danger' : '',
+              }}
+              isInvalid={!!(errors && errors[name])}
+              errorMessage={errors && errors[name]?.toString()}
             />
           </div>
         </div>
