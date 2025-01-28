@@ -6,6 +6,8 @@ import { Poule, PouleOpponent } from '@/types/poule-types';
 
 import { Player, PlayerStat } from './user-types';
 
+export type OpponentStrength = 'STRONGER' | 'SIMILAR' | 'WEAKER';
+
 export interface MatchFormProps {
   poules: Poule[];
   players: Player[];
@@ -61,12 +63,6 @@ export interface MatchFormValues {
     eventType: 'SUBSTITUTION' | 'GOAL' | 'ASSIST';
     substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   }[];
-}
-
-export interface MatchPlayer {
-  id: number;
-  username: string;
-  matchPlayers: MatchPlayerInfo[];
 }
 
 export interface MatchPlayerInfo {
@@ -132,12 +128,20 @@ export interface UserWithOptionalMatchStats {
   id: number;
   username: string | null;
   whatsappNumber: string | null;
-  MatchPlayer?: {
+  matchPlayers?: {
     id: number;
     matchId: number;
     userId: number;
     minutes: number;
     available: boolean;
+    match: {
+      opponentStrength: OpponentStrength | null;
+    } | null;
+  }[];
+  MatchEvent?: {
+    id: number;
+    eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
+    minute: number;
   }[];
 }
 

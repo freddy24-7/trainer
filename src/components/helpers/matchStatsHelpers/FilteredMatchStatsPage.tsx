@@ -5,17 +5,28 @@ import React, { useState } from 'react';
 import DateFilter from '@/components/DateFilter';
 import MatchOpponents from '@/components/helpers/matchStatsHelpers/MatchOpponents';
 import MatchStats from '@/components/helpers/matchStatsHelpers/MatchStats';
+import PlayerOpponentStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOpponentStatsTable';
 import { MatchData } from '@/types/match-types';
 import { PlayerMatchStat } from '@/types/user-types';
+
+interface PlayerOpponentStat {
+  id: number;
+  username: string | null;
+  avgMinutesStronger: number;
+  avgMinutesSimilar: number;
+  avgMinutesWeaker: number;
+}
 
 interface FilteredMatchStatsPageProps {
   initialPlayerStats: PlayerMatchStat[];
   initialMatchData: MatchData[];
+  initialOpponentStats: PlayerOpponentStat[];
 }
 
 const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
   initialPlayerStats,
   initialMatchData,
+  initialOpponentStats,
 }) => {
   const [filteredPlayerStats, setFilteredPlayerStats] =
     useState<PlayerMatchStat[]>(initialPlayerStats);
@@ -43,6 +54,9 @@ const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
       <DateFilter onFilter={handleFilter} />
       <MatchStats playerStats={filteredPlayerStats} />
       <MatchOpponents matchData={filteredMatchData} />
+      <div className="mt-8 w-full max-w-4xl">
+        <PlayerOpponentStatsTable playerStats={initialOpponentStats} />
+      </div>
     </div>
   );
 };

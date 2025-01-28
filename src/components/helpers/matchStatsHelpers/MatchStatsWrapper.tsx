@@ -7,14 +7,24 @@ import FilteredMatchStatsPage from '@/components/helpers/matchStatsHelpers/Filte
 import { MatchData } from '@/types/match-types';
 import { PlayerMatchStat } from '@/types/user-types';
 
+interface PlayerOpponentStat {
+  id: number;
+  username: string | null;
+  avgMinutesStronger: number;
+  avgMinutesSimilar: number;
+  avgMinutesWeaker: number;
+}
+
 interface MatchStatsWrapperProps {
   initialPlayerStats: PlayerMatchStat[];
   initialMatchData: MatchData[];
+  initialOpponentStats: PlayerOpponentStat[];
 }
 
 const MatchStatsWrapper: React.FC<MatchStatsWrapperProps> = ({
   initialPlayerStats,
   initialMatchData,
+  initialOpponentStats,
 }) => {
   const methods = useForm();
 
@@ -23,6 +33,7 @@ const MatchStatsWrapper: React.FC<MatchStatsWrapperProps> = ({
       <FilteredMatchStatsPage
         initialPlayerStats={initialPlayerStats}
         initialMatchData={initialMatchData}
+        initialOpponentStats={initialOpponentStats}
       />
     </FormProvider>
   );

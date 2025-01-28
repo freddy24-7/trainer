@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { getMatchData } from '@/app/actions/getMatchData';
+import { getPlayerOpponentStats } from '@/app/actions/getPlayerOpponentStats';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import MatchStatsWrapper from '@/components/helpers/matchStatsHelpers/MatchStatsWrapper';
@@ -13,10 +14,12 @@ import { formatError } from '@/utils/errorUtils';
 
 export default async function MatchStatsPage(): Promise<React.ReactElement> {
   try {
-    const [playerStatsResponse, matchDataResponse] = await Promise.all([
-      getPlayerStats(),
-      getMatchData(),
-    ]);
+    const [playerStatsResponse, matchDataResponse, opponentStats] =
+      await Promise.all([
+        getPlayerStats(),
+        getMatchData(),
+        getPlayerOpponentStats(),
+      ]);
 
     if (!playerStatsResponse.success) {
       const formattedError = formatError(
@@ -51,15 +54,11 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
 
     return (
       <ProtectedLayout requiredRole="TRAINER">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-center mb-4">
-            Match Statistics
-          </h1>
-          <MatchStatsWrapper
-            initialPlayerStats={playerStats}
-            initialMatchData={matchData}
-          />
-        </div>
+        <MatchStatsWrapper
+          initialPlayerStats={playerStats}
+          initialMatchData={matchData}
+          initialOpponentStats={opponentStats}
+        />
       </ProtectedLayout>
     );
   } catch (error) {
