@@ -37,7 +37,6 @@ export const mapPlayerStats = (
   }[]
 ) => {
   return players.map((player) => {
-    // Existing stats
     const matchesPlayed = calculateMatchesPlayed(player.matchPlayers);
     const totalMinutesPlayed = calculateTotalMinutesPlayed(player.matchPlayers);
     const averagePlayingTime = calculateAveragePlayingTime(
@@ -46,7 +45,6 @@ export const mapPlayerStats = (
     );
     const absences = calculateAbsences(player.matchPlayers);
 
-    // NEW: goals & assists
     const goals = player.MatchEvent
       ? player.MatchEvent.filter((evt) => evt.eventType === 'GOAL').length
       : 0;
@@ -91,7 +89,6 @@ export const getValidPlayers = (
       id: player.id,
       username: player.username as string,
       matchPlayers: player.matchPlayers ?? [],
-      // Keep the events if present
       MatchEvent: player.MatchEvent ?? [],
     }));
 };

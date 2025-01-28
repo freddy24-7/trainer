@@ -12,7 +12,6 @@ export async function fetchPlayers(
       id: true,
       username: true,
       whatsappNumber: true,
-      // Only fetch these relations if includeMatchStats = true
       ...(includeMatchStats && {
         matchPlayers: {
           select: {
@@ -27,7 +26,7 @@ export async function fetchPlayers(
           select: {
             id: true,
             eventType: true,
-            minute: true, // or any other fields you'd like
+            minute: true,
           },
         },
       }),

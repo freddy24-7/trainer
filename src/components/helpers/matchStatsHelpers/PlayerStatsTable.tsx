@@ -9,7 +9,6 @@ import {
 } from '@/strings/clientStrings';
 import { PlayerStatsTableProps } from '@/types/user-types';
 
-// Add or create new localized string constants if you have them:
 const goalsHeader = 'Goals';
 const assistsHeader = 'Assists';
 
@@ -22,7 +21,6 @@ const PlayerStatsTable: React.FC<PlayerStatsTableProps> = ({ playerStats }) => {
           <th className="px-4 py-2">{matchesPlayedHeader}</th>
           <th className="px-4 py-2">{avgPlayingTimeHeader}</th>
           <th className="px-4 py-2">{absencesHeader}</th>
-          {/* New columns */}
           <th className="px-4 py-2">{goalsHeader}</th>
           <th className="px-4 py-2">{assistsHeader}</th>
         </tr>
@@ -35,11 +33,10 @@ const PlayerStatsTable: React.FC<PlayerStatsTableProps> = ({ playerStats }) => {
             </td>
             <td className="border px-4 py-2">{player.matchesPlayed}</td>
             <td className="border px-4 py-2">
-              {player.averagePlayingTime.toFixed(2)} mins
+              {Math.round(player.averagePlayingTime)} mins
             </td>
             <td className="border px-4 py-2">{player.absences}</td>
 
-            {/* Render the new stats */}
             <td className="border px-4 py-2">{player.goals}</td>
             <td className="border px-4 py-2">{player.assists}</td>
           </tr>
