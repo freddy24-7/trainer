@@ -51,6 +51,7 @@ export const mapPlayerStats = (
     const assists = player.MatchEvent
       ? player.MatchEvent.filter((evt) => evt.eventType === 'ASSIST').length
       : 0;
+    const matchIds = player.matchPlayers.map((mp) => mp.matchId);
 
     return {
       id: player.id,
@@ -60,6 +61,7 @@ export const mapPlayerStats = (
       absences,
       goals,
       assists,
+      matchIds,
     };
   });
 };

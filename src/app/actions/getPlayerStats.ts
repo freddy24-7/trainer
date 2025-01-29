@@ -8,7 +8,7 @@ import { mapPlayerStats, getValidPlayers } from '@/utils/matchPlayerUtils';
 
 export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
   try {
-    const players = await fetchPlayers(true);
+    const players = await fetchPlayers();
 
     const validPlayers = getValidPlayers(players);
 
