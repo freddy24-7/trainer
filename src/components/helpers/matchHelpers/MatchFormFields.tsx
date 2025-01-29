@@ -50,11 +50,7 @@ const MatchFormFields: React.FC<MatchFormFieldsProps> = ({
         opponentStrength={opponentStrength}
       />
 
-      <DateField
-        errors={errors}
-        label="Match date"
-        onChange={(date) => setValue('date', date)}
-      />
+      <DateField name="date" label="Match date" errors={errors} />
 
       {players.length > 0 && (
         <PlayerManagement

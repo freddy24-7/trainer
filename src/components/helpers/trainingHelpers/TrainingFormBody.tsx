@@ -36,11 +36,7 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
 }) => {
   return (
     <form onSubmit={onSubmit} className="space-y-4 text-center">
-      <DateField
-        errors={errors}
-        label="Training Date"
-        onChange={(selectedDate) => setValue('date', selectedDate)}
-      />
+      <DateField name="date" label="Training Date" errors={errors} />
 
       <TrainingPlayersField
         players={players}
