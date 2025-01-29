@@ -19,16 +19,11 @@ export async function fetchPlayers(): Promise<UserWithOptionalMatchStats[]> {
           available: true,
           match: {
             select: {
+              id: true,
+              date: true,
               opponentStrength: true,
             },
           },
-        },
-      },
-      MatchEvent: {
-        select: {
-          id: true,
-          eventType: true,
-          minute: true,
         },
       },
     },

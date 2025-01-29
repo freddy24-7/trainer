@@ -7,21 +7,17 @@ import DateFilter from '@/components/DateFilter';
 import MatchOpponents from '@/components/helpers/matchStatsHelpers/MatchOpponents';
 import MatchStats from '@/components/helpers/matchStatsHelpers/MatchStats';
 import PlayerOpponentStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOpponentStatsTable';
-import { MatchData } from '@/types/match-types';
+import {
+  MatchData,
+  PlayerOpponentStatData,
+  PlayerOpponentStat,
+} from '@/types/match-types';
 import { PlayerMatchStat } from '@/types/user-types';
-
-interface PlayerOpponentStat {
-  id: number;
-  username: string | null;
-  avgMinutesStronger: number;
-  avgMinutesSimilar: number;
-  avgMinutesWeaker: number;
-}
 
 interface FilteredMatchStatsPageProps {
   initialPlayerStats: PlayerMatchStat[];
   initialMatchData: MatchData[];
-  initialOpponentStats: PlayerOpponentStat[];
+  initialOpponentStats: PlayerOpponentStatData[];
 }
 
 const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
@@ -42,9 +38,46 @@ const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
       : true;
   });
 
-  const filteredPlayerStats = initialPlayerStats.filter(
-    (playerStat) => playerStat.matchesPlayed > 0
-  );
+  const opponentStatsWithAverages: PlayerOpponentStat[] =
+    initialOpponentStats.map((player) => {
+      const filteredMatchData = player.matchData.filter((match) => {
+        const matchDate = new Date(match.date);
+        return startDate && endDate
+          ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+          : true;
+      });
+
+      const totalStrongerMinutes = filteredMatchData
+        .filter((m) => m.opponentStrength === 'STRONGER')
+        .reduce((sum, match) => sum + match.minutes, 0);
+      const totalSimilarMinutes = filteredMatchData
+        .filter((m) => m.opponentStrength === 'SIMILAR')
+        .reduce((sum, match) => sum + match.minutes, 0);
+      const totalWeakerMinutes = filteredMatchData
+        .filter((m) => m.opponentStrength === 'WEAKER')
+        .reduce((sum, match) => sum + match.minutes, 0);
+
+      const strongerMatches = filteredMatchData.filter(
+        (m) => m.opponentStrength === 'STRONGER'
+      ).length;
+      const similarMatches = filteredMatchData.filter(
+        (m) => m.opponentStrength === 'SIMILAR'
+      ).length;
+      const weakerMatches = filteredMatchData.filter(
+        (m) => m.opponentStrength === 'WEAKER'
+      ).length;
+
+      return {
+        id: player.id,
+        username: player.username,
+        avgMinutesStronger:
+          strongerMatches > 0 ? totalStrongerMinutes / strongerMatches : 0,
+        avgMinutesSimilar:
+          similarMatches > 0 ? totalSimilarMinutes / similarMatches : 0,
+        avgMinutesWeaker:
+          weakerMatches > 0 ? totalWeakerMinutes / weakerMatches : 0,
+      };
+    });
 
   return (
     <FormProvider {...methods}>
@@ -55,10 +88,10 @@ const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
             setValue('endDate', endDate);
           }}
         />
-        <MatchStats playerStats={filteredPlayerStats} />
+        <MatchStats playerStats={initialPlayerStats} />
         <MatchOpponents matchData={filteredMatches} />
         <div className="mt-8 w-full max-w-4xl">
-          <PlayerOpponentStatsTable playerStats={initialOpponentStats} />
+          <PlayerOpponentStatsTable playerStats={opponentStatsWithAverages} />{' '}
         </div>
       </div>
     </FormProvider>

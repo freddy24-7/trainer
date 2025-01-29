@@ -10,6 +10,7 @@ import {
   errorLoadingMatchData,
   unknownErrorOccurred,
 } from '@/strings/serverStrings';
+import { PlayerOpponentStatData } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function MatchStatsPage(): Promise<React.ReactElement> {
@@ -20,6 +21,11 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
         getMatchData(),
         getPlayerOpponentStats(),
       ]);
+
+    console.log(
+      'Opponent Stats Response:',
+      JSON.stringify(opponentStats, null, 2)
+    );
 
     if (!playerStatsResponse.success) {
       const formattedError = formatError(
@@ -57,7 +63,7 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
         <MatchStatsWrapper
           initialPlayerStats={playerStats}
           initialMatchData={matchData}
-          initialOpponentStats={opponentStats}
+          initialOpponentStats={opponentStats as PlayerOpponentStatData[]}
         />
       </ProtectedLayout>
     );

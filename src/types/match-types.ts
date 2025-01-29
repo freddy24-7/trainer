@@ -135,6 +135,7 @@ export interface UserWithOptionalMatchStats {
     minutes: number;
     available: boolean;
     match: {
+      date: Date;
       opponentStrength: OpponentStrength | null;
     } | null;
   }[];
@@ -152,4 +153,26 @@ export interface SubmitMatchFormOptions {
     _prevState: unknown,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
+}
+
+export interface PlayerOpponentStat {
+  id: number;
+  username: string | null;
+  avgMinutesStronger: number;
+  avgMinutesSimilar: number;
+  avgMinutesWeaker: number;
+}
+
+export interface MatchStat {
+  id: number;
+  date: Date;
+  opponentStrength: OpponentStrength | null;
+  minutes: number;
+  available: boolean;
+}
+
+export interface PlayerOpponentStatData {
+  id: number;
+  username: string | null;
+  matchData: MatchStat[];
 }
