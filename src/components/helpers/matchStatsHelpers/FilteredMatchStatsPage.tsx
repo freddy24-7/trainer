@@ -79,6 +79,29 @@ const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
       };
     });
 
+  const processedPlayerStats = initialPlayerStats.map((player) => {
+    const filteredMatchData = player.matchData.filter((match) => {
+      const matchDate = match.date ? new Date(match.date) : null;
+      return matchDate && startDate && endDate
+        ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+        : true;
+    });
+
+    return {
+      id: player.id,
+      username: player.username,
+      matchesPlayed: filteredMatchData.length,
+      averagePlayingTime:
+        filteredMatchData.length > 0
+          ? filteredMatchData.reduce((sum, match) => sum + match.minutes, 0) /
+            filteredMatchData.length
+          : 0,
+      absences: filteredMatchData.filter((match) => !match.available).length,
+      goals: filteredMatchData.reduce((sum, match) => sum + match.goals, 0),
+      assists: filteredMatchData.reduce((sum, match) => sum + match.assists, 0),
+    };
+  });
+
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
@@ -88,7 +111,7 @@ const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
             setValue('endDate', endDate);
           }}
         />
-        <MatchStats playerStats={initialPlayerStats} />
+        <MatchStats playerStats={processedPlayerStats} />
         <MatchOpponents matchData={filteredMatches} />
         <div className="mt-8 w-full max-w-4xl">
           <PlayerOpponentStatsTable playerStats={opponentStatsWithAverages} />{' '}

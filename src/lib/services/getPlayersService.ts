@@ -26,6 +26,15 @@ export async function fetchPlayers(): Promise<UserWithOptionalMatchStats[]> {
           },
         },
       },
+      MatchEvent: {
+        select: {
+          id: true,
+          eventType: true,
+          minute: true,
+          matchId: true,
+          substitutionReason: true,
+        },
+      },
     },
   });
 }

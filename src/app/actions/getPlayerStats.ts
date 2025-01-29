@@ -2,19 +2,33 @@
 
 import { fetchPlayers } from '@/lib/services/getPlayersService';
 import { errorFetchingPlayerStats } from '@/strings/actionStrings';
-import { GetPlayerMatchStatsResponse } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
-import { mapPlayerStats, getValidPlayers } from '@/utils/matchPlayerUtils';
 
-export async function getPlayerStats(): Promise<GetPlayerMatchStatsResponse> {
+export async function getPlayerStats() {
   try {
     const players = await fetchPlayers();
 
-    const validPlayers = getValidPlayers(players);
-
-    const playerStats = mapPlayerStats(validPlayers);
-
-    return { success: true, playerStats };
+    return players.map((player) => ({
+      id: player.id,
+      username: player.username,
+      matchData:
+        player.matchPlayers?.map((mp) => ({
+          id: mp.matchId,
+          date: mp.match?.date,
+          minutes: mp.minutes,
+          available: mp.available,
+          goals:
+            player.MatchEvent?.filter(
+              (event) =>
+                event.matchId === mp.matchId && event.eventType === 'GOAL'
+            ).length || 0,
+          assists:
+            player.MatchEvent?.filter(
+              (event) =>
+                event.matchId === mp.matchId && event.eventType === 'ASSIST'
+            ).length || 0,
+        })) || [],
+    }));
   } catch (error) {
     console.error(errorFetchingPlayerStats, error);
     const formattedError = formatError(errorFetchingPlayerStats, [

@@ -65,14 +65,6 @@ export interface MatchFormValues {
   }[];
 }
 
-export interface MatchPlayerInfo {
-  id: number;
-  matchId: number;
-  userId: number;
-  minutes: number;
-  available: boolean;
-}
-
 export interface PlayerInMatch {
   id: number;
   minutes: string;
@@ -141,6 +133,7 @@ export interface UserWithOptionalMatchStats {
   }[];
   MatchEvent?: {
     id: number;
+    matchId: number;
     eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
     minute: number;
   }[];

@@ -1,3 +1,5 @@
+'use server';
+
 import { fetchPlayers } from '@/lib/services/getPlayersService';
 import {
   UserWithOptionalMatchStats,

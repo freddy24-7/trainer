@@ -15,6 +15,7 @@ import { formatError } from '@/utils/errorUtils';
 
 export default async function MatchStatsPage(): Promise<React.ReactElement> {
   try {
+    // Fetch all necessary data in parallel
     const [playerStatsResponse, matchDataResponse, opponentStats] =
       await Promise.all([
         getPlayerStats(),
@@ -22,14 +23,19 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
         getPlayerOpponentStats(),
       ]);
 
+    // console.log(
+    //   'Opponent Stats Response:',
+    //   JSON.stringify(opponentStats, null, 2)
+    // );
     console.log(
-      'Opponent Stats Response:',
-      JSON.stringify(opponentStats, null, 2)
+      'PlayerStats Response:',
+      JSON.stringify(playerStatsResponse, null, 2)
     );
 
-    if (!playerStatsResponse.success) {
+    // Check for errors in player stats
+    if (!Array.isArray(playerStatsResponse)) {
       const formattedError = formatError(
-        playerStatsResponse.error || errorLoadingPlayerStatistics,
+        playerStatsResponse?.error || errorLoadingPlayerStatistics,
         ['getPlayerStats']
       );
       return (
@@ -41,6 +47,7 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
       );
     }
 
+    // Check for errors in match data
     if (!matchDataResponse.success) {
       const formattedError = formatError(
         matchDataResponse.error || errorLoadingMatchData,
@@ -55,14 +62,11 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
       );
     }
 
-    const { playerStats } = playerStatsResponse;
-    const { matchData } = matchDataResponse;
-
     return (
       <ProtectedLayout requiredRole="TRAINER">
         <MatchStatsWrapper
-          initialPlayerStats={playerStats}
-          initialMatchData={matchData}
+          initialPlayerStats={playerStatsResponse}
+          initialMatchData={matchDataResponse.matchData}
           initialOpponentStats={opponentStats as PlayerOpponentStatData[]}
         />
       </ProtectedLayout>

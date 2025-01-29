@@ -92,12 +92,14 @@ export interface PlayerManagementClientProps {
 export interface PlayerMatchStat {
   id: number;
   username: string | null;
-  matchesPlayed: number;
-  averagePlayingTime: number;
-  absences: number;
-  goals: number;
-  assists: number;
-  matchIds: number[];
+  matchData: {
+    id: number;
+    date: Date | undefined;
+    minutes: number;
+    available: boolean;
+    goals: number;
+    assists: number;
+  }[];
 }
 
 export interface PlayerResponse {
@@ -154,10 +156,6 @@ export interface PlayerResponseData {
   players?: PlayerResponse[];
   errors?: (ResponseError | ZodIssue)[];
 }
-
-export type GetPlayerMatchStatsResponse =
-  | { success: true; playerStats: PlayerMatchStat[] }
-  | { success: false; error: string };
 
 export interface ClerkUser {
   id: string;
