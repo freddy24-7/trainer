@@ -136,6 +136,13 @@ export interface UserWithOptionalMatchStats {
     matchId: number;
     eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
     minute: number;
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+    playerOutId?: number | null;
+    match?: {
+      id: number;
+      date: Date;
+      opponentStrength: OpponentStrength | null;
+    };
   }[];
 }
 
@@ -189,6 +196,10 @@ export interface MatchStatsWrapperProps {
   initialOpponentStats: PlayerOpponentStatData[];
   initialGoalStats: GoalsByPlayerStatData[];
   initialAssistStats: AssistsByPlayerStatData[];
+  initialSubstitutionStats: SubstitutionOutStatData[];
+  initialSubstitutionInjuryStats: SubstitutionOutStatData[];
+  initialSubstitutionOutTacticalStats: SubstitutionOutStatData[];
+  initialSubstitutionInTacticalStats: SubstitutionOutStatData[];
 }
 
 export interface AssistsByPlayerStatData {
@@ -201,5 +212,75 @@ export interface AssistsByPlayerStatData {
     minutes: number;
     available: boolean;
     assists: number;
+  }[];
+}
+
+export interface SubstitutionOutStatData {
+  id: number;
+  username: string | null;
+  matchData: {
+    id: number;
+    date: Date;
+    opponentStrength: OpponentStrength | null;
+  }[];
+}
+
+export interface SubstitutionMatchStats {
+  id: number;
+  username: string | null;
+  whatsappNumber: string | null;
+  matchPlayers?: {
+    id: number;
+    matchId: number;
+    userId: number;
+    minutes: number;
+    available: boolean;
+    match: {
+      date: Date;
+      opponentStrength: OpponentStrength | null;
+    } | null;
+  }[];
+  substitutedOut?: {
+    id: number;
+    matchId: number;
+    eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
+    minute: number;
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+    playerOutId?: number | null;
+    match?: {
+      id: number;
+      date: Date;
+      opponentStrength: OpponentStrength | null;
+    };
+  }[];
+}
+
+export interface SubstitutionInMatchStats {
+  id: number;
+  username: string | null;
+  whatsappNumber: string | null;
+  matchPlayers?: {
+    id: number;
+    matchId: number;
+    userId: number;
+    minutes: number;
+    available: boolean;
+    match: {
+      date: Date;
+      opponentStrength: OpponentStrength | null;
+    } | null;
+  }[];
+  substitutedIn?: {
+    id: number;
+    matchId: number;
+    eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
+    minute: number;
+    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+    playerInId?: number | null;
+    match?: {
+      id: number;
+      date: Date;
+      opponentStrength: OpponentStrength | null;
+    };
   }[];
 }

@@ -12,6 +12,10 @@ const MatchStatsWrapper: React.FC<MatchStatsWrapperProps> = ({
   initialOpponentStats,
   initialGoalStats,
   initialAssistStats,
+  initialSubstitutionStats,
+  initialSubstitutionInjuryStats,
+  initialSubstitutionOutTacticalStats,
+  initialSubstitutionInTacticalStats,
 }) => {
   const methods = useForm();
 
@@ -23,6 +27,12 @@ const MatchStatsWrapper: React.FC<MatchStatsWrapperProps> = ({
         initialOpponentStats={initialOpponentStats}
         initialGoalStats={initialGoalStats}
         initialAssistStats={initialAssistStats}
+        initialSubstitutionStats={initialSubstitutionStats}
+        initialSubstitutionInjuryStats={initialSubstitutionInjuryStats}
+        initialSubstitutionOutTacticalStats={
+          initialSubstitutionOutTacticalStats
+        }
+        initialSubstitutionInTacticalStats={initialSubstitutionInTacticalStats}
       />
     </FormProvider>
   );

@@ -9,6 +9,10 @@ import MatchStats from '@/components/helpers/matchStatsHelpers/MatchStats';
 import PlayerAssistStatsTable from '@/components/helpers/matchStatsHelpers/PlayerAssistStatsTable';
 import PlayerGoalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerGoalStatsTable';
 import PlayerOpponentStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOpponentStatsTable';
+import PlayerSubstitutionInjuryStatsTable from '@/components/helpers/matchStatsHelpers/PlayerSubstitutionInjuryStat';
+import PlayerSubstitutionInTacticalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerSubstitutionInTacticalStatsTable';
+import PlayerSubstitutionStatsTable from '@/components/helpers/matchStatsHelpers/PlayerSubstitutionStatsTable';
+import PlayerSubstitutionTacticalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerSubstitutionTacticalStatsTable';
 import {
   PlayerOpponentStat,
   MatchStatsWrapperProps,
@@ -23,6 +27,10 @@ const FilteredMatchStatsPage: React.FC<
   initialOpponentStats,
   initialGoalStats,
   initialAssistStats,
+  initialSubstitutionStats,
+  initialSubstitutionInjuryStats,
+  initialSubstitutionOutTacticalStats,
+  initialSubstitutionInTacticalStats,
 }) => {
   const methods = useForm();
   const { watch, setValue } = methods;
@@ -86,16 +94,21 @@ const FilteredMatchStatsPage: React.FC<
         : true;
     });
 
+    const absences = filteredMatchData.filter(
+      (match) => !match.available
+    ).length;
+    const matchesPlayed = filteredMatchData.length - absences;
+
     return {
       id: player.id,
       username: player.username,
-      matchesPlayed: filteredMatchData.length,
+      matchesPlayed: matchesPlayed >= 0 ? matchesPlayed : 0,
       averagePlayingTime:
-        filteredMatchData.length > 0
+        matchesPlayed > 0
           ? filteredMatchData.reduce((sum, match) => sum + match.minutes, 0) /
-            filteredMatchData.length
+            matchesPlayed
           : 0,
-      absences: filteredMatchData.filter((match) => !match.available).length,
+      absences,
       goals: filteredMatchData.reduce((sum, match) => sum + match.goals, 0),
       assists: filteredMatchData.reduce((sum, match) => sum + match.assists, 0),
     };
@@ -155,6 +168,106 @@ const FilteredMatchStatsPage: React.FC<
     };
   });
 
+  const processedSubstitutionStats = initialSubstitutionStats.map((player) => {
+    const filteredMatchData = player.matchData.filter((match) => {
+      const matchDate = match.date ? new Date(match.date) : null;
+      return matchDate && startDate && endDate
+        ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+        : true;
+    });
+
+    return {
+      id: player.id,
+      username: player.username,
+      substitutionsAgainstStronger: filteredMatchData.filter(
+        (m) => m.opponentStrength === 'STRONGER'
+      ).length,
+      substitutionsAgainstSimilar: filteredMatchData.filter(
+        (m) => m.opponentStrength === 'SIMILAR'
+      ).length,
+      substitutionsAgainstWeaker: filteredMatchData.filter(
+        (m) => m.opponentStrength === 'WEAKER'
+      ).length,
+      totalSubstitutions: filteredMatchData.length,
+    };
+  });
+
+  const processedSubstitutionInjuryStats = initialSubstitutionInjuryStats.map(
+    (player) => {
+      const filteredMatchData = player.matchData.filter((match) => {
+        const matchDate = match.date ? new Date(match.date) : null;
+        return matchDate && startDate && endDate
+          ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+          : true;
+      });
+
+      return {
+        id: player.id,
+        username: player.username,
+        substitutionsAgainstStronger: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'STRONGER'
+        ).length,
+        substitutionsAgainstSimilar: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'SIMILAR'
+        ).length,
+        substitutionsAgainstWeaker: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'WEAKER'
+        ).length,
+        totalSubstitutions: filteredMatchData.length,
+      };
+    }
+  );
+
+  const processedSubstitutionTacticalStats =
+    initialSubstitutionOutTacticalStats.map((player) => {
+      const filteredMatchData = player.matchData.filter((match) => {
+        const matchDate = match.date ? new Date(match.date) : null;
+        return matchDate && startDate && endDate
+          ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+          : true;
+      });
+
+      return {
+        id: player.id,
+        username: player.username,
+        substitutionsAgainstStronger: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'STRONGER'
+        ).length,
+        substitutionsAgainstSimilar: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'SIMILAR'
+        ).length,
+        substitutionsAgainstWeaker: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'WEAKER'
+        ).length,
+        totalSubstitutions: filteredMatchData.length,
+      };
+    });
+
+  const processedSubstitutionInTacticalStats =
+    initialSubstitutionInTacticalStats.map((player) => {
+      const filteredMatchData = player.matchData.filter((match) => {
+        const matchDate = match.date ? new Date(match.date) : null;
+        return matchDate && startDate && endDate
+          ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+          : true;
+      });
+
+      return {
+        id: player.id,
+        username: player.username,
+        substitutionsAgainstStronger: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'STRONGER'
+        ).length,
+        substitutionsAgainstSimilar: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'SIMILAR'
+        ).length,
+        substitutionsAgainstWeaker: filteredMatchData.filter(
+          (m) => m.opponentStrength === 'WEAKER'
+        ).length,
+        totalSubstitutions: filteredMatchData.length,
+      };
+    });
+
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
@@ -165,7 +278,6 @@ const FilteredMatchStatsPage: React.FC<
           }}
         />
         <MatchStats playerStats={processedPlayerStats} />
-        <MatchOpponents matchData={filteredMatches} />
         <div className="mt-8 w-full max-w-4xl">
           <PlayerOpponentStatsTable playerStats={opponentStatsWithAverages} />
         </div>
@@ -175,6 +287,27 @@ const FilteredMatchStatsPage: React.FC<
         <div className="mt-8 w-full max-w-4xl">
           <PlayerAssistStatsTable assistStats={processedAssistStats} />
         </div>
+        <div className="mt-8 w-full max-w-4xl">
+          <PlayerSubstitutionStatsTable
+            substitutionStats={processedSubstitutionStats}
+          />
+        </div>
+        <div className="mt-8 w-full max-w-4xl">
+          <PlayerSubstitutionInjuryStatsTable
+            substitutionStats={processedSubstitutionInjuryStats}
+          />
+        </div>
+        <div className="mt-8 w-full max-w-4xl">
+          <PlayerSubstitutionTacticalStatsTable
+            substitutionStats={processedSubstitutionTacticalStats}
+          />
+        </div>
+        <div className="mt-8 w-full max-w-4xl">
+          <PlayerSubstitutionInTacticalStatsTable
+            substitutionStats={processedSubstitutionInTacticalStats}
+          />
+        </div>
+        <MatchOpponents matchData={filteredMatches} />
       </div>
     </FormProvider>
   );

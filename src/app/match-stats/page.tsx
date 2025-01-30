@@ -5,6 +5,10 @@ import { getGoalsByPlayerByOpponent } from '@/app/actions/getGoalsByPlayerByOppo
 import { getMatchData } from '@/app/actions/getMatchData';
 import { getPlayerOpponentStats } from '@/app/actions/getPlayerOpponentStats';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
+import { getSubstitutionInTacticalOpponent } from '@/app/actions/getSubstitutionInTacticalOpponent';
+import { getSubstitutionOutFitnessOpponent } from '@/app/actions/getSubstitutionOutFitnessOpponent';
+import { getSubstitutionOutInjuryOpponent } from '@/app/actions/getSubstitutionOutInjuryOpponent';
+import { getSubstitutionOutTacticalOpponent } from '@/app/actions/getSubstitutionOutTacticalOpponent';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import MatchStatsWrapper from '@/components/helpers/matchStatsHelpers/MatchStatsWrapper';
 import {
@@ -16,6 +20,7 @@ import {
   PlayerOpponentStatData,
   GoalsByPlayerStatData,
   AssistsByPlayerStatData,
+  SubstitutionOutStatData,
 } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -27,18 +32,21 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
       opponentStats,
       goalStats,
       assistStats,
+      substitutionStats,
+      substitutionInjuryStats,
+      substitutionOutTacticalStats,
+      substitutionInTacticalStats,
     ] = await Promise.all([
       getPlayerStats(),
       getMatchData(),
       getPlayerOpponentStats(),
       getGoalsByPlayerByOpponent(),
       getAssistsByPlayerByOpponent(),
+      getSubstitutionOutFitnessOpponent(),
+      getSubstitutionOutInjuryOpponent(),
+      getSubstitutionOutTacticalOpponent(),
+      getSubstitutionInTacticalOpponent(),
     ]);
-
-    console.log(
-      'Goals By Player By Opponent Response:',
-      JSON.stringify(goalStats, null, 2)
-    );
 
     if (!Array.isArray(playerStatsResponse)) {
       const formattedError = formatError(
@@ -76,6 +84,18 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
           initialOpponentStats={opponentStats as PlayerOpponentStatData[]}
           initialGoalStats={goalStats as GoalsByPlayerStatData[]}
           initialAssistStats={assistStats as AssistsByPlayerStatData[]}
+          initialSubstitutionStats={
+            substitutionStats as SubstitutionOutStatData[]
+          }
+          initialSubstitutionInjuryStats={
+            substitutionInjuryStats as SubstitutionOutStatData[]
+          }
+          initialSubstitutionOutTacticalStats={
+            substitutionOutTacticalStats as SubstitutionOutStatData[]
+          }
+          initialSubstitutionInTacticalStats={
+            substitutionInTacticalStats as SubstitutionOutStatData[]
+          }
         />
       </ProtectedLayout>
     );
