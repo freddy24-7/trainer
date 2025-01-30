@@ -4,7 +4,7 @@ import { ZodIssue } from 'zod';
 
 import { Poule, PouleOpponent } from '@/types/poule-types';
 
-import { Player, PlayerStat } from './user-types';
+import { Player, PlayerMatchStat, PlayerStat } from './user-types';
 
 export type OpponentStrength = 'STRONGER' | 'SIMILAR' | 'WEAKER';
 
@@ -168,4 +168,38 @@ export interface PlayerOpponentStatData {
   id: number;
   username: string | null;
   matchData: MatchStat[];
+}
+
+export interface GoalsByPlayerStatData {
+  id: number;
+  username: string | null;
+  matchData: {
+    id: number;
+    date: Date;
+    opponentStrength: OpponentStrength | null;
+    minutes: number;
+    available: boolean;
+    goals: number;
+  }[];
+}
+
+export interface MatchStatsWrapperProps {
+  initialPlayerStats: PlayerMatchStat[];
+  initialMatchData: MatchData[];
+  initialOpponentStats: PlayerOpponentStatData[];
+  initialGoalStats: GoalsByPlayerStatData[];
+  initialAssistStats: AssistsByPlayerStatData[];
+}
+
+export interface AssistsByPlayerStatData {
+  id: number;
+  username: string | null;
+  matchData: {
+    id: number;
+    date: Date;
+    opponentStrength: OpponentStrength | null;
+    minutes: number;
+    available: boolean;
+    assists: number;
+  }[];
 }

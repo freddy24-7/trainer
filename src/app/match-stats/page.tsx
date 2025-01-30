@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { getAssistsByPlayerByOpponent } from '@/app/actions/getAssistsByPlayerByOpponent';
+import { getGoalsByPlayerByOpponent } from '@/app/actions/getGoalsByPlayerByOpponent';
 import { getMatchData } from '@/app/actions/getMatchData';
 import { getPlayerOpponentStats } from '@/app/actions/getPlayerOpponentStats';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
@@ -10,29 +12,34 @@ import {
   errorLoadingMatchData,
   unknownErrorOccurred,
 } from '@/strings/serverStrings';
-import { PlayerOpponentStatData } from '@/types/match-types';
+import {
+  PlayerOpponentStatData,
+  GoalsByPlayerStatData,
+  AssistsByPlayerStatData,
+} from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function MatchStatsPage(): Promise<React.ReactElement> {
   try {
-    // Fetch all necessary data in parallel
-    const [playerStatsResponse, matchDataResponse, opponentStats] =
-      await Promise.all([
-        getPlayerStats(),
-        getMatchData(),
-        getPlayerOpponentStats(),
-      ]);
+    const [
+      playerStatsResponse,
+      matchDataResponse,
+      opponentStats,
+      goalStats,
+      assistStats,
+    ] = await Promise.all([
+      getPlayerStats(),
+      getMatchData(),
+      getPlayerOpponentStats(),
+      getGoalsByPlayerByOpponent(),
+      getAssistsByPlayerByOpponent(),
+    ]);
 
-    // console.log(
-    //   'Opponent Stats Response:',
-    //   JSON.stringify(opponentStats, null, 2)
-    // );
     console.log(
-      'PlayerStats Response:',
-      JSON.stringify(playerStatsResponse, null, 2)
+      'Goals By Player By Opponent Response:',
+      JSON.stringify(goalStats, null, 2)
     );
 
-    // Check for errors in player stats
     if (!Array.isArray(playerStatsResponse)) {
       const formattedError = formatError(
         playerStatsResponse?.error || errorLoadingPlayerStatistics,
@@ -47,7 +54,6 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
       );
     }
 
-    // Check for errors in match data
     if (!matchDataResponse.success) {
       const formattedError = formatError(
         matchDataResponse.error || errorLoadingMatchData,
@@ -68,6 +74,8 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
           initialPlayerStats={playerStatsResponse}
           initialMatchData={matchDataResponse.matchData}
           initialOpponentStats={opponentStats as PlayerOpponentStatData[]}
+          initialGoalStats={goalStats as GoalsByPlayerStatData[]}
+          initialAssistStats={assistStats as AssistsByPlayerStatData[]}
         />
       </ProtectedLayout>
     );

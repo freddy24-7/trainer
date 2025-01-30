@@ -6,24 +6,23 @@ import { useForm, FormProvider } from 'react-hook-form';
 import DateFilter from '@/components/DateFilter';
 import MatchOpponents from '@/components/helpers/matchStatsHelpers/MatchOpponents';
 import MatchStats from '@/components/helpers/matchStatsHelpers/MatchStats';
+import PlayerAssistStatsTable from '@/components/helpers/matchStatsHelpers/PlayerAssistStatsTable';
+import PlayerGoalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerGoalStatsTable';
 import PlayerOpponentStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOpponentStatsTable';
 import {
-  MatchData,
-  PlayerOpponentStatData,
   PlayerOpponentStat,
+  MatchStatsWrapperProps,
+  GoalsByPlayerStatData,
 } from '@/types/match-types';
-import { PlayerMatchStat } from '@/types/user-types';
 
-interface FilteredMatchStatsPageProps {
-  initialPlayerStats: PlayerMatchStat[];
-  initialMatchData: MatchData[];
-  initialOpponentStats: PlayerOpponentStatData[];
-}
-
-const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
+const FilteredMatchStatsPage: React.FC<
+  MatchStatsWrapperProps & { initialGoalStats: GoalsByPlayerStatData[] }
+> = ({
   initialPlayerStats,
   initialMatchData,
   initialOpponentStats,
+  initialGoalStats,
+  initialAssistStats,
 }) => {
   const methods = useForm();
   const { watch, setValue } = methods;
@@ -102,6 +101,60 @@ const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
     };
   });
 
+  const processedGoalStats = initialGoalStats.map((player) => {
+    const filteredMatchData = player.matchData.filter((match) => {
+      const matchDate = match.date ? new Date(match.date) : null;
+      return matchDate && startDate && endDate
+        ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+        : true;
+    });
+
+    return {
+      id: player.id,
+      username: player.username,
+      goalsAgainstStronger: filteredMatchData
+        .filter((m) => m.opponentStrength === 'STRONGER')
+        .reduce((sum, match) => sum + match.goals, 0),
+      goalsAgainstSimilar: filteredMatchData
+        .filter((m) => m.opponentStrength === 'SIMILAR')
+        .reduce((sum, match) => sum + match.goals, 0),
+      goalsAgainstWeaker: filteredMatchData
+        .filter((m) => m.opponentStrength === 'WEAKER')
+        .reduce((sum, match) => sum + match.goals, 0),
+      totalGoals: filteredMatchData.reduce(
+        (sum, match) => sum + match.goals,
+        0
+      ),
+    };
+  });
+
+  const processedAssistStats = initialAssistStats.map((player) => {
+    const filteredMatchData = player.matchData.filter((match) => {
+      const matchDate = match.date ? new Date(match.date) : null;
+      return matchDate && startDate && endDate
+        ? matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+        : true;
+    });
+
+    return {
+      id: player.id,
+      username: player.username,
+      assistsAgainstStronger: filteredMatchData
+        .filter((m) => m.opponentStrength === 'STRONGER')
+        .reduce((sum, match) => sum + match.assists, 0),
+      assistsAgainstSimilar: filteredMatchData
+        .filter((m) => m.opponentStrength === 'SIMILAR')
+        .reduce((sum, match) => sum + match.assists, 0),
+      assistsAgainstWeaker: filteredMatchData
+        .filter((m) => m.opponentStrength === 'WEAKER')
+        .reduce((sum, match) => sum + match.assists, 0),
+      totalAssists: filteredMatchData.reduce(
+        (sum, match) => sum + match.assists,
+        0
+      ),
+    };
+  });
+
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
@@ -114,7 +167,13 @@ const FilteredMatchStatsPage: React.FC<FilteredMatchStatsPageProps> = ({
         <MatchStats playerStats={processedPlayerStats} />
         <MatchOpponents matchData={filteredMatches} />
         <div className="mt-8 w-full max-w-4xl">
-          <PlayerOpponentStatsTable playerStats={opponentStatsWithAverages} />{' '}
+          <PlayerOpponentStatsTable playerStats={opponentStatsWithAverages} />
+        </div>
+        <div className="mt-8 w-full max-w-4xl">
+          <PlayerGoalStatsTable goalStats={processedGoalStats} />
+        </div>
+        <div className="mt-8 w-full max-w-4xl">
+          <PlayerAssistStatsTable assistStats={processedAssistStats} />
         </div>
       </div>
     </FormProvider>

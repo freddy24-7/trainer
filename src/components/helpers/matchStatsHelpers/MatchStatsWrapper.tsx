@@ -4,19 +4,14 @@ import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import FilteredMatchStatsPage from '@/components/helpers/matchStatsHelpers/FilteredMatchStatsPage';
-import { MatchData, PlayerOpponentStatData } from '@/types/match-types';
-import { PlayerMatchStat } from '@/types/user-types';
-
-interface MatchStatsWrapperProps {
-  initialPlayerStats: PlayerMatchStat[];
-  initialMatchData: MatchData[];
-  initialOpponentStats: PlayerOpponentStatData[];
-}
+import { MatchStatsWrapperProps } from '@/types/match-types';
 
 const MatchStatsWrapper: React.FC<MatchStatsWrapperProps> = ({
   initialPlayerStats,
   initialMatchData,
   initialOpponentStats,
+  initialGoalStats,
+  initialAssistStats,
 }) => {
   const methods = useForm();
 
@@ -26,6 +21,8 @@ const MatchStatsWrapper: React.FC<MatchStatsWrapperProps> = ({
         initialPlayerStats={initialPlayerStats}
         initialMatchData={initialMatchData}
         initialOpponentStats={initialOpponentStats}
+        initialGoalStats={initialGoalStats}
+        initialAssistStats={initialAssistStats}
       />
     </FormProvider>
   );
