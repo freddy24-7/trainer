@@ -8,18 +8,24 @@ const ProtectedLayout = async ({
   children,
   requiredRole,
 }: ProtectedLayoutProps): Promise<React.ReactElement> => {
+  let redirectPath: string | null = null;
+
   try {
     const user = await fetchAndCheckUser();
 
     if (!user || user.role !== requiredRole) {
-      redirect('/dashboard');
+      redirectPath = '/dashboard';
     }
-
-    return <>{children}</>;
   } catch (error) {
     console.error(error);
-    redirect('/sign-in');
+    redirectPath = '/sign-in';
+  } finally {
+    if (redirectPath) {
+      redirect(redirectPath);
+    }
   }
+
+  return <>{children}</>;
 };
 
 export default ProtectedLayout;
