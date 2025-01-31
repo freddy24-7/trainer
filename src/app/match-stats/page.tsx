@@ -1,14 +1,14 @@
 import React from 'react';
 
-import { getAssistsByPlayerByOpponent } from '@/app/actions/getAssistsByPlayerByOpponent';
-import { getGoalsByPlayerByOpponent } from '@/app/actions/getGoalsByPlayerByOpponent';
+import { getAssistsByPlayerBy } from '@/app/actions/getAssistsByPlayerBy';
+import { getGoalsByPlayerBy } from '@/app/actions/getGoalsByPlayerBy';
 import { getMatchData } from '@/app/actions/getMatchData';
 import { getPlayerOpponentStats } from '@/app/actions/getPlayerOpponentStats';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
-import { getSubstitutionInTacticalOpponent } from '@/app/actions/getSubstitutionInTacticalOpponent';
-import { getSubstitutionOutFitnessOpponent } from '@/app/actions/getSubstitutionOutFitnessOpponent';
-import { getSubstitutionOutInjuryOpponent } from '@/app/actions/getSubstitutionOutInjuryOpponent';
-import { getSubstitutionOutTacticalOpponent } from '@/app/actions/getSubstitutionOutTacticalOpponent';
+import { getSubstitutionInTactical } from '@/app/actions/getSubstitutionInTactical';
+import { getSubstitutionOutFitness } from '@/app/actions/getSubstitutionOutFitness';
+import { getSubstitutionOutInjury } from '@/app/actions/getSubstitutionOutInjury';
+import { getSubstitutionOutTactical } from '@/app/actions/getSubstitutionOutTactical';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import MatchStatsWrapper from '@/components/helpers/matchStatsHelpers/MatchStatsWrapper';
 import {
@@ -40,12 +40,12 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
       getPlayerStats(),
       getMatchData(),
       getPlayerOpponentStats(),
-      getGoalsByPlayerByOpponent(),
-      getAssistsByPlayerByOpponent(),
-      getSubstitutionOutFitnessOpponent(),
-      getSubstitutionOutInjuryOpponent(),
-      getSubstitutionOutTacticalOpponent(),
-      getSubstitutionInTacticalOpponent(),
+      getGoalsByPlayerBy(),
+      getAssistsByPlayerBy(),
+      getSubstitutionOutFitness(),
+      getSubstitutionOutInjury(),
+      getSubstitutionOutTactical(),
+      getSubstitutionInTactical(),
     ]);
 
     if (!Array.isArray(playerStatsResponse)) {

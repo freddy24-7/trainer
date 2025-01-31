@@ -3,7 +3,7 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-interface PlayerSubstitutionTacticalStat {
+interface PlayerSubstitutionStat {
   id: number;
   username: string | null;
   substitutionsAgainstStronger: number;
@@ -12,19 +12,19 @@ interface PlayerSubstitutionTacticalStat {
   totalSubstitutions: number;
 }
 
-interface PlayerSubstitutionTacticalStatsTableProps {
-  substitutionStats: PlayerSubstitutionTacticalStat[];
+interface PlayerSubstitutionStatsTableProps {
+  substitutionStats: PlayerSubstitutionStat[];
 }
 
-const PlayerSubstitutionTacticalStatsTable: React.FC<
-  PlayerSubstitutionTacticalStatsTableProps
+const PlayerOutFitnessStatsTable: React.FC<
+  PlayerSubstitutionStatsTableProps
 > = ({ substitutionStats }) => {
   return (
     <div className="w-full max-w-4xl">
       <Card>
         <CardHeader>
           <h2 className="text-2xl font-semibold">
-            Tactical Substitutions - Players going out
+            Fitness-Related Substitutions - Players going out
           </h2>
         </CardHeader>
         <CardBody>
@@ -66,4 +66,4 @@ const PlayerSubstitutionTacticalStatsTable: React.FC<
   );
 };
 
-export default PlayerSubstitutionTacticalStatsTable;
+export default PlayerOutFitnessStatsTable;

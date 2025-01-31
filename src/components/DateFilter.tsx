@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 import DateField from '@/components/DateField';
 
@@ -20,6 +21,12 @@ const DateFilter: React.FC<DateFilterProps> = ({
   const applyFilter = () => {
     const startDate = getValues('startDate');
     const endDate = getValues('endDate');
+
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+      toast.error('❌ Start date cannot be after the end date.');
+      return;
+    }
+
     onFilter(startDate, endDate);
     setShowFilters(false);
   };
@@ -37,8 +44,8 @@ const DateFilter: React.FC<DateFilterProps> = ({
 
       {showFilters && (
         <div className="flex flex-col items-center space-y-4 mb-6">
-          <DateField name="startDate" label="Start Date" errors={{}} />
-          <DateField name="endDate" label="End Date" errors={{}} />
+          <DateField name="startDate" label="Start Date" />
+          <DateField name="endDate" label="End Date" />
           <button
             className="bg-green-500 text-white px-4 py-2 rounded"
             onClick={applyFilter}

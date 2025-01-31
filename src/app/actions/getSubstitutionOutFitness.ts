@@ -2,17 +2,17 @@ import { OpponentStrength } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
 import {
-  SubstitutionInMatchStats,
+  SubstitutionMatchStats,
   SubstitutionOutStatData,
 } from '@/types/match-types';
 
-export async function getSubstitutionInTacticalOpponent(): Promise<
+export async function getSubstitutionOutFitness(): Promise<
   SubstitutionOutStatData[]
 > {
-  const players = await fetchPlayersWithTacticalSubstitutionsIn();
+  const players = await fetchPlayersWithFitnessSubstitutions();
 
   return players.map((player) => {
-    const matchData = (player.substitutedIn ?? [])
+    const matchData = (player.substitutedOut ?? [])
       .map((event) => {
         if (!event.match || !event.match.date) {
           console.warn(`⚠️ Missing match or date for event ${event.id}`);
@@ -44,8 +44,8 @@ export async function getSubstitutionInTacticalOpponent(): Promise<
   });
 }
 
-async function fetchPlayersWithTacticalSubstitutionsIn(): Promise<
-  SubstitutionInMatchStats[]
+async function fetchPlayersWithFitnessSubstitutions(): Promise<
+  SubstitutionMatchStats[]
 > {
   return prisma.user.findMany({
     where: {
@@ -71,11 +71,11 @@ async function fetchPlayersWithTacticalSubstitutionsIn(): Promise<
           },
         },
       },
-      substitutedIn: {
+      substitutedOut: {
         where: {
           eventType: 'SUBSTITUTION',
-          substitutionReason: 'TACTICAL',
-          playerInId: { not: null },
+          substitutionReason: 'FITNESS',
+          playerOutId: { not: null },
         },
         select: {
           id: true,
@@ -83,7 +83,7 @@ async function fetchPlayersWithTacticalSubstitutionsIn(): Promise<
           eventType: true,
           minute: true,
           substitutionReason: true,
-          playerInId: true,
+          playerOutId: true,
           match: {
             select: {
               id: true,

@@ -1,4 +1,4 @@
-import { getPlayerStats } from '@/app/actions/getPlayerStats';
+import { getPlayerStats } from '@/app/actions/getMyPlayerStats';
 import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
 import { getTrainingData } from '@/app/actions/getTrainingData';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';

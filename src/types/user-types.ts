@@ -220,3 +220,22 @@ export interface PlayerApiResponse {
   players?: PlayerResponse[];
   errors?: (ResponseError | ZodIssue)[];
 }
+
+export type GetPlayerMatchStatsResponse =
+  | { success: true; playerStats: PlayerMatchOwnStat[] }
+  | { success: false; error: string };
+
+type PlayerMatchOwnStat = {
+  id: number;
+  username: string;
+  matchesPlayed: number;
+  averagePlayingTime: number;
+  absences: number;
+  matchData?: {
+    id: number;
+    matchId: number;
+    userId: number;
+    minutes: number;
+    available: boolean;
+  }[];
+};

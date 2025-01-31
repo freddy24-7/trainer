@@ -8,11 +8,11 @@ import MatchOpponents from '@/components/helpers/matchStatsHelpers/MatchOpponent
 import MatchStats from '@/components/helpers/matchStatsHelpers/MatchStats';
 import PlayerAssistStatsTable from '@/components/helpers/matchStatsHelpers/PlayerAssistStatsTable';
 import PlayerGoalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerGoalStatsTable';
+import PlayerInTacticalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerInTacticalStatsTable';
 import PlayerOpponentStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOpponentStatsTable';
-import PlayerSubstitutionInjuryStatsTable from '@/components/helpers/matchStatsHelpers/PlayerSubstitutionInjuryStat';
-import PlayerSubstitutionInTacticalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerSubstitutionInTacticalStatsTable';
-import PlayerSubstitutionStatsTable from '@/components/helpers/matchStatsHelpers/PlayerSubstitutionStatsTable';
-import PlayerSubstitutionTacticalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerSubstitutionTacticalStatsTable';
+import PlayerOutFitnessStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOutFitnessStatsTable';
+import PlayerSubstitutionInjuryStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOutInjuryStat';
+import PlayerOutTacticalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOutTacticalStatsTable';
 import {
   PlayerOpponentStat,
   MatchStatsWrapperProps,
@@ -288,7 +288,7 @@ const FilteredMatchStatsPage: React.FC<
           <PlayerAssistStatsTable assistStats={processedAssistStats} />
         </div>
         <div className="mt-8 w-full max-w-4xl">
-          <PlayerSubstitutionStatsTable
+          <PlayerOutFitnessStatsTable
             substitutionStats={processedSubstitutionStats}
           />
         </div>
@@ -298,12 +298,12 @@ const FilteredMatchStatsPage: React.FC<
           />
         </div>
         <div className="mt-8 w-full max-w-4xl">
-          <PlayerSubstitutionTacticalStatsTable
+          <PlayerOutTacticalStatsTable
             substitutionStats={processedSubstitutionTacticalStats}
           />
         </div>
         <div className="mt-8 w-full max-w-4xl">
-          <PlayerSubstitutionInTacticalStatsTable
+          <PlayerInTacticalStatsTable
             substitutionStats={processedSubstitutionInTacticalStats}
           />
         </div>

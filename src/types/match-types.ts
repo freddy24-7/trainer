@@ -284,3 +284,17 @@ export interface SubstitutionInMatchStats {
     };
   }[];
 }
+
+export interface MatchPlayerInfo {
+  id: number;
+  matchId: number;
+  userId: number;
+  minutes: number;
+  available: boolean;
+}
+
+export interface MatchPlayer {
+  id: number;
+  username: string;
+  matchPlayers: MatchPlayerInfo[];
+}

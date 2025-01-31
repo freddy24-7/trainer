@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { UserWithOptionalMatchStats } from '@/types/match-types';
 
-export async function getAssistsByPlayerByOpponent() {
+export async function getAssistsByPlayerBy() {
   const players = await fetchPlayersWithAssists();
 
   return players.map((player) => {
