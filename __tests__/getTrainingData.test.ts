@@ -1,4 +1,4 @@
-import { getTrainingData } from '@/app/actions/getTrainingData';
+import { getMyTrainingData } from '@/app/actions/getMyTrainingData';
 import prisma from '../src/lib/prisma';
 
 jest.mock('../src/lib/prisma', () => ({
@@ -31,7 +31,7 @@ describe('getTrainingData', () => {
 
     (prisma.training.findMany as jest.Mock).mockResolvedValue(mockTrainings);
 
-    const result = await getTrainingData();
+    const result = await getMyTrainingData();
 
     expect(result).toEqual({
       success: true,
@@ -53,7 +53,7 @@ describe('getTrainingData', () => {
   it('should return an empty training data list if no trainings are found', async () => {
     (prisma.training.findMany as jest.Mock).mockResolvedValue([]);
 
-    const result = await getTrainingData();
+    const result = await getMyTrainingData();
 
     expect(result).toEqual({
       success: true,
@@ -72,7 +72,7 @@ describe('getTrainingData', () => {
 
     (prisma.training.findMany as jest.Mock).mockResolvedValue(mockTrainings);
 
-    const result = await getTrainingData();
+    const result = await getMyTrainingData();
 
     expect(result).toEqual({
       success: true,
@@ -91,7 +91,7 @@ describe('getTrainingData', () => {
       new Error('Database error')
     );
 
-    const result = await getTrainingData();
+    const result = await getMyTrainingData();
 
     expect(result).toEqual({
       success: false,

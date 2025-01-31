@@ -1,25 +1,55 @@
 import React from 'react';
 
-import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
-import { getTrainingData } from '@/app/actions/getTrainingData';
+import { getTrainingDataPlayers } from '@/app/actions/getTrainingDataPlayers';
 import ProtectedLayout from '@/app/ProtectedLayout';
-import FilterableTrainingListWrapper from '@/components/helpers/trainingStatsHelpers/FilterableTrainingListWrapper';
-import {
-  errorLoadingTrainingData,
-  errorLoadingAttendanceData,
-} from '@/strings/serverStrings';
+import TrainingStatsWrapper from '@/components/helpers/trainingStatsHelpers/TrainingStatsWrapper';
+import { unknownErrorOccurred } from '@/strings/serverStrings';
 import { formatError } from '@/utils/errorUtils';
 
-export default async function TrainingsPage(): Promise<React.ReactElement> {
-  const [trainingDataResponse, attendanceDataResponse] = await Promise.all([
-    getTrainingData(),
-    getTrainingAttendanceList(),
-  ]);
+interface TrainingPlayer {
+  id: number;
+  username: string | null;
+  absent: boolean;
+}
 
-  if (!trainingDataResponse.success) {
+interface TrainingData {
+  id: number;
+  date: Date;
+  players: TrainingPlayer[];
+}
+
+export default async function TrainingStatsPage(): Promise<React.ReactElement> {
+  try {
+    const trainingDataResponse: TrainingData[] =
+      await getTrainingDataPlayers();
+
+    console.log(
+      'Fetched Training Data:',
+      JSON.stringify(trainingDataResponse, null, 2)
+    );
+
+    if (!Array.isArray(trainingDataResponse)) {
+      const formattedError = formatError('Error loading training data', [
+        'getTrainingDataForPlayers',
+      ]);
+      return (
+        <ProtectedLayout requiredRole="TRAINER">
+          <div className="p-6 bg-red-100 text-red-800">
+            {formattedError.errors[0].message}
+          </div>
+        </ProtectedLayout>
+      );
+    }
+
+    return (
+      <ProtectedLayout requiredRole="TRAINER">
+        <TrainingStatsWrapper initialTrainingData={trainingDataResponse} />
+      </ProtectedLayout>
+    );
+  } catch (error) {
     const formattedError = formatError(
-      trainingDataResponse.error || errorLoadingTrainingData,
-      ['getTrainingData']
+      error instanceof Error ? error.message : unknownErrorOccurred,
+      ['TrainingStatsPage']
     );
     return (
       <ProtectedLayout requiredRole="TRAINER">
@@ -29,35 +59,4 @@ export default async function TrainingsPage(): Promise<React.ReactElement> {
       </ProtectedLayout>
     );
   }
-
-  if (!attendanceDataResponse.success) {
-    const formattedError = formatError(
-      attendanceDataResponse.error || errorLoadingAttendanceData,
-      ['getTrainingAttendanceList']
-    );
-    return (
-      <ProtectedLayout requiredRole="TRAINER">
-        <div className="p-6 bg-red-100 text-red-800">
-          {formattedError.errors[0].message}
-        </div>
-      </ProtectedLayout>
-    );
-  }
-
-  const { trainingData } = trainingDataResponse;
-  const { attendanceList } = attendanceDataResponse;
-
-  return (
-    <ProtectedLayout requiredRole="TRAINER">
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-center mb-4">
-          Training Sessions
-        </h1>
-        <FilterableTrainingListWrapper
-          trainingData={trainingData}
-          attendanceList={attendanceList}
-        />
-      </div>
-    </ProtectedLayout>
-  );
 }

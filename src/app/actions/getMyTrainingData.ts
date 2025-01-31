@@ -6,7 +6,7 @@ import { GetTrainingDataResponse } from '@/types/response-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleMapTrainingData } from '@/utils/mapTrainingData';
 
-export async function getTrainingData(): Promise<GetTrainingDataResponse> {
+export async function getMyTrainingData(): Promise<GetTrainingDataResponse> {
   try {
     const trainings = await fetchTrainingData();
     const trainingData = handleMapTrainingData(trainings);
@@ -16,7 +16,7 @@ export async function getTrainingData(): Promise<GetTrainingDataResponse> {
     console.error(errorFetchingTrainingData, error);
     const formattedError = formatError(
       errorFetchingTrainingData,
-      ['getTrainingData'],
+      ['getMyTrainingData'],
       'custom',
       true
     );

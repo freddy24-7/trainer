@@ -1,6 +1,6 @@
 import { getPlayerStats } from '@/app/actions/getMyPlayerStats';
 import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
-import { getTrainingData } from '@/app/actions/getTrainingData';
+import { getMyTrainingData } from '@/app/actions/getMyTrainingData';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import {
   errorLoadingTrainingData,
@@ -24,7 +24,7 @@ export const fetchMyStatsData = async (): Promise<FetchMyStatsResult> => {
 
   const [trainingDataResponse, attendanceDataResponse, playerStatsResponse] =
     await Promise.all([
-      getTrainingData(),
+      getMyTrainingData(),
       getTrainingAttendanceList(),
       getPlayerStats(),
     ]);
