@@ -1,6 +1,6 @@
 import { getPlayerStats } from '@/app/actions/getMyPlayerStats';
-import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
 import { getMyTrainingData } from '@/app/actions/getMyTrainingData';
+import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import {
   errorLoadingTrainingData,
@@ -12,7 +12,7 @@ import { TrainingData, PlayerAttendance } from '@/types/training-types';
 import { PlayerStat } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
 
-export const fetchMyStatsData = async (): Promise<FetchMyStatsResult> => {
+export const getMyStatsData = async (): Promise<FetchMyStatsResult> => {
   const user = await fetchAndCheckUser();
 
   if (!user) {

@@ -1,11 +1,13 @@
 import React from 'react';
 
+import { getMatchData } from '@/app/actions/getMatchData';
+import { getMyStatsData } from '@/app/actions/getMyStatsData';
 import ProtectedLayout from '@/app/ProtectedLayout';
-import { fetchMyStatsData } from '@/components/helpers/myStatsHelpers/fetchMyStatsData';
 import MyStatsWrapper from '@/components/helpers/myStatsHelpers/MyStatsWrapper';
 
 const MyStatsPage = async (): Promise<React.ReactElement> => {
-  const response = await fetchMyStatsData();
+  const response = await getMyStatsData();
+  const matchResponse = await getMatchData();
 
   if (!response.success) {
     return (
@@ -15,7 +17,12 @@ const MyStatsPage = async (): Promise<React.ReactElement> => {
     );
   }
 
+  if (!matchResponse.success) {
+    console.error('Error fetching match data:', matchResponse.error);
+  }
+
   const { user, trainingData, attendanceList, playerStats } = response.data;
+  const matchData = matchResponse.success ? matchResponse.matchData : [];
 
   return (
     <ProtectedLayout requiredRole="PLAYER">
@@ -24,6 +31,7 @@ const MyStatsPage = async (): Promise<React.ReactElement> => {
         initialTrainingData={trainingData}
         initialAttendanceList={attendanceList}
         initialPlayerStats={playerStats}
+        initialMatchData={matchData}
       />
     </ProtectedLayout>
   );
