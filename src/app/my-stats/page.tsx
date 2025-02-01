@@ -24,6 +24,8 @@ const MyStatsPage = async (): Promise<React.ReactElement> => {
   const { user, trainingData, attendanceList, playerStats } = response.data;
   const matchData = matchResponse.success ? matchResponse.matchData : [];
 
+  console.log('initialPlayerStats', playerStats);
+
   return (
     <ProtectedLayout requiredRole="PLAYER">
       <MyStatsWrapper

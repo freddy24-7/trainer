@@ -1,6 +1,4 @@
-import { MatchData } from '@/types/match-types';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
-import { PlayerStat } from '@/types/user-types';
 
 export const calculateTrainingStats = (
   trainingData: TrainingData[],
@@ -26,31 +24,4 @@ export const calculateTrainingStats = (
     totalTrainings - (playerAttendance?.absences ?? totalTrainings);
 
   return { totalTrainings, attendedTrainings };
-};
-
-export const calculateMatchStats = (
-  matchData: MatchData[] = [],
-  playerStats: PlayerStat[] = [],
-  userId: string
-): {
-  matchesPlayed: number;
-  avgMinutesPlayed: number;
-} => {
-  if (!Array.isArray(matchData)) {
-    console.error('matchData is not an array or is undefined:', matchData);
-  }
-
-  if (!Array.isArray(playerStats)) {
-    console.error('playerStats is not an array:', playerStats);
-    playerStats = [];
-  }
-
-  const playerMatchStats = playerStats.find(
-    (stats) => stats.id.toString() === userId
-  );
-
-  return {
-    matchesPlayed: playerMatchStats?.matchesPlayed ?? 0,
-    avgMinutesPlayed: playerMatchStats?.averagePlayingTime ?? 0,
-  };
 };

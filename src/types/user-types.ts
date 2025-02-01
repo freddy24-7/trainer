@@ -122,6 +122,7 @@ export interface PlayerStat {
   absences: number;
   goals: number;
   assists: number;
+  matchData?: MatchDataEntry[];
 }
 
 export interface PlayerStatsTableProps {
@@ -225,7 +226,7 @@ export type GetPlayerMatchStatsResponse =
   | { success: true; playerStats: PlayerMatchOwnStat[] }
   | { success: false; error: string };
 
-type PlayerMatchOwnStat = {
+interface PlayerMatchOwnStat {
   id: number;
   username: string;
   matchesPlayed: number;
@@ -238,4 +239,17 @@ type PlayerMatchOwnStat = {
     minutes: number;
     available: boolean;
   }[];
-};
+}
+
+export interface MatchDataEntry {
+  id: number;
+  matchId: number;
+  userId: number;
+  minutes: number;
+  available: boolean;
+  match: {
+    id: number;
+    date: string;
+    opponentStrength: string | null;
+  };
+}

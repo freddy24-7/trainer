@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import DateFilter from '@/components/DateFilter';
@@ -8,10 +8,7 @@ import MatchStatsTable from '@/components/helpers/myStatsHelpers/MyMatchStatsTab
 import { MatchData } from '@/types/match-types';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
 import { PlayerStat, SignedInUser } from '@/types/user-types';
-import {
-  calculateTrainingStats,
-  calculateMatchStats,
-} from '@/utils/myStatsUtils';
+import { calculateTrainingStats } from '@/utils/myStatsUtils';
 
 interface MyStatsWrapperProps {
   user: SignedInUser;
@@ -29,45 +26,43 @@ const MyStatsWrapper: React.FC<MyStatsWrapperProps> = ({
   initialMatchData,
 }) => {
   const methods = useForm();
+  const { watch, setValue } = methods;
 
-  const [filteredTrainingData, setFilteredTrainingData] = useState<
-    TrainingData[]
-  >(Array.isArray(initialTrainingData) ? initialTrainingData : []);
-  const [filteredAttendanceList, setFilteredAttendanceList] = useState<
-    PlayerAttendance[]
-  >(Array.isArray(initialAttendanceList) ? initialAttendanceList : []);
-  const [filteredPlayerStats, setFilteredPlayerStats] = useState<PlayerStat[]>(
-    Array.isArray(initialPlayerStats) ? initialPlayerStats : []
-  );
-  const [filteredMatchData, setFilteredMatchData] = useState<MatchData[]>(
-    Array.isArray(initialMatchData) ? initialMatchData : []
-  );
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
 
-  useEffect(() => {
-    console.log('Initial Match Data:', initialMatchData);
-    console.log('Filtered Match Data:', filteredMatchData);
-  }, [initialMatchData, filteredMatchData]);
+  const filteredTrainingData = useMemo(() => {
+    return startDate && endDate
+      ? initialTrainingData.filter((training) => {
+          const trainingDate = new Date(training.date);
+          return (
+            trainingDate >= new Date(startDate) &&
+            trainingDate <= new Date(endDate)
+          );
+        })
+      : initialTrainingData;
+  }, [initialTrainingData, startDate, endDate]);
 
-  const handleFilter = (startDate: Date | null, endDate: Date | null): void => {
-    if (!startDate || !endDate) return;
+  const filteredAttendanceList = useMemo(() => {
+    return startDate && endDate
+      ? initialAttendanceList.filter((attendance) =>
+          filteredTrainingData.some(
+            (session) => session.id === attendance.playerId
+          )
+        )
+      : initialAttendanceList;
+  }, [initialAttendanceList, filteredTrainingData, startDate, endDate]);
 
-    const filteredTrainings = initialTrainingData.filter((training) => {
-      const trainingDate = new Date(training.date);
-      return trainingDate >= startDate && trainingDate <= endDate;
-    });
-
-    const filteredAttendance = initialAttendanceList.filter((attendance) =>
-      filteredTrainings.some((session) => session.id === attendance.playerId)
-    );
-
-    setFilteredTrainingData(filteredTrainings);
-    setFilteredAttendanceList(filteredAttendance);
-    setFilteredPlayerStats(initialPlayerStats);
-    setFilteredMatchData(initialMatchData);
-  };
-
-  console.log('Filtered Player Stats:', filteredPlayerStats);
-  console.log('Initial Player Stats:', initialPlayerStats);
+  const filteredMatchData = useMemo(() => {
+    return startDate && endDate
+      ? initialMatchData.filter((match) => {
+          const matchDate = new Date(match.date);
+          return (
+            matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+          );
+        })
+      : initialMatchData;
+  }, [initialMatchData, startDate, endDate]);
 
   const { totalTrainings, attendedTrainings } = calculateTrainingStats(
     filteredTrainingData,
@@ -77,16 +72,52 @@ const MyStatsWrapper: React.FC<MyStatsWrapperProps> = ({
 
   const totalMatches = filteredMatchData.length;
 
-  const { matchesPlayed, avgMinutesPlayed } = calculateMatchStats(
-    filteredMatchData,
-    filteredPlayerStats,
-    user.id
-  );
+  const { matchesPlayed, avgMinutesPlayed } = useMemo(() => {
+    const userStat = initialPlayerStats.find(
+      (stat) => stat.id.toString() === user.id.toString()
+    );
+    if (!userStat) {
+      return { matchesPlayed: 0, avgMinutesPlayed: 0 };
+    }
+
+    const filteredUserMatchData = (userStat.matchData ?? []).filter((entry) => {
+      if (startDate && endDate) {
+        const matchDate = new Date(entry.match.date);
+        return (
+          matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
+        );
+      }
+      return true;
+    });
+
+    const absences = filteredUserMatchData.filter(
+      (entry) => !entry.available
+    ).length;
+
+    const matchesPlayedCalc = totalMatches - absences;
+
+    const totalMinutes = filteredUserMatchData
+      .filter((entry) => entry.available)
+      .reduce((sum, entry) => sum + entry.minutes, 0);
+
+    const avgMinutesPlayedCalc =
+      matchesPlayedCalc > 0 ? totalMinutes / matchesPlayedCalc : 0;
+
+    return {
+      matchesPlayed: matchesPlayedCalc,
+      avgMinutesPlayed: avgMinutesPlayedCalc,
+    };
+  }, [initialPlayerStats, user.id, startDate, endDate, totalMatches]);
 
   return (
     <FormProvider {...methods}>
       <div className="p-6 max-w-3xl mx-auto">
-        <DateFilter onFilter={handleFilter} />
+        <DateFilter
+          onFilter={(startDate, endDate) => {
+            setValue('startDate', startDate);
+            setValue('endDate', endDate);
+          }}
+        />
         <h1 className="text-2xl font-bold text-center mb-4 text-black">
           My Training and Match Stats
         </h1>
