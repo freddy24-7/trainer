@@ -1,7 +1,7 @@
 'use server';
 
 import { fetchTrainingDataPlayers } from '@/lib/services/getTrainingPlayerService';
-import { TrainingDataResponse } from '@/types/match-types';
+import { TrainingDataResponse } from '@/types/training-types';
 
 export async function getTrainingDataPlayers(): Promise<
   TrainingDataResponse[]

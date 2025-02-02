@@ -1,25 +1,14 @@
 import React from 'react';
 
 import OpponentSelector from '@/components/helpers/matchHelpers/OpponentSelector';
-import { Poule, PouleOpponent } from '@/types/poule-types';
-
-interface FieldError {
-  message?: string;
-}
-
-interface Props {
-  selectedPoule: Poule | null;
-  selectedOpponent: PouleOpponent | null;
-  errors: { opponent?: FieldError };
-  onChange: (opponentId: number) => void;
-}
+import { OpponentFieldProps } from '@/types/match-types';
 
 const OpponentField = ({
   selectedPoule,
   selectedOpponent,
   errors,
   onChange,
-}: Props): React.ReactElement | null =>
+}: OpponentFieldProps): React.ReactElement | null =>
   selectedPoule && selectedPoule.opponents.length > 0 ? (
     <div className="space-y-4">
       <div className="flex flex-col">

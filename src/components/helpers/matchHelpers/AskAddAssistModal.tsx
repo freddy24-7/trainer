@@ -8,11 +8,7 @@ import {
 } from '@heroui/react';
 import React from 'react';
 
-interface AskAddAssistModalProps {
-  isOpen: boolean;
-  onYes: () => void;
-  onNo: () => void;
-}
+import { AskAddAssistModalProps } from '@/types/match-types';
 
 const AskAddAssistModal: React.FC<AskAddAssistModalProps> = ({
   isOpen,

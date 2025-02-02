@@ -8,14 +8,7 @@ import {
 } from '@heroui/react';
 import React from 'react';
 
-import { Player } from '@/types/user-types';
-
-interface SelectAssistModalProps {
-  isOpen: boolean;
-  playersOnPitch: Player[];
-  onSelect: (player: Player) => void;
-  onCancel: () => void;
-}
+import { SelectAssistModalProps } from '@/types/match-types';
 
 const SelectAssistModal: React.FC<SelectAssistModalProps> = ({
   isOpen,

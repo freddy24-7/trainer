@@ -1,25 +1,11 @@
 import React from 'react';
 
 import SubstitutionDetails from '@/components/helpers/matchHelpers/SubstitutionDetails';
+import { SubstitutionManagementBodyProps } from '@/types/match-types';
 import {
   handleAddSubstitution,
   handleRemoveSubstitution,
-  Substitution,
 } from '@/utils/substitutionUtils';
-
-interface Player {
-  id: number;
-  username: string;
-}
-
-interface SubstitutionManagementBodyProps {
-  players: Player[];
-  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
-  minute: number | '';
-  setMinute: React.Dispatch<React.SetStateAction<number | ''>>;
-  substitutions: Substitution[];
-  setSubstitutions: React.Dispatch<React.SetStateAction<Substitution[]>>;
-}
 
 const SubstitutionManagementBody: React.FC<SubstitutionManagementBodyProps> = ({
   players,

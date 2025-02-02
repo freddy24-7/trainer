@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+import { ModalStep, GoalAssistModalProps } from '@/types/match-types';
 import { Player } from '@/types/user-types';
 
 import AskAddAssistModal from './AskAddAssistModal';
@@ -7,22 +8,6 @@ import ConfirmAssistModal from './ConfirmAssistModal';
 import ConfirmGoalModal from './ConfirmGoalModal';
 import SelectAssistModal from './SelectAssistModal';
 import SelectGoalScorerModal from './SelectGoalScorerModal';
-
-type ModalStep =
-  | 'SELECT_GOAL_SCORER'
-  | 'CONFIRM_GOAL'
-  | 'ASK_ADD_ASSIST'
-  | 'SELECT_ASSIST'
-  | 'CONFIRM_ASSIST'
-  | 'CLOSED';
-
-interface GoalAssistModalProps {
-  isOpen: boolean;
-  onOpenChange: (value: boolean) => void;
-  players: Player[];
-  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
-  onConfirm: (playerId: number, eventType: 'GOAL' | 'ASSIST') => void;
-}
 
 const GoalAssistModal: React.FC<GoalAssistModalProps> = ({
   isOpen,

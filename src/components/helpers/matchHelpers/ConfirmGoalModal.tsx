@@ -8,14 +8,7 @@ import {
 } from '@heroui/react';
 import React from 'react';
 
-import { Player } from '@/types/user-types';
-
-interface ConfirmGoalModalProps {
-  isOpen: boolean;
-  goalScorer: Player | null;
-  onCancel: () => void;
-  onConfirm: () => void;
-}
+import { ConfirmGoalModalProps } from '@/types/match-types';
 
 const ConfirmGoalModal: React.FC<ConfirmGoalModalProps> = ({
   isOpen,

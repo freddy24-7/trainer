@@ -57,7 +57,7 @@ export interface DashboardClientProps {
 export interface Player {
   id: number;
   username: string;
-  whatsappNumber: string;
+  whatsappNumber?: string;
 }
 
 export interface ChatUser {

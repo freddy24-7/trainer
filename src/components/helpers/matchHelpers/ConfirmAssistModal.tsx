@@ -8,14 +8,7 @@ import {
 } from '@heroui/react';
 import React from 'react';
 
-import { Player } from '@/types/user-types';
-
-interface ConfirmAssistModalProps {
-  isOpen: boolean;
-  assistProvider: Player | null;
-  onCancel: () => void;
-  onConfirm: () => void;
-}
+import { ConfirmAssistModalProps } from '@/types/match-types';
 
 const ConfirmAssistModal: React.FC<ConfirmAssistModalProps> = ({
   isOpen,

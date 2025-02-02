@@ -8,13 +8,7 @@ import {
 } from '@heroui/react';
 import React from 'react';
 
-interface ConfirmationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title?: string;
-  message?: string;
-}
+import { ConfirmationModalProps } from '@/types/match-types';
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   isOpen,

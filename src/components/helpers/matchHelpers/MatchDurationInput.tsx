@@ -2,10 +2,7 @@
 
 import React from 'react';
 
-interface MatchDurationInputProps {
-  matchDuration: number;
-  onDurationChange: (newDuration: number) => void;
-}
+import { MatchDurationInputProps } from '@/types/match-types';
 
 const MatchDurationInput: React.FC<MatchDurationInputProps> = ({
   matchDuration,

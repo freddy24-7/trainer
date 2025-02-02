@@ -1,8 +1,10 @@
 import { CalendarDate } from '@heroui/react';
+import React from 'react';
 import { FieldErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
 import { Poule, PouleOpponent } from '@/types/poule-types';
+import { Substitution } from '@/utils/substitutionUtils';
 
 import { Player, PlayerMatchStat, PlayerStat } from './user-types';
 
@@ -24,6 +26,7 @@ export interface BaseMatchEvent {
   substitutionReason?: SubstitutionReason | null;
   playerInId?: number | null;
   playerOutId?: number | null;
+  playerId?: number | null;
   match?: {
     id: number;
     date: Date;
@@ -253,14 +256,180 @@ export type GetPlayerStatsReturn =
   | PlayerDataAdd[]
   | { success: false; error: string };
 
-export interface TrainingDataPlayer {
+export interface TrainingPlayerDisplay {
   id: number;
-  username: string;
+  username: string | null;
   absent: boolean;
 }
 
-export interface TrainingDataResponse {
+export interface TrainingDataDisplay {
   id: number;
   date: Date;
-  players: TrainingDataPlayer[];
+  players: TrainingPlayerDisplay[];
+}
+
+export interface AskAddAssistModalProps {
+  isOpen: boolean;
+  onYes: () => void;
+  onNo: () => void;
+}
+
+export interface ConfirmAssistModalProps {
+  isOpen: boolean;
+  assistProvider: Player | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+}
+
+export interface ConfirmationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title?: string;
+  message?: string;
+}
+
+export interface ConfirmGoalModalProps {
+  isOpen: boolean;
+  goalScorer: Player | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+}
+
+export type ModalStep =
+  | 'SELECT_GOAL_SCORER'
+  | 'CONFIRM_GOAL'
+  | 'ASK_ADD_ASSIST'
+  | 'SELECT_ASSIST'
+  | 'CONFIRM_ASSIST'
+  | 'CLOSED';
+
+export interface GoalAssistModalProps {
+  isOpen: boolean;
+  onOpenChange: (value: boolean) => void;
+  players: Player[];
+  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
+  onConfirm: (playerId: number, eventType: 'GOAL' | 'ASSIST') => void;
+}
+
+export interface MatchDurationInputProps {
+  matchDuration: number;
+  onDurationChange: (newDuration: number) => void;
+}
+
+export interface MatchFormSetFieldProps
+  extends Pick<
+    MatchFormFieldProps,
+    | 'poules'
+    | 'players'
+    | 'errors'
+    | 'setValue'
+    | 'opponentStrength'
+    | 'matchEvents'
+    | 'playerValues'
+    | 'selectedPoule'
+    | 'selectedOpponent'
+  > {
+  matchType: 'competition' | 'practice';
+  setLineupFinalized: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface PlayerManagementProps {
+  players: Player[];
+  playerValues: MatchFormValues['players'];
+  setValue: UseFormSetValue<MatchFormValues>;
+  matchEvents: MatchFormValues['matchEvents'];
+}
+
+export interface MatchTypeSelectionProps {
+  matchType: 'competition' | 'practice';
+  setValue: UseFormSetValue<MatchFormValues>;
+}
+
+export interface FieldError {
+  message?: string;
+}
+
+export interface OpponentFieldProps {
+  selectedPoule: Poule | null;
+  selectedOpponent: PouleOpponent | null;
+  errors: { opponent?: FieldError };
+  onChange: (opponentId: number) => void;
+}
+
+export interface OpponentLogicProps {
+  matchType: 'competition' | 'practice';
+  selectedPoule: Poule | null;
+  selectedOpponent: PouleOpponent | null;
+  poules: Poule[];
+  errors: FieldErrors<MatchFormValues>;
+  setValue: UseFormSetValue<MatchFormValues>;
+  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+}
+
+export interface SelectAssistModalProps {
+  isOpen: boolean;
+  playersOnPitch: Player[];
+  onSelect: (player: Player) => void;
+  onCancel: () => void;
+}
+
+export interface SelectGoalScorerModalProps {
+  isOpen: boolean;
+  playersOnPitch: Player[];
+  onSelect: (player: Player) => void;
+  onCancel: () => void;
+}
+
+export interface StrengthModalProps {
+  isOpen: boolean;
+  onOpenChange: (value: boolean) => void;
+  isConfirmOpen: boolean;
+  onConfirmOpen: () => void;
+  onConfirmChange: (value: boolean) => void;
+
+  selectedStrength: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
+  setSelectedStrength: React.Dispatch<
+    React.SetStateAction<'STRONGER' | 'SIMILAR' | 'WEAKER' | null>
+  >;
+
+  handleConfirmStrength: () => void;
+}
+
+export interface SubstitutionDetailsProps {
+  player: Player;
+  players: Player[];
+  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
+  substitutions: Substitution[];
+  setSubstitutions: React.Dispatch<React.SetStateAction<Substitution[]>>;
+}
+
+export interface SubstitutionManagementBodyProps {
+  players: Player[];
+  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
+  minute: number | '';
+  setMinute: React.Dispatch<React.SetStateAction<number | ''>>;
+  substitutions: Substitution[];
+  setSubstitutions: React.Dispatch<React.SetStateAction<Substitution[]>>;
+}
+
+export interface SubstitutionManagementProps {
+  players: Player[];
+  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
+  matchEvents: MatchFormValues['matchEvents'];
+  onSubstitution: (
+    minute: number,
+    playerInId: number,
+    playerOutId: number,
+    substitutionReason: SubstitutionReason
+  ) => void;
+  setValue: UseFormSetValue<MatchFormValues>;
+  setPlayerStates: React.Dispatch<
+    React.SetStateAction<Record<number, 'playing' | 'bench' | 'absent'>>
+  >;
+}
+
+export interface SubstitutionReasonSelectorProps {
+  value: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+  onChange: (reason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER') => void;
 }

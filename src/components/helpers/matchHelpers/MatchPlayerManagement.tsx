@@ -1,6 +1,5 @@
 import { Button } from '@heroui/react';
 import React, { useEffect, useState } from 'react';
-import { UseFormSetValue } from 'react-hook-form';
 
 import GoalAssistModal from '@/components/helpers/matchHelpers/GoalAssistModal';
 import LineupManagement from '@/components/helpers/matchHelpers/LineupManagement';
@@ -8,15 +7,7 @@ import MatchDurationInput from '@/components/helpers/matchHelpers/MatchDurationI
 import PlayerMinutes from '@/components/helpers/matchHelpers/PlayerMinutes';
 import SubstitutionManagement from '@/components/helpers/matchHelpers/SubstitutionManagement';
 import { usePlayerManagement } from '@/hooks/usePlayerManagement';
-import { MatchFormValues } from '@/types/match-types';
-import { Player } from '@/types/user-types';
-
-interface PlayerManagementProps {
-  players: Player[];
-  playerValues: MatchFormValues['players'];
-  setValue: UseFormSetValue<MatchFormValues>;
-  matchEvents: MatchFormValues['matchEvents'];
-}
+import { PlayerManagementProps } from '@/types/match-types';
 
 const PlayerManagement: React.FC<
   PlayerManagementProps & { onLineupFinalized: (finalized: boolean) => void }

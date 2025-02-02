@@ -7,36 +7,13 @@ import {
   Button,
 } from '@heroui/react';
 import React, { useState } from 'react';
-import { UseFormSetValue } from 'react-hook-form';
 
 import SubstitutionManagementBody from '@/components/helpers/matchHelpers/SubstitutionManagementBody';
-import { MatchFormValues } from '@/types/match-types';
+import { SubstitutionManagementProps } from '@/types/match-types';
 import {
   handleConfirmAllAtOnce,
   Substitution,
-  SubstitutionReason,
 } from '@/utils/substitutionUtils';
-
-interface Player {
-  id: number;
-  username: string;
-}
-
-interface SubstitutionManagementProps {
-  players: Player[];
-  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
-  matchEvents: MatchFormValues['matchEvents'];
-  onSubstitution: (
-    minute: number,
-    playerInId: number,
-    playerOutId: number,
-    substitutionReason: SubstitutionReason
-  ) => void;
-  setValue: UseFormSetValue<MatchFormValues>;
-  setPlayerStates: React.Dispatch<
-    React.SetStateAction<Record<number, 'playing' | 'bench' | 'absent'>>
-  >;
-}
 
 const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
   players,

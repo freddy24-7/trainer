@@ -4,23 +4,12 @@ import { getTrainingDataPlayers } from '@/app/actions/getTrainingDataPlayers';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import TrainingStatsWrapper from '@/components/helpers/trainingStatsHelpers/TrainingStatsWrapper';
 import { unknownErrorOccurred } from '@/strings/serverStrings';
+import { TrainingDataDisplay } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
-
-interface TrainingPlayer {
-  id: number;
-  username: string | null;
-  absent: boolean;
-}
-
-interface TrainingData {
-  id: number;
-  date: Date;
-  players: TrainingPlayer[];
-}
 
 export default async function TrainingStatsPage(): Promise<React.ReactElement> {
   try {
-    const trainingDataResponse: TrainingData[] =
+    const trainingDataResponse: TrainingDataDisplay[] =
       await getTrainingDataPlayers();
 
     console.log(

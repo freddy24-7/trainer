@@ -1,9 +1,6 @@
 import React from 'react';
 
-interface SubstitutionReasonSelectorProps {
-  value: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-  onChange: (reason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER') => void;
-}
+import { SubstitutionReasonSelectorProps } from '@/types/match-types';
 
 const SubstitutionReasonSelector: React.FC<SubstitutionReasonSelectorProps> = ({
   value,

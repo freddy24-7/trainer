@@ -1,12 +1,6 @@
 import React from 'react';
-import { UseFormSetValue } from 'react-hook-form';
 
-import { MatchFormValues } from '@/types/match-types';
-
-interface MatchTypeSelectionProps {
-  matchType: 'competition' | 'practice';
-  setValue: UseFormSetValue<MatchFormValues>;
-}
+import { MatchTypeSelectionProps } from '@/types/match-types';
 
 const MatchTypeSelection: React.FC<MatchTypeSelectionProps> = ({
   matchType,

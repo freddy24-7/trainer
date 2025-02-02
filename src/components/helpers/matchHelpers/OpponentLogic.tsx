@@ -1,23 +1,11 @@
 import { Button } from '@heroui/react';
 import React, { useState } from 'react';
-import { FieldErrors, UseFormSetValue } from 'react-hook-form';
 
 import OpponentField from '@/components/helpers/matchHelpers/OpponentField';
 import PouleField from '@/components/helpers/matchHelpers/PouleField';
 import StrengthModal from '@/components/helpers/matchHelpers/StrengthModal';
 import { useStrengthModal } from '@/hooks/useStrengthModal';
-import { MatchFormValues } from '@/types/match-types';
-import { Poule, PouleOpponent } from '@/types/poule-types';
-
-interface OpponentLogicProps {
-  matchType: 'competition' | 'practice';
-  selectedPoule: Poule | null;
-  selectedOpponent: PouleOpponent | null;
-  poules: Poule[];
-  errors: FieldErrors<MatchFormValues>;
-  setValue: UseFormSetValue<MatchFormValues>;
-  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-}
+import { OpponentLogicProps } from '@/types/match-types';
 
 const OpponentLogic: React.FC<OpponentLogicProps> = ({
   matchType,

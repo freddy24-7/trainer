@@ -80,3 +80,15 @@ export interface TrainingFrontEndProps {
 export interface ErrorDetails {
   message: string;
 }
+
+export interface TrainingDataPlayer {
+  id: number;
+  username: string;
+  absent: boolean;
+}
+
+export interface TrainingDataResponse {
+  id: number;
+  date: Date;
+  players: TrainingDataPlayer[];
+}

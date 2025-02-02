@@ -1,23 +1,10 @@
 import React from 'react';
 
+import { SubstitutionDetailsProps } from '@/types/match-types';
 import {
   handleSubstitutionChange,
-  Substitution,
   SubstitutionReason,
 } from '@/utils/substitutionUtils';
-
-interface Player {
-  id: number;
-  username: string;
-}
-
-interface SubstitutionDetailsProps {
-  player: Player;
-  players: Player[];
-  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
-  substitutions: Substitution[];
-  setSubstitutions: React.Dispatch<React.SetStateAction<Substitution[]>>;
-}
 
 const SubstitutionDetails: React.FC<SubstitutionDetailsProps> = ({
   player,

@@ -8,20 +8,7 @@ import {
 } from '@heroui/react';
 import React from 'react';
 
-interface StrengthModalProps {
-  isOpen: boolean;
-  onOpenChange: (value: boolean) => void;
-  isConfirmOpen: boolean;
-  onConfirmOpen: () => void;
-  onConfirmChange: (value: boolean) => void;
-
-  selectedStrength: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  setSelectedStrength: React.Dispatch<
-    React.SetStateAction<'STRONGER' | 'SIMILAR' | 'WEAKER' | null>
-  >;
-
-  handleConfirmStrength: () => void;
-}
+import { StrengthModalProps } from '@/types/match-types';
 
 const StrengthModal: React.FC<StrengthModalProps> = ({
   isOpen,

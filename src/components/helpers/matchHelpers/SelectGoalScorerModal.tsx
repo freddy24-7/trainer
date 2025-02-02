@@ -8,14 +8,7 @@ import {
 } from '@heroui/react';
 import React from 'react';
 
-import { Player } from '@/types/user-types';
-
-interface SelectGoalScorerModalProps {
-  isOpen: boolean;
-  playersOnPitch: Player[];
-  onSelect: (player: Player) => void;
-  onCancel: () => void;
-}
+import { SelectGoalScorerModalProps } from '@/types/match-types';
 
 const SelectGoalScorerModal: React.FC<SelectGoalScorerModalProps> = ({
   isOpen,
