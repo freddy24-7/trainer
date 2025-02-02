@@ -1,19 +1,28 @@
+'use client';
+
 import { useTheme } from 'next-themes';
 import React from 'react';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { FiMoon, FiSun } from 'react-icons/fi';
 
 import CustomButton from '@/components/Button';
-import { toggleThemeAriaLabel } from '@/strings/clientStrings';
 
-export function ThemeToggleButton(): React.ReactElement {
+interface ThemeToggleButtonProps {
+  onPress?: () => void;
+}
+
+export const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({
+  onPress,
+}) => {
   const { theme, setTheme } = useTheme();
 
+  const handleClick = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+    if (onPress) onPress();
+  };
+
   return (
-    <CustomButton
-      onPress={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      aria-label={toggleThemeAriaLabel}
-    >
+    <CustomButton onPress={handleClick}>
       {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
     </CustomButton>
   );
-}
+};

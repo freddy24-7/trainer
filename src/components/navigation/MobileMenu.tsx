@@ -1,22 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
 import React, { useState } from 'react';
 import { CiHome } from 'react-icons/ci';
-import { FiMoon, FiSun, FiMenu, FiX } from 'react-icons/fi';
+import { FiMenu, FiX } from 'react-icons/fi';
 
 import { homeLabel } from '@/strings/clientStrings';
 import { MobileMenuProps } from '@/types/ui-types';
 
 import { NavBarUserContent } from './NavBarUserContent';
+import { ThemeToggleButton } from './ThemeToggleButton';
 
 export function MobileMenu({
   userId,
   userRole,
   dropdownTextColor,
 }: MobileMenuProps): React.ReactElement {
-  const { theme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = (): void => setMenuOpen(false);
@@ -44,16 +43,7 @@ export function MobileMenu({
             <span>{homeLabel}</span>
           </Link>
 
-          <button
-            className="text-white border border-white rounded p-2 flex items-center space-x-2 w-full justify-start"
-            onClick={() => {
-              setTheme(theme === 'light' ? 'dark' : 'light');
-              closeMenu();
-            }}
-          >
-            {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
-            <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-          </button>
+          <ThemeToggleButton onPress={closeMenu} />
 
           <NavBarUserContent
             userId={userId}
