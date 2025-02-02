@@ -1,28 +1,20 @@
-import prisma from '@/lib/prisma';
+'use server';
 
-export async function getTrainingDataPlayers() {
+import { fetchTrainingDataPlayers } from '@/lib/services/getTrainingPlayerService';
+import { TrainingDataResponse } from '@/types/match-types';
+
+export async function getTrainingDataPlayers(): Promise<
+  TrainingDataResponse[]
+> {
   try {
-    const trainingData = await prisma.training.findMany({
-      include: {
-        trainingPlayers: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const trainingData = await fetchTrainingDataPlayers();
 
     return trainingData.map((training) => ({
       id: training.id,
       date: training.date,
       players: training.trainingPlayers.map((tp) => ({
         id: tp.user.id,
-        username: tp.user.username,
+        username: tp.user.username ?? 'Unknown',
         absent: tp.absent,
       })),
     }));

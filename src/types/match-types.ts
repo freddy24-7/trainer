@@ -233,3 +233,34 @@ export interface MatchPlayer {
 export interface MatchEvent extends BaseMatchEvent {
   playerId?: number | null;
 }
+
+export interface PlayerMatchData {
+  id: number;
+  date: Date | undefined;
+  minutes: number;
+  available: boolean;
+  goals: number;
+  assists: number;
+}
+
+export interface PlayerDataAdd {
+  id: number;
+  username: string | null;
+  matchData: PlayerMatchData[];
+}
+
+export type GetPlayerStatsReturn =
+  | PlayerDataAdd[]
+  | { success: false; error: string };
+
+export interface TrainingDataPlayer {
+  id: number;
+  username: string;
+  absent: boolean;
+}
+
+export interface TrainingDataResponse {
+  id: number;
+  date: Date;
+  players: TrainingDataPlayer[];
+}

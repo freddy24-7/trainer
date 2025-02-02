@@ -2,11 +2,15 @@
 
 import { fetchPlayers } from '@/lib/services/getPlayersService';
 import { errorFetchingPlayerStats } from '@/strings/actionStrings';
+import {
+  UserWithOptionalMatchStats,
+  GetPlayerStatsReturn,
+} from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 
-export async function getPlayerStats() {
+export async function getPlayerStats(): Promise<GetPlayerStatsReturn> {
   try {
-    const players = await fetchPlayers();
+    const players: UserWithOptionalMatchStats[] = await fetchPlayers();
 
     return players.map((player) => ({
       id: player.id,
