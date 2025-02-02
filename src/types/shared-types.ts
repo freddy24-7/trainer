@@ -1,4 +1,3 @@
-import { CalendarDate } from '@heroui/react';
 import React, { ReactNode } from 'react';
 import { Control, FieldErrors } from 'react-hook-form';
 import { ZodIssue } from 'zod';
@@ -24,14 +23,6 @@ export interface ActionResponse {
 export interface ProtectedLayoutProps {
   children: ReactNode;
   requiredRole: string;
-}
-
-export interface DateProps {
-  errors: {
-    date?: { message?: string };
-  };
-  onChange: (date: CalendarDate | null) => void;
-  label: string;
 }
 
 export interface InputFieldProps {

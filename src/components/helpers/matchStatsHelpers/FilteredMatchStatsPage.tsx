@@ -54,6 +54,15 @@ const FilteredMatchStatsPage: React.FC<
           : true;
       });
 
+      const totalMinutes = filteredMatchData.reduce(
+        (sum, match) => sum + match.minutes,
+        0
+      );
+      const avgMinutes =
+        filteredMatchData.length > 0
+          ? totalMinutes / filteredMatchData.length
+          : 0;
+
       const totalStrongerMinutes = filteredMatchData
         .filter((m) => m.opponentStrength === 'STRONGER')
         .reduce((sum, match) => sum + match.minutes, 0);
@@ -77,6 +86,7 @@ const FilteredMatchStatsPage: React.FC<
       return {
         id: player.id,
         username: player.username,
+        avgMinutes,
         avgMinutesStronger:
           strongerMatches > 0 ? totalStrongerMinutes / strongerMatches : 0,
         avgMinutesSimilar:

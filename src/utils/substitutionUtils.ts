@@ -1,20 +1,14 @@
 import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 
-import { MatchFormValues } from '@/types/match-types';
+import {
+  MatchFormValues,
+  SubstitutionData,
+  GameState,
+  Substitution,
+  SubstitutionReason,
+} from '@/types/match-types';
 import { handleSubstitution } from '@/utils/playerManagementUtils';
-
-interface SubstitutionData {
-  minute: number;
-  playerInId: number;
-  playerOutId: number;
-  substitutionReason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-}
-
-interface GameState {
-  matchEvents: MatchFormValues['matchEvents'];
-  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
-}
 
 export const processSubstitution = (
   substitutionData: SubstitutionData,
@@ -32,19 +26,6 @@ export const processSubstitution = (
   setValue('matchEvents', updatedMatchEvents);
   setPlayerStates(updatedPlayerStates);
 };
-
-export type SubstitutionReason =
-  | 'TACTICAL'
-  | 'FITNESS'
-  | 'INJURY'
-  | 'OTHER'
-  | null;
-
-export interface Substitution {
-  playerOutId: number;
-  playerInId: number | null;
-  substitutionReason: SubstitutionReason;
-}
 
 export function handleSubstitutionChange(
   setSubstitutions: React.Dispatch<React.SetStateAction<Substitution[]>>,

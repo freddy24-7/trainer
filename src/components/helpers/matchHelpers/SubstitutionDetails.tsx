@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { SubstitutionDetailsProps } from '@/types/match-types';
 import {
-  handleSubstitutionChange,
+  SubstitutionDetailsProps,
   SubstitutionReason,
-} from '@/utils/substitutionUtils';
+} from '@/types/match-types';
+import { handleSubstitutionChange } from '@/utils/substitutionUtils';
 
 const SubstitutionDetails: React.FC<SubstitutionDetailsProps> = ({
   player,

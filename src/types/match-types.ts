@@ -4,7 +4,6 @@ import { FieldErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
 import { Poule, PouleOpponent } from '@/types/poule-types';
-import { Substitution } from '@/utils/substitutionUtils';
 
 import { Player, PlayerMatchStat, PlayerStat } from './user-types';
 
@@ -16,6 +15,7 @@ export type SubstitutionReason = 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER';
 export interface BaseMatch {
   id: number;
   date: Date;
+  opponentStrength: OpponentStrength | null;
 }
 
 export interface BaseMatchEvent {
@@ -160,7 +160,10 @@ export interface SubmitMatchFormOptions {
 export interface PlayerOpponentStat {
   id: number;
   username: string | null;
-  avgMinutes: number;
+  avgMinutes?: number;
+  avgMinutesStronger: number;
+  avgMinutesSimilar: number;
+  avgMinutesWeaker: number;
 }
 
 export interface PlayerOpponentStatData {
@@ -432,4 +435,22 @@ export interface SubstitutionManagementProps {
 export interface SubstitutionReasonSelectorProps {
   value: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
   onChange: (reason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER') => void;
+}
+
+export interface SubstitutionData {
+  minute: number;
+  playerInId: number;
+  playerOutId: number;
+  substitutionReason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
+}
+
+export interface GameState {
+  matchEvents: MatchFormValues['matchEvents'];
+  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
+}
+
+export interface Substitution {
+  playerOutId: number;
+  playerInId: number | null;
+  substitutionReason: SubstitutionReason | null;
 }

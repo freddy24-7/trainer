@@ -3,7 +3,7 @@ import {
   SubstitutionMatchStats,
   SubstitutionOutStatData,
 } from '@/types/match-types';
-import { handlePlayerSubstitutionData } from '@/utils/match-stats-utils';
+import { handlePlayerSubstitutionData } from '@/utils/matchStatsUtils';
 
 export async function fetchPlayersWithFitnessSubstitutions(): Promise<
   SubstitutionMatchStats[]

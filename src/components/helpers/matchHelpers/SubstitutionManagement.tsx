@@ -9,11 +9,8 @@ import {
 import React, { useState } from 'react';
 
 import SubstitutionManagementBody from '@/components/helpers/matchHelpers/SubstitutionManagementBody';
-import { SubstitutionManagementProps } from '@/types/match-types';
-import {
-  handleConfirmAllAtOnce,
-  Substitution,
-} from '@/utils/substitutionUtils';
+import { SubstitutionManagementProps, Substitution } from '@/types/match-types';
+import { handleConfirmAllAtOnce } from '@/utils/substitutionUtils';
 
 const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
   players,
