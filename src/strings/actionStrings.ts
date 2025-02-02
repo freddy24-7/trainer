@@ -8,7 +8,6 @@ export const unexpectedErrorAddingPlayer =
 export const matchIdNotFound = 'Fout: Wedstrijd-ID niet gevonden.';
 export const failedToAddMatchPlayer =
   'Mislukt om wedstrijdspeler toe te voegen aan de database.';
-export const errorUploadingVideo = 'Fout bij het uploaden van video.';
 export const senderNotFoundOrUsernameNull =
   'Fout: Afzender niet gevonden of gebruikersnaam is leeg.';
 export const errorSendingMessage = 'Fout bij het verzenden van het bericht.';
@@ -44,3 +43,5 @@ export const errorFetchingAttendanceData =
 export const errorFetchingTrainingData =
   'Mislukt om trainingsgegevens op te halen.';
 export const errorFetchingUsers = 'Fout bij het ophalen van gebruikers.';
+export const errorFetchingAssists =
+  'Fout bij het ophalen van assist-gegevens..';

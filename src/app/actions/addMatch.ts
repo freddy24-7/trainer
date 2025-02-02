@@ -12,16 +12,8 @@ import {
   opponentNotExistMessage,
   failedToCreateMatchMessage,
 } from '@/strings/actionStrings';
+import { MatchEvent } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
-
-interface MatchEvent {
-  playerInId?: number | null;
-  playerOutId?: number | null;
-  playerId?: number | null;
-  minute: number;
-  eventType: 'SUBSTITUTION' | 'GOAL' | 'ASSIST';
-  substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-}
 
 async function handleValidateAndHandleCompetitionMatch(
   trainingMatch: boolean,

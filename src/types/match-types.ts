@@ -7,6 +7,43 @@ import { Poule, PouleOpponent } from '@/types/poule-types';
 import { Player, PlayerMatchStat, PlayerStat } from './user-types';
 
 export type OpponentStrength = 'STRONGER' | 'SIMILAR' | 'WEAKER';
+export type MatchType = 'competition' | 'practice';
+export type EventType = 'SUBSTITUTION' | 'GOAL' | 'ASSIST';
+export type SubstitutionReason = 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER';
+
+export interface BaseMatch {
+  id: number;
+  date: Date;
+}
+
+export interface BaseMatchEvent {
+  id?: number;
+  matchId?: number;
+  eventType: EventType;
+  minute: number;
+  substitutionReason?: SubstitutionReason | null;
+  playerInId?: number | null;
+  playerOutId?: number | null;
+  match?: {
+    id: number;
+    date: Date;
+    opponentStrength: OpponentStrength | null;
+  };
+}
+
+export interface BaseMatchPlayer {
+  id: number;
+  matchId: number;
+  userId: number;
+  minutes: number;
+  available: boolean;
+}
+
+export interface BaseMatchStat extends BaseMatch {
+  opponentStrength: OpponentStrength | null;
+  minutes: number;
+  available: boolean;
+}
 
 export interface MatchFormProps {
   poules: Poule[];
@@ -21,16 +58,12 @@ export interface MatchClientProps {
   playerStats: PlayerStat[];
 }
 
-export interface MatchData {
-  id: number;
-  date: Date;
+export interface MatchData extends BaseMatch {
   opponentTeamName: string;
   absentPlayers: string[];
 }
 
-export interface MatchDataHelper {
-  id: number;
-  date: Date;
+export interface MatchDataHelper extends BaseMatch {
   pouleOpponent: {
     team: {
       name: string | null;
@@ -44,7 +77,7 @@ export interface MatchDataHelper {
 }
 
 export interface MatchFormValues {
-  matchType: 'competition' | 'practice';
+  matchType: MatchType;
   poule: number | undefined;
   opponent: number | undefined;
   opponentName: string;
@@ -54,15 +87,8 @@ export interface MatchFormValues {
     minutes: number;
     available: boolean;
   }[];
-  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  matchEvents?: {
-    playerInId?: number | null;
-    playerOutId?: number | null;
-    playerId?: number | null;
-    minute: number;
-    eventType: 'SUBSTITUTION' | 'GOAL' | 'ASSIST';
-    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-  }[];
+  opponentStrength?: OpponentStrength | null;
+  matchEvents?: BaseMatchEvent[];
 }
 
 export interface PlayerInMatch {
@@ -86,19 +112,11 @@ export interface MatchFormFieldProps {
   onSubmit: (data: MatchFormValues) => Promise<void>;
   setValue: UseFormSetValue<MatchFormValues>;
   playerId?: number | null;
-  opponentStrength?: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  matchEvents?: {
-    playerInId?: number | null;
-    playerOutId?: number | null;
-    minute: number;
-    eventType: 'SUBSTITUTION' | 'GOAL' | 'ASSIST';
-    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-  }[];
+  opponentStrength?: OpponentStrength | null;
+  matchEvents?: BaseMatchEvent[];
 }
 
-export interface ObtainMatchData {
-  id: number;
-  date: Date;
+export interface ObtainMatchData extends BaseMatch {
   pouleOpponent: {
     id: number;
     team: {
@@ -106,44 +124,25 @@ export interface ObtainMatchData {
       name: string;
     } | null;
   } | null;
-  matchPlayers: {
-    id: number;
-    available: boolean;
+  matchPlayers: (BaseMatchPlayer & {
     user: {
       id: number;
       username: string | null;
     };
-  }[];
+  })[];
 }
 
 export interface UserWithOptionalMatchStats {
   id: number;
   username: string | null;
   whatsappNumber: string | null;
-  matchPlayers?: {
-    id: number;
-    matchId: number;
-    userId: number;
-    minutes: number;
-    available: boolean;
-    match: {
+  matchPlayers?: (BaseMatchPlayer & {
+    match?: {
       date: Date;
       opponentStrength: OpponentStrength | null;
     } | null;
-  }[];
-  MatchEvent?: {
-    id: number;
-    matchId: number;
-    eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
-    minute: number;
-    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-    playerOutId?: number | null;
-    match?: {
-      id: number;
-      date: Date;
-      opponentStrength: OpponentStrength | null;
-    };
-  }[];
+  })[];
+  MatchEvent?: BaseMatchEvent[];
 }
 
 export interface SubmitMatchFormOptions {
@@ -158,36 +157,31 @@ export interface SubmitMatchFormOptions {
 export interface PlayerOpponentStat {
   id: number;
   username: string | null;
-  avgMinutesStronger: number;
-  avgMinutesSimilar: number;
-  avgMinutesWeaker: number;
-}
-
-export interface MatchStat {
-  id: number;
-  date: Date;
-  opponentStrength: OpponentStrength | null;
-  minutes: number;
-  available: boolean;
+  avgMinutes: number;
 }
 
 export interface PlayerOpponentStatData {
   id: number;
   username: string | null;
-  matchData: MatchStat[];
+  matchData: BaseMatchStat[];
 }
 
 export interface GoalsByPlayerStatData {
   id: number;
   username: string | null;
-  matchData: {
-    id: number;
-    date: Date;
-    opponentStrength: OpponentStrength | null;
-    minutes: number;
-    available: boolean;
-    goals: number;
-  }[];
+  matchData: (BaseMatchStat & { goals: number })[];
+}
+
+export interface AssistsByPlayerStatData {
+  id: number;
+  username: string | null;
+  matchData: (BaseMatchStat & { assists: number })[];
+}
+
+export interface SubstitutionOutStatData {
+  id: number;
+  username: string | null;
+  matchData: BaseMatch[];
 }
 
 export interface MatchStatsWrapperProps {
@@ -202,99 +196,40 @@ export interface MatchStatsWrapperProps {
   initialSubstitutionInTacticalStats: SubstitutionOutStatData[];
 }
 
-export interface AssistsByPlayerStatData {
-  id: number;
-  username: string | null;
-  matchData: {
-    id: number;
-    date: Date;
-    opponentStrength: OpponentStrength | null;
-    minutes: number;
-    available: boolean;
-    assists: number;
-  }[];
-}
-
-export interface SubstitutionOutStatData {
-  id: number;
-  username: string | null;
-  matchData: {
-    id: number;
-    date: Date;
-    opponentStrength: OpponentStrength | null;
-  }[];
-}
-
 export interface SubstitutionMatchStats {
   id: number;
   username: string | null;
   whatsappNumber: string | null;
-  matchPlayers?: {
-    id: number;
-    matchId: number;
-    userId: number;
-    minutes: number;
-    available: boolean;
-    match: {
+  matchPlayers?: (BaseMatchPlayer & {
+    match?: {
       date: Date;
       opponentStrength: OpponentStrength | null;
     } | null;
-  }[];
-  substitutedOut?: {
-    id: number;
-    matchId: number;
-    eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
-    minute: number;
-    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-    playerOutId?: number | null;
-    match?: {
-      id: number;
-      date: Date;
-      opponentStrength: OpponentStrength | null;
-    };
-  }[];
+  })[];
+  substitutedOut?: BaseMatchEvent[];
 }
 
 export interface SubstitutionInMatchStats {
   id: number;
   username: string | null;
   whatsappNumber: string | null;
-  matchPlayers?: {
-    id: number;
-    matchId: number;
-    userId: number;
-    minutes: number;
-    available: boolean;
-    match: {
+  matchPlayers?: (BaseMatchPlayer & {
+    match?: {
       date: Date;
       opponentStrength: OpponentStrength | null;
     } | null;
-  }[];
-  substitutedIn?: {
-    id: number;
-    matchId: number;
-    eventType: 'GOAL' | 'ASSIST' | 'SUBSTITUTION';
-    minute: number;
-    substitutionReason?: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null;
-    playerInId?: number | null;
-    match?: {
-      id: number;
-      date: Date;
-      opponentStrength: OpponentStrength | null;
-    };
-  }[];
+  })[];
+  substitutedIn?: BaseMatchEvent[];
 }
 
-export interface MatchPlayerInfo {
-  id: number;
-  matchId: number;
-  userId: number;
-  minutes: number;
-  available: boolean;
-}
+export interface MatchPlayerInfo extends BaseMatchPlayer {}
 
 export interface MatchPlayer {
   id: number;
   username: string;
   matchPlayers: MatchPlayerInfo[];
+}
+
+export interface MatchEvent extends BaseMatchEvent {
+  playerId?: number | null;
 }

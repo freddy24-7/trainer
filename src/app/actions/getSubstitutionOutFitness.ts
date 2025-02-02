@@ -1,66 +1,13 @@
-import prisma from '@/lib/prisma';
-import {
-  SubstitutionMatchStats,
-  SubstitutionOutStatData,
-} from '@/types/match-types';
-import { handlePlayerSubstitutionData } from '@/utils/match-stats-utils';
+import { fetchSubstitutionOutFitness } from '@/lib/services/getSubstitutionOutFitnessService';
+import { SubstitutionOutStatData } from '@/types/match-types';
 
 export async function getSubstitutionOutFitness(): Promise<
   SubstitutionOutStatData[]
 > {
-  const players = await fetchPlayersWithFitnessSubstitutions();
-  return handlePlayerSubstitutionData(players);
-}
-
-async function fetchPlayersWithFitnessSubstitutions(): Promise<
-  SubstitutionMatchStats[]
-> {
-  return prisma.user.findMany({
-    where: {
-      role: 'PLAYER',
-    },
-    select: {
-      id: true,
-      username: true,
-      whatsappNumber: true,
-      matchPlayers: {
-        select: {
-          id: true,
-          matchId: true,
-          userId: true,
-          minutes: true,
-          available: true,
-          match: {
-            select: {
-              id: true,
-              date: true,
-              opponentStrength: true,
-            },
-          },
-        },
-      },
-      substitutedOut: {
-        where: {
-          eventType: 'SUBSTITUTION',
-          substitutionReason: 'FITNESS',
-          playerOutId: { not: null },
-        },
-        select: {
-          id: true,
-          matchId: true,
-          eventType: true,
-          minute: true,
-          substitutionReason: true,
-          playerOutId: true,
-          match: {
-            select: {
-              id: true,
-              date: true,
-              opponentStrength: true,
-            },
-          },
-        },
-      },
-    },
-  });
+  try {
+    return await fetchSubstitutionOutFitness();
+  } catch (error) {
+    console.error('Error fetching substitution out fitness data:', error);
+    throw error;
+  }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { getAssistsByPlayerBy } from '@/app/actions/getAssistsByPlayerBy';
-import { getGoalsByPlayerBy } from '@/app/actions/getGoalsByPlayerBy';
+import { getAssistsByPlayer } from '@/app/actions/getAssistsByPlayer';
+import { getGoalsByPlayer } from '@/app/actions/getGoalsByPlayer';
 import { getMatchData } from '@/app/actions/getMatchData';
 import { getPlayerOpponentStats } from '@/app/actions/getPlayerOpponentStats';
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
@@ -40,8 +40,8 @@ export default async function MatchStatsPage(): Promise<React.ReactElement> {
       getPlayerStats(),
       getMatchData(),
       getPlayerOpponentStats(),
-      getGoalsByPlayerBy(),
-      getAssistsByPlayerBy(),
+      getGoalsByPlayer(),
+      getAssistsByPlayer(),
       getSubstitutionOutFitness(),
       getSubstitutionOutInjury(),
       getSubstitutionOutTactical(),

@@ -4,7 +4,7 @@ import { fetchPlayers } from '@/lib/services/getPlayersService';
 import {
   UserWithOptionalMatchStats,
   PlayerOpponentStatData,
-  MatchStat,
+  BaseMatchStat,
 } from '@/types/match-types';
 
 export async function getPlayerOpponentStats(): Promise<
@@ -13,7 +13,7 @@ export async function getPlayerOpponentStats(): Promise<
   const players = await fetchPlayers();
 
   return players.map((player: UserWithOptionalMatchStats) => {
-    const matchData: MatchStat[] =
+    const matchData: BaseMatchStat[] =
       player.matchPlayers
         ?.map((mp) => {
           if (!mp.match) {
@@ -29,7 +29,7 @@ export async function getPlayerOpponentStats(): Promise<
             available: mp.available,
           };
         })
-        .filter((match): match is MatchStat => match !== null) || [];
+        .filter((match): match is BaseMatchStat => match !== null) || [];
 
     return {
       id: player.id,
