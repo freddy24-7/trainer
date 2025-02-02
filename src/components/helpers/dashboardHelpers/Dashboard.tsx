@@ -38,6 +38,9 @@ export default function Dashboard({
         <h1 className="text-3xl font-bold">Hoi {signedInUser.username}!</h1>
       )}
       <p className="text-lg">Welcome to this app</p>
+      <p className="slide-out-to-left-extra-loose">
+        First time? Check out the info section.
+      </p>
     </div>
   );
 }

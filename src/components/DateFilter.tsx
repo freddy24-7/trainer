@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+import CustomButton from '@/components/Button';
 import DateField from '@/components/DateField';
 
 interface DateFilterProps {
@@ -31,27 +32,21 @@ const DateFilter: React.FC<DateFilterProps> = ({
     setShowFilters(false);
   };
 
+  const containerClass = 'flex flex-col items-center space-y-4 mb-6';
+
   return (
     <div>
-      <div className="text-right mb-4">
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={() => setShowFilters(!showFilters)}
-        >
+      <div className={containerClass}>
+        <CustomButton onPress={() => setShowFilters(!showFilters)}>
           {showFilters ? 'Hide Filters' : label}
-        </button>
+        </CustomButton>
       </div>
 
       {showFilters && (
-        <div className="flex flex-col items-center space-y-4 mb-6">
+        <div className={containerClass}>
           <DateField name="startDate" label="Start Date" />
           <DateField name="endDate" label="End Date" />
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded"
-            onClick={applyFilter}
-          >
-            Apply Filter
-          </button>
+          <CustomButton onPress={applyFilter}>Apply Filter</CustomButton>
         </div>
       )}
     </div>

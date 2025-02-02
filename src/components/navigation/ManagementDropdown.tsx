@@ -1,11 +1,10 @@
 import {
-  Button,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
 } from '@heroui/react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import {
@@ -22,55 +21,52 @@ export function ManagementDropdown({
   dropdownTextColor,
   closeMenu,
 }: ManagementDropdownProps): React.ReactElement {
+  const router = useRouter();
+
+  const handleClick = (path: string) => {
+    closeMenu();
+    router.push(path);
+  };
+
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button
-          variant="bordered"
-          className={`capitalize ${dropdownTextColor}`}
-        >
+        <button className={`capitalize ${dropdownTextColor}`}>
           {managementButtonText}
-        </Button>
+        </button>
       </DropdownTrigger>
       <DropdownMenu aria-label={managementOptionsAriaLabel} variant="light">
-        <DropdownItem key="player-management" textValue={playerManagementText}>
-          <Link
-            href="/player-management"
-            className={dropdownTextColor}
-            onClick={closeMenu}
-          >
-            {playerManagementText}
-          </Link>
+        <DropdownItem
+          key="player-management"
+          textValue={playerManagementText}
+          onPress={() => handleClick('/player-management')}
+          className={`w-full px-2 py-1 ${dropdownTextColor}`}
+        >
+          {playerManagementText}
         </DropdownItem>
-        <DropdownItem key="poule-management" textValue={pouleManagementText}>
-          <Link
-            href="/poule-management"
-            className={dropdownTextColor}
-            onClick={closeMenu}
-          >
-            {pouleManagementText}
-          </Link>
+        <DropdownItem
+          key="poule-management"
+          textValue={pouleManagementText}
+          onPress={() => handleClick('/poule-management')}
+          className={`w-full px-2 py-1 ${dropdownTextColor}`}
+        >
+          {pouleManagementText}
         </DropdownItem>
-        <DropdownItem key="match-management" textValue={matchManagementText}>
-          <Link
-            href="/matches"
-            className={dropdownTextColor}
-            onClick={closeMenu}
-          >
-            {matchManagementText}
-          </Link>
+        <DropdownItem
+          key="match-management"
+          textValue={matchManagementText}
+          onPress={() => handleClick('/matches')}
+          className={`w-full px-2 py-1 ${dropdownTextColor}`}
+        >
+          {matchManagementText}
         </DropdownItem>
         <DropdownItem
           key="training-management"
           textValue={trainingManagementText}
+          onPress={() => handleClick('/trainings')}
+          className={`w-full px-2 py-1 ${dropdownTextColor}`}
         >
-          <Link
-            href="/trainings"
-            className={dropdownTextColor}
-            onClick={closeMenu}
-          >
-            {trainingManagementText}
-          </Link>
+          {trainingManagementText}
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

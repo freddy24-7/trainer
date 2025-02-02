@@ -1,6 +1,6 @@
-import { Button } from '@heroui/react';
 import React, { useState } from 'react';
 
+import CustomButton from '@/components/Button';
 import { OpponentsList } from '@/components/helpers/pouleHelpers/OpponentsList';
 import { PouleFormFields } from '@/components/helpers/pouleHelpers/PouleFormFields';
 import {
@@ -44,19 +44,15 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
         handleAddOpponent={handleAddOpponent}
       />
 
-      <Button
-        type="button"
-        onPress={handleAddOpponent}
-        className="mt-2 bg-blue-500 text-white p-1 rounded"
-      >
+      <CustomButton type="button" onPress={handleAddOpponent}>
         {addOpponentButtonText}
-      </Button>
+      </CustomButton>
 
       {opponents.length > 0 && (
         <OpponentsList opponents={opponents} onRemove={handleRemoveOpponent} />
       )}
 
-      <Button
+      <CustomButton
         type="submit"
         disabled={isSubmitting}
         className={`mt-4 w-full p-2 rounded ${
@@ -66,7 +62,7 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
         }`}
       >
         {isSubmitting ? 'Submitting...' : addPouleButtonText}
-      </Button>
+      </CustomButton>
     </form>
   );
 };

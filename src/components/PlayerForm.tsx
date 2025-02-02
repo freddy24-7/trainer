@@ -1,6 +1,6 @@
-import { Button } from '@heroui/react';
 import React, { useEffect, useState } from 'react';
 
+import CustomButton from '@/components/Button';
 import { usePlayerFormState } from '@/hooks/usePlayerFormState';
 import {
   usernameLabel,
@@ -90,6 +90,8 @@ function PlayerForm({
         id="username"
         label={usernameLabel}
         type="text"
+        name="username"
+        autocomplete="current-username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
@@ -111,17 +113,11 @@ function PlayerForm({
         placeholder={whatsappNumberPlaceholder}
       />
 
-      <Button
-        type="submit"
-        disabled={!isFormValid || isSubmitting}
-        className={`w-full py-2 px-4 rounded-lg shadow focus:outline-none focus:ring ${
-          isFormValid && !isSubmitting
-            ? 'bg-blue-500 text-white hover:bg-blue-600'
-            : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-        }`}
-      >
-        {isSubmitting ? 'Submitting...' : submitButtonText}
-      </Button>
+      <div className="flex justify-center w-full">
+        <CustomButton type="submit" disabled={!isFormValid || isSubmitting}>
+          {isSubmitting ? 'Submitting...' : submitButtonText}
+        </CustomButton>
+      </div>
     </form>
   );
 }

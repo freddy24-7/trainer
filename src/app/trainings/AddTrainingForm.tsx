@@ -9,12 +9,12 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
+import CustomButton from '@/components/Button';
 import TrainingFormBody from '@/components/helpers/trainingHelpers/TrainingFormBody';
 import { addTrainingHeader } from '@/strings/clientStrings';
 import {
@@ -98,15 +98,15 @@ const AddTrainingForm = ({
             <p>Are you sure you want to submit this training data?</p>
           </ModalBody>
           <ModalFooter>
-            <Button
+            <CustomButton
               color="danger"
               onPress={() => setConfirmationModalOpen(false)}
             >
               No
-            </Button>
-            <Button color="primary" onPress={handleConfirmSubmission}>
+            </CustomButton>
+            <CustomButton color="primary" onPress={handleConfirmSubmission}>
               Yes
-            </Button>
+            </CustomButton>
           </ModalFooter>
         </ModalContent>
       </Modal>

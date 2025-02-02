@@ -4,10 +4,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import React, { useCallback } from 'react';
 
+import CustomButton from '@/components/Button';
 import {
   defaultConfirmLabel,
   defaultCancelLabel,
@@ -42,12 +42,16 @@ export default function ReusableModal({
           <ModalBody>{body}</ModalBody>
           {confirmAction && (
             <ModalFooter>
-              <Button color="secondary" variant="light" onPress={handleClose}>
+              <CustomButton
+                color="secondary"
+                variant="light"
+                onPress={handleClose}
+              >
                 {cancelLabel}
-              </Button>
-              <Button color="primary" onPress={handleConfirm}>
+              </CustomButton>
+              <CustomButton color="primary" onPress={handleConfirm}>
                 {confirmLabel}
-              </Button>
+              </CustomButton>
             </ModalFooter>
           )}
         </>

@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@heroui/react';
 import React from 'react';
 import { FieldErrors } from 'react-hook-form';
 
+import CustomButton from '@/components/Button';
 import DateField from '@/components/DateField';
 import TrainingPlayersField from '@/components/helpers/trainingHelpers/TrainingPlayersField';
 import {
@@ -44,16 +44,15 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
         setValue={setValue}
       />
 
-      <Button
+      <CustomButton
         type="submit"
         color="primary"
         size="lg"
-        className="w-full"
         isDisabled={!date || isSubmitting}
         isLoading={isSubmitting}
       >
         {isSubmitting ? submittingButtonText : addTrainingButtonText}
-      </Button>
+      </CustomButton>
     </form>
   );
 };

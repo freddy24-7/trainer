@@ -1,11 +1,10 @@
 import {
-  Button,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
 } from '@heroui/react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import {
@@ -16,40 +15,42 @@ import {
 } from '@/strings/clientStrings';
 import { StatsDropdownProps } from '@/types/ui-types';
 
-export class StatsDropdown extends React.Component<StatsDropdownProps> {
-  render(): React.ReactElement {
-    let { dropdownTextColor, closeMenu } = this.props;
-    return (
-      <Dropdown>
-        <DropdownTrigger>
-          <Button
-            variant="bordered"
-            className={`capitalize ${dropdownTextColor}`}
-          >
-            {statsButtonText}
-          </Button>
-        </DropdownTrigger>
-        <DropdownMenu aria-label={statsOptionsAriaLabel} variant="light">
-          <DropdownItem key="match-stats" textValue={matchStatsText}>
-            <Link
-              href="/match-stats"
-              className={dropdownTextColor}
-              onClick={closeMenu}
-            >
-              {matchStatsText}
-            </Link>
-          </DropdownItem>
-          <DropdownItem key="training-stats" textValue={trainingStatsText}>
-            <Link
-              href="/training-stats"
-              className={dropdownTextColor}
-              onClick={closeMenu}
-            >
-              {trainingStatsText}
-            </Link>
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    );
-  }
+export function StatsDropdown({
+  dropdownTextColor,
+  closeMenu,
+}: StatsDropdownProps): React.ReactElement {
+  const router = useRouter();
+
+  const handleClick = (path: string) => {
+    closeMenu();
+    router.push(path);
+  };
+
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <button className={`capitalize ${dropdownTextColor}`}>
+          {statsButtonText}
+        </button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label={statsOptionsAriaLabel} variant="light">
+        <DropdownItem
+          key="match-stats"
+          textValue={matchStatsText}
+          onPress={() => handleClick('/match-stats')}
+          className={`w-full px-2 py-1 ${dropdownTextColor}`}
+        >
+          {matchStatsText}
+        </DropdownItem>
+        <DropdownItem
+          key="training-stats"
+          textValue={trainingStatsText}
+          onPress={() => handleClick('/training-stats')}
+          className={`w-full px-2 py-1 ${dropdownTextColor}`}
+        >
+          {trainingStatsText}
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
 }

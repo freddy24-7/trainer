@@ -1,6 +1,7 @@
-import { Button, Card, CardHeader, CardBody, Divider } from '@heroui/react';
+import { Card, CardHeader, CardBody, Divider } from '@heroui/react';
 import React from 'react';
 
+import CustomButton from '@/components/Button';
 import {
   groupChatLabel,
   editButtonLabel,
@@ -44,22 +45,22 @@ export default function PlayersList({
             {(onEdit || onDelete) && (
               <div className="flex justify-end space-x-2">
                 {onEdit && (
-                  <Button
+                  <CustomButton
                     color="primary"
                     onPress={() => onEdit?.(player)}
                     className="text-sm px-2 py-1"
                   >
                     {editButtonLabel}
-                  </Button>
+                  </CustomButton>
                 )}
                 {onDelete && (
-                  <Button
-                    color="danger"
+                  <CustomButton
+                    color="default"
                     onPress={() => onDelete?.(player.id)}
                     className="text-sm px-2 py-1"
                   >
                     {deleteButtonLabel}
-                  </Button>
+                  </CustomButton>
                 )}
               </div>
             )}

@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
+import CustomButton from '@/components/Button';
 import { PouleFormContent } from '@/components/helpers/pouleHelpers/PouleFormContent';
 import { useOpponentManagement } from '@/hooks/useOpponentManagement';
 import { createPouleSchema } from '@/schemas/createPouleSchema';
@@ -54,12 +54,11 @@ function AddPouleForm({ action }: PouleProps): React.ReactElement {
 
   return (
     <div className="mt-4">
-      <Button
-        onPress={() => setShowForm((prev) => !prev)}
-        className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        {showForm ? cancelButtonText : addPouleButtonText}
-      </Button>
+      <div className="flex justify-center w-full">
+        <CustomButton onPress={() => setShowForm((prev) => !prev)}>
+          {showForm ? cancelButtonText : addPouleButtonText}
+        </CustomButton>
+      </div>
 
       {showForm && (
         <div className="space-y-4 max-w-md mx-auto mt-10">
