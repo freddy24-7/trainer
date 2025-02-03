@@ -15,7 +15,7 @@ export const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({
 }) => {
   const { theme, setTheme } = useTheme();
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     setTheme(theme === 'light' ? 'dark' : 'light');
     if (onPress) onPress();
   };

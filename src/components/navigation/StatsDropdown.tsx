@@ -21,7 +21,7 @@ export function StatsDropdown({
 }: StatsDropdownProps): React.ReactElement {
   const router = useRouter();
 
-  const handleClick = (path: string) => {
+  const handleClick = (path: string): void => {
     closeMenu();
     router.push(path);
   };

@@ -15,7 +15,7 @@ const DateFilter: React.FC<DateFilterProps> = ({
   const [showFilters, setShowFilters] = useState(false);
   const { getValues } = useFormContext();
 
-  const applyFilter = () => {
+  const applyFilter = (): void => {
     const startDate = getValues('startDate');
     const endDate = getValues('endDate');
 

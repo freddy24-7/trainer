@@ -23,7 +23,7 @@ export function ManagementDropdown({
 }: ManagementDropdownProps): React.ReactElement {
   const router = useRouter();
 
-  const handleClick = (path: string) => {
+  const handleClick = (path: string): void => {
     closeMenu();
     router.push(path);
   };
