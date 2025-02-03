@@ -5,7 +5,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 
 import DateFilter from '@/components/DateFilter';
 import MatchStatsTable from '@/components/helpers/myStatsHelpers/MyMatchStatsTable';
-import { MyStatsWrapperProps } from '@/types/match-types';
+import { MyStatsWrapperProps } from '@/types/stats-types';
 import {
   getCalculatedTrainingStats,
   handleFilterDataByDate,

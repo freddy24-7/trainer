@@ -2,7 +2,7 @@ import prisma from '@/lib/prisma';
 import {
   SubstitutionMatchStats,
   SubstitutionOutStatData,
-} from '@/types/match-types';
+} from '@/types/stats-types';
 import { handlePlayerSubstitutionData } from '@/utils/matchStatsUtils';
 
 export async function fetchPlayersWithTacticalSubstitutions(): Promise<

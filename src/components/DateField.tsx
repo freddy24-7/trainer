@@ -4,11 +4,7 @@ import { DatePicker } from '@heroui/react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-interface DateFieldProps {
-  name: string;
-  label: string;
-  errors?: Record<string, unknown>;
-}
+import { DateFieldProps } from '@/types/shared-types';
 
 const DateField: React.FC<DateFieldProps> = ({ name, label }) => {
   const { control, getValues } = useFormContext();

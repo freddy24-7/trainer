@@ -6,11 +6,7 @@ import { toast } from 'react-toastify';
 
 import CustomButton from '@/components/Button';
 import DateField from '@/components/DateField';
-
-interface DateFilterProps {
-  onFilter: (startDate: Date | null, endDate: Date | null) => void;
-  label?: string;
-}
+import { DateFilterProps } from '@/types/shared-types';
 
 const DateFilter: React.FC<DateFilterProps> = ({
   onFilter,

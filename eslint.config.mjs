@@ -81,7 +81,7 @@ export default [{
         }],
 
         "max-lines": ["warn", {
-            max: 250,
+            max: 350,
         }],
 
         "max-lines-per-function": ["warn", {

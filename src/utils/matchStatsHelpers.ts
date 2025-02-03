@@ -1,12 +1,12 @@
+import { MatchData } from '@/types/match-types';
 import {
-  MatchData,
   PlayerDataAdd,
   PlayerOpponentStatData,
   PlayerOpponentStat,
   SubstitutionOutStatData,
   ProcessedPlayerStat,
   ProcessedSubstitutionStat,
-} from '@/types/match-types';
+} from '@/types/stats-types';
 
 export const filterMatchesByDate = (
   matches: MatchData[],

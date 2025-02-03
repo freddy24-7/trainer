@@ -2,7 +2,8 @@ import {
   unknownOpponentMessage,
   unknownPlayerMessage,
 } from '@/strings/validationStrings';
-import { MatchData, MatchDataHelper } from '@/types/match-types';
+import { MatchData } from '@/types/match-types';
+import { MatchDataHelper } from '@/types/stats-types';
 
 export function handleMapMatchData(matches: MatchDataHelper[]): MatchData[] {
   return matches.map((match) => ({

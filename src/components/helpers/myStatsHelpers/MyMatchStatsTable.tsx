@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MatchStatsTableProps } from '@/types/match-types';
+import { MatchStatsTableProps } from '@/types/stats-types';
 
 const MatchStatsTable: React.FC<MatchStatsTableProps> = ({
   totalMatches,

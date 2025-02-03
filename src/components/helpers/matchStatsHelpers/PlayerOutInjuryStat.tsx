@@ -3,18 +3,7 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-interface PlayerOutInjuryStat {
-  id: number;
-  username: string | null;
-  substitutionsAgainstStronger: number;
-  substitutionsAgainstSimilar: number;
-  substitutionsAgainstWeaker: number;
-  totalSubstitutions: number;
-}
-
-interface PlayerSubstitutionInjuryStatsTableProps {
-  substitutionStats: PlayerOutInjuryStat[];
-}
+import { PlayerSubstitutionInjuryStatsTableProps } from '@/types/stats-types';
 
 const PlayerSubstitutionInjuryStatsTable: React.FC<
   PlayerSubstitutionInjuryStatsTableProps

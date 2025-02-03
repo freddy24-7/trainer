@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { UserWithOptionalMatchStats } from '@/types/match-types';
+import { UserWithOptionalMatchStats } from '@/types/stats-types';
 
 export async function fetchUsers(
   includeMatchStats = false

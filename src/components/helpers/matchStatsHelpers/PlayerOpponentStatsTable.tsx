@@ -3,17 +3,7 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-interface PlayerOpponentStat {
-  id: number;
-  username: string | null;
-  avgMinutesStronger: number;
-  avgMinutesSimilar: number;
-  avgMinutesWeaker: number;
-}
-
-interface PlayerOpponentStatsTableProps {
-  playerStats: PlayerOpponentStat[];
-}
+import { PlayerOpponentStatsTableProps } from '@/types/stats-types';
 
 const PlayerOpponentStatsTable: React.FC<PlayerOpponentStatsTableProps> = ({
   playerStats,

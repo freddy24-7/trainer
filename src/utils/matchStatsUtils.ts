@@ -3,7 +3,7 @@ import { OpponentStrength } from '@prisma/client';
 import {
   SubstitutionMatchStats,
   SubstitutionOutStatData,
-} from '@/types/match-types';
+} from '@/types/stats-types';
 
 export function handlePlayerSubstitutionData(
   players: SubstitutionMatchStats[]

@@ -7,7 +7,7 @@ import PlayerOpponentStatsTable from '@/components/helpers/matchStatsHelpers/Pla
 import PlayerOutFitnessStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOutFitnessStatsTable';
 import PlayerSubstitutionInjuryStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOutInjuryStat';
 import PlayerOutTacticalStatsTable from '@/components/helpers/matchStatsHelpers/PlayerOutTacticalStatsTable';
-import { TableDisplayProps } from '@/types/match-types';
+import { TableDisplayProps } from '@/types/stats-types';
 
 const TableDisplay: React.FC<TableDisplayProps> = ({
   opponentStatsWithAverages,

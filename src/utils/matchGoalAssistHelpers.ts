@@ -3,7 +3,7 @@ import {
   AssistsByPlayerStatData,
   ProcessedGoalStat,
   ProcessedAssistStat,
-} from '@/types/match-types';
+} from '@/types/stats-types';
 
 export const processGoalStats = (
   initialGoalStats: GoalsByPlayerStatData[],

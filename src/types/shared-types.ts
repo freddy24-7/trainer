@@ -50,3 +50,14 @@ export interface LoadingSpinnerProps {
   color?: 'primary' | 'success' | 'danger' | 'warning';
   labelColor?: 'primary' | 'success' | 'danger' | 'warning';
 }
+
+export interface DateFieldProps {
+  name: string;
+  label: string;
+  errors?: Record<string, unknown>;
+}
+
+export interface DateFilterProps {
+  onFilter: (startDate: Date | null, endDate: Date | null) => void;
+  label?: string;
+}

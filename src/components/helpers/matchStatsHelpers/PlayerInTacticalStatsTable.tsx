@@ -3,18 +3,7 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-interface PlayerSubstitutionInTacticalStat {
-  id: number;
-  username: string | null;
-  substitutionsAgainstStronger: number;
-  substitutionsAgainstSimilar: number;
-  substitutionsAgainstWeaker: number;
-  totalSubstitutions: number;
-}
-
-interface PlayerSubstitutionInTacticalStatsTableProps {
-  substitutionStats: PlayerSubstitutionInTacticalStat[];
-}
+import { PlayerSubstitutionInTacticalStatsTableProps } from '@/types/stats-types';
 
 const PlayerInTacticalStatsTable: React.FC<
   PlayerSubstitutionInTacticalStatsTableProps

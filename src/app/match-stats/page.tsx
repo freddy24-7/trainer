@@ -21,7 +21,7 @@ import {
   GoalsByPlayerStatData,
   AssistsByPlayerStatData,
   SubstitutionOutStatData,
-} from '@/types/match-types';
+} from '@/types/stats-types';
 import { formatError } from '@/utils/errorUtils';
 
 export default async function MatchStatsPage(): Promise<React.ReactElement> {

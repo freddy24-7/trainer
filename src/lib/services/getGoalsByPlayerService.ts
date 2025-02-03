@@ -1,8 +1,6 @@
 import prisma from '@/lib/prisma';
-import {
-  UserWithOptionalMatchStats,
-  OpponentStrength,
-} from '@/types/match-types';
+import { OpponentStrength } from '@/types/match-types';
+import { UserWithOptionalMatchStats } from '@/types/stats-types';
 
 export async function fetchPlayersWithGoals(): Promise<
   UserWithOptionalMatchStats[]

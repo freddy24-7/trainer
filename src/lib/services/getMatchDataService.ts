@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
-import { MatchDataHelper, ObtainMatchData } from '@/types/match-types';
+import { ObtainMatchData } from '@/types/match-types';
+import { MatchDataHelper } from '@/types/stats-types';
 
 export async function getMatchDataService(): Promise<MatchDataHelper[]> {
   const matches: ObtainMatchData[] = await prisma.match.findMany({

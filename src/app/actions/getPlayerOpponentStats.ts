@@ -5,7 +5,7 @@ import {
   UserWithOptionalMatchStats,
   PlayerOpponentStatData,
   BaseMatchStat,
-} from '@/types/match-types';
+} from '@/types/stats-types';
 
 export async function getPlayerOpponentStats(): Promise<
   PlayerOpponentStatData[]

@@ -10,7 +10,7 @@ import TableDisplay from '@/components/helpers/matchStatsHelpers/TableDisplay';
 import {
   MatchStatsWrapperProps,
   GoalsByPlayerStatData,
-} from '@/types/match-types';
+} from '@/types/stats-types';
 import {
   processGoalStats,
   processAssistStats,

@@ -4,10 +4,8 @@ import { FieldErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
 import { Poule, PouleOpponent } from '@/types/poule-types';
-import { PlayerAttendance, TrainingData } from '@/types/training-types';
 
-import { PlayerMatchStat, PlayerStat } from './stats-types';
-import { Player, SignedInUser } from './user-types';
+import { Player } from './user-types';
 
 export type OpponentStrength = 'STRONGER' | 'SIMILAR' | 'WEAKER';
 export type MatchType = 'competition' | 'practice';
@@ -44,12 +42,6 @@ export interface BaseMatchPlayer {
   available: boolean;
 }
 
-export interface BaseMatchStat extends BaseMatch {
-  opponentStrength: OpponentStrength | null;
-  minutes: number;
-  available: boolean;
-}
-
 export interface MatchFormProps {
   poules: Poule[];
   players: Player[];
@@ -57,28 +49,6 @@ export interface MatchFormProps {
     _prevState: unknown,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
-}
-
-export interface MatchClientProps {
-  playerStats: PlayerStat[];
-}
-
-export interface MatchData extends BaseMatch {
-  opponentTeamName: string;
-  absentPlayers: string[];
-}
-
-export interface MatchDataHelper extends BaseMatch {
-  pouleOpponent: {
-    team: {
-      name: string | null;
-    } | null;
-  };
-  matchPlayers: {
-    user: {
-      username: string | null;
-    };
-  }[];
 }
 
 export interface MatchFormValues {
@@ -100,6 +70,13 @@ export interface PlayerInMatch {
   id: number;
   minutes: string;
   available: boolean;
+}
+
+export interface MatchData {
+  id: number;
+  date: Date;
+  opponentTeamName: string;
+  absentPlayers: string[];
 }
 
 export interface MatchDetailProps {
@@ -137,19 +114,6 @@ export interface ObtainMatchData extends BaseMatch {
   })[];
 }
 
-export interface UserWithOptionalMatchStats {
-  id: number;
-  username: string | null;
-  whatsappNumber: string | null;
-  matchPlayers?: (BaseMatchPlayer & {
-    match?: {
-      date: Date;
-      opponentStrength: OpponentStrength | null;
-    } | null;
-  })[];
-  MatchEvent?: BaseMatchEvent[];
-}
-
 export interface SubmitMatchFormOptions {
   validatePlayers: () => boolean;
   setSubmitting: (submitting: boolean) => void;
@@ -157,77 +121,6 @@ export interface SubmitMatchFormOptions {
     _prevState: unknown,
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
-}
-
-export interface PlayerOpponentStat {
-  id: number;
-  username: string | null;
-  avgMinutes?: number;
-  avgMinutesStronger: number;
-  avgMinutesSimilar: number;
-  avgMinutesWeaker: number;
-}
-
-export interface PlayerOpponentStatData {
-  id: number;
-  username: string | null;
-  matchData: BaseMatchStat[];
-}
-
-export interface GoalsByPlayerStatData {
-  id: number;
-  username: string | null;
-  matchData: (BaseMatchStat & { goals: number })[];
-}
-
-export interface AssistsByPlayerStatData {
-  id: number;
-  username: string | null;
-  matchData: (BaseMatchStat & { assists: number })[];
-}
-
-export interface SubstitutionOutStatData {
-  id: number;
-  username: string | null;
-  matchData: BaseMatch[];
-}
-
-export interface MatchStatsWrapperProps {
-  initialPlayerStats: PlayerMatchStat[];
-  initialMatchData: MatchData[];
-  initialOpponentStats: PlayerOpponentStatData[];
-  initialGoalStats: GoalsByPlayerStatData[];
-  initialAssistStats: AssistsByPlayerStatData[];
-  initialSubstitutionStats: SubstitutionOutStatData[];
-  initialSubstitutionInjuryStats: SubstitutionOutStatData[];
-  initialSubstitutionOutTacticalStats: SubstitutionOutStatData[];
-  initialSubstitutionInTacticalStats: SubstitutionOutStatData[];
-}
-
-export interface SubstitutionMatchStats {
-  id: number;
-  username: string | null;
-  whatsappNumber: string | null;
-  matchPlayers?: (BaseMatchPlayer & {
-    match?: {
-      date: Date;
-      opponentStrength: OpponentStrength | null;
-    } | null;
-  })[];
-  substitutedOut?: BaseMatchEvent[];
-}
-
-export interface SubstitutionInMatchStats {
-  id: number;
-  username: string | null;
-  whatsappNumber: string | null;
-  matchPlayers?: (BaseMatchPlayer & {
-    match?: {
-      date: Date;
-      opponentStrength: OpponentStrength | null;
-    } | null;
-  })[];
-  substitutedIn?: BaseMatchEvent[];
 }
 
 export interface MatchPlayerInfo extends BaseMatchPlayer {}
@@ -250,16 +143,6 @@ export interface PlayerMatchData {
   goals: number;
   assists: number;
 }
-
-export interface PlayerDataAdd {
-  id: number;
-  username: string | null;
-  matchData: PlayerMatchData[];
-}
-
-export type GetPlayerStatsReturn =
-  | PlayerDataAdd[]
-  | { success: false; error: string };
 
 export interface TrainingPlayerDisplay {
   id: number;
@@ -455,65 +338,4 @@ export interface Substitution {
   playerOutId: number;
   playerInId: number | null;
   substitutionReason: SubstitutionReason | null;
-}
-
-export interface ProcessedPlayerStat {
-  id: number;
-  username: string | null;
-  matchesPlayed: number;
-  averagePlayingTime: number;
-  absences: number;
-  goals: number;
-  assists: number;
-}
-
-export interface ProcessedSubstitutionStat {
-  id: number;
-  username: string | null;
-  substitutionsAgainstStronger: number;
-  substitutionsAgainstSimilar: number;
-  substitutionsAgainstWeaker: number;
-  totalSubstitutions: number;
-}
-
-export interface ProcessedGoalStat {
-  id: number;
-  username: string | null;
-  goalsAgainstStronger: number;
-  goalsAgainstSimilar: number;
-  goalsAgainstWeaker: number;
-  totalGoals: number;
-}
-
-export interface ProcessedAssistStat {
-  id: number;
-  username: string | null;
-  assistsAgainstStronger: number;
-  assistsAgainstSimilar: number;
-  assistsAgainstWeaker: number;
-  totalAssists: number;
-}
-
-export interface TableDisplayProps {
-  opponentStatsWithAverages: PlayerOpponentStat[];
-  processedGoalStatsData: ProcessedGoalStat[];
-  processedAssistStatsData: ProcessedAssistStat[];
-  processedSubstitutionStatsData: ProcessedSubstitutionStat[];
-  processedSubstitutionInjuryStatsData: ProcessedSubstitutionStat[];
-  processedSubstitutionTacticalStatsData: ProcessedSubstitutionStat[];
-  processedSubstitutionInTacticalStatsData: ProcessedSubstitutionStat[];
-}
-
-export interface MatchStatsTableProps {
-  totalMatches: number;
-  matchesPlayed: number;
-  avgMinutesPlayed: number;
-}
-
-export interface MyStatsWrapperProps {
-  user: SignedInUser;
-  initialTrainingData: TrainingData[];
-  initialAttendanceList: PlayerAttendance[];
-  initialPlayerStats: PlayerStat[];
-  initialMatchData: MatchData[];
 }

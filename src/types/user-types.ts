@@ -194,25 +194,6 @@ export interface PlayerApiResponse {
   errors?: (ResponseError | ZodIssue)[];
 }
 
-export type GetPlayerMatchStatsResponse =
-  | { success: true; playerStats: PlayerMatchOwnStat[] }
-  | { success: false; error: string };
-
-interface PlayerMatchOwnStat {
-  id: number;
-  username: string;
-  matchesPlayed: number;
-  averagePlayingTime: number;
-  absences: number;
-  matchData?: {
-    id: number;
-    matchId: number;
-    userId: number;
-    minutes: number;
-    available: boolean;
-  }[];
-}
-
 export interface MatchDataEntry {
   id: number;
   matchId: number;

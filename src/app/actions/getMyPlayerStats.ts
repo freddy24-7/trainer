@@ -2,7 +2,7 @@
 
 import { fetchPlayers } from '@/lib/services/getPlayersService';
 import { errorFetchingPlayerStats } from '@/strings/actionStrings';
-import { GetPlayerMatchStatsResponse } from '@/types/user-types';
+import { GetPlayerMatchStatsResponse } from '@/types/stats-types';
 import { formatError } from '@/utils/errorUtils';
 import { mapPlayerStats, getValidPlayers } from '@/utils/matchPlayerUtils';
 

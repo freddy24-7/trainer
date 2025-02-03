@@ -3,9 +3,9 @@
 import { fetchPlayers } from '@/lib/services/getPlayersService';
 import { errorFetchingPlayerStats } from '@/strings/actionStrings';
 import {
-  UserWithOptionalMatchStats,
   GetPlayerStatsReturn,
-} from '@/types/match-types';
+  UserWithOptionalMatchStats,
+} from '@/types/stats-types';
 import { formatError } from '@/utils/errorUtils';
 
 export async function getPlayerStats(): Promise<GetPlayerStatsReturn> {

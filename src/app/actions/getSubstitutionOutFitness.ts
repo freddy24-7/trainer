@@ -1,5 +1,5 @@
 import { fetchSubstitutionOutFitness } from '@/lib/services/getSubstitutionOutFitnessService';
-import { SubstitutionOutStatData } from '@/types/match-types';
+import { SubstitutionOutStatData } from '@/types/stats-types';
 
 export async function getSubstitutionOutFitness(): Promise<
   SubstitutionOutStatData[]

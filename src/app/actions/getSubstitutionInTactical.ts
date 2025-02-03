@@ -1,5 +1,5 @@
 import { fetchSubstitutionInTactical } from '@/lib/services/getSubstitutionInTacticalService';
-import { SubstitutionOutStatData } from '@/types/match-types';
+import { SubstitutionOutStatData } from '@/types/stats-types';
 
 export async function getSubstitutionInTactical(): Promise<
   SubstitutionOutStatData[]
