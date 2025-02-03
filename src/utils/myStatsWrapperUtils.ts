@@ -74,8 +74,12 @@ export function getCalculatedTrainingStats(
   userId: number | string
 ): { totalTrainings: number; attendedTrainings: number } {
   const totalTrainings = trainingData.length;
-  const attendedTrainings = attendanceList.filter(
+  const playerAttendance = attendanceList.find(
     (attendance) => attendance.playerId.toString() === userId.toString()
-  ).length;
+  );
+
+  const attendedTrainings =
+    totalTrainings - (playerAttendance?.absences ?? totalTrainings);
+
   return { totalTrainings, attendedTrainings };
 }
