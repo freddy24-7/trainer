@@ -85,7 +85,7 @@ export default [{
         }],
 
         "max-lines-per-function": ["warn", {
-            max: 90,
+            max: 105,
         }],
 
         "max-params": ["warn", {

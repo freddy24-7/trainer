@@ -5,18 +5,8 @@ import { useForm, FormProvider } from 'react-hook-form';
 
 import DateFilter from '@/components/DateFilter';
 import MatchStatsTable from '@/components/helpers/myStatsHelpers/MyMatchStatsTable';
-import { MatchData } from '@/types/match-types';
-import { TrainingData, PlayerAttendance } from '@/types/training-types';
-import { PlayerStat, SignedInUser } from '@/types/user-types';
+import { MyStatsWrapperProps } from '@/types/match-types';
 import { calculateTrainingStats } from '@/utils/myStatsUtils';
-
-interface MyStatsWrapperProps {
-  user: SignedInUser;
-  initialTrainingData: TrainingData[];
-  initialAttendanceList: PlayerAttendance[];
-  initialPlayerStats: PlayerStat[];
-  initialMatchData: MatchData[];
-}
 
 const MyStatsWrapper: React.FC<MyStatsWrapperProps> = ({
   user,

@@ -1,10 +1,6 @@
 import React from 'react';
 
-interface MatchStatsTableProps {
-  totalMatches: number;
-  matchesPlayed: number;
-  avgMinutesPlayed: number;
-}
+import { MatchStatsTableProps } from '@/types/match-types';
 
 const MatchStatsTable: React.FC<MatchStatsTableProps> = ({
   totalMatches,

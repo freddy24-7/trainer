@@ -4,8 +4,14 @@ import { FieldErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
 
 import { Poule, PouleOpponent } from '@/types/poule-types';
+import { PlayerAttendance, TrainingData } from '@/types/training-types';
 
-import { Player, PlayerMatchStat, PlayerStat } from './user-types';
+import {
+  Player,
+  PlayerMatchStat,
+  PlayerStat,
+  SignedInUser,
+} from './user-types';
 
 export type OpponentStrength = 'STRONGER' | 'SIMILAR' | 'WEAKER';
 export type MatchType = 'competition' | 'practice';
@@ -453,4 +459,65 @@ export interface Substitution {
   playerOutId: number;
   playerInId: number | null;
   substitutionReason: SubstitutionReason | null;
+}
+
+export interface ProcessedPlayerStat {
+  id: number;
+  username: string | null;
+  matchesPlayed: number;
+  averagePlayingTime: number;
+  absences: number;
+  goals: number;
+  assists: number;
+}
+
+export interface ProcessedSubstitutionStat {
+  id: number;
+  username: string | null;
+  substitutionsAgainstStronger: number;
+  substitutionsAgainstSimilar: number;
+  substitutionsAgainstWeaker: number;
+  totalSubstitutions: number;
+}
+
+export interface ProcessedGoalStat {
+  id: number;
+  username: string | null;
+  goalsAgainstStronger: number;
+  goalsAgainstSimilar: number;
+  goalsAgainstWeaker: number;
+  totalGoals: number;
+}
+
+export interface ProcessedAssistStat {
+  id: number;
+  username: string | null;
+  assistsAgainstStronger: number;
+  assistsAgainstSimilar: number;
+  assistsAgainstWeaker: number;
+  totalAssists: number;
+}
+
+export interface TableDisplayProps {
+  opponentStatsWithAverages: PlayerOpponentStat[];
+  processedGoalStatsData: ProcessedGoalStat[];
+  processedAssistStatsData: ProcessedAssistStat[];
+  processedSubstitutionStatsData: ProcessedSubstitutionStat[];
+  processedSubstitutionInjuryStatsData: ProcessedSubstitutionStat[];
+  processedSubstitutionTacticalStatsData: ProcessedSubstitutionStat[];
+  processedSubstitutionInTacticalStatsData: ProcessedSubstitutionStat[];
+}
+
+export interface MatchStatsTableProps {
+  totalMatches: number;
+  matchesPlayed: number;
+  avgMinutesPlayed: number;
+}
+
+export interface MyStatsWrapperProps {
+  user: SignedInUser;
+  initialTrainingData: TrainingData[];
+  initialAttendanceList: PlayerAttendance[];
+  initialPlayerStats: PlayerStat[];
+  initialMatchData: MatchData[];
 }
