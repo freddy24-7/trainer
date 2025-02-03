@@ -35,7 +35,9 @@ const TrainingAbsenceTable: React.FC<TrainingAbsenceTableProps> = ({
             <tbody>
               {absenceData.map((session) => (
                 <tr key={session.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border-b">{session.date}</td>
+                  <td className="px-4 py-2 border-b">
+                    {session.formattedDate}
+                  </td>
                   <td className="px-4 py-2 border-b">{session.absences}</td>
                 </tr>
               ))}

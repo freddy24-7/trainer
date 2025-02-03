@@ -102,7 +102,8 @@ export interface TrainingFormBodyProps {
 
 export interface TrainingAbsence {
   id: number;
-  date: string;
+  date: Date;
+  formattedDate: string;
   absences: string;
 }
 

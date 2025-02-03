@@ -55,17 +55,22 @@ const TrainingStatsWrapper: React.FC<TrainingStatsWrapperProps> = ({
   }, [filteredTrainingData]);
 
   const trainingAbsenceData = useMemo(() => {
-    return filteredTrainingData.map((training) => {
-      const absentPlayers = training.players.filter((player) => player.absent);
-      return {
-        id: training.id,
-        date: new Date(training.date).toLocaleDateString(),
-        absences:
-          absentPlayers.length > 0
-            ? absentPlayers.map((p) => p.username).join(', ')
-            : 'All players present',
-      };
-    });
+    return filteredTrainingData
+      .map((training) => {
+        const absentPlayers = training.players.filter(
+          (player) => player.absent
+        );
+        return {
+          id: training.id,
+          date: new Date(training.date),
+          formattedDate: new Date(training.date).toLocaleDateString(),
+          absences:
+            absentPlayers.length > 0
+              ? absentPlayers.map((p) => p.username).join(', ')
+              : 'All players present',
+        };
+      })
+      .sort((a, b) => b.date.getTime() - a.date.getTime());
   }, [filteredTrainingData]);
 
   return (

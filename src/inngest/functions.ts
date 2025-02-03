@@ -20,7 +20,8 @@ export const videoAutodeleteJob = inngest.createFunction(
     console.log('Running video autodelete job...');
 
     try {
-      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
 
       const folderPath = process.env.CLOUDINARY_FOLDER_NAME;
 
@@ -49,10 +50,10 @@ export const videoAutodeleteJob = inngest.createFunction(
 
       const oldVideos = allVideos.filter((video) => {
         const videoCreatedAt = new Date(video.created_at);
-        return videoCreatedAt < oneWeekAgo;
+        return videoCreatedAt < threeMonthsAgo;
       });
 
-      console.log(`Found ${oldVideos.length} videos older than one week.`);
+      console.log(`Found ${oldVideos.length} videos older than three months.`);
 
       for (const video of oldVideos) {
         try {
