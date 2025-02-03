@@ -3,15 +3,7 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-interface PlayerTrainingStat {
-  id: number;
-  username: string;
-  totalMissed: number;
-}
-
-interface TrainingStatsTableProps {
-  trainingStats: PlayerTrainingStat[];
-}
+import { TrainingStatsTableProps } from '@/types/training-types';
 
 const TrainingStatsTable: React.FC<TrainingStatsTableProps> = ({
   trainingStats,

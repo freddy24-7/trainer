@@ -20,12 +20,12 @@ export interface EditPlayerFormProps {
     params: FormData
   ) => Promise<{ errors: ZodIssue[] }>;
   initialUsername: string;
-  initialWhatsappNumber: string;
+  initialWhatsappNumber?: string;
   onPlayerEdited: (updatedPlayer: {
     id: number;
     username: string;
-    whatsappNumber: string;
-    whatsappLink: string;
+    whatsappNumber?: string;
+    whatsappLink?: string;
   }) => void;
   onSubmissionStart?: () => void;
   onAbort?: () => void;
@@ -74,7 +74,7 @@ export interface PlayerAtTraining {
 export interface PlayerFormData {
   username: string;
   password: string;
-  whatsappNumber: string;
+  whatsappNumber?: string;
 }
 
 export interface PlayerFormProps {
@@ -149,7 +149,7 @@ export interface HandlePlayerFormSubmitParams {
 export interface EditPlayerFormData {
   username: string;
   password?: string;
-  whatsappNumber: string;
+  whatsappNumber?: string;
 }
 
 export interface PlayerResponseData {
@@ -188,7 +188,7 @@ export interface PlayerModalProps {
 export interface RenderPlayerFormProps {
   formKey: number;
   initialUsername: string;
-  initialWhatsappNumber: string;
+  initialWhatsappNumber?: string;
   isSubmitting: boolean;
   playerData: PlayerFormData | null;
   handleEditPlayer: (data: PlayerFormData) => Promise<void>;

@@ -33,7 +33,7 @@ export default async function addPlayer(
     await createPlayerInDatabase({
       clerkId: clerkUser.id,
       username,
-      whatsappNumber,
+      whatsappNumber: whatsappNumber ?? '',
     });
 
     return { errors: [], success: true };

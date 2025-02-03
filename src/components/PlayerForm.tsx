@@ -52,12 +52,13 @@ function PlayerForm({
     setPassword,
     whatsappNumber,
     setWhatsappNumber,
-  } = usePlayerFormState(
-    initialData ?? { username: '', password: '', whatsappNumber: '' }
-  );
+  } = usePlayerFormState({
+    username: initialData?.username ?? '',
+    password: initialData?.password ?? '',
+    whatsappNumber: initialData?.whatsappNumber ?? '',
+  });
 
   const [isFormValid, setIsFormValid] = useState(false);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ function PlayerForm({
       username.trim() !== '' &&
       password.trim() !== '' &&
       whatsappNumber.trim() !== '';
+
     setIsFormValid(isValid);
   }, [username, password, whatsappNumber]);
 
@@ -76,7 +78,11 @@ function PlayerForm({
     onSubmissionStart();
 
     try {
-      await onSubmit({ username, password, whatsappNumber });
+      await onSubmit({
+        username,
+        password,
+        whatsappNumber: whatsappNumber ?? '',
+      });
     } catch (error) {
       console.error('Error during submission:', error);
     } finally {

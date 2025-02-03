@@ -35,7 +35,7 @@ const MatchStatsTable: React.FC<MatchStatsTableProps> = ({
               Average Minutes Played
             </td>
             <td className="border px-4 py-2 text-black">
-              {avgMinutesPlayed.toFixed(2)} mins
+              {Math.round(avgMinutesPlayed)} mins
             </td>
           </tr>
         </tbody>

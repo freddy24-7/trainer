@@ -6,22 +6,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import DateFilter from '@/components/DateFilter';
 import TrainingAbsenceTable from '@/components/helpers/trainingStatsHelpers/TrainingAbsenceTable';
 import TrainingStatsTable from '@/components/helpers/trainingStatsHelpers/TrainingStatsTable';
-
-interface TrainingPlayer {
-  id: number;
-  username: string | null;
-  absent: boolean;
-}
-
-interface TrainingData {
-  id: number;
-  date: Date;
-  players: TrainingPlayer[];
-}
-
-interface TrainingStatsWrapperProps {
-  initialTrainingData: TrainingData[];
-}
+import { TrainingStatsWrapperProps } from '@/types/training-types';
 
 const TrainingStatsWrapper: React.FC<TrainingStatsWrapperProps> = ({
   initialTrainingData,

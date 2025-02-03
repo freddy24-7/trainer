@@ -3,15 +3,7 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React, { useState, useEffect } from 'react';
 
-interface TrainingAbsence {
-  id: number;
-  date: string;
-  absences: string;
-}
-
-interface TrainingAbsenceTableProps {
-  absenceData: TrainingAbsence[];
-}
+import { TrainingAbsenceTableProps } from '@/types/training-types';
 
 const TrainingAbsenceTable: React.FC<TrainingAbsenceTableProps> = ({
   absenceData,

@@ -1,5 +1,6 @@
 import { CalendarDate } from '@internationalized/date';
-import { UseFormSetValue } from 'react-hook-form';
+import React from 'react';
+import { FieldErrors, UseFormSetValue } from 'react-hook-form';
 
 import { formatError } from '@/utils/errorUtils';
 
@@ -26,10 +27,6 @@ export interface TrainingPlayer {
     username: string | null;
   };
   absent?: boolean;
-}
-
-export interface TrainingPlayerAttendance extends TrainingPlayer {
-  absent: boolean;
 }
 
 export interface Training {
@@ -91,4 +88,56 @@ export interface TrainingDataResponse {
   id: number;
   date: Date;
   players: TrainingDataPlayer[];
+}
+
+export interface TrainingFormBodyProps {
+  players: TrainingPlayersFieldProps['players'];
+  playerValues: TrainingPlayersFieldProps['playerValues'];
+  setValue: TrainingPlayersFieldProps['setValue'];
+  errors: FieldErrors<TrainingFormValues>;
+  date: TrainingFormValues['date'];
+  isSubmitting: boolean;
+  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+}
+
+export interface TrainingAbsence {
+  id: number;
+  date: string;
+  absences: string;
+}
+
+export interface TrainingAbsenceTableProps {
+  absenceData: TrainingAbsence[];
+}
+
+export interface PlayerTrainingStat {
+  id: number;
+  username: string;
+  totalMissed: number;
+}
+
+export interface TrainingStatsTableProps {
+  trainingStats: PlayerTrainingStat[];
+}
+
+interface TrainingStatsPlayer {
+  id: number;
+  username: string | null;
+  absent: boolean;
+}
+
+interface TrainingStatsData {
+  id: number;
+  date: Date;
+  players: TrainingStatsPlayer[];
+}
+
+export interface TrainingStatsWrapperProps {
+  initialTrainingData: TrainingStatsData[];
+}
+
+export interface TrainingProps {
+  id: number;
+  date: Date;
+  trainingPlayers: TrainingPlayer[];
 }

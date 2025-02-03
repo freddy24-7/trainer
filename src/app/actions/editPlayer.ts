@@ -34,7 +34,10 @@ export default async function handleEditPlayer(
     }
 
     await updateClerkUser(player.clerkId, { username, password });
-    await updatePlayerInDatabase(playerId, { username, whatsappNumber });
+    await updatePlayerInDatabase(playerId, {
+      username,
+      whatsappNumber: whatsappNumber ?? '',
+    });
 
     return { errors: [], success: true };
   } catch (error) {

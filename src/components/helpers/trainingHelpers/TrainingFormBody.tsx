@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { FieldErrors } from 'react-hook-form';
 
 import CustomButton from '@/components/Button';
 import DateField from '@/components/DateField';
@@ -10,20 +9,7 @@ import {
   submittingButtonText,
   addTrainingButtonText,
 } from '@/strings/clientStrings';
-import {
-  TrainingFormValues,
-  TrainingPlayersFieldProps,
-} from '@/types/training-types';
-
-interface TrainingFormBodyProps {
-  players: TrainingPlayersFieldProps['players'];
-  playerValues: TrainingPlayersFieldProps['playerValues'];
-  setValue: TrainingPlayersFieldProps['setValue'];
-  errors: FieldErrors<TrainingFormValues>;
-  date: TrainingFormValues['date'];
-  isSubmitting: boolean;
-  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
-}
+import { TrainingFormBodyProps } from '@/types/training-types';
 
 const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
   players,

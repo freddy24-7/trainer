@@ -18,7 +18,7 @@ export async function handlePlayerFormSubmit({
 }: HandlePlayerFormSubmitParams): Promise<void> {
   setIsSubmitting(true);
 
-  const formattedNumber = handleFormatWhatsappNumber(data.whatsappNumber);
+  const formattedNumber = handleFormatWhatsappNumber(data.whatsappNumber ?? '');
   if (!formattedNumber) {
     const error = formatError(invalidWhatsappNumberMessage);
     toast.error(error.errors[0].message);
