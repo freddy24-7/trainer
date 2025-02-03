@@ -6,7 +6,12 @@ import { useForm, FormProvider } from 'react-hook-form';
 import DateFilter from '@/components/DateFilter';
 import MatchStatsTable from '@/components/helpers/myStatsHelpers/MyMatchStatsTable';
 import { MyStatsWrapperProps } from '@/types/match-types';
-import { calculateTrainingStats } from '@/utils/myStatsUtils';
+import {
+  getCalculatedTrainingStats,
+  handleFilterDataByDate,
+  handleFilterAttendanceList,
+  getCalculatedUserMatchStats,
+} from '@/utils/myStatsWrapperUtils';
 
 const MyStatsWrapper: React.FC<MyStatsWrapperProps> = ({
   user,
@@ -21,40 +26,28 @@ const MyStatsWrapper: React.FC<MyStatsWrapperProps> = ({
   const startDate = watch('startDate');
   const endDate = watch('endDate');
 
-  const filteredTrainingData = useMemo(() => {
-    return startDate && endDate
-      ? initialTrainingData.filter((training) => {
-          const trainingDate = new Date(training.date);
-          return (
-            trainingDate >= new Date(startDate) &&
-            trainingDate <= new Date(endDate)
-          );
-        })
-      : initialTrainingData;
-  }, [initialTrainingData, startDate, endDate]);
+  const filteredTrainingData = useMemo(
+    () => handleFilterDataByDate(initialTrainingData, startDate, endDate),
+    [initialTrainingData, startDate, endDate]
+  );
 
-  const filteredAttendanceList = useMemo(() => {
-    return startDate && endDate
-      ? initialAttendanceList.filter((attendance) =>
-          filteredTrainingData.some(
-            (session) => session.id === attendance.playerId
+  const filteredMatchData = useMemo(
+    () => handleFilterDataByDate(initialMatchData, startDate, endDate),
+    [initialMatchData, startDate, endDate]
+  );
+
+  const filteredAttendanceList = useMemo(
+    () =>
+      startDate && endDate
+        ? handleFilterAttendanceList(
+            initialAttendanceList,
+            filteredTrainingData
           )
-        )
-      : initialAttendanceList;
-  }, [initialAttendanceList, filteredTrainingData, startDate, endDate]);
+        : initialAttendanceList,
+    [initialAttendanceList, filteredTrainingData, startDate, endDate]
+  );
 
-  const filteredMatchData = useMemo(() => {
-    return startDate && endDate
-      ? initialMatchData.filter((match) => {
-          const matchDate = new Date(match.date);
-          return (
-            matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
-          );
-        })
-      : initialMatchData;
-  }, [initialMatchData, startDate, endDate]);
-
-  const { totalTrainings, attendedTrainings } = calculateTrainingStats(
+  const { totalTrainings, attendedTrainings } = getCalculatedTrainingStats(
     filteredTrainingData,
     filteredAttendanceList,
     user.id
@@ -62,42 +55,17 @@ const MyStatsWrapper: React.FC<MyStatsWrapperProps> = ({
 
   const totalMatches = filteredMatchData.length;
 
-  const { matchesPlayed, avgMinutesPlayed } = useMemo(() => {
-    const userStat = initialPlayerStats.find(
-      (stat) => stat.id.toString() === user.id.toString()
-    );
-    if (!userStat) {
-      return { matchesPlayed: 0, avgMinutesPlayed: 0 };
-    }
-
-    const filteredUserMatchData = (userStat.matchData ?? []).filter((entry) => {
-      if (startDate && endDate) {
-        const matchDate = new Date(entry.match.date);
-        return (
-          matchDate >= new Date(startDate) && matchDate <= new Date(endDate)
-        );
-      }
-      return true;
-    });
-
-    const absences = filteredUserMatchData.filter(
-      (entry) => !entry.available
-    ).length;
-
-    const matchesPlayedCalc = totalMatches - absences;
-
-    const totalMinutes = filteredUserMatchData
-      .filter((entry) => entry.available)
-      .reduce((sum, entry) => sum + entry.minutes, 0);
-
-    const avgMinutesPlayedCalc =
-      matchesPlayedCalc > 0 ? totalMinutes / matchesPlayedCalc : 0;
-
-    return {
-      matchesPlayed: matchesPlayedCalc,
-      avgMinutesPlayed: avgMinutesPlayedCalc,
-    };
-  }, [initialPlayerStats, user.id, startDate, endDate, totalMatches]);
+  const { matchesPlayed, avgMinutesPlayed } = useMemo(
+    () =>
+      getCalculatedUserMatchStats({
+        playerStats: initialPlayerStats,
+        userId: user.id,
+        startDate,
+        endDate,
+        totalMatches,
+      }),
+    [initialPlayerStats, user.id, startDate, endDate, totalMatches]
+  );
 
   return (
     <FormProvider {...methods}>
