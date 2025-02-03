@@ -89,19 +89,6 @@ export interface PlayerManagementClientProps {
   players: Player[];
 }
 
-export interface PlayerMatchStat {
-  id: number;
-  username: string | null;
-  matchData: {
-    id: number;
-    date: Date | undefined;
-    minutes: number;
-    available: boolean;
-    goals: number;
-    assists: number;
-  }[];
-}
-
 export interface PlayerResponse {
   id: number;
   username?: string;
@@ -112,21 +99,6 @@ export interface UserResponse {
   id: number;
   username?: string;
   whatsappNumber?: string;
-}
-
-export interface PlayerStat {
-  id: number;
-  username: string | null;
-  matchesPlayed: number;
-  averagePlayingTime: number;
-  absences: number;
-  goals: number;
-  assists: number;
-  matchData?: MatchDataEntry[];
-}
-
-export interface PlayerStatsTableProps {
-  playerStats: PlayerStat[];
 }
 
 export interface SignedInUser {

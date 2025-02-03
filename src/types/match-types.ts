@@ -6,12 +6,8 @@ import { ZodIssue } from 'zod';
 import { Poule, PouleOpponent } from '@/types/poule-types';
 import { PlayerAttendance, TrainingData } from '@/types/training-types';
 
-import {
-  Player,
-  PlayerMatchStat,
-  PlayerStat,
-  SignedInUser,
-} from './user-types';
+import { PlayerMatchStat, PlayerStat } from './stats-types';
+import { Player, SignedInUser } from './user-types';
 
 export type OpponentStrength = 'STRONGER' | 'SIMILAR' | 'WEAKER';
 export type MatchType = 'competition' | 'practice';

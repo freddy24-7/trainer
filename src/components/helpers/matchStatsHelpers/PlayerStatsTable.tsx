@@ -7,7 +7,7 @@ import {
   absencesHeader,
   unknownPlayerPlaceholder,
 } from '@/strings/clientStrings';
-import { PlayerStatsTableProps } from '@/types/user-types';
+import { PlayerStatsTableProps } from '@/types/stats-types';
 
 const goalsHeader = 'Goals';
 const assistsHeader = 'Assists';

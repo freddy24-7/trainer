@@ -1,5 +1,6 @@
+import { PlayerStat } from '@/types/stats-types';
 import { PlayerAttendance, TrainingData } from '@/types/training-types';
-import { PlayerStat, SignedInUser } from '@/types/user-types';
+import { SignedInUser } from '@/types/user-types';
 
 export interface FetchMyStatsSuccess {
   success: true;

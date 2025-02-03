@@ -8,8 +8,8 @@ import {
   errorLoadingPlayerStatistics,
 } from '@/strings/serverStrings';
 import { FetchMyStatsResult } from '@/types/myStats-types';
+import { PlayerStat } from '@/types/stats-types';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
-import { PlayerStat } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
 
 export const getMyStatsData = async (): Promise<FetchMyStatsResult> => {

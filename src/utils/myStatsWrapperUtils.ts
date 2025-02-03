@@ -1,5 +1,5 @@
+import { PlayerStat } from '@/types/stats-types';
 import { TrainingData, PlayerAttendance } from '@/types/training-types';
-import { PlayerStat } from '@/types/user-types';
 
 export function handleFilterDataByDate<T extends { date: string | Date }>(
   data: T[],
