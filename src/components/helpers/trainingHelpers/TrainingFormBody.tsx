@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 
 import CustomButton from '@/components/Button';
@@ -46,7 +44,7 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
         setValue={setValue}
       />
 
-      <FutureDateWarning date={date} showToast={false} />
+      <FutureDateWarning isFutureDate={isFutureDate} showToast={false} />
 
       <CustomButton
         type="submit"

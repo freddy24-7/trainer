@@ -1,22 +1,16 @@
-'use client';
-
 import React, { useEffect } from 'react';
 import { FaBan } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 interface FutureDateWarningProps {
-  date: string | null;
+  isFutureDate: boolean;
   showToast?: boolean;
 }
 
 const FutureDateWarning: React.FC<FutureDateWarningProps> = ({
-  date,
+  isFutureDate,
   showToast = false,
 }) => {
-  const currentDate = new Date();
-  const selectedDate = date ? new Date(date) : null;
-  const isFutureDate = !!selectedDate && selectedDate > currentDate;
-
   useEffect(() => {
     if (showToast && isFutureDate) {
       toast.error('🚫 You cannot schedule a training session in the future.', {
