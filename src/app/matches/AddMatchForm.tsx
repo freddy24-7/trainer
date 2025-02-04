@@ -27,7 +27,7 @@ async function handleAddMatchFormSubmit(
   console.log('Raw Form Data:', data);
 
   if (!data.date) {
-    console.error('Date is missing in the form data.');
+    console.error('Validation Error: Date is required.');
     return;
   }
 
@@ -38,11 +38,7 @@ async function handleAddMatchFormSubmit(
       minutes: player.minutes || 0,
       available: player.available ?? true,
     })),
-    date: new Date(
-      data.date.year,
-      data.date.month - 1,
-      data.date.day
-    ).toISOString(),
+    date: new Date(data.date).toISOString(),
     matchEvents:
       data.matchEvents?.map((matchEvent) => ({
         playerInId: matchEvent.playerInId,
@@ -72,7 +68,7 @@ function AddMatchForm({
   poules,
   players,
 }: MatchFormProps): React.ReactElement {
-  const [, setSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
   const methods: UseFormReturn<MatchFormValues> = useMatchFormConfig(
@@ -84,6 +80,8 @@ function AddMatchForm({
     setValue,
     formState: { errors },
   } = methods;
+
+  const date = watch('date');
 
   const matchType = watch('matchType');
   const selectedPouleId = watch('poule');
@@ -106,6 +104,10 @@ function AddMatchForm({
   };
 
   const onSubmit = (data: MatchFormValues): Promise<void> => {
+    if (!date) {
+      console.error('Validation Error: Date is required.');
+      return Promise.resolve();
+    }
     return handleAddMatchFormSubmit(data, {
       validatePlayers,
       setSubmitting,
@@ -136,6 +138,8 @@ function AddMatchForm({
               setValue={setValue}
               opponentStrength={opponentStrength}
               matchEvents={matchEvents || []}
+              date={date}
+              isSubmitting={isSubmitting}
             />
           </CardBody>
         </Card>

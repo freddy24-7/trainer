@@ -1,4 +1,3 @@
-import { CalendarDate } from '@heroui/react';
 import React from 'react';
 import { FieldErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { ZodIssue } from 'zod';
@@ -56,7 +55,7 @@ export interface MatchFormValues {
   poule: number | undefined;
   opponent: number | undefined;
   opponentName: string;
-  date: CalendarDate | null;
+  date: string;
   players: {
     id: number;
     minutes: number;
@@ -96,6 +95,8 @@ export interface MatchFormFieldProps {
   playerId?: number | null;
   opponentStrength?: OpponentStrength | null;
   matchEvents?: BaseMatchEvent[];
+  isSubmitting: boolean;
+  date: string;
 }
 
 export interface ObtainMatchData extends BaseMatch {
