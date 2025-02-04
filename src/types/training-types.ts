@@ -1,4 +1,3 @@
-import { CalendarDate } from '@internationalized/date';
 import React from 'react';
 import { FieldErrors, UseFormSetValue } from 'react-hook-form';
 
@@ -13,7 +12,7 @@ export interface TrainingData {
 }
 
 export interface TrainingFormValues {
-  date: CalendarDate | null;
+  date: string;
   players: { userId: number; absent: boolean }[];
 }
 

@@ -10,12 +10,14 @@ import {
   ModalBody,
   ModalFooter,
 } from '@heroui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import CustomButton from '@/components/Button';
 import TrainingFormBody from '@/components/helpers/trainingHelpers/TrainingFormBody';
+import { addTrainingSchema } from '@/schemas/trainingSchema';
 import { addTrainingHeader } from '@/strings/clientStrings';
 import {
   TrainingFormValues,
@@ -31,12 +33,15 @@ const AddTrainingForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [formData, setFormData] = useState<TrainingFormValues | null>(null);
+
   const methods = useForm<TrainingFormValues>({
+    resolver: zodResolver(addTrainingSchema),
     defaultValues: {
-      date: null,
+      date: undefined,
       players: players.map((player) => ({ userId: player.id, absent: false })),
     },
   });
+
   const {
     handleSubmit,
     formState: { errors },

@@ -5,7 +5,6 @@ import { errorAddingTraining, anErrorOccurred } from '@/strings/clientStrings';
 import { TrainingFormValues, ErrorDetails } from '@/types/training-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
-import { convertCalendarDateToDate } from '@/utils/trainingPlayerUtils';
 
 export const submitTrainingForm = async (
   data: TrainingFormValues,
@@ -20,9 +19,9 @@ export const submitTrainingForm = async (
   const formData = new FormData();
 
   if (data.date) {
-    const dateObj = convertCalendarDateToDate(data.date);
-    formData.append('date', dateObj.toISOString());
+    formData.append('date', data.date);
   }
+
   formData.append('players', JSON.stringify(data.players));
 
   try {
