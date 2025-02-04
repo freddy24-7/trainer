@@ -2,6 +2,7 @@ import { Button } from '@heroui/react';
 import React, { useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 
+import FutureDateWarning from '@/components/FutureDateWarning';
 import ConfirmationModal from '@/components/helpers/matchHelpers/ConfirmationModal';
 import { useMatchFormHandlers } from '@/hooks/useMatchFormHandlers';
 import { MatchFormFieldProps } from '@/types/match-types';
@@ -20,7 +21,11 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   setValue,
   opponentStrength,
   matchEvents = [],
+  date,
 }) => {
+  const currentDate = new Date();
+  const selectedDate = date ? new Date(date) : null;
+  const isFutureDate = !!selectedDate && selectedDate > currentDate;
   const { watch, handleSubmit } = methods;
   const [lineupFinalized, setLineupFinalized] = useState(false);
 
@@ -32,7 +37,6 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
     setConfirmationModalOpen,
   } = useMatchFormHandlers({ onSubmit });
 
-  const date = watch('date');
   const matchType = watch('matchType') as 'competition' | 'practice';
 
   const isFormValid = date && lineupFinalized;
@@ -53,6 +57,8 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
           selectedOpponent={selectedOpponent}
           setLineupFinalized={setLineupFinalized}
         />
+
+        <FutureDateWarning isFutureDate={isFutureDate} showToast={false} />
 
         <Button
           type="submit"
