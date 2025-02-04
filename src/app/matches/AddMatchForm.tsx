@@ -27,7 +27,7 @@ async function handleAddMatchFormSubmit(
   console.log('Raw Form Data:', data);
 
   if (!data.date) {
-    console.error('Validation Error: Date is required.');
+    console.error('Date is missing in the form data.');
     return;
   }
 

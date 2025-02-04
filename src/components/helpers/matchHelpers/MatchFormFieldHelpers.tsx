@@ -24,10 +24,16 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   date,
 }) => {
   const currentDate = new Date();
-  const selectedDate = date ? new Date(date) : null;
+  console.log('Current Date:', currentDate);
+
+  const selectedDate = date
+    ? new Date(new Date(date).setHours(0, 0, 0, 0))
+    : null;
   const isFutureDate = !!selectedDate && selectedDate > currentDate;
   const { watch, handleSubmit } = methods;
   const [lineupFinalized, setLineupFinalized] = useState(false);
+  console.log(isFutureDate);
+  console.log(selectedDate);
 
   const {
     handleFormSubmit,
@@ -62,12 +68,12 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
 
         <Button
           type="submit"
+          disabled={!isFormValid || isSubmitting || isFutureDate}
           className={`mt-4 w-full p-2 rounded ${
-            isFormValid && !isSubmitting
+            isFormValid && !isSubmitting && !isFutureDate
               ? 'bg-black text-white hover:bg-gray-800'
               : 'bg-gray-400 text-gray-700 cursor-not-allowed'
           }`}
-          disabled={!isFormValid || isSubmitting}
         >
           {isSubmitting ? 'Submitting...' : 'Add Match'}
         </Button>

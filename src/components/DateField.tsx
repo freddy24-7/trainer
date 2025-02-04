@@ -8,8 +8,6 @@ import { DateFieldProps } from '@/types/shared-types';
 
 const DateField: React.FC<DateFieldProps> = ({ name, label }) => {
   const { control, getValues } = useFormContext();
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
   return (
     <Controller
@@ -26,10 +24,6 @@ const DateField: React.FC<DateFieldProps> = ({ name, label }) => {
               : new Date(getValues('startDate'));
           const endDate =
             name === 'endDate' ? selectedDate : new Date(getValues('endDate'));
-
-          if (selectedDate > today) {
-            return 'Future dates are not allowed';
-          }
 
           if (startDate && endDate && startDate > endDate) {
             return 'Start date cannot be after end date';

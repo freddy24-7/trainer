@@ -17,7 +17,7 @@ export const useMatchFormConfig = (
           ? poules[0].opponents[0].id
           : undefined,
       opponentName: '',
-      date: '',
+      date: undefined,
       players: players.map((player) => ({
         id: player.id,
         minutes: 0,
