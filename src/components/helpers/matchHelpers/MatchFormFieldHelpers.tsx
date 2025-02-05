@@ -30,10 +30,11 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
     ? new Date(new Date(date).setHours(0, 0, 0, 0))
     : null;
   const isFutureDate = !!selectedDate && selectedDate > currentDate;
-  const { watch, handleSubmit } = methods;
-  const [lineupFinalized, setLineupFinalized] = useState(false);
   console.log(isFutureDate);
   console.log(selectedDate);
+
+  const { watch, handleSubmit } = methods;
+  const [lineupFinalized, setLineupFinalized] = useState(false);
 
   const {
     handleFormSubmit,
@@ -46,6 +47,14 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   const matchType = watch('matchType') as 'competition' | 'practice';
 
   const isFormValid = date && lineupFinalized;
+
+  const isButtonDisabled = !isFormValid || isSubmitting || isFutureDate;
+
+  const buttonClassName = `mt-4 w-full p-2 rounded ${
+    isButtonDisabled
+      ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+      : 'bg-black text-white hover:bg-gray-800'
+  }`;
 
   return (
     <FormProvider {...methods}>
@@ -68,12 +77,8 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
 
         <Button
           type="submit"
-          disabled={!isFormValid || isSubmitting || isFutureDate}
-          className={`mt-4 w-full p-2 rounded ${
-            isFormValid && !isSubmitting && !isFutureDate
-              ? 'bg-black text-white hover:bg-gray-800'
-              : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-          }`}
+          disabled={isButtonDisabled}
+          className={buttonClassName}
         >
           {isSubmitting ? 'Submitting...' : 'Add Match'}
         </Button>
