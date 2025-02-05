@@ -4,10 +4,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import React from 'react';
 
+import CustomButton from '@/components/Button';
 import { ConfirmAssistModalProps } from '@/types/match-types';
 
 const ConfirmAssistModal: React.FC<ConfirmAssistModalProps> = ({
@@ -28,12 +28,12 @@ const ConfirmAssistModal: React.FC<ConfirmAssistModalProps> = ({
           </p>
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" onPress={onCancel}>
+          <CustomButton color="danger" onPress={onCancel}>
             No
-          </Button>
-          <Button color="primary" onPress={onConfirm}>
+          </CustomButton>
+          <CustomButton color="primary" onPress={onConfirm}>
             Yes
-          </Button>
+          </CustomButton>
         </ModalFooter>
       </ModalContent>
     </Modal>

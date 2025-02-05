@@ -4,10 +4,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import React, { useState } from 'react';
 
+import CustomButton from '@/components/Button';
 import SubstitutionManagementBody from '@/components/helpers/matchHelpers/SubstitutionManagementBody';
 import { SubstitutionManagementProps, Substitution } from '@/types/match-types';
 import { handleConfirmAllAtOnce } from '@/utils/substitutionUtils';
@@ -52,9 +52,9 @@ const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
 
   return (
     <>
-      <Button onPress={() => setOpen(true)} color="primary">
+      <CustomButton onPress={() => setOpen(true)} color="primary">
         Manage Substitutions
-      </Button>
+      </CustomButton>
 
       <Modal isOpen={isOpen} onOpenChange={setOpen}>
         <ModalContent>
@@ -72,13 +72,13 @@ const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
           </ModalBody>
 
           <ModalFooter>
-            <Button
+            <CustomButton
               onPress={handleConfirmClick}
               color="primary"
               isDisabled={!isValid}
             >
               Confirm
-            </Button>
+            </CustomButton>
           </ModalFooter>
         </ModalContent>
       </Modal>

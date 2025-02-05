@@ -4,10 +4,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import React from 'react';
 
+import CustomButton from '@/components/Button';
 import { ConfirmGoalModalProps } from '@/types/match-types';
 
 const ConfirmGoalModal: React.FC<ConfirmGoalModalProps> = ({
@@ -28,12 +28,12 @@ const ConfirmGoalModal: React.FC<ConfirmGoalModalProps> = ({
           </p>
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" onPress={onCancel}>
+          <CustomButton color="danger" onPress={onCancel}>
             Cancel
-          </Button>
-          <Button color="primary" onPress={onConfirm}>
+          </CustomButton>
+          <CustomButton color="primary" onPress={onConfirm}>
             Confirm
-          </Button>
+          </CustomButton>
         </ModalFooter>
       </ModalContent>
     </Modal>

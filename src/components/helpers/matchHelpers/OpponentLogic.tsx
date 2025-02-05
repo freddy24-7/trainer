@@ -1,6 +1,6 @@
-import { Button } from '@heroui/react';
 import React, { useState } from 'react';
 
+import CustomButton from '@/components/Button';
 import OpponentField from '@/components/helpers/matchHelpers/OpponentField';
 import PouleField from '@/components/helpers/matchHelpers/PouleField';
 import StrengthModal from '@/components/helpers/matchHelpers/StrengthModal';
@@ -72,13 +72,13 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
       {isButtonVisible && (
         <>
           <div className="flex flex-col items-center space-y-4 mt-4">
-            <Button
+            <CustomButton
               color="primary"
               onPress={strengthModal.onOpen}
               className="mt-4"
             >
               Insert Opponent Strength
-            </Button>
+            </CustomButton>
           </div>
           <StrengthModal
             isOpen={strengthModal.isOpen}

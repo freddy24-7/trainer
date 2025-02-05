@@ -1,6 +1,6 @@
-import { Button } from '@heroui/react';
 import React, { useEffect, useState } from 'react';
 
+import CustomButton from '@/components/Button';
 import GoalAssistModal from '@/components/helpers/matchHelpers/GoalAssistModal';
 import LineupManagement from '@/components/helpers/matchHelpers/LineupManagement';
 import MatchDurationInput from '@/components/helpers/matchHelpers/MatchDurationInput';
@@ -65,14 +65,14 @@ const PlayerManagement: React.FC<
           setPlayerStates={setPlayerStates}
           onSubstitution={onSubstitution}
         />
-        <Button
+        <CustomButton
           onPress={() => setGoalAssistModalOpen(true)}
           color="primary"
           className="mt-4"
           type="button"
         >
           Record Goal/Assist
-        </Button>
+        </CustomButton>
 
         <GoalAssistModal
           isOpen={isGoalAssistModalOpen}

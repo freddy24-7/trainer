@@ -4,10 +4,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import React from 'react';
 
+import CustomButton from '@/components/Button';
 import { AskAddAssistModalProps } from '@/types/match-types';
 
 const AskAddAssistModal: React.FC<AskAddAssistModalProps> = ({
@@ -22,12 +22,12 @@ const AskAddAssistModal: React.FC<AskAddAssistModalProps> = ({
         <p>Would you like to add an assist for this goal?</p>
       </ModalBody>
       <ModalFooter>
-        <Button color="danger" onPress={onNo}>
+        <CustomButton color="danger" onPress={onNo}>
           No
-        </Button>
-        <Button color="primary" onPress={onYes}>
+        </CustomButton>
+        <CustomButton color="primary" onPress={onYes}>
           Yes
-        </Button>
+        </CustomButton>
       </ModalFooter>
     </ModalContent>
   </Modal>

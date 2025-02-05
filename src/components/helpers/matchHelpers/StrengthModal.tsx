@@ -4,10 +4,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import React from 'react';
 
+import CustomButton from '@/components/Button';
 import { StrengthModalProps } from '@/types/match-types';
 
 const StrengthModal: React.FC<StrengthModalProps> = ({
@@ -29,22 +29,22 @@ const StrengthModal: React.FC<StrengthModalProps> = ({
               <ModalHeader>Select Opponent Strength</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-4">
-                  <Button onPress={() => setSelectedStrength('STRONGER')}>
+                  <CustomButton onPress={() => setSelectedStrength('STRONGER')}>
                     Stronger
-                  </Button>
-                  <Button onPress={() => setSelectedStrength('SIMILAR')}>
+                  </CustomButton>
+                  <CustomButton onPress={() => setSelectedStrength('SIMILAR')}>
                     Similar
-                  </Button>
-                  <Button onPress={() => setSelectedStrength('WEAKER')}>
+                  </CustomButton>
+                  <CustomButton onPress={() => setSelectedStrength('WEAKER')}>
                     Weaker
-                  </Button>
+                  </CustomButton>
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" onPress={onClose}>
+                <CustomButton color="danger" onPress={onClose}>
                   Cancel
-                </Button>
-                <Button
+                </CustomButton>
+                <CustomButton
                   color="primary"
                   onPress={() => {
                     onClose();
@@ -54,7 +54,7 @@ const StrengthModal: React.FC<StrengthModalProps> = ({
                   }}
                 >
                   Confirm
-                </Button>
+                </CustomButton>
               </ModalFooter>
             </>
           )}
@@ -72,10 +72,10 @@ const StrengthModal: React.FC<StrengthModalProps> = ({
                 strength?
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" onPress={onClose}>
+                <CustomButton color="danger" onPress={onClose}>
                   Cancel
-                </Button>
-                <Button
+                </CustomButton>
+                <CustomButton
                   color="primary"
                   onPress={() => {
                     handleConfirmStrength();
@@ -83,7 +83,7 @@ const StrengthModal: React.FC<StrengthModalProps> = ({
                   }}
                 >
                   Confirm
-                </Button>
+                </CustomButton>
               </ModalFooter>
             </>
           )}

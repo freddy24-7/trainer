@@ -6,10 +6,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import React, { useState } from 'react';
 
+import CustomButton from '@/components/Button';
 import { Player } from '@/types/user-types';
 
 const LineupManagement: React.FC<{
@@ -30,9 +30,9 @@ const LineupManagement: React.FC<{
 
   return (
     <>
-      <Button onPress={() => setOpen(true)} color="primary">
+      <CustomButton onPress={() => setOpen(true)} color="primary">
         Set Line-up
-      </Button>
+      </CustomButton>
       <Modal isOpen={isOpen} onOpenChange={setOpen}>
         <ModalContent>
           <ModalHeader>Select Line-up</ModalHeader>
@@ -59,12 +59,12 @@ const LineupManagement: React.FC<{
             ))}
           </ModalBody>
           <ModalFooter>
-            <Button onPress={() => setOpen(false)} color="danger">
+            <CustomButton onPress={() => setOpen(false)} color="danger">
               Cancel
-            </Button>
-            <Button onPress={handleConfirm} color="primary">
+            </CustomButton>
+            <CustomButton onPress={handleConfirm} color="primary">
               Confirm
-            </Button>
+            </CustomButton>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -1,7 +1,7 @@
-import { Button } from '@heroui/react';
 import React, { useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 
+import CustomButton from '@/components/Button';
 import FutureDateWarning from '@/components/FutureDateWarning';
 import ConfirmationModal from '@/components/helpers/matchHelpers/ConfirmationModal';
 import { useMatchFormHandlers } from '@/hooks/useMatchFormHandlers';
@@ -75,13 +75,13 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
 
         <FutureDateWarning isFutureDate={isFutureDate} showToast={false} />
 
-        <Button
+        <CustomButton
           type="submit"
           disabled={isButtonDisabled}
           className={buttonClassName}
         >
           {isSubmitting ? 'Submitting...' : 'Add Match'}
-        </Button>
+        </CustomButton>
       </form>
 
       <ConfirmationModal

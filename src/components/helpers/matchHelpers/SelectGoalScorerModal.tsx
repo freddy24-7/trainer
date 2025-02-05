@@ -4,10 +4,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@heroui/react';
 import React from 'react';
 
+import CustomButton from '@/components/Button';
 import { SelectGoalScorerModalProps } from '@/types/match-types';
 
 const SelectGoalScorerModal: React.FC<SelectGoalScorerModalProps> = ({
@@ -25,16 +25,16 @@ const SelectGoalScorerModal: React.FC<SelectGoalScorerModalProps> = ({
             <div>No players on pitch to choose from</div>
           )}
           {playersOnPitch.map((player) => (
-            <Button key={player.id} onPress={() => onSelect(player)}>
+            <CustomButton key={player.id} onPress={() => onSelect(player)}>
               {player.username}
-            </Button>
+            </CustomButton>
           ))}
         </div>
       </ModalBody>
       <ModalFooter>
-        <Button color="danger" onPress={onCancel}>
+        <CustomButton color="danger" onPress={onCancel}>
           Cancel
-        </Button>
+        </CustomButton>
       </ModalFooter>
     </ModalContent>
   </Modal>
