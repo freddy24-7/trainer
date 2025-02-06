@@ -61,3 +61,12 @@ export const failedToAddPouleMessage =
 export const pouleAddedSuccessMessage = 'Poule succesvol toegevoegd!';
 export const failedPusherAuthMessage = 'Mislukt om Pusher-kanaal te verifiëren';
 export const pusherAuthorizationErrorMessage = 'Fout bij Pusher-autorisatie';
+export const userErrorInfo = 'Unable to fetch user information.';
+export const unknownUsername = 'Onbekend';
+export const errorFetchingTrainingData =
+  'Fout bij het ophalen van trainingsgegevens';
+export const errorUploadPresetMissing = 'Upload preset ontbreekt';
+export const errorGeneratingUploadSignature =
+  'Fout bij het genereren van de upload-handtekening';
+export const errorInvalidUserId = 'Ongeldig gebruikers-ID formaat van Clerk.';
+export const errorInvalidRecipientId = 'Ongeldig ontvanger-ID formaat.';

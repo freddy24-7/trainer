@@ -3,7 +3,10 @@ import React from 'react';
 import { getTrainingDataPlayers } from '@/app/actions/getTrainingDataPlayers';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import TrainingStatsWrapper from '@/components/helpers/trainingStatsHelpers/TrainingStatsWrapper';
-import { unknownErrorOccurred } from '@/strings/serverStrings';
+import {
+  unknownErrorOccurred,
+  errorLoadingTrainingData,
+} from '@/strings/serverStrings';
 import { TrainingDataDisplay } from '@/types/match-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -18,7 +21,7 @@ export default async function TrainingStatsPage(): Promise<React.ReactElement> {
     );
 
     if (!Array.isArray(trainingDataResponse)) {
-      const formattedError = formatError('Error loading training data', [
+      const formattedError = formatError(errorLoadingTrainingData, [
         'getTrainingDataForPlayers',
       ]);
       return (

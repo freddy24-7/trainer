@@ -6,6 +6,7 @@ import {
   errorLoadingTrainingData,
   errorLoadingAttendanceData,
   errorLoadingPlayerStatistics,
+  userErrorInfo,
 } from '@/strings/serverStrings';
 import { FetchMyStatsResult } from '@/types/myStats-types';
 import { PlayerStat } from '@/types/stats-types';
@@ -18,7 +19,7 @@ export const getMyStatsData = async (): Promise<FetchMyStatsResult> => {
   if (!user) {
     return {
       success: false,
-      error: 'Unable to fetch user information.',
+      error: userErrorInfo,
     };
   }
 

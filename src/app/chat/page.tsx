@@ -9,7 +9,12 @@ import ChatClient from '@/app/chat/ChatClient';
 import { fetchAndCheckUser } from '@/app/fetchAndCheckUser';
 import LoginModal from '@/components/LoginModal';
 import { handleChatErrorResponse } from '@/components/RenderError';
-import { errorLoadingMessages } from '@/strings/serverStrings';
+import {
+  errorLoadingMessages,
+  errorInvalidUserId,
+  errorInvalidRecipientId,
+  unknownUsername,
+} from '@/strings/serverStrings';
 import { Message } from '@/types/message-types';
 import { ChatUser } from '@/types/user-types';
 
@@ -26,7 +31,7 @@ const getValidatedUser = async (): Promise<ValidatedUser> => {
 
   const userId = Number(signedInUser.id);
   if (isNaN(userId)) {
-    throw new Error('Invalid user ID format from Clerk.');
+    throw new Error(errorInvalidUserId);
   }
 
   return { signedInUser: { ...signedInUser, id: userId }, userId };
@@ -41,7 +46,7 @@ const getValidatedRecipientId = (
     Array.isArray(recipientIdParam) ? recipientIdParam[0] : recipientIdParam
   );
   if (isNaN(recipientId)) {
-    throw new Error('Invalid recipient ID format.');
+    throw new Error(errorInvalidRecipientId);
   }
 
   return recipientId;
@@ -54,7 +59,7 @@ const fetchProcessedUsers = async (): Promise<ChatUser[]> => {
   return (
     usersResponse.users?.map((user) => ({
       ...user,
-      username: user.username || 'Unknown',
+      username: user.username || unknownUsername,
       whatsappNumber: user.whatsappNumber || '',
     })) || []
   );

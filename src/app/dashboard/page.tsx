@@ -9,6 +9,7 @@ import {
   usernameUpdateFailed,
   errorCheckingOrUpdatingUsername,
   usernameSuccessfullyUpdated,
+  unknownUsername,
 } from '@/strings/serverStrings';
 import { SignedInUser, ClerkUser } from '@/types/user-types';
 
@@ -32,7 +33,7 @@ async function handleUpdateUsername(
   try {
     const updateResponse = await updateUsername(
       clerkUser.id,
-      clerkUser.username || 'Unknown'
+      clerkUser.username || unknownUsername
     );
 
     if ('errors' in updateResponse) {

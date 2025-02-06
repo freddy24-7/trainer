@@ -18,7 +18,13 @@ import { useForm, FormProvider } from 'react-hook-form';
 import CustomButton from '@/components/Button';
 import TrainingFormBody from '@/components/helpers/trainingHelpers/TrainingFormBody';
 import { addTrainingSchema } from '@/schemas/trainingSchema';
-import { addTrainingHeader } from '@/strings/clientStrings';
+import {
+  addTrainingHeader,
+  confirmSubmitTrainingHeader,
+  confirmSubmitTrainingBody,
+  buttonNo,
+  buttonYes,
+} from '@/strings/clientStrings';
 import {
   TrainingFormValues,
   TrainingFrontEndProps,
@@ -98,19 +104,19 @@ const AddTrainingForm = ({
       </Card>
       <Modal isOpen={isConfirmationModalOpen} backdrop="transparent">
         <ModalContent>
-          <ModalHeader>Submit Training?</ModalHeader>
+          <ModalHeader>{confirmSubmitTrainingHeader}</ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to submit this training data?</p>
+            <p>{confirmSubmitTrainingBody}</p>
           </ModalBody>
           <ModalFooter>
             <CustomButton
               color="danger"
               onPress={() => setConfirmationModalOpen(false)}
             >
-              No
+              {buttonNo}
             </CustomButton>
             <CustomButton color="primary" onPress={handleConfirmSubmission}>
-              Yes
+              {buttonYes}
             </CustomButton>
           </ModalFooter>
         </ModalContent>

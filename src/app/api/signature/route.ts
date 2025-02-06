@@ -1,6 +1,11 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse } from 'next/server';
 
+import {
+  errorUploadPresetMissing,
+  errorGeneratingUploadSignature,
+} from '@/strings/serverStrings';
+
 export async function GET(): Promise<Response> {
   try {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -8,7 +13,7 @@ export async function GET(): Promise<Response> {
 
     if (!uploadPreset) {
       return NextResponse.json(
-        { error: 'Upload preset is missing' },
+        { error: errorUploadPresetMissing },
         { status: 400 }
       );
     }
@@ -26,7 +31,7 @@ export async function GET(): Promise<Response> {
   } catch (error) {
     console.error('Error generating signature:', error);
     return NextResponse.json(
-      { error: 'Failed to generate upload signature' },
+      { error: errorGeneratingUploadSignature },
       { status: 500 }
     );
   }
