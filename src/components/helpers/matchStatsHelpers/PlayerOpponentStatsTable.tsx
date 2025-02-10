@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
 import {
-  avgPlayingTimeHeader,
+  avgPlayingTimeHeaderOpponent,
   playerColumn,
   strongerOpponentColumn,
   similarOpponentColumn,
@@ -21,7 +21,9 @@ const PlayerOpponentStatsTable: React.FC<PlayerOpponentStatsTableProps> = ({
     <div className="w-full max-w-4xl">
       <Card>
         <CardHeader>
-          <h2 className="text-2xl font-semibold">{avgPlayingTimeHeader}</h2>
+          <h2 className="text-2xl font-semibold">
+            {avgPlayingTimeHeaderOpponent}
+          </h2>
         </CardHeader>
         <CardBody>
           <table className="min-w-full table-auto">

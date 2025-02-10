@@ -297,3 +297,29 @@ export interface PlayerDataAdd {
 export type GetPlayerStatsReturn =
   | PlayerDataAdd[]
   | { success: false; error: string };
+
+export interface PlayerAssistStat {
+  id: number;
+  username: string | null;
+  assistsAgainstStronger: number;
+  assistsAgainstSimilar: number;
+  assistsAgainstWeaker: number;
+  totalAssists: number;
+}
+
+export interface PlayerAssistStatsTableProps {
+  assistStats: PlayerAssistStat[];
+}
+
+export interface PlayerGoalStatsTableProps {
+  goalStats: PlayerGoalStat[];
+}
+
+export interface PlayerGoalStat {
+  id: number;
+  username: string | null;
+  goalsAgainstStronger: number;
+  goalsAgainstSimilar: number;
+  goalsAgainstWeaker: number;
+  totalGoals: number;
+}

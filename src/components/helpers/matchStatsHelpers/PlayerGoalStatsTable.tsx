@@ -3,17 +3,8 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-interface PlayerGoalStat {
-  id: number;
-  username: string | null;
-  goalsAgainstStronger: number;
-  goalsAgainstSimilar: number;
-  goalsAgainstWeaker: number;
-  totalGoals: number;
-}
-
 import {
-  goalsHeader,
+  goalsHeaderOpponent,
   playerColumn,
   strongerOpponentColumn,
   similarOpponentColumn,
@@ -21,10 +12,7 @@ import {
   totalGoalsColumn,
   unknownPlayerPlaceholder,
 } from '@/strings/clientStrings';
-
-interface PlayerGoalStatsTableProps {
-  goalStats: PlayerGoalStat[];
-}
+import { PlayerGoalStatsTableProps } from '@/types/stats-types';
 
 const PlayerGoalStatsTable: React.FC<PlayerGoalStatsTableProps> = ({
   goalStats,
@@ -33,7 +21,7 @@ const PlayerGoalStatsTable: React.FC<PlayerGoalStatsTableProps> = ({
     <div className="w-full max-w-4xl">
       <Card>
         <CardHeader>
-          <h2 className="text-2xl font-semibold">{goalsHeader}</h2>
+          <h2 className="text-2xl font-semibold">{goalsHeaderOpponent}</h2>
         </CardHeader>
         <CardBody>
           <table className="min-w-full table-auto">

@@ -16,6 +16,8 @@ export const errorDeletingPlayerMessage =
 export const playerNameHeader = 'Spelernaam';
 export const matchesPlayedHeader = 'Gespeelde Wedstrijden';
 export const avgPlayingTimeHeader = 'Gemiddelde Speeltijd';
+export const avgPlayingTimeHeaderOpponent =
+  'Gemiddelde Speeltijd - kracht van tegenstander';
 export const absencesHeader = 'Afwezigheden';
 export const unknownPlayerPlaceholder = 'Onbekende Speler';
 export const pouleManagementHeading = 'Poulebewerking';
@@ -135,22 +137,24 @@ export const matchDetailsHeader = 'Wedstrijddetails';
 export const noMatchDataMessage = 'Geen wedstrijdgegevens beschikbaar.';
 export const playerStatisticsHeader = 'Spelerstatistieken';
 export const assistsHeader = 'Assists';
+export const assistsHeaderOpponent = 'Assists - kracht van tegenstander';
 export const playerColumn = 'Speler';
-export const strongerOpponentColumn = 'Sterkere tegenstander';
-export const similarOpponentColumn = 'Gelijkwaardige tegenstander';
+export const strongerOpponentColumn = 'Sterkere';
+export const similarOpponentColumn = 'Gelijkwaardige';
 export const totalAssistsColumn = 'Totale assists';
 export const goalsHeader = 'Doelpunten';
+export const goalsHeaderOpponent = 'Doelpunten - kracht van tegenstander';
 export const totalGoalsColumn = 'Totale doelpunten';
 export const tacticalSubstitutionsHeader =
   'Tactische wissels - Spelers die binnenkomen';
 export const minutesSuffix = ' min';
 export const fitnessSubstitutionsHeader =
-  'Fitheid-gerelateerde wissels - Spelers die eruit gaan';
+  'Fitheid wissels - Spelers die eruit gaan';
 export const injurySubstitutionsHeader =
-  'Blessure-gerelateerde wissels - Spelers die eruit gaan';
+  'Blessure wissels - Spelers die eruit gaan';
 export const tacticalSubstitutionsOutHeader =
   'Tactische wissels - Spelers die eruit gaan';
-export const weakerOpponentColumn = 'Zwakkere tegenstander';
+export const weakerOpponentColumn = 'Zwakkere ';
 export const totalSubstitutionsColumn = 'Totale wissels';
 export const matchStatsHeader = 'Wedstrijdstatistieken';
 export const statisticColumn = 'Statistiek';

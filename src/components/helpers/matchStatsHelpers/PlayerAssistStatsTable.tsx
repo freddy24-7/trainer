@@ -3,21 +3,8 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React from 'react';
 
-interface PlayerAssistStat {
-  id: number;
-  username: string | null;
-  assistsAgainstStronger: number;
-  assistsAgainstSimilar: number;
-  assistsAgainstWeaker: number;
-  totalAssists: number;
-}
-
-interface PlayerAssistStatsTableProps {
-  assistStats: PlayerAssistStat[];
-}
-
 import {
-  assistsHeader,
+  assistsHeaderOpponent,
   playerColumn,
   strongerOpponentColumn,
   similarOpponentColumn,
@@ -25,6 +12,7 @@ import {
   totalAssistsColumn,
   unknownPlayerPlaceholder,
 } from '@/strings/clientStrings';
+import { PlayerAssistStatsTableProps } from '@/types/stats-types';
 
 const PlayerAssistStatsTable: React.FC<PlayerAssistStatsTableProps> = ({
   assistStats,
@@ -33,7 +21,7 @@ const PlayerAssistStatsTable: React.FC<PlayerAssistStatsTableProps> = ({
     <div className="w-full max-w-4xl">
       <Card>
         <CardHeader>
-          <h2 className="text-2xl font-semibold">{assistsHeader}</h2>
+          <h2 className="text-2xl font-semibold">{assistsHeaderOpponent}</h2>
         </CardHeader>
         <CardBody>
           <table className="min-w-full table-auto">

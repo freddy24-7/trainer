@@ -15,6 +15,16 @@ import {
   playerAccessInstructions,
   appDesignInstructions,
   instructionsHeader,
+  welcomeMessageTitle,
+  signUpMessageTitle,
+  accountManagementTitle,
+  playerManagementTitle,
+  pouleManagementTitle,
+  matchManagementTitle,
+  trainingManagementTitle,
+  chatFunctionTitle,
+  playerAccessTitle,
+  appDesignTitle,
 } from '@/strings/instructionsStrings';
 
 const Instructions: React.FC = (): React.ReactElement => {
@@ -29,70 +39,70 @@ const Instructions: React.FC = (): React.ReactElement => {
           <AccordionItem
             key="welcome"
             aria-label="Welcome Instructions"
-            title="Welcome Message"
+            title={welcomeMessageTitle}
           >
             {instructionsWelcomeMessage}
           </AccordionItem>
           <AccordionItem
             key="signup"
             aria-label="Signup Instructions"
-            title="Sign-Up Instructions"
+            title={signUpMessageTitle}
           >
             {instructionsSignUpMessage}
           </AccordionItem>
           <AccordionItem
             key="account"
             aria-label="Account Management Instructions"
-            title="Account Management"
+            title={accountManagementTitle}
           >
             {instructionsAccountManagementMessage}
           </AccordionItem>
           <AccordionItem
             key="player-management"
             aria-label="Player Management Instructions"
-            title="Player Management"
+            title={playerManagementTitle}
           >
             {playerManagementInstructions}
           </AccordionItem>
           <AccordionItem
             key="poule-management"
             aria-label="Poule Management Instructions"
-            title="Poule Management"
+            title={pouleManagementTitle}
           >
             {pouleManagementInstructions}
           </AccordionItem>
           <AccordionItem
             key="match-management"
             aria-label="Match Management Instructions"
-            title="Match Management"
+            title={matchManagementTitle}
           >
             {matchManagementInstructions}
           </AccordionItem>
           <AccordionItem
             key="training-management"
             aria-label="Training Management Instructions"
-            title="Training Management"
+            title={trainingManagementTitle}
           >
             {trainingManagementInstructions}
           </AccordionItem>
           <AccordionItem
             key="chat-function"
             aria-label="Chat Function Instructions"
-            title="Chat Function"
+            title={chatFunctionTitle}
           >
             {chatFunctionInstructions}
           </AccordionItem>
           <AccordionItem
             key="player-access"
             aria-label="Player Access Instructions"
-            title="Player Access"
+            title={playerAccessTitle}
           >
             {playerAccessInstructions}
           </AccordionItem>
           <AccordionItem
             key="app-design"
             aria-label="App Design Instructions"
-            title="App Design"
+            title={appDesignTitle}
           >
             {appDesignInstructions}
           </AccordionItem>

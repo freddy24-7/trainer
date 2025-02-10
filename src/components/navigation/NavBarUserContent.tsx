@@ -35,7 +35,7 @@ function RoleSpecificLinks({
           />
           <NavLink
             href="/instructions"
-            className="text-white"
+            className={dropdownTextColor || 'text-white'}
             onClick={closeMenu}
           >
             {infoLabel}
@@ -88,7 +88,7 @@ export function NavBarUserContent({
 
   return (
     <div className={containerClasses}>
-      <NavLink href="/chat" className="text-white" onClick={closeMenu}>
+      <NavLink href="/chat" className={dropdownTextColor} onClick={closeMenu}>
         {chatLabel}
       </NavLink>
       <RoleSpecificLinks
