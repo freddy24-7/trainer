@@ -1,9 +1,14 @@
 import { Card, CardHeader, CardBody } from '@heroui/react';
 import React, { useState } from 'react';
 
-import { renderPlayerFormWithWhatsAppLink } from '@/components/helpers/playerHelpers/RenderPlayerFormWithWhatsAppLink';
+import { RenderPlayerFormWithWhatsAppLink } from '@/components/helpers/playerHelpers/RenderPlayerFormWithWhatsAppLink';
 import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
-import { editPlayerHeader } from '@/strings/clientStrings';
+import {
+  editPlayerHeader,
+  updatingButtonText,
+  updatePlayerButtonText,
+  sendWhatsAppMessageText,
+} from '@/strings/clientStrings';
 import { PlayerFormData, EditPlayerFormProps } from '@/types/user-types';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 
@@ -21,9 +26,7 @@ function EditPlayerForm({
   const [playerData, setPlayerData] = useState<PlayerFormData | null>(null);
 
   const handleEditPlayer = async (data: PlayerFormData): Promise<void> => {
-    if (onSubmissionStart) {
-      onSubmissionStart();
-    }
+    if (onSubmissionStart) onSubmissionStart();
     await handlePlayerFormSubmit({
       data,
       setIsSubmitting,
@@ -32,16 +35,14 @@ function EditPlayerForm({
       onSuccess: (playerData) => {
         setPlayerData(playerData);
         setFormKey((prevKey) => prevKey + 1);
-
-        const updatedPlayer = {
+        onPlayerEdited({
           id: playerId,
           username: data.username,
           whatsappNumber: data.whatsappNumber,
           whatsappLink: data.whatsappNumber
             ? `https://wa.me/${data.whatsappNumber.replace(/\D/g, '')}`
             : '',
-        };
-        onPlayerEdited(updatedPlayer);
+        });
       },
     });
   };
@@ -53,16 +54,28 @@ function EditPlayerForm({
           <h3 className="text-lg font-semibold">{editPlayerHeader}</h3>
         </CardHeader>
         <CardBody>
-          {renderPlayerFormWithWhatsAppLink({
-            formKey,
-            initialUsername,
-            initialWhatsappNumber,
-            isSubmitting,
-            playerData,
-            handleEditPlayer,
-            onSubmissionStart,
-            onAbort,
-          })}
+          <RenderPlayerFormWithWhatsAppLink
+            formKey={formKey}
+            initialData={{
+              username: initialUsername,
+              password: '',
+              whatsappNumber: initialWhatsappNumber || '',
+            }}
+            isSubmitting={isSubmitting}
+            playerData={playerData}
+            onSubmit={handleEditPlayer}
+            onSubmissionStart={onSubmissionStart}
+            onAbort={onAbort}
+            submitButtonText={
+              isSubmitting ? updatingButtonText : updatePlayerButtonText
+            }
+            generateWhatsAppMessage={(data, initData) =>
+              `Hello ${data?.username || initData.username}, your account has been updated. Username: ${
+                data?.username || initData.username
+              }, Password: ${data?.password}. Please log in and change your password.`
+            }
+            whatsappButtonText={sendWhatsAppMessageText}
+          />
         </CardBody>
       </Card>
     </div>

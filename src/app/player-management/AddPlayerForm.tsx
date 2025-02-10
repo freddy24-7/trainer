@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody } from '@heroui/react';
 import React, { useState } from 'react';
 import { ZodIssue } from 'zod';
 
-import PlayerForm from '@/components/PlayerForm';
+import { RenderPlayerFormWithWhatsAppLink } from '@/components/helpers/playerHelpers/RenderPlayerFormWithWhatsAppLink';
 import { handleValidatePlayerData } from '@/schemas/validation/createPlayerValidation';
 import {
   playerAdditionTitle,
@@ -13,9 +13,7 @@ import {
   sendWhatsAppMessage,
 } from '@/strings/clientStrings';
 import { PlayerFormData } from '@/types/user-types';
-import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
-import { handleSubmissionState } from '@/utils/submissionUtils';
 
 function AddPlayerForm({
   action,
@@ -30,12 +28,6 @@ function AddPlayerForm({
   const [playerData, setPlayerData] = useState<PlayerFormData | null>(null);
 
   const handleAddPlayer = async (data: PlayerFormData): Promise<void> => {
-    const resetSubmission = handleSubmissionState(
-      setIsSubmitting,
-      () => console.log('Submission started...'),
-      () => setIsSubmitting(false)
-    );
-
     await handlePlayerFormSubmit({
       data,
       setIsSubmitting,
@@ -46,8 +38,6 @@ function AddPlayerForm({
         setFormKey((prevKey) => prevKey + 1);
       },
     });
-
-    resetSubmission();
   };
 
   return (
@@ -57,30 +47,24 @@ function AddPlayerForm({
           <h3 className="text-lg font-semibold">{playerAdditionTitle}</h3>
         </CardHeader>
         <CardBody>
-          <PlayerForm
-            key={formKey}
+          <RenderPlayerFormWithWhatsAppLink
+            formKey={formKey}
             initialData={{ username: '', password: '', whatsappNumber: '' }}
+            isSubmitting={isSubmitting}
+            playerData={playerData}
             onSubmit={handleAddPlayer}
             onSubmissionStart={() => console.log('Submission started...')}
             onAbort={() => setIsSubmitting(false)}
             submitButtonText={
               isSubmitting ? submittingText : addPlayerButtonText
             }
+            generateWhatsAppMessage={(data, initData) =>
+              `Hallo ${data?.username || initData.username}, je account is aangemaakt. Gebruikersnaam: ${
+                data?.username || initData.username
+              }, Wachtwoord: ${data?.password}. Log alstublieft in en wijzig je wachtwoord.`
+            }
+            whatsappButtonText={sendWhatsAppMessage}
           />
-          {playerData?.whatsappNumber && (
-            <a
-              href={`https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}/?text=${encodeURIComponent(
-                `Hallo ${playerData.username}, je account is aangemaakt. Gebruikersnaam: ${playerData.username}, Wachtwoord: ${playerData.password}. 
-                Log alstublieft in en wijzig je wachtwoord naar een eigen wachtwoord. Het websiteadres wordt door je trainers in een apart bericht aan je verstrekt.`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 bg-green-500 text-white p-2 rounded-lg"
-              onClick={() => handleWhatsAppClick()}
-            >
-              {sendWhatsAppMessage}
-            </a>
-          )}
         </CardBody>
       </Card>
     </div>

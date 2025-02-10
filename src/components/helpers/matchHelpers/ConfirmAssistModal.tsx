@@ -30,10 +30,7 @@ const ConfirmAssistModal: React.FC<ConfirmAssistModalProps> = ({
         <ModalHeader>{confirmAssistModalHeader}</ModalHeader>
         <ModalBody>
           <p>
-            <p>
-              {confirmAssistModalBody}{' '}
-              <strong>{assistProvider.username}</strong>?
-            </p>
+            {confirmAssistModalBody} <strong>{assistProvider.username}</strong>?
           </p>
         </ModalBody>
         <ModalFooter>

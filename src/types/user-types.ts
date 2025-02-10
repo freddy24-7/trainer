@@ -157,15 +157,20 @@ export interface PlayerModalProps {
   cancelAction?: () => void;
 }
 
-export interface RenderPlayerFormProps {
+export interface RenderPlayerFormWithWhatsAppLinkProps {
   formKey: number;
-  initialUsername: string;
-  initialWhatsappNumber?: string;
+  initialData: PlayerFormData;
   isSubmitting: boolean;
   playerData: PlayerFormData | null;
-  handleEditPlayer: (data: PlayerFormData) => Promise<void>;
+  onSubmit: (data: PlayerFormData) => Promise<void>;
   onSubmissionStart?: () => void;
   onAbort?: () => void;
+  submitButtonText: string;
+  generateWhatsAppMessage: (
+    playerData: PlayerFormData | null,
+    initialData: PlayerFormData
+  ) => string;
+  whatsappButtonText: string;
 }
 
 export interface PlayerFormInputFieldProps {
