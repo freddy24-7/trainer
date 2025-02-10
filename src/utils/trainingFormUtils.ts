@@ -1,7 +1,11 @@
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-import { errorAddingTraining, anErrorOccurred } from '@/strings/clientStrings';
+import {
+  trainingAddedSuccess,
+  errorAddingTraining,
+  anErrorOccurred,
+} from '@/strings/clientStrings';
 import { TrainingFormValues, ErrorDetails } from '@/types/training-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
@@ -28,7 +32,7 @@ export const submitTrainingForm = async (
     const response = await action(formData);
 
     if (response.success) {
-      toast.success('Training succesvol toegevoegd!');
+      toast.success(trainingAddedSuccess);
       router.push('/');
       return;
     }

@@ -21,7 +21,7 @@ const ChatRecipientSelector: React.FC<ChatRecipientSelectorProps> = ({
           .filter((user) => user.id !== signedInUser.id)
           .map((user) => (
             <option key={user.id} value={user.id}>
-              Chat with {user.username}
+              Chat met {user.username}
             </option>
           ))}
       </select>

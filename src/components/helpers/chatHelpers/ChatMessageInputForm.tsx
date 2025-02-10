@@ -8,6 +8,9 @@ import { useVideoUpload } from '@/hooks/useVideoUpload';
 import {
   messagePlaceholderText,
   sendButtonText,
+  uploadingText,
+  uploadedText,
+  enterMessageOrUploadError,
 } from '@/strings/clientStrings';
 import {
   MessageInputFormProps,
@@ -65,14 +68,15 @@ const VideoUploader: React.FC<
 
     {isUploading ? (
       <LoadingSpinner
-        label="Uploading..."
+        label={uploadingText}
         color="primary"
         labelColor="primary"
       />
     ) : (
       selectedVideo && (
         <span className="text-sm text-gray-600 mr-2 truncate">
-          Uploaded:{' '}
+          {uploadedText}
+
           <a
             href={typeof selectedVideo === 'string' ? selectedVideo : '#'}
             target="_blank"
@@ -153,7 +157,7 @@ const ChatMessageInputForm: React.FC<
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (!newMessage.trim() && !selectedVideo) {
-      console.error('Please enter a message or upload a video.');
+      console.error(enterMessageOrUploadError);
       return;
     }
 

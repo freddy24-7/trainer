@@ -7,6 +7,7 @@ import {
   pouleManagementHeading,
   addOpponentButtonText,
   addPouleButtonText,
+  submittingText,
 } from '@/strings/clientStrings';
 import { PouleFormContentProps, PouleFormValues } from '@/types/poule-types';
 
@@ -61,7 +62,7 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
             : 'bg-black text-white hover:bg-gray-800'
         }`}
       >
-        {isSubmitting ? 'Submitting...' : addPouleButtonText}
+        {isSubmitting ? submittingText : addPouleButtonText}
       </CustomButton>
     </form>
   );

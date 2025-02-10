@@ -6,11 +6,11 @@ import {
   avgPlayingTimeHeader,
   absencesHeader,
   unknownPlayerPlaceholder,
+  goalsHeader,
+  assistsHeader,
+  minutesSuffix,
 } from '@/strings/clientStrings';
 import { PlayerStatsTableProps } from '@/types/stats-types';
-
-const goalsHeader = 'Goals';
-const assistsHeader = 'Assists';
 
 const PlayerStatsTable: React.FC<PlayerStatsTableProps> = ({ playerStats }) => {
   return (
@@ -33,7 +33,7 @@ const PlayerStatsTable: React.FC<PlayerStatsTableProps> = ({ playerStats }) => {
             </td>
             <td className="border px-4 py-2">{player.matchesPlayed}</td>
             <td className="border px-4 py-2">
-              {Math.round(player.averagePlayingTime)} mins
+              {Math.round(player.averagePlayingTime) + minutesSuffix}
             </td>
             <td className="border px-4 py-2">{player.absences}</td>
 

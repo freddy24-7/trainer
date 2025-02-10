@@ -1,5 +1,10 @@
 import React from 'react';
 
+import {
+  matchTypeLabel,
+  competitionMatchOption,
+  practiceMatchOption,
+} from '@/strings/clientStrings';
 import { MatchTypeSelectionProps } from '@/types/match-types';
 
 const MatchTypeSelection: React.FC<MatchTypeSelectionProps> = ({
@@ -9,7 +14,9 @@ const MatchTypeSelection: React.FC<MatchTypeSelectionProps> = ({
   return (
     <div>
       <div className="flex flex-col items-center space-y-4 mt-4">
-        <label className="block mb-2 text-sm font-medium">Match Type</label>
+        <label className="block mb-2 text-sm font-medium">
+          {matchTypeLabel}
+        </label>
       </div>
       <select
         className="w-full p-2 border rounded"
@@ -18,8 +25,8 @@ const MatchTypeSelection: React.FC<MatchTypeSelectionProps> = ({
           setValue('matchType', e.target.value as 'competition' | 'practice')
         }
       >
-        <option value="competition">Competition Match</option>
-        <option value="practice">Practice Match</option>
+        <option value="competition">{competitionMatchOption}</option>
+        <option value="practice">{practiceMatchOption}</option>
       </select>
     </div>
   );

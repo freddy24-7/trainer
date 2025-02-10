@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { markAbsentPlayersLabel } from '@/strings/clientStrings';
 import { TrainingPlayersFieldProps } from '@/types/training-types';
 
 const TrainingPlayersField = ({
@@ -13,7 +14,7 @@ const TrainingPlayersField = ({
 
   return (
     <div>
-      <h4 className="text-lg font-semibold mb-4">Mark Absent Players</h4>
+      <h4 className="text-lg font-semibold mb-4">{markAbsentPlayersLabel}</h4>
       <div className="space-y-2">
         {players.map((player, index) => (
           <div

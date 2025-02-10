@@ -7,6 +7,7 @@ import TrainingPlayersField from '@/components/helpers/trainingHelpers/TrainingP
 import {
   submittingButtonText,
   addTrainingButtonText,
+  trainingDateLabel,
 } from '@/strings/clientStrings';
 import { TrainingFormBodyProps } from '@/types/training-types';
 
@@ -37,7 +38,7 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 text-center relative">
-      <DateField name="date" label="Training Date" errors={errors} />
+      <DateField name="date" label={trainingDateLabel} errors={errors} />
       <TrainingPlayersField
         players={players}
         playerValues={playerValues}

@@ -27,3 +27,5 @@ export const playerAccessInstructions =
 
 export const appDesignInstructions =
   'De app is ontworpen voor verschillende schermformaten, inclusief mobiel, maar het registreren van gegevens of het verzenden van video’s gaat makkelijker op een laptop.';
+
+export const instructionsHeader = 'Instructies voor trainers';

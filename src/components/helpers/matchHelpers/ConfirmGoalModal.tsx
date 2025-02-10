@@ -8,6 +8,12 @@ import {
 import React from 'react';
 
 import CustomButton from '@/components/Button';
+import {
+  buttonCancel,
+  confirmGoalModalHeader,
+  confirmGoalModalBody,
+  buttonConfirm,
+} from '@/strings/clientStrings';
 import { ConfirmGoalModalProps } from '@/types/match-types';
 
 const ConfirmGoalModal: React.FC<ConfirmGoalModalProps> = ({
@@ -21,18 +27,18 @@ const ConfirmGoalModal: React.FC<ConfirmGoalModalProps> = ({
   return (
     <Modal isOpen={isOpen} backdrop="transparent">
       <ModalContent>
-        <ModalHeader>Confirm Goal</ModalHeader>
+        <ModalHeader>{confirmGoalModalHeader}</ModalHeader>
         <ModalBody>
           <p>
-            Confirm goal for <strong>{goalScorer.username}</strong>?
+            {confirmGoalModalBody} <strong>{goalScorer.username}</strong>?
           </p>
         </ModalBody>
         <ModalFooter>
           <CustomButton color="danger" onPress={onCancel}>
-            Cancel
+            {buttonCancel}
           </CustomButton>
           <CustomButton color="primary" onPress={onConfirm}>
-            Confirm
+            {buttonConfirm}
           </CustomButton>
         </ModalFooter>
       </ModalContent>

@@ -12,7 +12,7 @@ export function handlePlayerSubstitutionData(
     const matchData = (player.substitutedOut ?? [])
       .map((event) => {
         if (!event.match || !event.match.date) {
-          console.warn(`⚠️ Missing match or date for event ${event.id}`);
+          console.warn(`Missing match or date for event ${event.id}`);
           return null;
         }
         return {

@@ -8,6 +8,7 @@ import {
   playerCommunicationInstructions,
   playerVideoFeedbackInstructions,
   playerParticipationReportsInstructions,
+  playerInstructionsHeader,
 } from '@/strings/playerinfoStrings';
 
 const PlayerInstructions: React.FC = (): React.ReactElement => {
@@ -15,7 +16,7 @@ const PlayerInstructions: React.FC = (): React.ReactElement => {
     <div className="flex justify-center items-center min-h-screen bg-black-500">
       <div className="max-w-3xl w-full">
         <h1 className="text-2xl font-bold text-center text-brandcolor mb-4">
-          Instructies voor Spelers
+          {playerInstructionsHeader}
         </h1>
         <Accordion>
           <AccordionItem

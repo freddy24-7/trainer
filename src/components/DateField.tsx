@@ -4,6 +4,10 @@ import { DatePicker } from '@heroui/react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import {
+  dateRequiredError,
+  startDateAfterEndDateError,
+} from '@/strings/clientStrings';
 import { DateFieldProps } from '@/types/shared-types';
 
 const DateField: React.FC<DateFieldProps> = ({ name, label }) => {
@@ -15,7 +19,7 @@ const DateField: React.FC<DateFieldProps> = ({ name, label }) => {
       control={control}
       rules={{
         validate: (value) => {
-          if (!value) return 'Date is required';
+          if (!value) return dateRequiredError;
 
           const selectedDate = new Date(value);
           const startDate =
@@ -26,7 +30,7 @@ const DateField: React.FC<DateFieldProps> = ({ name, label }) => {
             name === 'endDate' ? selectedDate : new Date(getValues('endDate'));
 
           if (startDate && endDate && startDate > endDate) {
-            return 'Start date cannot be after end date';
+            return startDateAfterEndDateError;
           }
 
           return true;

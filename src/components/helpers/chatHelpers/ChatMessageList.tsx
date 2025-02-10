@@ -5,6 +5,7 @@ import {
   youLabel,
   removeVideoButtonText,
   deleteMessageButtonText,
+  downloadVideoButtonText,
 } from '@/strings/clientStrings';
 import { MessageListProps } from '@/types/message-types';
 
@@ -41,7 +42,7 @@ const renderVideoControls = (
           }}
           className="text-blue-500 text-xs"
         >
-          Download Video
+          {downloadVideoButtonText}
         </Button>
       )}
       <div className="flex justify-end ml-2">

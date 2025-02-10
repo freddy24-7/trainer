@@ -9,3 +9,5 @@ export const playerVideoFeedbackInstructions =
 
 export const playerParticipationReportsInstructions =
   'Bekijk rapporten over je eigen deelname aan trainingen en wedstrijden. Deze informatie helpt je om je vooruitgang bij te houden en te zien waar je jezelf kunt verbeteren.';
+
+export const playerInstructionsHeader = 'Instructies voor spelers';

@@ -8,14 +8,20 @@ import {
 import React from 'react';
 
 import CustomButton from '@/components/Button';
+import {
+  confirmSubmissionTitle,
+  confirmSubmissionMessage,
+  buttonCancel,
+  buttonSubmit,
+} from '@/strings/clientStrings';
 import { ConfirmationModalProps } from '@/types/match-types';
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  title = 'Confirm Submission',
-  message = 'Are you sure you want to submit this data?',
+  title = confirmSubmissionTitle,
+  message = confirmSubmissionMessage,
 }) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose}>
@@ -26,10 +32,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         </ModalBody>
         <ModalFooter>
           <CustomButton onPress={onClose} color="danger">
-            Cancel
+            {buttonCancel}
           </CustomButton>
           <CustomButton onPress={onConfirm} color="primary">
-            Submit
+            {buttonSubmit}
           </CustomButton>
         </ModalFooter>
       </ModalContent>

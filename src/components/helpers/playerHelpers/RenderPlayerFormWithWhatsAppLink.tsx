@@ -1,6 +1,11 @@
 import React from 'react';
 
 import PlayerForm from '@/components/PlayerForm';
+import {
+  updatingButtonText,
+  updatePlayerButtonText,
+  sendWhatsAppMessageText,
+} from '@/strings/clientStrings';
 import { RenderPlayerFormProps } from '@/types/user-types';
 import { handleWhatsAppClick } from '@/utils/phoneNumberUtils';
 
@@ -34,7 +39,9 @@ export const renderPlayerFormWithWhatsAppLink = ({
             onAbort();
           }
         }}
-        submitButtonText={isSubmitting ? 'Updating...' : 'Update Player'}
+        submitButtonText={
+          isSubmitting ? updatingButtonText : updatePlayerButtonText
+        }
       />
       {playerData?.whatsappNumber && (
         <a
@@ -46,7 +53,7 @@ export const renderPlayerFormWithWhatsAppLink = ({
           className="mt-4 bg-green-500 text-white p-2 rounded-lg"
           onClick={() => handleWhatsAppClick()}
         >
-          Send WhatsApp Message to Player
+          {sendWhatsAppMessageText}
         </a>
       )}
     </>

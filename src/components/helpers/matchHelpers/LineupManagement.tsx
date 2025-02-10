@@ -10,6 +10,15 @@ import {
 import React, { useState } from 'react';
 
 import CustomButton from '@/components/Button';
+import {
+  setLineupButtonText,
+  selectLineupHeader,
+  buttonCancel,
+  buttonConfirm,
+  playerStatePlaying,
+  playerStateBench,
+  playerStateAbsent,
+} from '@/strings/clientStrings';
 import { Player } from '@/types/user-types';
 
 const LineupManagement: React.FC<{
@@ -31,11 +40,11 @@ const LineupManagement: React.FC<{
   return (
     <>
       <CustomButton onPress={() => setOpen(true)} color="primary">
-        Set Line-up
+        {setLineupButtonText}
       </CustomButton>
       <Modal isOpen={isOpen} onOpenChange={setOpen}>
         <ModalContent>
-          <ModalHeader>Select Line-up</ModalHeader>
+          <ModalHeader>{selectLineupHeader}</ModalHeader>
           <ModalBody>
             {players.map((player) => (
               <div
@@ -43,16 +52,22 @@ const LineupManagement: React.FC<{
                 className="grid grid-cols-4 items-center gap-4 mb-2"
               >
                 <p>{player.username}</p>
-                {(['playing', 'bench', 'absent'] as const).map((state) => (
-                  <label key={state} className="flex items-center gap-2">
+                {(
+                  [
+                    { key: 'playing', label: playerStatePlaying },
+                    { key: 'bench', label: playerStateBench },
+                    { key: 'absent', label: playerStateAbsent },
+                  ] as const
+                ).map(({ key, label }) => (
+                  <label key={key} className="flex items-center gap-2">
                     <input
                       type="radio"
                       name={`player-${player.id}`}
-                      value={state}
-                      checked={playerStates[player.id] === state}
-                      onChange={() => onPlayerStateChange(player.id, state)}
+                      value={key}
+                      checked={playerStates[player.id] === key}
+                      onChange={() => onPlayerStateChange(player.id, key)}
                     />
-                    {state}
+                    {label}
                   </label>
                 ))}
               </div>
@@ -60,10 +75,10 @@ const LineupManagement: React.FC<{
           </ModalBody>
           <ModalFooter>
             <CustomButton onPress={() => setOpen(false)} color="danger">
-              Cancel
+              {buttonCancel}
             </CustomButton>
             <CustomButton onPress={handleConfirm} color="primary">
-              Confirm
+              {buttonConfirm}
             </CustomButton>
           </ModalFooter>
         </ModalContent>

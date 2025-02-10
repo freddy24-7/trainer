@@ -28,3 +28,16 @@ export const clerkIdRequiredMessage = 'clerkId is verplicht';
 export const usernameRequiredMessage = 'Gebruikersnaam is verplicht';
 export const unknownPlayerMessage = 'Onbekende Speler';
 export const unknownOpponentMessage = 'Onbekende Tegenstander';
+export const invalidPlayerInIdMessage = 'Ongeldige speler-in ID';
+export const invalidPlayerOutIdMessage = 'Ongeldige speler-uit ID';
+export const invalidPlayerIdMessage = 'Ongeldige speler ID';
+export const invalidPouleOpponentIdMessage = 'Ongeldige poule tegenstander ID';
+export const invalidDateFormatMessage = 'Ongeldige datumindeling';
+export const pouleOpponentIdRequiredMessage =
+  'Poule tegenstander ID is vereist voor competitiewedstrijden';
+export const atLeastOnePlayerRequiredMessage =
+  'Er moet minstens één speler aanwezig zijn';
+export const minutesRequiredForSubstitutionsMessage =
+  'Minuten zijn vereist voor wissels';
+export const playerIdRequiredForGoalAssistMessage =
+  'Speler ID is vereist voor doelpunten en assists';

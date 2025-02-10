@@ -9,6 +9,11 @@ import React, { useState } from 'react';
 
 import CustomButton from '@/components/Button';
 import SubstitutionManagementBody from '@/components/helpers/matchHelpers/SubstitutionManagementBody';
+import {
+  manageSubstitutionsButton,
+  recordSubstitutionsHeader,
+  buttonConfirm,
+} from '@/strings/clientStrings';
 import { SubstitutionManagementProps, Substitution } from '@/types/match-types';
 import { handleConfirmAllAtOnce } from '@/utils/substitutionUtils';
 
@@ -53,12 +58,12 @@ const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
   return (
     <>
       <CustomButton onPress={() => setOpen(true)} color="primary">
-        Manage Substitutions
+        {manageSubstitutionsButton}
       </CustomButton>
 
       <Modal isOpen={isOpen} onOpenChange={setOpen}>
         <ModalContent>
-          <ModalHeader>Record Substitutions</ModalHeader>
+          <ModalHeader>{recordSubstitutionsHeader}</ModalHeader>
 
           <ModalBody>
             <SubstitutionManagementBody
@@ -77,7 +82,7 @@ const SubstitutionManagement: React.FC<SubstitutionManagementProps> = ({
               color="primary"
               isDisabled={!isValid}
             >
-              Confirm
+              {buttonConfirm}
             </CustomButton>
           </ModalFooter>
         </ModalContent>

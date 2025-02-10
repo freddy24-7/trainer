@@ -5,6 +5,12 @@ import CustomButton from '@/components/Button';
 import FutureDateWarning from '@/components/FutureDateWarning';
 import ConfirmationModal from '@/components/helpers/matchHelpers/ConfirmationModal';
 import { useMatchFormHandlers } from '@/hooks/useMatchFormHandlers';
+import {
+  submittingTextNotice,
+  addMatchButtonText,
+  confirmSubmissionTitle,
+  confirmSubmissionMessage,
+} from '@/strings/clientStrings';
 import { MatchFormFieldProps } from '@/types/match-types';
 
 import MatchFormFields from './MatchFormFields';
@@ -80,7 +86,7 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
           disabled={isButtonDisabled}
           className={buttonClassName}
         >
-          {isSubmitting ? 'Submitting...' : 'Add Match'}
+          {isSubmitting ? submittingTextNotice : addMatchButtonText}
         </CustomButton>
       </form>
 
@@ -88,8 +94,8 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
         isOpen={isConfirmationModalOpen}
         onClose={() => setConfirmationModalOpen(false)}
         onConfirm={handleConfirmSubmission}
-        title="Confirm Submission"
-        message="Are you sure you want to submit this match data?"
+        title={confirmSubmissionTitle}
+        message={confirmSubmissionMessage}
       />
     </FormProvider>
   );

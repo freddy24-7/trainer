@@ -1,6 +1,7 @@
 import React from 'react';
 
 import SubstitutionDetails from '@/components/helpers/matchHelpers/SubstitutionDetails';
+import { minutePlaceholder, goesOutLabel } from '@/strings/clientStrings';
 import { SubstitutionManagementBodyProps } from '@/types/match-types';
 import {
   handleAddSubstitution,
@@ -23,7 +24,7 @@ const SubstitutionManagementBody: React.FC<SubstitutionManagementBodyProps> = ({
     <>
       <input
         type="number"
-        placeholder="Minute"
+        placeholder={minutePlaceholder}
         value={minute}
         onChange={(e) => setMinute(Number(e.target.value))}
         className="border rounded w-32 p-2 mb-4 mx-auto"
@@ -53,7 +54,7 @@ const SubstitutionManagementBody: React.FC<SubstitutionManagementBodyProps> = ({
                   }
                 }}
               />
-              Goes Out
+              {goesOutLabel}
             </label>
 
             {isOut && (

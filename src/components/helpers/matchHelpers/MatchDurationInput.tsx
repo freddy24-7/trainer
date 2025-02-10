@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { matchDurationLabel } from '@/strings/clientStrings';
 import { MatchDurationInputProps } from '@/types/match-types';
 
 const MatchDurationInput: React.FC<MatchDurationInputProps> = ({
@@ -18,7 +19,7 @@ const MatchDurationInput: React.FC<MatchDurationInputProps> = ({
 
   return (
     <div className="mb-4 flex justify-center items-center space-x-2">
-      <label className="block font-semibold mb-1">Match Duration:</label>
+      <label className="block font-semibold mb-1">{matchDurationLabel}</label>
       <input
         type="number"
         value={matchDuration}

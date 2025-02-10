@@ -8,6 +8,12 @@ import {
 import React from 'react';
 
 import CustomButton from '@/components/Button';
+import {
+  buttonNo,
+  buttonYes,
+  confirmAssistModalHeader,
+  confirmAssistModalBody,
+} from '@/strings/clientStrings';
 import { ConfirmAssistModalProps } from '@/types/match-types';
 
 const ConfirmAssistModal: React.FC<ConfirmAssistModalProps> = ({
@@ -21,18 +27,21 @@ const ConfirmAssistModal: React.FC<ConfirmAssistModalProps> = ({
   return (
     <Modal isOpen={isOpen} backdrop="transparent">
       <ModalContent>
-        <ModalHeader>Confirm Assist</ModalHeader>
+        <ModalHeader>{confirmAssistModalHeader}</ModalHeader>
         <ModalBody>
           <p>
-            Confirm assist for <strong>{assistProvider.username}</strong>?
+            <p>
+              {confirmAssistModalBody}{' '}
+              <strong>{assistProvider.username}</strong>?
+            </p>
           </p>
         </ModalBody>
         <ModalFooter>
           <CustomButton color="danger" onPress={onCancel}>
-            No
+            {buttonNo}
           </CustomButton>
           <CustomButton color="primary" onPress={onConfirm}>
-            Yes
+            {buttonYes}
           </CustomButton>
         </ModalFooter>
       </ModalContent>

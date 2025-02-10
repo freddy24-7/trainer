@@ -1,42 +1,14 @@
-import React, { useMemo, useState } from 'react';
-import { UseFormSetValue } from 'react-hook-form';
+import { useMemo, useState } from 'react';
 
-import { MatchFormValues } from '@/types/match-types';
-import { Player } from '@/types/user-types';
+import {
+  UsePlayerManagementParams,
+  UsePlayerManagementReturn,
+} from '@/types/hook-types';
 import {
   calculatePlayerMinutes,
   handlePlayerStateChange,
 } from '@/utils/playerManagementUtils';
 import { processSubstitution } from '@/utils/substitutionUtils';
-
-interface UsePlayerManagementParams {
-  players: Player[];
-  matchEvents: MatchFormValues['matchEvents'];
-  setValue: UseFormSetValue<MatchFormValues>;
-}
-
-interface UsePlayerManagementReturn {
-  playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
-  setPlayerStates: React.Dispatch<
-    React.SetStateAction<Record<number, 'playing' | 'bench' | 'absent'>>
-  >;
-  startingLineup: number[];
-  setStartingLineup: React.Dispatch<React.SetStateAction<number[]>>;
-  matchDuration: number;
-  setMatchDuration: React.Dispatch<React.SetStateAction<number>>;
-  onPlayerStateChange: (
-    playerId: number,
-    newState: 'playing' | 'bench' | 'absent'
-  ) => void;
-  onSubstitution: (
-    minute: number,
-    playerInId: number,
-    playerOutId: number,
-    substitutionReason: 'TACTICAL' | 'FITNESS' | 'INJURY' | 'OTHER' | null
-  ) => void;
-  onGoalOrAssist: (playerId: number, eventType: 'GOAL' | 'ASSIST') => void;
-  playerMinutes: ReturnType<typeof calculatePlayerMinutes>;
-}
 
 export const usePlayerManagement = ({
   players,

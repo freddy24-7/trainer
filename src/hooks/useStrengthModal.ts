@@ -1,18 +1,7 @@
 import { useDisclosure } from '@heroui/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-export interface StrengthModalHook {
-  isOpen: boolean;
-  onOpen: () => void;
-  onOpenChange: (isOpen: boolean) => void;
-  isConfirmOpen: boolean;
-  onConfirmOpen: () => void;
-  onConfirmChange: (isOpen: boolean) => void;
-  selectedStrength: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null;
-  setSelectedStrength: React.Dispatch<
-    React.SetStateAction<'STRONGER' | 'SIMILAR' | 'WEAKER' | null>
-  >;
-}
+import { StrengthModalHook } from '@/types/hook-types';
 
 export const useStrengthModal = (
   initialStrength: 'STRONGER' | 'SIMILAR' | 'WEAKER' | null = null

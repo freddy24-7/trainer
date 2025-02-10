@@ -1,6 +1,8 @@
 import React from 'react';
 import { UseFormSetValue } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
+import { incompleteSubstitutionErrorMessage } from '@/strings/clientStrings';
 import {
   MatchFormValues,
   SubstitutionData,
@@ -89,7 +91,7 @@ export function handleConfirmAllAtOnce({
     !minute ||
     substitutions.some((sub) => !sub.playerInId || !sub.substitutionReason)
   ) {
-    alert('Please complete all fields for each substitution.');
+    toast.error(incompleteSubstitutionErrorMessage);
     return;
   }
 

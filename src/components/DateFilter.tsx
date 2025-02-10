@@ -6,6 +6,13 @@ import { toast } from 'react-toastify';
 
 import CustomButton from '@/components/Button';
 import DateField from '@/components/DateField';
+import {
+  startDateFutureError,
+  endDateFutureError,
+  startDateAfterEndDateError,
+  hideFiltersText,
+  applyFilterText,
+} from '@/strings/clientStrings';
 import { DateFilterProps } from '@/types/shared-types';
 
 const DateFilter: React.FC<DateFilterProps> = ({
@@ -22,17 +29,17 @@ const DateFilter: React.FC<DateFilterProps> = ({
     today.setHours(0, 0, 0, 0);
 
     if (startDate && new Date(startDate) > today) {
-      toast.error('❌ Start date cannot be in the future.');
+      toast.error(startDateFutureError);
       return;
     }
 
     if (endDate && new Date(endDate) > today) {
-      toast.error('❌ End date cannot be in the future.');
+      toast.error(endDateFutureError);
       return;
     }
 
     if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-      toast.error('❌ Start date cannot be after the end date.');
+      toast.error(startDateAfterEndDateError);
       return;
     }
 
@@ -46,7 +53,7 @@ const DateFilter: React.FC<DateFilterProps> = ({
     <div>
       <div className={containerClass}>
         <CustomButton onPress={() => setShowFilters(!showFilters)}>
-          {showFilters ? 'Hide Filters' : label}
+          {showFilters ? hideFiltersText : label}
         </CustomButton>
       </div>
 
@@ -54,7 +61,7 @@ const DateFilter: React.FC<DateFilterProps> = ({
         <div className={containerClass}>
           <DateField name="startDate" label="Start Date" />
           <DateField name="endDate" label="End Date" />
-          <CustomButton onPress={applyFilter}>Apply Filter</CustomButton>
+          <CustomButton onPress={applyFilter}>{applyFilterText}</CustomButton>
         </div>
       )}
     </div>

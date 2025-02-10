@@ -8,6 +8,12 @@ import {
 import React from 'react';
 
 import CustomButton from '@/components/Button';
+import {
+  buttonNo,
+  buttonYes,
+  addAssistModalHeader,
+  addAssistModalBody,
+} from '@/strings/clientStrings';
 import { AskAddAssistModalProps } from '@/types/match-types';
 
 const AskAddAssistModal: React.FC<AskAddAssistModalProps> = ({
@@ -17,16 +23,16 @@ const AskAddAssistModal: React.FC<AskAddAssistModalProps> = ({
 }) => (
   <Modal isOpen={isOpen} backdrop="transparent">
     <ModalContent>
-      <ModalHeader>Add Assist?</ModalHeader>
+      <ModalHeader>{addAssistModalHeader}</ModalHeader>
       <ModalBody>
-        <p>Would you like to add an assist for this goal?</p>
+        <p>{addAssistModalBody}</p>
       </ModalBody>
       <ModalFooter>
         <CustomButton color="danger" onPress={onNo}>
-          No
+          {buttonNo}
         </CustomButton>
         <CustomButton color="primary" onPress={onYes}>
-          Yes
+          {buttonYes}
         </CustomButton>
       </ModalFooter>
     </ModalContent>

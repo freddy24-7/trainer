@@ -24,7 +24,7 @@ export async function getMatchDataService(): Promise<MatchDataHelper[]> {
   return matches.map((match) => ({
     id: match.id,
     date: match.date,
-    opponentStrength: match.opponentStrength ?? null, // Ensure opponentStrength is included
+    opponentStrength: match.opponentStrength ?? null,
     pouleOpponent: {
       team: match.pouleOpponent?.team ?? { name: null },
     },

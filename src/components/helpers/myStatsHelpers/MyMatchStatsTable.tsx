@@ -1,5 +1,14 @@
 import React from 'react';
 
+import {
+  matchStatsHeader,
+  statisticColumn,
+  valueColumn,
+  totalMatchesPlayedLabel,
+  yourMatchesPlayedLabel,
+  avgMinutesPlayedLabel,
+  minutesSuffix,
+} from '@/strings/clientStrings';
 import { MatchStatsTableProps } from '@/types/stats-types';
 
 const MatchStatsTable: React.FC<MatchStatsTableProps> = ({
@@ -10,32 +19,37 @@ const MatchStatsTable: React.FC<MatchStatsTableProps> = ({
   return (
     <div className="bg-white shadow-md rounded-md p-4">
       <h2 className="text-xl font-semibold mb-4 text-black">
-        Match Statistics
+        {matchStatsHeader}
       </h2>
+
       <table className="min-w-full table-auto">
         <thead>
           <tr>
-            <th className="px-4 py-2 text-black">Statistic</th>
-            <th className="px-4 py-2 text-black">Value</th>
+            <th className="px-4 py-2 text-black">{statisticColumn}</th>
+            <th className="px-4 py-2 text-black">{valueColumn}</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td className="border px-4 py-2 text-black">
-              Total Matches Played (Team)
+              {totalMatchesPlayedLabel}
             </td>
+
             <td className="border px-4 py-2 text-black">{totalMatches}</td>
           </tr>
           <tr>
-            <td className="border px-4 py-2 text-black">Your Matches Played</td>
+            <td className="border px-4 py-2 text-black">
+              {yourMatchesPlayedLabel}
+            </td>
             <td className="border px-4 py-2 text-black">{matchesPlayed}</td>
           </tr>
           <tr>
             <td className="border px-4 py-2 text-black">
-              Average Minutes Played
+              {avgMinutesPlayedLabel}
             </td>
+
             <td className="border px-4 py-2 text-black">
-              {Math.round(avgMinutesPlayed)} mins
+              {Math.round(avgMinutesPlayed) + minutesSuffix}
             </td>
           </tr>
         </tbody>

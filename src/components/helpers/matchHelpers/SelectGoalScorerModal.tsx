@@ -8,6 +8,11 @@ import {
 import React from 'react';
 
 import CustomButton from '@/components/Button';
+import {
+  selectGoalScorerHeader,
+  noPlayersOnPitchMessage,
+  buttonCancel,
+} from '@/strings/clientStrings';
 import { SelectGoalScorerModalProps } from '@/types/match-types';
 
 const SelectGoalScorerModal: React.FC<SelectGoalScorerModalProps> = ({
@@ -18,12 +23,11 @@ const SelectGoalScorerModal: React.FC<SelectGoalScorerModalProps> = ({
 }) => (
   <Modal isOpen={isOpen} backdrop="transparent">
     <ModalContent>
-      <ModalHeader>Select Goal Scorer</ModalHeader>
+      <ModalHeader>{selectGoalScorerHeader}</ModalHeader>
       <ModalBody>
         <div className="flex flex-col gap-2">
-          {playersOnPitch.length === 0 && (
-            <div>No players on pitch to choose from</div>
-          )}
+          {playersOnPitch.length === 0 && <div>{noPlayersOnPitchMessage}</div>}
+
           {playersOnPitch.map((player) => (
             <CustomButton key={player.id} onPress={() => onSelect(player)}>
               {player.username}
@@ -33,7 +37,7 @@ const SelectGoalScorerModal: React.FC<SelectGoalScorerModalProps> = ({
       </ModalBody>
       <ModalFooter>
         <CustomButton color="danger" onPress={onCancel}>
-          Cancel
+          {buttonCancel}
         </CustomButton>
       </ModalFooter>
     </ModalContent>

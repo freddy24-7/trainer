@@ -8,6 +8,15 @@ import {
 import React from 'react';
 
 import CustomButton from '@/components/Button';
+import {
+  selectOpponentStrengthHeader,
+  strongerButton,
+  similarButton,
+  weakerButton,
+  confirmStrengthSelectionHeader,
+  buttonCancel,
+  buttonConfirm,
+} from '@/strings/clientStrings';
 import { StrengthModalProps } from '@/types/match-types';
 
 const StrengthModal: React.FC<StrengthModalProps> = ({
@@ -26,17 +35,17 @@ const StrengthModal: React.FC<StrengthModalProps> = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Select Opponent Strength</ModalHeader>
+              <ModalHeader>{selectOpponentStrengthHeader}</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-4">
                   <CustomButton onPress={() => setSelectedStrength('STRONGER')}>
-                    Stronger
+                    {strongerButton}
                   </CustomButton>
                   <CustomButton onPress={() => setSelectedStrength('SIMILAR')}>
-                    Similar
+                    {similarButton}
                   </CustomButton>
                   <CustomButton onPress={() => setSelectedStrength('WEAKER')}>
-                    Weaker
+                    {weakerButton}
                   </CustomButton>
                 </div>
               </ModalBody>
@@ -65,15 +74,15 @@ const StrengthModal: React.FC<StrengthModalProps> = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Confirm Strength Selection</ModalHeader>
+              <ModalHeader>{confirmStrengthSelectionHeader}</ModalHeader>
               <ModalBody>
-                Are you sure you want to select
-                <strong>{selectedStrength}</strong> as the opponent&apos;s
-                strength?
+                Ben je zeker dat je
+                <strong>{selectedStrength}</strong> wilt selecteren als de
+                sterkte van de tegenstander?
               </ModalBody>
               <ModalFooter>
                 <CustomButton color="danger" onPress={onClose}>
-                  Cancel
+                  {buttonCancel}
                 </CustomButton>
                 <CustomButton
                   color="primary"
@@ -82,7 +91,7 @@ const StrengthModal: React.FC<StrengthModalProps> = ({
                     onClose();
                   }}
                 >
-                  Confirm
+                  {buttonConfirm}
                 </CustomButton>
               </ModalFooter>
             </>

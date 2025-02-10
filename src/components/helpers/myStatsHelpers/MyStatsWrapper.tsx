@@ -5,6 +5,14 @@ import { useForm, FormProvider } from 'react-hook-form';
 
 import DateFilter from '@/components/DateFilter';
 import MatchStatsTable from '@/components/helpers/myStatsHelpers/MyMatchStatsTable';
+import {
+  myStatsHeader,
+  trainingStatsHeader,
+  usernameLabel,
+  totalTrainingsLabel,
+  attendanceLabel,
+  outOfLabel,
+} from '@/strings/clientStrings';
 import { MyStatsWrapperProps } from '@/types/stats-types';
 import {
   getCalculatedTrainingStats,
@@ -77,21 +85,24 @@ const MyStatsWrapper: React.FC<MyStatsWrapperProps> = ({
           }}
         />
         <h1 className="text-2xl font-bold text-center mb-4 text-black">
-          My Training and Match Stats
+          {myStatsHeader}
         </h1>
 
         <div className="bg-white shadow-md rounded-md p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4 text-black">
-            Training Statistics
+            {trainingStatsHeader}
           </h2>
+
           <p className="text-lg text-black">
-            <strong>Username:</strong> {user.username}
+            <strong>{usernameLabel}</strong> {user.username}
           </p>
+
           <p className="text-lg text-black">
-            <strong>Total Trainings:</strong> {totalTrainings}
+            <strong>{totalTrainingsLabel}</strong> {totalTrainings}
           </p>
+
           <p className="text-lg text-black">
-            <strong>Your Attendance:</strong> {attendedTrainings} out of{' '}
+            <strong>{attendanceLabel}</strong> {attendedTrainings} {outOfLabel}{' '}
             {totalTrainings}
           </p>
         </div>

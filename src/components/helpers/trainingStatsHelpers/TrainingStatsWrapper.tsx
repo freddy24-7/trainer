@@ -6,6 +6,10 @@ import { useForm, FormProvider } from 'react-hook-form';
 import DateFilter from '@/components/DateFilter';
 import TrainingAbsenceTable from '@/components/helpers/trainingStatsHelpers/TrainingAbsenceTable';
 import TrainingStatsTable from '@/components/helpers/trainingStatsHelpers/TrainingStatsTable';
+import {
+  unknownPlayerLabel,
+  allPlayersPresentLabel,
+} from '@/strings/clientStrings';
 import { TrainingStatsWrapperProps } from '@/types/training-types';
 
 const TrainingStatsWrapper: React.FC<TrainingStatsWrapperProps> = ({
@@ -37,7 +41,7 @@ const TrainingStatsWrapper: React.FC<TrainingStatsWrapperProps> = ({
       training.players.forEach((player) => {
         if (!playerStats[player.id]) {
           playerStats[player.id] = {
-            username: player.username || 'Unknown',
+            username: player.username || unknownPlayerLabel,
             totalMissed: 0,
           };
         }
@@ -67,7 +71,7 @@ const TrainingStatsWrapper: React.FC<TrainingStatsWrapperProps> = ({
           absences:
             absentPlayers.length > 0
               ? absentPlayers.map((p) => p.username).join(', ')
-              : 'All players present',
+              : allPlayersPresentLabel,
         };
       })
       .sort((a, b) => b.date.getTime() - a.date.getTime());

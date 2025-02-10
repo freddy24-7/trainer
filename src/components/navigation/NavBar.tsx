@@ -6,6 +6,11 @@ import React from 'react';
 import { IoFootball } from 'react-icons/io5';
 
 import NavBarClient from '@/components/navigation/NavBarClient';
+import {
+  appTitle,
+  aboutPageText,
+  signInButtonText,
+} from '@/strings/clientStrings';
 import { SignedInUser } from '@/types/user-types';
 
 interface NavBarProps {
@@ -26,8 +31,7 @@ export default function NavBar({ user }: NavBarProps): React.ReactElement {
       <NavbarBrand as={Link} href="/" className="flex items-center space-x-2">
         <IoFootball size={28} className="text-gray-700" />
         <div className="hidden sm:flex font-bold text-lg">
-          <span className="text-gray-700">Club</span>
-          <span className="text-gray-100">Trainer</span>
+          <span className="text-gray-700">{appTitle}</span>
         </div>
       </NavbarBrand>
 
@@ -36,10 +40,10 @@ export default function NavBar({ user }: NavBarProps): React.ReactElement {
       ) : (
         <div className="flex items-center space-x-4">
           <Link href="/about" prefetch={false} className="text-white text-xl">
-            About
+            {aboutPageText}
           </Link>
           <Link href="/sign-in" prefetch={false} className="text-white text-xl">
-            Sign In
+            {signInButtonText}
           </Link>
         </div>
       )}

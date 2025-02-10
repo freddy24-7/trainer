@@ -12,6 +12,16 @@ interface PlayerGoalStat {
   totalGoals: number;
 }
 
+import {
+  goalsHeader,
+  playerColumn,
+  strongerOpponentColumn,
+  similarOpponentColumn,
+  weakerOpponentColumn,
+  totalGoalsColumn,
+  unknownPlayerPlaceholder,
+} from '@/strings/clientStrings';
+
 interface PlayerGoalStatsTableProps {
   goalStats: PlayerGoalStat[];
 }
@@ -23,27 +33,26 @@ const PlayerGoalStatsTable: React.FC<PlayerGoalStatsTableProps> = ({
     <div className="w-full max-w-4xl">
       <Card>
         <CardHeader>
-          <h2 className="text-2xl font-semibold">
-            Goals Scored Against Different Opponent Strengths
-          </h2>
+          <h2 className="text-2xl font-semibold">{goalsHeader}</h2>
         </CardHeader>
         <CardBody>
           <table className="min-w-full table-auto">
             <thead>
               <tr>
-                <th className="px-4 py-2 border-b">Player</th>
-                <th className="px-4 py-2 border-b">Stronger Opponent</th>
-                <th className="px-4 py-2 border-b">Similar Opponent</th>
-                <th className="px-4 py-2 border-b">Weaker Opponent</th>
-                <th className="px-4 py-2 border-b">Total Goals</th>
+                <th className="px-4 py-2 border-b">{playerColumn}</th>
+                <th className="px-4 py-2 border-b">{strongerOpponentColumn}</th>
+                <th className="px-4 py-2 border-b">{similarOpponentColumn}</th>
+                <th className="px-4 py-2 border-b">{weakerOpponentColumn}</th>
+                <th className="px-4 py-2 border-b">{totalGoalsColumn}</th>
               </tr>
             </thead>
             <tbody>
               {goalStats.map((player) => (
                 <tr key={player.id} className="hover:bg-gray-50">
                   <td className="px-4 py-2 border-b">
-                    {player.username || 'Unknown'}
+                    {player.username || unknownPlayerPlaceholder}
                   </td>
+
                   <td className="px-4 py-2 border-b">
                     {player.goalsAgainstStronger}
                   </td>

@@ -1,5 +1,13 @@
 import React from 'react';
 
+import {
+  substitutionReasonLabel,
+  selectSubstitutionReasonPlaceholder,
+  substitutionReasonTactical,
+  substitutionReasonFitness,
+  substitutionReasonInjury,
+  substitutionReasonOther,
+} from '@/strings/clientStrings';
 import { SubstitutionReasonSelectorProps } from '@/types/match-types';
 
 const SubstitutionReasonSelector: React.FC<SubstitutionReasonSelectorProps> = ({
@@ -9,8 +17,9 @@ const SubstitutionReasonSelector: React.FC<SubstitutionReasonSelectorProps> = ({
   return (
     <div className="mt-4">
       <label htmlFor="substitution-reason" className="block mb-2">
-        Substitution Reason:
+        {substitutionReasonLabel}
       </label>
+
       <select
         id="substitution-reason"
         value={value || ''}
@@ -22,12 +31,13 @@ const SubstitutionReasonSelector: React.FC<SubstitutionReasonSelectorProps> = ({
         className="border rounded w-full p-2"
       >
         <option value="" disabled={true}>
-          Select Substitution Reason
+          {selectSubstitutionReasonPlaceholder}
         </option>
-        <option value="TACTICAL">Tactical</option>
-        <option value="FITNESS">Fitness</option>
-        <option value="INJURY">Injury</option>
-        <option value="OTHER">Other</option>
+
+        <option value="TACTICAL">{substitutionReasonTactical}</option>
+        <option value="FITNESS">{substitutionReasonFitness}</option>
+        <option value="INJURY">{substitutionReasonInjury}</option>
+        <option value="OTHER">{substitutionReasonOther}</option>
       </select>
     </div>
   );

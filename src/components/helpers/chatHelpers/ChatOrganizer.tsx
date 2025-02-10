@@ -27,7 +27,7 @@ const ChatOrganizer: React.FC<ChatMessageProps> = ({
   return (
     <div className="mt-5 max-w-xl mx-auto bg-brandcolor p-6 rounded">
       <h1 className="text-3xl font-bold mb-4 text-center">
-        Welcome to Chat, {signedInUser.username}!
+        Gaan chatten, {signedInUser.username}!
       </h1>
 
       <ChatRecipientSelector

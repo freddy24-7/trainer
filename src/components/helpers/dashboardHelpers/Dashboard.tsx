@@ -3,6 +3,11 @@
 import React, { useEffect, useState } from 'react';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
+import {
+  loadingSuccess,
+  welcomeMessage,
+  firstTimeMessage,
+} from '@/strings/clientStrings';
 import { DashboardClientProps } from '@/types/user-types';
 
 export default function Dashboard({
@@ -28,7 +33,11 @@ export default function Dashboard({
 
   if (loading) {
     return (
-      <LoadingSpinner label="Success" color="success" labelColor="success" />
+      <LoadingSpinner
+        label={loadingSuccess}
+        color="success"
+        labelColor="success"
+      />
     );
   }
 
@@ -37,10 +46,8 @@ export default function Dashboard({
       {showMessage && (
         <h1 className="text-3xl font-bold">Hoi {signedInUser.username}!</h1>
       )}
-      <p className="text-lg">Welcome to this app</p>
-      <p className="slide-out-to-left-extra-loose">
-        First time? Check out the info section.
-      </p>
+      <p className="text-lg">{welcomeMessage}</p>
+      <p className="slide-out-to-left-extra-loose">{firstTimeMessage}</p>
     </div>
   );
 }

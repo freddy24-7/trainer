@@ -1,6 +1,11 @@
 import React from 'react';
 
 import { InputField } from '@/components/helpers/pouleHelpers/FormFields';
+import {
+  pouleNamePlaceholder,
+  mainTeamNamePlaceholder,
+  opponentNamePlaceholder,
+} from '@/strings/clientStrings';
 import { PouleFormFieldsProps } from '@/types/poule-types';
 
 export function PouleFormFields({
@@ -13,19 +18,19 @@ export function PouleFormFields({
       <InputField
         name="pouleName"
         control={control}
-        placeholder="Poule Name"
+        placeholder={pouleNamePlaceholder}
         errors={errors}
       />
       <InputField
         name="mainTeamName"
         control={control}
-        placeholder="Main Team Name"
+        placeholder={mainTeamNamePlaceholder}
         errors={errors}
       />
       <InputField
         name="opponentName"
         control={control}
-        placeholder="Enter opponent name"
+        placeholder={opponentNamePlaceholder}
         errors={errors}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {

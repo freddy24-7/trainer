@@ -9,6 +9,7 @@ import {
 import PlayerModal from '@/components/helpers/playerHelpers/PlayerModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import PlayersList from '@/components/PlayersList';
+import { currentPlayersHeader, submittingLabel } from '@/strings/clientStrings';
 import { Player, DisplayPlayersProps } from '@/types/user-types';
 import { setupModal } from '@/utils/modalUtils';
 import { updatePlayerList } from '@/utils/playerUtils';
@@ -59,12 +60,12 @@ function DisplayPlayers({
   return (
     <div>
       <h3 className="text-lg font-semibold mt-8 mb-4 text-black">
-        Current Players
+        {currentPlayersHeader}
       </h3>
 
       {submitting && (
         <LoadingSpinner
-          label="Submitting..."
+          label={submittingLabel}
           color="success"
           labelColor="success"
         />

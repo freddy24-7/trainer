@@ -4,17 +4,33 @@ import {
   invalidUserIdMessage,
   minutesPositiveNumberMessage,
   minutesWhenAvailableMessage,
+  invalidPlayerInIdMessage,
+  invalidPlayerOutIdMessage,
+  invalidPlayerIdMessage,
+  invalidPouleOpponentIdMessage,
+  invalidMatchIdMessage,
+  invalidDateFormatMessage,
+  opponentNameRequiredMessage,
+  pouleOpponentIdRequiredMessage,
+  atLeastOnePlayerRequiredMessage,
+  minutesRequiredForSubstitutionsMessage,
+  playerIdRequiredForGoalAssistMessage,
 } from '@/strings/validationStrings';
 
 export const matchEventSchema = z
   .object({
-    playerInId: z.number().min(1, 'Invalid player-in ID').nullable().optional(),
-    playerOutId: z
+    playerInId: z
       .number()
-      .min(1, 'Invalid player-out ID')
+      .min(1, invalidPlayerInIdMessage)
       .nullable()
       .optional(),
-    playerId: z.number().min(1, 'Invalid player ID').nullable(),
+    playerOutId: z
+      .number()
+      .min(1, invalidPlayerOutIdMessage)
+      .nullable()
+      .optional(),
+
+    playerId: z.number().min(1, invalidPlayerIdMessage).nullable(),
     minute: z
       .number()
       .min(0, 'Minute must be non-negative')
@@ -30,7 +46,7 @@ export const matchEventSchema = z
     (data) =>
       !['GOAL', 'ASSIST'].includes(data.eventType) || data.playerId !== null,
     {
-      message: 'playerId is required for GOAL and ASSIST events',
+      message: playerIdRequiredForGoalAssistMessage,
       path: ['playerId'],
     }
   )
@@ -39,7 +55,7 @@ export const matchEventSchema = z
       !['SUBSTITUTION'].includes(data.eventType) ||
       (data.minute !== null && data.minute !== undefined),
     {
-      message: 'Minutes are required for substitutions',
+      message: minutesRequiredForSubstitutionsMessage,
       path: ['minute'],
     }
   );
@@ -49,7 +65,7 @@ export const createMatchSchema = z
     trainingMatch: z.boolean(),
     pouleOpponentId: z
       .number()
-      .min(1, 'Invalid Poule Opponent ID')
+      .min(1, invalidPouleOpponentIdMessage)
       .nullable()
       .optional(),
     opponentName: z
@@ -57,7 +73,7 @@ export const createMatchSchema = z
       .min(1, 'Opponent name must be at least 1 character')
       .nullable(),
     date: z.string().refine((val) => !isNaN(Date.parse(val)), {
-      message: 'Invalid date format',
+      message: invalidDateFormatMessage,
     }),
     players: z
       .array(
@@ -67,7 +83,7 @@ export const createMatchSchema = z
           available: z.boolean(),
         })
       )
-      .nonempty('At least one player must be present'),
+      .nonempty(atLeastOnePlayerRequiredMessage),
     opponentStrength: z
       .enum(['STRONGER', 'SIMILAR', 'WEAKER'])
       .nullable()
@@ -85,8 +101,8 @@ export const createMatchSchema = z
       return true;
     },
     {
-      message:
-        'Opponent name is required when Poule Opponent ID is not provided',
+      message: opponentNameRequiredMessage,
+
       path: ['opponentName'],
     }
   )
@@ -100,7 +116,7 @@ export const createMatchSchema = z
       return true;
     },
     {
-      message: 'Poule Opponent ID is required for competition matches',
+      message: pouleOpponentIdRequiredMessage,
       path: ['pouleOpponentId'],
     }
   );
@@ -108,7 +124,7 @@ export const createMatchSchema = z
 export const addMatchPlayerSchema = z
   .object({
     userId: z.number().min(1, invalidUserIdMessage),
-    matchId: z.number().min(1, 'Invalid matchId'),
+    matchId: z.number().min(1, invalidMatchIdMessage),
     available: z.boolean(),
     minutes: z.number().min(0, minutesPositiveNumberMessage),
   })

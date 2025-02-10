@@ -1,9 +1,13 @@
 import React from 'react';
 
 import {
-  SubstitutionDetailsProps,
-  SubstitutionReason,
-} from '@/types/match-types';
+  substitutionInPlaceholder,
+  substitutionReasonTactical,
+  substitutionReasonFitness,
+  substitutionReasonInjury,
+  substitutionReasonOther,
+} from '@/strings/clientStrings';
+import { SubstitutionDetailsProps } from '@/types/match-types';
 import { handleSubstitutionChange } from '@/utils/substitutionUtils';
 
 const SubstitutionDetails: React.FC<SubstitutionDetailsProps> = ({
@@ -30,8 +34,9 @@ const SubstitutionDetails: React.FC<SubstitutionDetailsProps> = ({
         }
       >
         <option value="" disabled={true}>
-          In
+          {substitutionInPlaceholder}
         </option>
+
         {players
           .filter(
             (p) =>
@@ -54,24 +59,29 @@ const SubstitutionDetails: React.FC<SubstitutionDetailsProps> = ({
 
       <div className="flex gap-2">
         {(
-          ['TACTICAL', 'FITNESS', 'INJURY', 'OTHER'] as SubstitutionReason[]
-        ).map((reason) => (
-          <label key={reason} className="flex items-center gap-1">
+          [
+            { key: 'TACTICAL', label: substitutionReasonTactical },
+            { key: 'FITNESS', label: substitutionReasonFitness },
+            { key: 'INJURY', label: substitutionReasonInjury },
+            { key: 'OTHER', label: substitutionReasonOther },
+          ] as const
+        ).map(({ key, label }) => (
+          <label key={key} className="flex items-center gap-1">
             <input
               type="radio"
               name={`reason-${player.id}`}
-              value={reason || ''}
-              checked={currentSub?.substitutionReason === reason}
+              value={key}
+              checked={currentSub?.substitutionReason === key}
               onChange={() =>
                 handleSubstitutionChange(
                   setSubstitutions,
                   player.id,
                   'substitutionReason',
-                  reason as string
+                  key as string
                 )
               }
             />
-            {reason}
+            {label}
           </label>
         ))}
       </div>

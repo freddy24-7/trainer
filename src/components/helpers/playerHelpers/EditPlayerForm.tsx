@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import { renderPlayerFormWithWhatsAppLink } from '@/components/helpers/playerHelpers/RenderPlayerFormWithWhatsAppLink';
 import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
+import { editPlayerHeader } from '@/strings/clientStrings';
 import { PlayerFormData, EditPlayerFormProps } from '@/types/user-types';
 import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 
@@ -49,7 +50,7 @@ function EditPlayerForm({
     <div className="max-w-md mx-auto mt-10">
       <Card>
         <CardHeader>
-          <h3 className="text-lg font-semibold">Edit Player</h3>
+          <h3 className="text-lg font-semibold">{editPlayerHeader}</h3>
         </CardHeader>
         <CardBody>
           {renderPlayerFormWithWhatsAppLink({

@@ -70,3 +70,5 @@ export const errorGeneratingUploadSignature =
   'Fout bij het genereren van de upload-handtekening';
 export const errorInvalidUserId = 'Ongeldig gebruikers-ID formaat van Clerk.';
 export const errorInvalidRecipientId = 'Ongeldig ontvanger-ID formaat.';
+export const invalidMinutesValueMessage =
+  'Ongeldige minutenwaarde voor speler {id}.';

@@ -12,12 +12,6 @@ const OpponentField = ({
   selectedPoule && selectedPoule.opponents.length > 0 ? (
     <div className="space-y-4">
       <div className="flex flex-col">
-        <label
-          htmlFor="opponent"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Opponent
-        </label>
         <div className="relative">
           <OpponentSelector
             opponents={selectedPoule.opponents}

@@ -7,6 +7,7 @@ import MatchDurationInput from '@/components/helpers/matchHelpers/MatchDurationI
 import PlayerMinutes from '@/components/helpers/matchHelpers/PlayerMinutes';
 import SubstitutionManagement from '@/components/helpers/matchHelpers/SubstitutionManagement';
 import { usePlayerManagement } from '@/hooks/usePlayerManagement';
+import { recordGoalAssistButtonText } from '@/strings/clientStrings';
 import { PlayerManagementProps } from '@/types/match-types';
 
 const PlayerManagement: React.FC<
@@ -71,7 +72,7 @@ const PlayerManagement: React.FC<
           className="mt-4"
           type="button"
         >
-          Record Goal/Assist
+          {recordGoalAssistButtonText}
         </CustomButton>
 
         <GoalAssistModal

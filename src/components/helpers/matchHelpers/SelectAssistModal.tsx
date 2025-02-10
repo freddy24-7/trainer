@@ -8,6 +8,11 @@ import {
 import React from 'react';
 
 import CustomButton from '@/components/Button';
+import {
+  selectAssistProviderHeader,
+  noPlayersForAssistMessage,
+  buttonCancel,
+} from '@/strings/clientStrings';
 import { SelectAssistModalProps } from '@/types/match-types';
 
 const SelectAssistModal: React.FC<SelectAssistModalProps> = ({
@@ -18,12 +23,13 @@ const SelectAssistModal: React.FC<SelectAssistModalProps> = ({
 }) => (
   <Modal isOpen={isOpen} backdrop="transparent">
     <ModalContent>
-      <ModalHeader>Select Assist Provider</ModalHeader>
+      <ModalHeader>{selectAssistProviderHeader}</ModalHeader>
       <ModalBody>
         <div className="flex flex-col gap-2">
           {playersOnPitch.length === 0 && (
-            <div>No players available to select for assist</div>
+            <div>{noPlayersForAssistMessage}</div>
           )}
+
           {playersOnPitch.map((player) => (
             <CustomButton key={player.id} onPress={() => onSelect(player)}>
               {player.username}
@@ -33,7 +39,7 @@ const SelectAssistModal: React.FC<SelectAssistModalProps> = ({
       </ModalBody>
       <ModalFooter>
         <CustomButton color="danger" onPress={onCancel}>
-          Cancel
+          {buttonCancel}
         </CustomButton>
       </ModalFooter>
     </ModalContent>

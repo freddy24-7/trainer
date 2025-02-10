@@ -1,19 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 
+import {
+  UseMatchFormHandlersProps,
+  UseMatchFormHandlersReturn,
+} from '@/types/hook-types';
 import { MatchFormValues } from '@/types/match-types';
-
-interface UseMatchFormHandlersProps {
-  onSubmit: (data: MatchFormValues) => Promise<void>;
-}
-
-export interface UseMatchFormHandlersReturn {
-  handleFormSubmit: SubmitHandler<MatchFormValues>;
-  handleConfirmSubmission: () => Promise<void>;
-  isSubmitting: boolean;
-  isConfirmationModalOpen: boolean;
-  setConfirmationModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 export const useMatchFormHandlers = ({
   onSubmit,

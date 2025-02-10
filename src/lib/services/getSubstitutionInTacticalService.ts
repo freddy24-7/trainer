@@ -76,7 +76,7 @@ export async function fetchSubstitutionInTactical(): Promise<
     )
       .map((event) => {
         if (!event.match || !event.match.date) {
-          console.warn(`⚠️ Missing match or date for event ${event.id}`);
+          console.warn(`Missing match or date for event ${event.id}`);
           return null;
         }
 

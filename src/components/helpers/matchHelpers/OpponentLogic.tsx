@@ -5,6 +5,11 @@ import OpponentField from '@/components/helpers/matchHelpers/OpponentField';
 import PouleField from '@/components/helpers/matchHelpers/PouleField';
 import StrengthModal from '@/components/helpers/matchHelpers/StrengthModal';
 import { useStrengthModal } from '@/hooks/useStrengthModal';
+import {
+  opponentNameLabel,
+  opponentNamePlaceholder,
+  insertOpponentStrengthButton,
+} from '@/strings/clientStrings';
 import { OpponentLogicProps } from '@/types/match-types';
 
 const OpponentLogic: React.FC<OpponentLogicProps> = ({
@@ -50,8 +55,9 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
             htmlFor="opponentName"
             className="block mb-2 text-sm font-medium"
           >
-            Opponent Name
+            {opponentNameLabel}
           </label>
+
           <input
             id="opponentName"
             type="text"
@@ -59,8 +65,9 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
             className={`w-full p-2 border rounded ${
               errors.opponentName ? 'border-red-500' : ''
             }`}
-            placeholder="Enter the opponent's name"
+            placeholder={opponentNamePlaceholder}
           />
+
           {errors.opponentName?.message && (
             <p className="text-sm text-red-500 mt-1">
               {errors.opponentName.message}
@@ -77,7 +84,7 @@ const OpponentLogic: React.FC<OpponentLogicProps> = ({
               onPress={strengthModal.onOpen}
               className="mt-4"
             >
-              Insert Opponent Strength
+              {insertOpponentStrengthButton}
             </CustomButton>
           </div>
           <StrengthModal

@@ -14,6 +14,7 @@ import {
   chatFunctionInstructions,
   playerAccessInstructions,
   appDesignInstructions,
+  instructionsHeader,
 } from '@/strings/instructionsStrings';
 
 const Instructions: React.FC = (): React.ReactElement => {
@@ -21,8 +22,9 @@ const Instructions: React.FC = (): React.ReactElement => {
     <div className="flex justify-center items-center min-h-screen bg-black-500">
       <div className="max-w-3xl w-full">
         <h1 className="text-2xl font-bold text-center text-brandcolor mb-4">
-          Instructions for Trainers
+          {instructionsHeader}
         </h1>
+
         <Accordion>
           <AccordionItem
             key="welcome"

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { EditPlayerForm } from '@/components/helpers/playerHelpers/EditPlayerForm';
 import ReusableModal from '@/components/ReusableModal';
+import { confirmButtonLabel, cancelButtonLabel } from '@/strings/clientStrings';
 import { PlayerModalProps } from '@/types/user-types';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 
@@ -15,8 +16,8 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
   handlePlayerEdited,
   editPlayerAction,
   confirmAction,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel = confirmButtonLabel,
+  cancelLabel = cancelButtonLabel,
   cancelAction,
 }) => {
   return (

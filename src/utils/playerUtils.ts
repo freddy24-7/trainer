@@ -6,6 +6,7 @@ import {
   playersDataMissingMessage,
   invalidPlayerDataFormatMessage,
   playersDataNotArrayMessage,
+  invalidMinutesValueMessage,
 } from '@/strings/serverStrings';
 import { MatchFormValues, PlayerInMatch } from '@/types/match-types';
 import { Player, PlayerResponseData } from '@/types/user-types';
@@ -67,7 +68,7 @@ export function handleParsePlayersData(playersString: string | null): {
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : invalidPlayerDataFormatMessage;
-    return formatError(`Invalid player data format: ${errorMessage}`, [
+    return formatError(`${invalidPlayerDataFormatMessage} ${errorMessage}`, [
       'players',
     ]);
   }
@@ -92,10 +93,10 @@ export function handleValidatePlayerData(player: PlayerInMatch): {
     return {
       isValid: false,
       parsedMinutes: 0,
-      errors: formatError(`Invalid minutes value for player ${id}.`, [
-        'players',
-        'minutes',
-      ]).errors,
+      errors: formatError(
+        invalidMinutesValueMessage.replace('{id}', id.toString()),
+        ['players', 'minutes']
+      ).errors,
     };
   }
 

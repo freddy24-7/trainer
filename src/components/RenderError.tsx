@@ -1,6 +1,11 @@
 import React from 'react';
 import { ZodIssue } from 'zod';
 
+import {
+  errorLoadingPlayers,
+  genericErrorMessage,
+  errorHeading,
+} from '@/strings/clientStrings';
 import { ResponseError } from '@/types/shared-types';
 import { formatError } from '@/utils/errorUtils';
 
@@ -16,20 +21,24 @@ export function handleRenderError(response: {
           'Unknown error'
       )
       .join(', ');
-    return <div>Error loading players: {errorMessage}</div>;
+    return (
+      <div>
+        {errorLoadingPlayers} {errorMessage}
+      </div>
+    );
   }
   return null;
 }
 
 export function handleChatErrorResponse(
-  errorMessage: string = 'An error occurred',
+  errorMessage: string = genericErrorMessage,
   path: string[] = ['default']
 ): React.ReactElement {
   const errorResponse = formatError(errorMessage, path, 'custom', false);
 
   return (
     <div>
-      <h2>Error</h2>
+      <h2>{errorHeading}</h2>
       <ul>
         {errorResponse.errors.map((err: ZodIssue, index: number) => (
           <li key={index}>{err.message}</li>

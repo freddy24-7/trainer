@@ -10,15 +10,7 @@ const PouleField = ({
   onChange,
 }: PouleFieldProps): React.ReactElement => (
   <div className="space-y-4">
-    {' '}
     <div className="relative">
-      {' '}
-      <label
-        htmlFor="poule"
-        className="block text-sm font-medium text-gray-700"
-      >
-        Poule
-      </label>
       <PouleSelector
         poules={poules}
         selectedPoule={selectedPoule}

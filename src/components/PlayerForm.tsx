@@ -7,6 +7,7 @@ import {
   passwordLabel,
   whatsappNumberLabel,
   whatsappNumberPlaceholder,
+  submittingText,
 } from '@/strings/clientStrings';
 import { PlayerFormProps, PlayerFormInputFieldProps } from '@/types/user-types';
 
@@ -121,7 +122,7 @@ function PlayerForm({
 
       <div className="flex justify-center w-full">
         <CustomButton type="submit" disabled={!isFormValid || isSubmitting}>
-          {isSubmitting ? 'Submitting...' : submitButtonText}
+          {isSubmitting ? submittingText : submitButtonText}
         </CustomButton>
       </div>
     </form>

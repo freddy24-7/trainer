@@ -4,6 +4,12 @@ import React from 'react';
 import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
+import {
+  infoLabel,
+  myStatsLabel,
+  chatLabel,
+  signInLabel,
+} from '@/strings/clientStrings';
 import { NavBarUserContentProps } from '@/types/ui-types';
 
 function RoleSpecificLinks({
@@ -32,7 +38,7 @@ function RoleSpecificLinks({
             className="text-white"
             onClick={closeMenu}
           >
-            Info
+            {infoLabel}
           </NavLink>
         </>
       );
@@ -40,14 +46,14 @@ function RoleSpecificLinks({
       return (
         <>
           <NavLink href="/my-stats" className="text-white" onClick={closeMenu}>
-            My Stats
+            {myStatsLabel}
           </NavLink>
           <NavLink
             href="/my-instructions"
             className="text-white"
             onClick={closeMenu}
           >
-            Info
+            {infoLabel}
           </NavLink>
         </>
       );
@@ -74,7 +80,7 @@ export function NavBarUserContent({
     return (
       <div className={containerClasses}>
         <NavLink href="/sign-in" className="text-gray-700" onClick={closeMenu}>
-          Sign In
+          {signInLabel}
         </NavLink>
       </div>
     );
@@ -83,7 +89,7 @@ export function NavBarUserContent({
   return (
     <div className={containerClasses}>
       <NavLink href="/chat" className="text-white" onClick={closeMenu}>
-        Chat
+        {chatLabel}
       </NavLink>
       <RoleSpecificLinks
         userRole={validUserRole}

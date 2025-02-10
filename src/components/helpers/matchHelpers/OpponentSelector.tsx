@@ -1,5 +1,9 @@
 import React from 'react';
 
+import {
+  opponentTeamLabel,
+  selectOpponentPlaceholder,
+} from '@/strings/clientStrings';
 import { OpponentSelectorProps } from '@/types/poule-types';
 
 export default function OpponentSelector({
@@ -10,15 +14,17 @@ export default function OpponentSelector({
   return (
     <div>
       <label className="block mb-2 mx-auto text-center">
-        Opponent Team:
+        {opponentTeamLabel}
+
         <select
           value={selectedOpponent?.id || ''}
           onChange={(e) => onOpponentChange(parseInt(e.target.value, 10))}
           className="input-class w-full p-2 border rounded mt-1 bg-white text-black"
         >
           <option value="" disabled={true}>
-            Select an opponent
+            {selectOpponentPlaceholder}
           </option>
+
           {opponents.map((opponent) => (
             <option key={opponent.id} value={opponent.id}>
               {opponent.team.name}
