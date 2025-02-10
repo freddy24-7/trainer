@@ -31,14 +31,11 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
   date,
 }) => {
   const currentDate = new Date();
-  console.log('Current Date:', currentDate);
 
   const selectedDate = date
     ? new Date(new Date(date).setHours(0, 0, 0, 0))
     : null;
   const isFutureDate = !!selectedDate && selectedDate > currentDate;
-  console.log(isFutureDate);
-  console.log(selectedDate);
 
   const { watch, handleSubmit } = methods;
   const [lineupFinalized, setLineupFinalized] = useState(false);
@@ -55,17 +52,11 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
 
   const isFormValid = Boolean(date && lineupFinalized);
 
-  const isButtonDisabled = useDisableSubmitButton({
+  const { buttonClassName } = useDisableSubmitButton({
     isSubmitting,
     isFutureDate,
     isFormValid,
   });
-
-  const buttonClassName = `mt-4 w-full p-2 rounded ${
-    isButtonDisabled
-      ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-      : 'bg-black text-white hover:bg-gray-800'
-  }`;
 
   return (
     <FormProvider {...methods}>
@@ -86,11 +77,7 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
 
         <FutureDateWarning isFutureDate={isFutureDate} showToast={false} />
 
-        <CustomButton
-          type="submit"
-          disabled={isButtonDisabled}
-          className={buttonClassName}
-        >
+        <CustomButton type="submit" className={buttonClassName}>
           {isSubmitting ? submittingTextNotice : addMatchButtonText}
         </CustomButton>
       </form>

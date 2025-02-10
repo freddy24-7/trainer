@@ -47,3 +47,14 @@ export interface StatsDropdownProps {
   dropdownTextColor: string;
   closeMenu: () => void;
 }
+
+export interface DisableButtonOptions {
+  isSubmitting: boolean;
+  isFutureDate?: boolean;
+  isFormValid: boolean;
+}
+
+export interface DisableButtonResult {
+  isButtonDisabled: boolean;
+  buttonClassName: string;
+}

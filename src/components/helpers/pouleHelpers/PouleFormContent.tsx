@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import CustomButton from '@/components/Button';
 import { OpponentsList } from '@/components/helpers/pouleHelpers/OpponentsList';
 import { PouleFormFields } from '@/components/helpers/pouleHelpers/PouleFormFields';
+import useDisableSubmitButton from '@/hooks/useDisableSubmitButton';
 import {
   pouleManagementHeading,
   addOpponentButtonText,
@@ -35,6 +36,13 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
     }
   };
 
+  const isFormValid = opponents.length > 0;
+
+  const { buttonClassName } = useDisableSubmitButton({
+    isSubmitting,
+    isFormValid,
+  });
+
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       <h3 className="text-lg font-semibold">{pouleManagementHeading}</h3>
@@ -53,15 +61,7 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
         <OpponentsList opponents={opponents} onRemove={handleRemoveOpponent} />
       )}
 
-      <CustomButton
-        type="submit"
-        disabled={isSubmitting}
-        className={`mt-4 w-full p-2 rounded ${
-          isSubmitting
-            ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-            : 'bg-black text-white hover:bg-gray-800'
-        }`}
-      >
+      <CustomButton type="submit" className={buttonClassName}>
         {isSubmitting ? submittingText : addPouleButtonText}
       </CustomButton>
     </form>

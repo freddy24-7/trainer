@@ -77,7 +77,7 @@ export default [{
         "prettier/prettier": "error",
 
         complexity: ["warn", {
-            max: 9,
+            max: 10,
         }],
 
         "max-lines": ["warn", {

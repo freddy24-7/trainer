@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import CustomButton from '@/components/Button';
+import useDisableSubmitButton from '@/hooks/useDisableSubmitButton';
 import { usePlayerFormState } from '@/hooks/usePlayerFormState';
 import {
   usernameLabel,
@@ -59,22 +60,19 @@ function PlayerForm({
     whatsappNumber: initialData?.whatsappNumber ?? '',
   });
 
-  const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const isValid =
-      username.trim() !== '' &&
-      password.trim() !== '' &&
-      whatsappNumber.trim() !== '';
+  const isFormValid =
+    username.trim() !== '' &&
+    password.trim() !== '' &&
+    whatsappNumber.trim() !== '';
 
-    setIsFormValid(isValid);
-  }, [username, password, whatsappNumber]);
+  const { buttonClassName } = useDisableSubmitButton({
+    isSubmitting,
+    isFormValid,
+  });
 
-  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault();
-
-    if (isSubmitting) return;
+  const handleSubmission = async (): Promise<void> => {
     setIsSubmitting(true);
     onSubmissionStart();
 
@@ -82,7 +80,7 @@ function PlayerForm({
       await onSubmit({
         username,
         password,
-        whatsappNumber: whatsappNumber ?? '',
+        whatsappNumber,
       });
     } catch (error) {
       console.error('Error during submission:', error);
@@ -91,37 +89,49 @@ function PlayerForm({
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+    if (isSubmitting) return;
+    await handleSubmission();
+  };
+
+  const formFields: PlayerFormInputFieldProps[] = [
+    {
+      id: 'username',
+      label: usernameLabel,
+      type: 'text',
+      name: 'username',
+      autocomplete: 'current-username',
+      value: username,
+      onChange: (e) => setUsername(e.target.value),
+    },
+    {
+      id: 'password-field',
+      label: passwordLabel,
+      type: 'password',
+      name: 'password',
+      autocomplete: 'current-password',
+      value: password,
+      onChange: (e) => setPassword(e.target.value),
+    },
+    {
+      id: 'whatsappNumber',
+      label: whatsappNumberLabel,
+      type: 'tel',
+      value: whatsappNumber,
+      onChange: (e) => setWhatsappNumber(e.target.value),
+      placeholder: whatsappNumberPlaceholder,
+    },
+  ];
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <InputField
-        id="username"
-        label={usernameLabel}
-        type="text"
-        name="username"
-        autocomplete="current-username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <InputField
-        id="password-field"
-        label={passwordLabel}
-        type="password"
-        name="password"
-        autocomplete="current-password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <InputField
-        id="whatsappNumber"
-        label={whatsappNumberLabel}
-        type="tel"
-        value={whatsappNumber}
-        onChange={(e) => setWhatsappNumber(e.target.value)}
-        placeholder={whatsappNumberPlaceholder}
-      />
+      {formFields.map((field) => (
+        <InputField key={field.id} {...field} />
+      ))}
 
       <div className="flex justify-center w-full">
-        <CustomButton type="submit" disabled={!isFormValid || isSubmitting}>
+        <CustomButton type="submit" className={buttonClassName}>
           {isSubmitting ? submittingText : submitButtonText}
         </CustomButton>
       </div>

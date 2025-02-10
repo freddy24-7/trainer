@@ -27,7 +27,7 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
 
   const isFormValid = !!date;
 
-  const isButtonDisabled = useDisableSubmitButton({
+  const { buttonClassName } = useDisableSubmitButton({
     isSubmitting,
     isFutureDate,
     isFormValid,
@@ -45,12 +45,6 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
     }
   };
 
-  const buttonClassName = `mt-4 w-full p-2 rounded ${
-    isButtonDisabled
-      ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-      : 'bg-blue-600 text-white hover:bg-blue-700'
-  }`;
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4 text-center relative">
       <DateField name="date" label={trainingDateLabel} errors={errors} />
@@ -64,7 +58,6 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
 
       <CustomButton
         type="submit"
-        disabled={isButtonDisabled}
         className={buttonClassName}
         isLoading={isSubmitting}
       >
