@@ -4,6 +4,7 @@ import CustomButton from '@/components/Button';
 import DateField from '@/components/DateField';
 import FutureDateWarning from '@/components/FutureDateWarning';
 import TrainingPlayersField from '@/components/helpers/trainingHelpers/TrainingPlayersField';
+import useDisableSubmitButton from '@/hooks/useDisableSubmitButton';
 import {
   submittingButtonText,
   addTrainingButtonText,
@@ -24,6 +25,14 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
   const selectedDate = date ? new Date(date) : null;
   const isFutureDate = !!selectedDate && selectedDate > currentDate;
 
+  const isFormValid = !!date;
+
+  const isButtonDisabled = useDisableSubmitButton({
+    isSubmitting,
+    isFutureDate,
+    isFormValid,
+  });
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -35,6 +44,12 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
       console.error('Error submitting form:', error);
     }
   };
+
+  const buttonClassName = `mt-4 w-full p-2 rounded ${
+    isButtonDisabled
+      ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+      : 'bg-blue-600 text-white hover:bg-blue-700'
+  }`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 text-center relative">
@@ -49,9 +64,8 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
 
       <CustomButton
         type="submit"
-        color="primary"
-        size="lg"
-        isDisabled={!date || isSubmitting || isFutureDate}
+        disabled={isButtonDisabled}
+        className={buttonClassName}
         isLoading={isSubmitting}
       >
         {isSubmitting ? submittingButtonText : addTrainingButtonText}

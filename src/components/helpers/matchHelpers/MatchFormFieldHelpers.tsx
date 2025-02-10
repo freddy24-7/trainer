@@ -4,6 +4,7 @@ import { FormProvider } from 'react-hook-form';
 import CustomButton from '@/components/Button';
 import FutureDateWarning from '@/components/FutureDateWarning';
 import ConfirmationModal from '@/components/helpers/matchHelpers/ConfirmationModal';
+import useDisableSubmitButton from '@/hooks/useDisableSubmitButton';
 import { useMatchFormHandlers } from '@/hooks/useMatchFormHandlers';
 import {
   submittingTextNotice,
@@ -52,9 +53,13 @@ const MatchForm: React.FC<MatchFormFieldProps> = ({
 
   const matchType = watch('matchType') as 'competition' | 'practice';
 
-  const isFormValid = date && lineupFinalized;
+  const isFormValid = Boolean(date && lineupFinalized);
 
-  const isButtonDisabled = !isFormValid || isSubmitting || isFutureDate;
+  const isButtonDisabled = useDisableSubmitButton({
+    isSubmitting,
+    isFutureDate,
+    isFormValid,
+  });
 
   const buttonClassName = `mt-4 w-full p-2 rounded ${
     isButtonDisabled
