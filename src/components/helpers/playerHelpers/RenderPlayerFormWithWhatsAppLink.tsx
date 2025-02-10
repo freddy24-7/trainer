@@ -43,10 +43,10 @@ export const renderPlayerFormWithWhatsAppLink = ({
           isSubmitting ? updatingButtonText : updatePlayerButtonText
         }
       />
-      {playerData?.whatsappNumber && (
+      {(playerData?.whatsappNumber || initialWhatsappNumber) && (
         <a
-          href={`https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}/?text=${encodeURIComponent(
-            `Hello ${playerData.username}, your account has been updated. Username: ${playerData.username}, Password: ${playerData.password}. Please log in and change your password to your own.`
+          href={`https://wa.me/${(playerData?.whatsappNumber || initialWhatsappNumber || '').replace(/\D/g, '')}/?text=${encodeURIComponent(
+            `Hello ${playerData?.username || initialUsername}, your account has been updated. Username: ${playerData?.username || initialUsername}, Password: ${playerData?.password}. Please log in and change your password to your own.`
           )}`}
           target="_blank"
           rel="noopener noreferrer"

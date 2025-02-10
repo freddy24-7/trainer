@@ -36,9 +36,9 @@ function EditPlayerForm({
         const updatedPlayer = {
           id: playerId,
           username: data.username,
-          whatsappNumber: playerData.whatsappNumber,
-          whatsappLink: playerData.whatsappNumber
-            ? `https://wa.me/${playerData.whatsappNumber.replace(/\D/g, '')}`
+          whatsappNumber: data.whatsappNumber,
+          whatsappLink: data.whatsappNumber
+            ? `https://wa.me/${data.whatsappNumber.replace(/\D/g, '')}`
             : '',
         };
         onPlayerEdited(updatedPlayer);
