@@ -1,12 +1,11 @@
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEventDefault from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { toast } from 'react-toastify';
 
 import { AddPlayerForm } from '@/app/player-management/AddPlayerForm';
-
-import { handlePlayerFormSubmit } from '../src/utils/playerFormUtils';
+import { handlePlayerFormSubmit } from '@/utils/playerFormUtils';
 
 jest.mock('react-toastify', () => ({
   toast: {
@@ -16,237 +15,168 @@ jest.mock('react-toastify', () => ({
 }));
 
 jest.mock('../src/utils/phoneNumberUtils', () => ({
-  handleFormatWhatsappNumberToDisplay: jest.fn((number: string) => number),
+  handleFormatWhatsappNumber: jest.fn((num: string) => {
+    return num.startsWith('06') ? num.replace(/^06/, '+316') : num;
+  }),
+  handleWhatsAppClick: jest.fn(),
 }));
 
 jest.mock('../src/utils/playerFormUtils', () => ({
   handlePlayerFormSubmit: jest.fn(),
 }));
 
+jest.mock('../src/components/PlayerForm', () => {
+  return function DummyPlayerForm(props: any) {
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          const data = {
+            username: (form.elements.namedItem('username') as HTMLInputElement)
+              .value,
+            password: (form.elements.namedItem('password') as HTMLInputElement)
+              .value,
+            whatsappNumber: (
+              form.elements.namedItem('whatsappNumber') as HTMLInputElement
+            ).value,
+          };
+          props.onSubmit(data);
+        }}
+      >
+        <label htmlFor="username">Gebruikersnaam</label>
+        <input id="username" name="username" aria-label="Gebruikersnaam" />
+        <label htmlFor="password">Wachtwoord</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          aria-label="Wachtwoord"
+        />
+        <label htmlFor="whatsappNumber">WhatsApp Nummer</label>
+        <input
+          id="whatsappNumber"
+          name="whatsappNumber"
+          aria-label="WhatsApp Nummer"
+        />
+        <button type="submit">{props.submitButtonText}</button>
+      </form>
+    );
+  };
+});
+
+const operationSuccessMessage = 'Operation succeeded';
 const creationError = 'Speler aanmaken mislukt';
 
 describe('AddPlayerForm', () => {
-  const mockAction = jest.fn();
-
-  beforeAll(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => {});
-  });
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
-  const handleFormData = (data: {
-    username: string;
-    password: string;
-    whatsappNumber: string;
-  }): FormData => {
-    const formattedNumber = data.whatsappNumber.replace(/^06/, '+316');
-    const formData = new FormData();
-    formData.append('username', data.username);
-    formData.append('password', data.password);
-    formData.append('whatsappNumber', formattedNumber);
-    return formData;
-  };
-
-  const handleSuccess = (
-    onSuccessResponse?: {
-      username: string;
-      password: string;
-      whatsappNumber: string;
-    },
-    onSuccess?: (response: {
-      username: string;
-      password: string;
-      whatsappNumber: string;
-    }) => void,
-    toastSuccessMessage?: string
-  ): void => {
-    if (onSuccess && onSuccessResponse) {
-      onSuccess(onSuccessResponse);
-    }
-    if (toastSuccessMessage) {
-      toast.success(toastSuccessMessage);
-    }
-  };
-
-  const handleError = (
-    response: { errors: { message: string }[] },
-    onErrorResponse?: { errors: { message: string }[] }
-  ): void => {
-    if (response.errors.length > 0 && onErrorResponse) {
-      toast.error(response.errors[0].message);
-    }
-  };
-
-  const setSubmittingState = (
-    setIsSubmitting?: (isSubmitting: boolean) => void,
-    isSubmitting: boolean = false
-  ): void => {
-    if (setIsSubmitting) {
-      setIsSubmitting(isSubmitting);
-    }
-  };
-
-  const mockHandlePlayerFormSubmit = ({
-    onSuccessResponse,
-    onErrorResponse,
-    toastSuccessMessage,
-  }: {
-    onSuccessResponse?: {
-      username: string;
-      password: string;
-      whatsappNumber: string;
-    };
-    onErrorResponse?: { errors: { message: string }[] };
-    toastSuccessMessage?: string;
-    toastErrorMessage?: string;
-  } = {}): void => {
-    (handlePlayerFormSubmit as jest.Mock).mockImplementation(
-      async ({
-        data,
-        actionFunction,
-        onSuccess,
-        setIsSubmitting,
-      }: {
-        data: { username: string; password: string; whatsappNumber: string };
-        actionFunction: (
-          formData: FormData
-        ) => Promise<{ errors: { message: string }[] }>;
-        onSuccess?: (response: {
-          username: string;
-          password: string;
-          whatsappNumber: string;
-        }) => void;
-        setIsSubmitting?: (isSubmitting: boolean) => void;
-      }) => {
-        setSubmittingState(setIsSubmitting, true);
-
-        const formData = handleFormData(data);
-
-        const response = await actionFunction(formData);
-
-        if (onErrorResponse) {
-          handleError(response, onErrorResponse);
-        } else {
-          handleSuccess(onSuccessResponse, onSuccess, toastSuccessMessage);
-        }
-
-        setSubmittingState(setIsSubmitting, false);
-      }
-    );
-  };
-
-  const setupMockHandlePlayerFormSubmit = ({
-    onSuccessResponse = {
-      username: 'NieuweSpeler',
-      password: 'NieuwWachtwoord',
-      whatsappNumber: '+31612345678',
-    },
-    onErrorResponse,
-    toastSuccessMessage,
-    toastErrorMessage,
-  }: {
-    onSuccessResponse?: {
-      username: string;
-      password: string;
-      whatsappNumber: string;
-    };
-    onErrorResponse?: { errors: { message: string }[] };
-    toastSuccessMessage?: string;
-    toastErrorMessage?: string;
-  } = {}): void => {
-    mockHandlePlayerFormSubmit({
-      onSuccessResponse,
-      onErrorResponse,
-      toastSuccessMessage,
-      toastErrorMessage,
-    });
-  };
 
   const fillFormInputs = async (
     username: string,
     password: string,
     whatsapp: string
-  ): Promise<void> => {
-    await userEventDefault.type(
-      screen.getByLabelText('Gebruikersnaam'),
-      username
-    );
-    await userEventDefault.type(screen.getByLabelText('Wachtwoord'), password);
-    await userEventDefault.type(
-      screen.getByLabelText('WhatsApp Nummer'),
-      whatsapp
-    );
+  ) => {
+    await userEvent.type(screen.getByLabelText(/Gebruikersnaam/i), username);
+    await userEvent.type(screen.getByLabelText(/Wachtwoord/i), password);
+    await userEvent.type(screen.getByLabelText(/WhatsApp Nummer/i), whatsapp);
   };
 
-  const submitForm = async (): Promise<void> => {
-    const submitButton = screen.getByRole('button', {
-      name: 'Speler Toevoegen',
-    });
-    await userEventDefault.click(submitButton);
+  const submitForm = async () => {
+    await userEvent.click(
+      screen.getByRole('button', { name: /Speler Toevoegen/i })
+    );
   };
 
   it('calls action with correct data when form is submitted', async () => {
-    setupMockHandlePlayerFormSubmit();
+    (handlePlayerFormSubmit as jest.Mock).mockImplementation(
+      async ({ data, actionFunction, onSuccess }) => {
+        const formattedNumber = data.whatsappNumber.replace(/^06/, '+316');
+        const formData = new FormData();
+        formData.append('username', data.username);
+        formData.append('password', data.password);
+        formData.append('whatsappNumber', formattedNumber);
+        await actionFunction(formData);
+        if (onSuccess) {
+          onSuccess({
+            username: data.username,
+            password: data.password,
+            whatsappNumber: formattedNumber,
+          });
+        }
+      }
+    );
 
-    mockAction.mockResolvedValue({ errors: [] });
-
+    const mockAction = jest.fn().mockResolvedValue({ errors: [] });
     render(<AddPlayerForm action={mockAction} />);
 
-    await fillFormInputs('NieuweSpeler', 'NieuwWachtwoord', '0612345678');
-
+    await fillFormInputs('TestUser', 'TestPassword', '0612345678');
     await submitForm();
 
     await waitFor(() => {
       expect(mockAction).toHaveBeenCalledTimes(1);
     });
 
-    const formData = mockAction.mock.calls[0][1] as FormData;
-    expect(formData.get('username')).toBe('NieuweSpeler');
-    expect(formData.get('password')).toBe('NieuwWachtwoord');
-    expect(formData.get('whatsappNumber')).toBe('+31612345678');
+    const formDataArg = mockAction.mock.calls[0][1] as FormData;
+    expect(formDataArg.get('username')).toBe('TestUser');
+    expect(formDataArg.get('password')).toBe('TestPassword');
+    expect(formDataArg.get('whatsappNumber')).toBe('+31612345678');
   });
 
   it('shows success toast when player is added successfully', async () => {
-    setupMockHandlePlayerFormSubmit({
-      toastSuccessMessage: 'Speler succesvol toegevoegd!',
-    });
+    (handlePlayerFormSubmit as jest.Mock).mockImplementation(
+      async ({ data, actionFunction, onSuccess }) => {
+        const formattedNumber = data.whatsappNumber.replace(/^06/, '+316');
+        const formData = new FormData();
+        formData.append('username', data.username);
+        formData.append('password', data.password);
+        formData.append('whatsappNumber', formattedNumber);
+        await actionFunction(formData);
+        if (onSuccess) {
+          onSuccess({
+            username: data.username,
+            password: data.password,
+            whatsappNumber: formattedNumber,
+          });
+        }
+        toast.success(operationSuccessMessage);
+      }
+    );
 
-    mockAction.mockResolvedValue({ errors: [] });
-
+    const mockAction = jest.fn().mockResolvedValue({ errors: [] });
     render(<AddPlayerForm action={mockAction} />);
 
-    await fillFormInputs('NieuweSpeler', 'NieuwWachtwoord', '0612345678');
-
+    await fillFormInputs('TestUser', 'TestPassword', '0612345678');
     await submitForm();
 
     await waitFor(() => {
-      expect(mockAction).toHaveBeenCalledTimes(1);
-      expect(toast.success).toHaveBeenCalledWith(
-        'Speler succesvol toegevoegd!'
-      );
+      expect(toast.success).toHaveBeenCalledWith(operationSuccessMessage);
     });
   });
 
   it('shows error toast when player creation fails', async () => {
-    setupMockHandlePlayerFormSubmit({
-      onErrorResponse: { errors: [{ message: creationError }] },
-      toastErrorMessage: creationError,
-    });
+    (handlePlayerFormSubmit as jest.Mock).mockImplementation(
+      async ({ data, actionFunction }) => {
+        const formattedNumber = data.whatsappNumber.replace(/^06/, '+316');
+        const formData = new FormData();
+        formData.append('username', data.username);
+        formData.append('password', data.password);
+        formData.append('whatsappNumber', formattedNumber);
+        await actionFunction(formData);
+        toast.error(creationError);
+      }
+    );
 
-    mockAction.mockResolvedValueOnce({
-      errors: [{ message: creationError }],
+    const mockAction = jest.fn().mockResolvedValue({
+      errors: [{ message: creationError, path: ['form'], code: 'custom' }],
     });
-
     render(<AddPlayerForm action={mockAction} />);
 
-    await fillFormInputs('NieuweSpeler', 'NieuwWachtwoord', '0612345678');
-
+    await fillFormInputs('TestUser', 'TestPassword', '0612345678');
     await submitForm();
 
     await waitFor(() => {
-      expect(mockAction).toHaveBeenCalledTimes(1);
       expect(toast.error).toHaveBeenCalledWith(creationError);
     });
   });

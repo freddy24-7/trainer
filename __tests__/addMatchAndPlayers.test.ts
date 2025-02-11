@@ -1,7 +1,9 @@
+import { invalidPlayerDataFormatMessage } from '@/strings/serverStrings';
+import { formatError } from '@/utils/errorUtils';
+
 import addMatch from '../src/app/actions/addMatch';
 import addMatchAndPlayers from '../src/app/actions/addMatchAndPlayers';
 import addMatchPlayer from '../src/app/actions/addMatchPlayer';
-import { formatError } from '../src/utils/errorUtils';
 
 jest.mock('../src/app/actions/addMatch');
 jest.mock('../src/app/actions/addMatchPlayer');
@@ -76,12 +78,16 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     const formData = new FormData();
     formData.append('pouleOpponentId', '1');
     formData.append('date', new Date().toISOString());
-    formData.append('players', 'invalid json string');
+    // Supply an invalid JSON string for players.
+    formData.append('players', 'invalid JSON string');
 
     const result = await addMatchAndPlayers(null, formData);
 
-    expect(result.errors[0].message).toContain('Invalid player data format');
+    expect(result.errors).toBeDefined();
+    expect(Array.isArray(result.errors)).toBe(true);
     expect(result.errors[0].path).toEqual(['players']);
+    // The error message should include the invalid JSON format message.
+    expect(result.errors[0].message).toContain(invalidPlayerDataFormatMessage);
   });
 
   it('should return an error if players data is not an array', async () => {
@@ -146,7 +152,6 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     const expectedMessage = 'Onverwachte fout bij het toevoegen van speler. 1.';
 
     expect(result.errors.map((e) => e.message)).toContain(expectedMessage);
-
     expect(result.errors[0].path).toEqual(['players', '1']);
     expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
   });
