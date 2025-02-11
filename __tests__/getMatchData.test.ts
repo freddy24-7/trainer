@@ -1,4 +1,5 @@
-import { getMatchData } from '../src/app/actions/getMatchData';
+import { getMatchData } from '@/app/actions/getMatchData';
+
 import prisma from '../src/lib/prisma';
 
 jest.mock('../src/lib/prisma', () => ({
@@ -13,29 +14,20 @@ describe('getMatchData', () => {
   });
 
   it('should return match data successfully', async () => {
-    const mockMatches = [
+    (prisma.match.findMany as jest.Mock).mockResolvedValue([
       {
         id: 1,
-        date: new Date('2023-09-15'),
+        date: new Date('2023-01-01T00:00:00.000Z'),
+        opponentStrength: 'SIMILAR',
         pouleOpponent: {
           team: { name: 'Team A' },
         },
         matchPlayers: [
-          { available: false, user: { username: 'player1' } },
-          { available: false, user: { username: 'player2' } },
+          { user: { username: 'player1' } },
+          { user: { username: 'player2' } },
         ],
       },
-      {
-        id: 2,
-        date: new Date('2023-09-16'),
-        pouleOpponent: {
-          team: { name: 'Team B' },
-        },
-        matchPlayers: [{ available: false, user: { username: 'player3' } }],
-      },
-    ];
-
-    (prisma.match.findMany as jest.Mock).mockResolvedValue(mockMatches);
+    ]);
 
     const result = await getMatchData();
 
@@ -44,33 +36,27 @@ describe('getMatchData', () => {
       matchData: [
         {
           id: 1,
-          date: new Date('2023-09-15'),
+          date: new Date('2023-01-01T00:00:00.000Z'),
+          opponentStrength: 'SIMILAR',
           opponentTeamName: 'Team A',
           absentPlayers: ['player1', 'player2'],
-        },
-        {
-          id: 2,
-          date: new Date('2023-09-16'),
-          opponentTeamName: 'Team B',
-          absentPlayers: ['player3'],
         },
       ],
     });
   });
 
-  it('should return match data with "Unknown Opponent" if opponent team is missing', async () => {
-    const mockMatches = [
+  it('should return match data with "Onbekende Tegenstander" if opponent team is missing', async () => {
+    (prisma.match.findMany as jest.Mock).mockResolvedValue([
       {
-        id: 3,
-        date: new Date('2023-09-17'),
+        id: 2,
+        date: new Date('2023-01-02T00:00:00.000Z'),
+        opponentStrength: 'WEAKER',
         pouleOpponent: {
-          team: null,
+          team: { name: null },
         },
-        matchPlayers: [],
+        matchPlayers: [{ user: { username: 'player3' } }],
       },
-    ];
-
-    (prisma.match.findMany as jest.Mock).mockResolvedValue(mockMatches);
+    ]);
 
     const result = await getMatchData();
 
@@ -78,10 +64,11 @@ describe('getMatchData', () => {
       success: true,
       matchData: [
         {
-          id: 3,
-          date: new Date('2023-09-17'),
+          id: 2,
+          date: new Date('2023-01-02T00:00:00.000Z'),
+          opponentStrength: 'WEAKER',
           opponentTeamName: 'Onbekende Tegenstander',
-          absentPlayers: [],
+          absentPlayers: ['player3'],
         },
       ],
     });

@@ -6,6 +6,7 @@ import AddTrainingForm from '@/app/trainings/AddTrainingForm';
 import {
   addTrainingButtonText,
   addTrainingHeader,
+  trainingDateLabel,
 } from '@/strings/clientStrings';
 import { Player } from '@/types/user-types';
 
@@ -49,34 +50,28 @@ describe('AddTrainingForm', () => {
       const checkbox = playerSpan
         .closest('div')
         ?.querySelector('input[type="checkbox"]');
-
       expect(checkbox).toBeInTheDocument();
       expect(checkbox).not.toBeChecked();
     });
   });
 
-  it('allows selecting a valid date with DatePicker', async () => {
+  it('allows selecting a valid date', async () => {
     render(<AddTrainingForm action={mockAction} players={mockPlayers} />);
-
-    const validDate = new Date();
-    validDate.setDate(validDate.getDate() - 1);
-
-    const datePickerInput = screen.getByRole('group', { name: /kies datum/i });
-    expect(datePickerInput).toBeInTheDocument();
-
-    const calendarButton = within(datePickerInput).getByRole('button', {
-      name: /calendar/i,
+    const dateGroup = screen.getByRole('group', {
+      name: new RegExp(trainingDateLabel, 'i'),
     });
-    await userEvent.click(calendarButton);
+    const spinbuttons = within(dateGroup).getAllByRole('spinbutton');
+    expect(spinbuttons).toHaveLength(3);
 
-    const dateToSelect = validDate.getDate().toString();
-    const dateElement = screen.getByText(dateToSelect);
+    await userEvent.clear(spinbuttons[0]);
+    await userEvent.type(spinbuttons[0], '06');
+    await userEvent.clear(spinbuttons[1]);
+    await userEvent.type(spinbuttons[1], '01');
+    await userEvent.clear(spinbuttons[2]);
+    await userEvent.type(spinbuttons[2], '2023');
 
-    expect(dateElement).toBeInTheDocument();
-    await userEvent.click(dateElement);
-
-    const formattedDate = `${String(validDate.getMonth() + 1).padStart(2, '0')}/${String(validDate.getDate()).padStart(2, '0')}/${validDate.getFullYear()}`;
-
-    expect(datePickerInput).toHaveTextContent(formattedDate);
+    expect(spinbuttons[0]).toHaveTextContent('06');
+    expect(spinbuttons[1]).toHaveTextContent('01');
+    expect(spinbuttons[2]).toHaveTextContent('2023');
   });
 });

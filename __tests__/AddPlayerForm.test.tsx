@@ -68,6 +68,30 @@ jest.mock('../src/components/PlayerForm', () => {
 const operationSuccessMessage = 'Operation succeeded';
 const creationError = 'Speler aanmaken mislukt';
 
+const simulateSubmission = async (
+  data: { username: string; password: string; whatsappNumber: string },
+  actionFunction: (formData: FormData) => Promise<any>,
+  onSuccess?: (playerData: {
+    username: string;
+    password: string;
+    whatsappNumber: string;
+  }) => void
+): Promise<void> => {
+  const formattedNumber = data.whatsappNumber.replace(/^06/, '+316');
+  const formData = new FormData();
+  formData.append('username', data.username);
+  formData.append('password', data.password);
+  formData.append('whatsappNumber', formattedNumber);
+  await actionFunction(formData);
+  if (onSuccess) {
+    onSuccess({
+      username: data.username,
+      password: data.password,
+      whatsappNumber: formattedNumber,
+    });
+  }
+};
+
 describe('AddPlayerForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -92,19 +116,7 @@ describe('AddPlayerForm', () => {
   it('calls action with correct data when form is submitted', async () => {
     (handlePlayerFormSubmit as jest.Mock).mockImplementation(
       async ({ data, actionFunction, onSuccess }) => {
-        const formattedNumber = data.whatsappNumber.replace(/^06/, '+316');
-        const formData = new FormData();
-        formData.append('username', data.username);
-        formData.append('password', data.password);
-        formData.append('whatsappNumber', formattedNumber);
-        await actionFunction(formData);
-        if (onSuccess) {
-          onSuccess({
-            username: data.username,
-            password: data.password,
-            whatsappNumber: formattedNumber,
-          });
-        }
+        await simulateSubmission(data, actionFunction, onSuccess);
       }
     );
 
@@ -127,19 +139,7 @@ describe('AddPlayerForm', () => {
   it('shows success toast when player is added successfully', async () => {
     (handlePlayerFormSubmit as jest.Mock).mockImplementation(
       async ({ data, actionFunction, onSuccess }) => {
-        const formattedNumber = data.whatsappNumber.replace(/^06/, '+316');
-        const formData = new FormData();
-        formData.append('username', data.username);
-        formData.append('password', data.password);
-        formData.append('whatsappNumber', formattedNumber);
-        await actionFunction(formData);
-        if (onSuccess) {
-          onSuccess({
-            username: data.username,
-            password: data.password,
-            whatsappNumber: formattedNumber,
-          });
-        }
+        await simulateSubmission(data, actionFunction, onSuccess);
         toast.success(operationSuccessMessage);
       }
     );
@@ -158,12 +158,7 @@ describe('AddPlayerForm', () => {
   it('shows error toast when player creation fails', async () => {
     (handlePlayerFormSubmit as jest.Mock).mockImplementation(
       async ({ data, actionFunction }) => {
-        const formattedNumber = data.whatsappNumber.replace(/^06/, '+316');
-        const formData = new FormData();
-        formData.append('username', data.username);
-        formData.append('password', data.password);
-        formData.append('whatsappNumber', formattedNumber);
-        await actionFunction(formData);
+        await simulateSubmission(data, actionFunction);
         toast.error(creationError);
       }
     );

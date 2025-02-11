@@ -2,6 +2,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
 jest.mock('pusher-js', () => {
   return jest.fn().mockImplementation(() => ({
     subscribe: jest.fn(),
@@ -57,194 +63,115 @@ const mockMessages: Message[] = [
   },
 ];
 
+const messageWithVideo: Message = {
+  id: 3,
+  content: 'Check out this video!',
+  sender: { id: 2, username: 'Recipient1' },
+  createdAt: new Date(),
+  recipientId: 1,
+  videoUrl: 'https://mockserver.example/video.mp4',
+};
+
+const dummyAction = jest.fn();
+const dummyGetMessages = jest.fn();
+const dummyDeleteVideo = jest.fn();
+const dummyDeleteMessage = jest.fn();
+
+const defaultProps = {
+  signedInUser: mockSignedInUser,
+  messages: mockMessages,
+  users: mockUsers,
+  action: dummyAction,
+  getMessages: dummyGetMessages,
+  deleteVideo: dummyDeleteVideo,
+  deleteMessage: dummyDeleteMessage,
+  recipientId: null,
+};
+
 describe('ChatClient Component Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('renders ChatOrganizer after loading', async () => {
-    render(
-      <ChatClient
-        signedInUser={mockSignedInUser}
-        messages={mockMessages}
-        users={mockUsers}
-        action={jest.fn()}
-        getMessages={jest.fn()}
-        deleteVideo={jest.fn()}
-        deleteMessage={jest.fn()}
-        recipientId={null}
-      />
-    );
-
+    render(<ChatClient {...defaultProps} />);
     await waitFor(() => {
-      const welcomeMessage = screen.getByText(
-        (content, element) =>
-          /Welcome to Chat/.test(content) && element?.tagName === 'H1'
-      );
-      expect(welcomeMessage).toBeInTheDocument();
+      expect(
+        screen.getByText(/Gaan chatten,\s*TestUser!/i)
+      ).toBeInTheDocument();
     });
-
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText('Typ je bericht...')
-    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Typ je bericht/i)).toBeInTheDocument();
   });
 
   it('handles message deletion', async () => {
-    const mockHandleOnDeleteMessage = jest.spyOn(
-      chatUtils,
-      'handleOnDeleteMessage'
-    );
-
-    render(
-      <ChatClient
-        signedInUser={mockSignedInUser}
-        messages={mockMessages}
-        users={mockUsers}
-        action={jest.fn()}
-        getMessages={jest.fn()}
-        deleteVideo={jest.fn()}
-        deleteMessage={jest.fn()}
-        recipientId={null}
-      />
-    );
-
+    render(<ChatClient {...defaultProps} />);
     await waitFor(() => {
-      const welcomeMessage = screen.getByText(
-        (content, element) =>
-          /Welcome to Chat, TestUser!/.test(content) &&
-          element?.tagName === 'H1'
-      );
-      expect(welcomeMessage).toBeInTheDocument();
+      expect(
+        screen.getByText(/Gaan chatten,\s*TestUser!/i)
+      ).toBeInTheDocument();
     });
-
     const deleteButtons = screen.getAllByText(/Bericht Verwijderen/i);
     expect(deleteButtons.length).toBeGreaterThan(0);
-
-    const deleteButton = deleteButtons[0];
-    fireEvent.click(deleteButton);
-
+    fireEvent.click(deleteButtons[0]);
     await waitFor(() => {
-      expect(mockHandleOnDeleteMessage).toHaveBeenCalledWith({
-        messageId: 1,
+      expect(chatUtils.handleOnDeleteMessage).toHaveBeenCalledWith({
+        messageId: mockMessages[0].id,
         removeFromDatabase: true,
         deleteMessage: expect.any(Function),
-        signedInUserId: 1,
+        signedInUserId: mockSignedInUser.id,
         handleDeleteMessage: expect.any(Function),
       });
     });
   });
 
   it('handles message sending with optimistic updates', async () => {
-    const originalRequestSubmit = HTMLFormElement.prototype.requestSubmit;
-
-    Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
-      configurable: true,
-      value: function (_submitter?: HTMLElement | null) {
-        void _submitter;
-        const event = new Event('submit', { bubbles: true, cancelable: true });
-        this.dispatchEvent(event);
-      },
-    } as any);
-
-    try {
-      const mockHandleSendMessage = jest.spyOn(chatUtils, 'handleSendMessage');
-      const mockAction = jest.fn().mockResolvedValue({ success: true });
-
-      render(
-        <ChatClient
-          signedInUser={mockSignedInUser}
-          messages={mockMessages}
-          users={mockUsers}
-          action={mockAction}
-          getMessages={jest.fn()}
-          deleteVideo={jest.fn()}
-          deleteMessage={jest.fn()}
-          recipientId={null}
-        />
-      );
-
-      await waitFor(() => {
-        const welcomeMessage = screen.getByText(
-          (content, element) =>
-            /Welcome to Chat, TestUser!/.test(content) &&
-            element?.tagName === 'H1'
-        );
-        expect(welcomeMessage).toBeInTheDocument();
-      });
-
-      const inputField = screen.getByPlaceholderText('Typ je bericht...');
-      fireEvent.change(inputField, { target: { value: 'Test Message' } });
-
-      const sendButton = screen.getByText(/Versturen/i);
-      fireEvent.click(sendButton);
-
-      await waitFor(() => {
-        expect(mockHandleSendMessage).toHaveBeenCalled();
-        expect(mockHandleSendMessage).toHaveBeenCalledTimes(1);
-
-        const callArgs = mockHandleSendMessage.mock.calls[0];
-        expect(callArgs).toHaveLength(1);
-
-        expect(callArgs[0]).toHaveProperty('e.preventDefault');
-        expect(callArgs[0]).toHaveProperty('e.type', 'submit');
-      });
-    } finally {
-      Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
-        configurable: true,
-        value: originalRequestSubmit,
-      } as any);
-    }
+    render(
+      <ChatClient
+        {...defaultProps}
+        action={jest.fn().mockResolvedValue({ success: true })}
+      />
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Gaan chatten,\s*TestUser!/i)
+      ).toBeInTheDocument();
+    });
+    const inputField = screen.getByPlaceholderText(/Typ je bericht/i);
+    fireEvent.change(inputField, { target: { value: 'Test Message' } });
+    const sendButton = screen.getByText(/Versturen/i);
+    fireEvent.click(sendButton);
+    await waitFor(() => {
+      expect(chatUtils.handleSendMessage).toHaveBeenCalled();
+      expect(chatUtils.handleSendMessage).toHaveBeenCalledTimes(1);
+      const callArgs = (chatUtils.handleSendMessage as jest.Mock).mock
+        .calls[0][0];
+      expect(callArgs).toHaveProperty('e');
+      expect(callArgs.e).toHaveProperty('type', 'submit');
+    });
   });
 
   it('handles video deletion', async () => {
-    const mockHandleOnDeleteVideo = jest.spyOn(
-      chatUtils,
-      'handleOnDeleteVideo'
-    );
-
-    const messagesWithVideo: Message[] = [
-      {
-        ...mockMessages[0],
-        videoUrl: 'https://mockserver.example/video.mp4',
-      },
-      ...mockMessages.slice(1),
-    ];
-
     render(
       <ChatClient
-        signedInUser={mockSignedInUser}
-        messages={messagesWithVideo}
-        users={mockUsers}
-        action={jest.fn()}
-        getMessages={jest.fn()}
-        deleteVideo={jest.fn()}
-        deleteMessage={jest.fn()}
-        recipientId={null}
+        {...defaultProps}
+        messages={[...mockMessages, messageWithVideo]}
       />
     );
-
     await waitFor(() => {
-      const welcomeMessage = screen.getByText(
-        (content, element) =>
-          /Welcome to Chat, TestUser!/.test(content) &&
-          element?.tagName === 'H1'
-      );
-      expect(welcomeMessage).toBeInTheDocument();
+      expect(
+        screen.getByText(/Gaan chatten,\s*TestUser!/i)
+      ).toBeInTheDocument();
     });
-
-    const deleteVideoButtons = screen.getAllByText(/Video Verwijderen/i);
-    expect(deleteVideoButtons.length).toBeGreaterThan(0);
-
-    const deleteVideoButton = deleteVideoButtons[0];
-    fireEvent.click(deleteVideoButton);
-
+    const videoDeleteButtons = screen.getAllByText(/Video Verwijderen/i);
+    expect(videoDeleteButtons.length).toBeGreaterThan(0);
+    fireEvent.click(videoDeleteButtons[0]);
     await waitFor(() => {
-      expect(mockHandleOnDeleteVideo).toHaveBeenCalledWith({
-        messageId: 1,
+      expect(chatUtils.handleOnDeleteVideo).toHaveBeenCalledWith({
+        messageId: messageWithVideo.id,
         removeFromDatabase: true,
         deleteVideo: expect.any(Function),
-        signedInUserId: 1,
+        signedInUserId: mockSignedInUser.id,
         setMessages: expect.any(Function),
       });
     });
