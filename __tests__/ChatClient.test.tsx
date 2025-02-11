@@ -41,6 +41,7 @@ jest.mock('../src/components/helpers/chatHelpers/ChatOrganizer', () => {
   return function MockChatOrganizer(props: {
     messages: any[];
     onDeleteMessage: (messageId: number, removeFromDatabase?: boolean) => void;
+    onDeleteVideo: (messageId: number, removeFromDatabase?: boolean) => void;
     handleRecipientChange: (
       event: React.ChangeEvent<HTMLSelectElement>
     ) => void;
@@ -53,6 +54,7 @@ jest.mock('../src/components/helpers/chatHelpers/ChatOrganizer', () => {
     const {
       messages,
       onDeleteMessage,
+      onDeleteVideo,
       handleRecipientChange,
       newMessage,
       setNewMessage,
@@ -78,6 +80,14 @@ jest.mock('../src/components/helpers/chatHelpers/ChatOrganizer', () => {
         {messages.map((message) => (
           <div key={message.id} data-testid={`message-${message.id}`}>
             <span>{message.content}</span>
+            {message.videoUrl && (
+              <button
+                data-testid={`delete-video-button-${message.id}`}
+                onClick={() => onDeleteVideo(message.id)}
+              >
+                Delete Video
+              </button>
+            )}
             {message.sender.id === 1 && (
               <button
                 data-testid={`delete-button-${message.id}`}
@@ -125,6 +135,15 @@ const mockMessages: Message[] = [
     recipientId: 1,
   },
 ];
+
+const messageWithVideo: Message = {
+  id: 3,
+  content: 'Check out this video!',
+  sender: { id: 2, username: 'Recipient1' },
+  createdAt: new Date(),
+  recipientId: 1,
+  videoUrl: 'https://mockserver.example/video.mp4',
+};
 
 const dummyDeleteVideo = jest.fn();
 const dummyDeleteMessage = jest.fn();
@@ -226,9 +245,36 @@ describe('ChatClient Component Tests', () => {
     expect(screen.getByTestId('message-42')).toHaveTextContent(
       optimisticMessageText
     );
-
     expect(actionMock).toHaveBeenCalledTimes(1);
-
     expect(screen.getByPlaceholderText(/Typ je bericht/i)).toHaveValue('');
+  });
+
+  it('handles video deletion', async () => {
+    const propsWithVideo = {
+      ...defaultProps,
+      messages: [messageWithVideo],
+    };
+
+    render(<ChatClient {...propsWithVideo} />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Gaan chatten,\s*TestUser!/i)
+      ).toBeInTheDocument();
+    });
+
+    const deleteVideoButton = screen.getByTestId('delete-video-button-3');
+    fireEvent.click(deleteVideoButton);
+
+    await waitFor(() => {
+      expect(chatUtils.handleOnDeleteVideo).toHaveBeenCalledTimes(1);
+      expect(chatUtils.handleOnDeleteVideo).toHaveBeenCalledWith({
+        messageId: 3,
+        removeFromDatabase: true,
+        deleteVideo: dummyDeleteVideo,
+        signedInUserId: mockSignedInUser.id,
+        setMessages: expect.any(Function),
+      });
+    });
   });
 });
