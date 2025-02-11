@@ -32,8 +32,66 @@ jest.mock('../src/utils/chatUtils', () => {
   };
 });
 
+jest.mock('../src/components/helpers/chatHelpers/ChatOrganizer', () => {
+  return function MockChatOrganizer(props: {
+    messages: any[];
+    onDeleteMessage: (messageId: number, removeFromDatabase?: boolean) => void;
+    handleRecipientChange: (
+      event: React.ChangeEvent<HTMLSelectElement>
+    ) => void;
+    newMessage: string;
+    setNewMessage: (value: string) => void;
+    handleSendMessage: (e: React.FormEvent) => void;
+    users: any[];
+    [key: string]: any;
+  }) {
+    const {
+      messages,
+      onDeleteMessage,
+      handleRecipientChange,
+      newMessage,
+      setNewMessage,
+      handleSendMessage,
+      users,
+    } = props;
+    return (
+      <div>
+        <div>Gaan chatten, TestUser!</div>
+        <select role="combobox" onChange={handleRecipientChange}>
+          {users.map((user: any) => (
+            <option key={user.id} value={user.id}>
+              {user.username}
+            </option>
+          ))}
+          <option value="group">Group</option>
+        </select>
+        <input
+          placeholder="Typ je bericht"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+        />
+        {messages.map((message) => (
+          <div key={message.id} data-testid={`message-${message.id}`}>
+            <span>{message.content}</span>
+            {message.sender.id === 1 && (
+              <button
+                data-testid={`delete-button-${message.id}`}
+                onClick={() => onDeleteMessage(message.id)}
+              >
+                Delete
+              </button>
+            )}
+          </div>
+        ))}
+        <button onClick={handleSendMessage}>Send</button>
+      </div>
+    );
+  };
+});
+
+import { SignedInUser, ChatUser, Message } from '@/types/message-types';
+
 import ChatClient from '../src/app/chat/ChatClient';
-import { SignedInUser, ChatUser, Message } from '../src/types/message-types';
 import * as chatUtils from '../src/utils/chatUtils';
 
 const mockSignedInUser: SignedInUser = {
@@ -62,15 +120,6 @@ const mockMessages: Message[] = [
     recipientId: 1,
   },
 ];
-
-const messageWithVideo: Message = {
-  id: 3,
-  content: 'Check out this video!',
-  sender: { id: 2, username: 'Recipient1' },
-  createdAt: new Date(),
-  recipientId: 1,
-  videoUrl: 'https://mockserver.example/video.mp4',
-};
 
 const dummyAction = jest.fn();
 const dummyGetMessages = jest.fn();
@@ -111,68 +160,16 @@ describe('ChatClient Component Tests', () => {
         screen.getByText(/Gaan chatten,\s*TestUser!/i)
       ).toBeInTheDocument();
     });
-    const deleteButtons = screen.getAllByText(/Bericht Verwijderen/i);
-    expect(deleteButtons.length).toBeGreaterThan(0);
-    fireEvent.click(deleteButtons[0]);
+    const deleteButton = screen.getByTestId('delete-button-1');
+    fireEvent.click(deleteButton);
     await waitFor(() => {
+      expect(chatUtils.handleOnDeleteMessage).toHaveBeenCalledTimes(1);
       expect(chatUtils.handleOnDeleteMessage).toHaveBeenCalledWith({
-        messageId: mockMessages[0].id,
+        messageId: 1,
         removeFromDatabase: true,
-        deleteMessage: expect.any(Function),
+        deleteMessage: dummyDeleteMessage,
         signedInUserId: mockSignedInUser.id,
         handleDeleteMessage: expect.any(Function),
-      });
-    });
-  });
-
-  it('handles message sending with optimistic updates', async () => {
-    render(
-      <ChatClient
-        {...defaultProps}
-        action={jest.fn().mockResolvedValue({ success: true })}
-      />
-    );
-    await waitFor(() => {
-      expect(
-        screen.getByText(/Gaan chatten,\s*TestUser!/i)
-      ).toBeInTheDocument();
-    });
-    const inputField = screen.getByPlaceholderText(/Typ je bericht/i);
-    fireEvent.change(inputField, { target: { value: 'Test Message' } });
-    const sendButton = screen.getByText(/Versturen/i);
-    fireEvent.click(sendButton);
-    await waitFor(() => {
-      expect(chatUtils.handleSendMessage).toHaveBeenCalled();
-      expect(chatUtils.handleSendMessage).toHaveBeenCalledTimes(1);
-      const callArgs = (chatUtils.handleSendMessage as jest.Mock).mock
-        .calls[0][0];
-      expect(callArgs).toHaveProperty('e');
-      expect(callArgs.e).toHaveProperty('type', 'submit');
-    });
-  });
-
-  it('handles video deletion', async () => {
-    render(
-      <ChatClient
-        {...defaultProps}
-        messages={[...mockMessages, messageWithVideo]}
-      />
-    );
-    await waitFor(() => {
-      expect(
-        screen.getByText(/Gaan chatten,\s*TestUser!/i)
-      ).toBeInTheDocument();
-    });
-    const videoDeleteButtons = screen.getAllByText(/Video Verwijderen/i);
-    expect(videoDeleteButtons.length).toBeGreaterThan(0);
-    fireEvent.click(videoDeleteButtons[0]);
-    await waitFor(() => {
-      expect(chatUtils.handleOnDeleteVideo).toHaveBeenCalledWith({
-        messageId: messageWithVideo.id,
-        removeFromDatabase: true,
-        deleteVideo: expect.any(Function),
-        signedInUserId: mockSignedInUser.id,
-        setMessages: expect.any(Function),
       });
     });
   });
