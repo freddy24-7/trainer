@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 
@@ -28,7 +34,6 @@ jest.mock('../src/utils/chatUtils', () => {
     ...actualChatUtils,
     handleOnDeleteMessage: jest.fn(),
     handleOnDeleteVideo: jest.fn(),
-    handleSendMessage: jest.fn(),
   };
 });
 
@@ -121,8 +126,6 @@ const mockMessages: Message[] = [
   },
 ];
 
-const dummyAction = jest.fn();
-const dummyGetMessages = jest.fn();
 const dummyDeleteVideo = jest.fn();
 const dummyDeleteMessage = jest.fn();
 
@@ -130,8 +133,8 @@ const defaultProps = {
   signedInUser: mockSignedInUser,
   messages: mockMessages,
   users: mockUsers,
-  action: dummyAction,
-  getMessages: dummyGetMessages,
+  action: jest.fn(),
+  getMessages: jest.fn().mockResolvedValue({ success: true, messages: [] }),
   deleteVideo: dummyDeleteVideo,
   deleteMessage: dummyDeleteMessage,
   recipientId: null,
@@ -172,5 +175,60 @@ describe('ChatClient Component Tests', () => {
         handleDeleteMessage: expect.any(Function),
       });
     });
+  });
+
+  it('handles message sending with optimistic updates', async () => {
+    const optimisticMessageText = 'Optimistic test';
+    const resolvedResponse = { success: true, messageId: 42 };
+    const actionMock = jest.fn().mockResolvedValue(resolvedResponse);
+    const getMessagesMock = jest
+      .fn()
+      .mockResolvedValue({ success: true, messages: [] });
+    const propsWithEmptyMessages = {
+      ...defaultProps,
+      messages: [],
+      action: actionMock,
+      getMessages: getMessagesMock,
+    };
+
+    render(<ChatClient {...propsWithEmptyMessages} />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Gaan chatten,\s*TestUser!/i)
+      ).toBeInTheDocument();
+    });
+
+    const selectElement = screen.getByRole('combobox');
+    await act(async () => {
+      fireEvent.change(selectElement, { target: { value: '2' } });
+    });
+    await waitFor(() => {
+      expect(getMessagesMock).toHaveBeenCalled();
+    });
+
+    const inputElement = screen.getByPlaceholderText(/Typ je bericht/i);
+    await act(async () => {
+      fireEvent.change(inputElement, {
+        target: { value: optimisticMessageText },
+      });
+    });
+
+    const sendButton = screen.getByText('Send');
+    await act(async () => {
+      fireEvent.click(sendButton);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('message-42')).toBeInTheDocument();
+    });
+
+    expect(screen.getByTestId('message-42')).toHaveTextContent(
+      optimisticMessageText
+    );
+
+    expect(actionMock).toHaveBeenCalledTimes(1);
+
+    expect(screen.getByPlaceholderText(/Typ je bericht/i)).toHaveValue('');
   });
 });
