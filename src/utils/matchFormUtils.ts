@@ -13,7 +13,7 @@ import { FormValues } from '@/types/user-types';
 import { formatError } from '@/utils/errorUtils';
 import { handleSubmissionState } from '@/utils/submissionUtils';
 
-const validateMatchForm = (
+export const validateMatchForm = (
   formData: FormData,
   validatePlayers: () => boolean
 ): boolean => {
@@ -39,7 +39,7 @@ const validateMatchForm = (
   return true;
 };
 
-const handleActionResponse = async (
+export const handleActionResponse = async (
   action: SubmitMatchFormOptions['action'],
   formData: FormData
 ): Promise<boolean> => {
@@ -91,7 +91,7 @@ export const submitMatchForm = async (
   }
 };
 
-const createFormData = (data: FormValues): FormData => {
+export const createFormData = (data: FormValues): FormData => {
   const formData = new FormData();
 
   formData.append('matchType', data.matchType);
@@ -134,7 +134,7 @@ const createFormData = (data: FormValues): FormData => {
   return formData;
 };
 
-const appendMatchTypeSpecificData = (
+export const appendMatchTypeSpecificData = (
   formData: FormData,
   data: FormValues
 ): void => {
