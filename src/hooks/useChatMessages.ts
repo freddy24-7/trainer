@@ -9,7 +9,7 @@ import {
 import { PusherEventMessage, Message } from '@/types/message-types';
 import { subscribeToPusherEvents } from '@/utils/chatUtils';
 
-function handleIncomingMessage(
+export function handleIncomingMessage(
   data: PusherEventMessage,
   setMessages: Dispatch<SetStateAction<Message[]>>,
   trackedMessageIds: Set<number>
