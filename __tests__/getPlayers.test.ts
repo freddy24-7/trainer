@@ -1,6 +1,8 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
+import { formatError } from '@/utils/errorUtils';
+
 import getPlayers from '../src/app/actions/getPlayers';
 import prisma from '../src/lib/prisma';
-import { formatError } from '../src/utils/errorUtils';
 
 const errorMessage = 'Fout bij het ophalen van spelers.';
 

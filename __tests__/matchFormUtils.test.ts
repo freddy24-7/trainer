@@ -1,3 +1,5 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, 'log').mockImplementation(() => {});
 import { toast } from 'react-toastify';
 
 import { handleValidateMatchData } from '@/schemas/validation/createMatchValidation';

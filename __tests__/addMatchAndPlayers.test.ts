@@ -1,3 +1,4 @@
+jest.spyOn(console, 'log').mockImplementation(() => {});
 import { invalidPlayerDataFormatMessage } from '@/strings/serverStrings';
 import { formatError } from '@/utils/errorUtils';
 

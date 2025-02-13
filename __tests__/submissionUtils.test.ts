@@ -1,3 +1,5 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, 'log').mockImplementation(() => {});
 import { handleSubmissionState } from '@/utils/submissionUtils';
 
 describe('handleSubmissionState', () => {

@@ -1,4 +1,6 @@
-import { getTrainingAttendanceList } from '../src/app/actions/getTrainingAttendanceList';
+jest.spyOn(console, 'error').mockImplementation(() => {});
+import { getTrainingAttendanceList } from '@/app/actions/getTrainingAttendanceList';
+
 import prisma from '../src/lib/prisma';
 
 jest.mock('../src/lib/prisma', () => ({

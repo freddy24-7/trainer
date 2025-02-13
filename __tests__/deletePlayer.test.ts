@@ -1,14 +1,16 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
+
+import {
+  handleFindPlayerById,
+  deletePlayerFromDatabase,
+  deleteClerkUser,
+} from '@/lib/services/deletePlayerService';
 import {
   playerNotFoundOrMissingClerkId,
   errorDeletingPlayer,
 } from '@/strings/actionStrings';
 
 import deletePlayer from '../src/app/actions/deletePlayer';
-import {
-  handleFindPlayerById,
-  deletePlayerFromDatabase,
-  deleteClerkUser,
-} from '../src/lib/services/deletePlayerService';
 
 jest.mock('../src/lib/services/deletePlayerService', () => ({
   handleFindPlayerById: jest.fn(),

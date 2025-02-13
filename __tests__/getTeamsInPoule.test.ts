@@ -1,4 +1,5 @@
-import { getTeamsInPoule } from '../src/app/actions/getTeamsInPoule';
+jest.spyOn(console, 'error').mockImplementation(() => {});
+import { getTeamsInPoule } from '@/app/actions/getTeamsInPoule';
 import prisma from '../src/lib/prisma';
 
 jest.mock('../src/lib/prisma', () => ({

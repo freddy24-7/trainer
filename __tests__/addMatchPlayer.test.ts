@@ -1,3 +1,5 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, 'log').mockImplementation(() => {});
 import addMatchPlayer from '../src/app/actions/addMatchPlayer';
 import prisma from '../src/lib/prisma';
 

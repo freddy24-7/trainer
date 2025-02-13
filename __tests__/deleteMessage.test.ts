@@ -1,3 +1,4 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
 import prisma from '@/lib/prisma';
 import { deleteVideoFromCloudinary } from '@/utils/cloudinaryUtils';
 import { formatError } from '@/utils/errorUtils';

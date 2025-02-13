@@ -1,9 +1,10 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, 'log').mockImplementation(() => {});
 import { updateUsername } from '@/app/actions/updateUsername';
-
 import {
   handleFindUserByClerkId,
   updateUserUsername,
-} from '../src/lib/services/updateUserService';
+} from '@/lib/services/updateUserService';
 
 jest.mock('../src/lib/services/updateUserService', () => ({
   handleFindUserByClerkId: jest.fn(),

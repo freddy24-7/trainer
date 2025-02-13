@@ -1,3 +1,4 @@
+jest.spyOn(console, 'log').mockImplementation(() => {});
 import { handleValidateMatchPlayerData } from '@/schemas/validation/addMatchPlayerValidation';
 import {
   playersDataMissingMessage,

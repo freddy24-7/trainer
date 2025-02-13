@@ -1,3 +1,4 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
 import { createClerkClient } from '@clerk/backend';
 
 import addPlayer from '../src/app/actions/addPlayer';

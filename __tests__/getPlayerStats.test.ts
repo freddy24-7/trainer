@@ -1,3 +1,4 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
 import { getPlayerStats } from '@/app/actions/getPlayerStats';
 
 import prisma from '../src/lib/prisma';

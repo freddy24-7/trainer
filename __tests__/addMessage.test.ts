@@ -1,12 +1,12 @@
+jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, 'log').mockImplementation(() => {});
+import { createMessage, getSenderById } from '@/lib/services/createChatService';
+import { validateMessageInput } from '@/schemas/validation/addMessageValidation';
+import { errorSendingMessage } from '@/strings/actionStrings';
+import { formatError } from '@/utils/errorUtils';
+import { handleTriggerNewMessageEvent } from '@/utils/pusherUtils';
+
 import addMessage from '../src/app/actions/addMessage';
-import {
-  createMessage,
-  getSenderById,
-} from '../src/lib/services/createChatService';
-import { validateMessageInput } from '../src/schemas/validation/addMessageValidation';
-import { errorSendingMessage } from '../src/strings/actionStrings';
-import { formatError } from '../src/utils/errorUtils';
-import { handleTriggerNewMessageEvent } from '../src/utils/pusherUtils';
 
 jest.mock('fs', () => ({
   writeFileSync: jest.fn(),

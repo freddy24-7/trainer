@@ -1,3 +1,5 @@
+jest.spyOn(console, 'log').mockImplementation(() => {});
+jest.spyOn(console, 'log').mockImplementation(() => {});
 import { renderHook, act } from '@testing-library/react';
 
 import { useMatchFormHandlers } from '@/hooks/useMatchFormHandlers';

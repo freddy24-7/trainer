@@ -1,15 +1,17 @@
-import handleEditPlayer from '../src/app/actions/editPlayer';
+jest.spyOn(console, 'error').mockImplementation(() => {});
 import {
   handleFindPlayerById,
   updatePlayerInDatabase,
   updateClerkUser,
-} from '../src/lib/services/editPlayerService';
-import { handleValidateEditPlayerData } from '../src/schemas/validation/editPlayerValidation';
+} from '@/lib/services/editPlayerService';
+import { handleValidateEditPlayerData } from '@/schemas/validation/editPlayerValidation';
 import {
   playerNotFoundOrInvalid,
   errorUpdatingPlayer,
-} from '../src/strings/actionStrings';
-import { formatError } from '../src/utils/errorUtils';
+} from '@/strings/actionStrings';
+import { formatError } from '@/utils/errorUtils';
+
+import handleEditPlayer from '../src/app/actions/editPlayer';
 
 jest.mock('../src/lib/services/editPlayerService', () => ({
   handleFindPlayerById: jest.fn(),
