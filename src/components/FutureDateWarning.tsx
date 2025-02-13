@@ -2,15 +2,11 @@ import React, { useEffect } from 'react';
 import { FaBan } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-interface FutureDateWarningProps {
-  isFutureDate: boolean;
-  showToast?: boolean;
-}
-
 import {
   futureTrainingError,
   futureDateWarningText,
 } from '@/strings/clientStrings';
+import { FutureDateWarningProps } from '@/types/shared-types';
 
 const FutureDateWarning: React.FC<FutureDateWarningProps> = ({
   isFutureDate,

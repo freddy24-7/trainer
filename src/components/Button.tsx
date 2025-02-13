@@ -1,13 +1,7 @@
-import { Button, ButtonProps } from '@heroui/react';
-import React, { FC, ReactNode } from 'react';
+import { Button } from '@heroui/react';
+import React, { FC } from 'react';
 
-interface CustomButtonProps extends Omit<ButtonProps, 'onPress'> {
-  children: ReactNode;
-  onPress?: () => void;
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
-  className?: string;
-}
+import { CustomButtonProps } from '@/types/shared-types';
 
 const CustomButton: FC<CustomButtonProps> = ({
   children,

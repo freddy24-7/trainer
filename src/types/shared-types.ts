@@ -1,3 +1,4 @@
+import { ButtonProps } from '@heroui/react';
 import React, { ReactNode } from 'react';
 import { Control, FieldErrors } from 'react-hook-form';
 import { ZodIssue } from 'zod';
@@ -60,4 +61,17 @@ export interface DateFieldProps {
 export interface DateFilterProps {
   onFilter: (startDate: Date | null, endDate: Date | null) => void;
   label?: string;
+}
+
+export interface CustomButtonProps extends Omit<ButtonProps, 'onPress'> {
+  children: ReactNode;
+  onPress?: () => void;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  className?: string;
+}
+
+export interface FutureDateWarningProps {
+  isFutureDate: boolean;
+  showToast?: boolean;
 }

@@ -270,18 +270,19 @@ export default [{
         "@typescript-eslint/no-explicit-any": "off",
     },
 }, {
-    files: ["__tests__/**/*.ts", "__tests__/**/*.tsx"],
-
-    rules: {
-        "max-lines": ["warn", {
-            max: 300,
-            skipBlankLines: true,
-            skipComments: true,
-        }],
-
+    "files": ["__tests__/**/*.{ts,tsx}", "__mocks__/**/*.{ts,tsx}"],
+    "rules": {
+        "max-lines": [
+            "warn",
+            {
+                "max": 300,
+                "skipBlankLines": true,
+                "skipComments": true
+            }
+        ],
         "max-lines-per-function": "off",
         "jest/no-disabled-tests": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/explicit-function-return-type": "off",
-    },
+        "@typescript-eslint/explicit-function-return-type": "off"
+    }
 }];
