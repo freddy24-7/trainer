@@ -72,7 +72,6 @@ export const submitMatchForm = async (
     const formData = createFormData(data);
 
     if (!validateMatchForm(formData, validatePlayers)) {
-      console.error(validationFailedMessage);
       return false;
     }
 

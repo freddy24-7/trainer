@@ -1,5 +1,6 @@
 jest.spyOn(console, 'error').mockImplementation(() => {});
 jest.spyOn(console, 'log').mockImplementation(() => {});
+jest.spyOn(console, 'warn').mockImplementation(() => {});
 import { ZodIssue } from 'zod';
 
 import addPoule from '../src/app/actions/addPoule';

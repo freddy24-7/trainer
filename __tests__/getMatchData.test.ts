@@ -1,4 +1,5 @@
 jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, 'warn').mockImplementation(() => {});
 import { getMatchData } from '@/app/actions/getMatchData';
 
 import prisma from '../src/lib/prisma';

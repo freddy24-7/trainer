@@ -1,4 +1,6 @@
 jest.spyOn(console, 'log').mockImplementation(() => {});
+jest.spyOn(console, 'error').mockImplementation(() => {});
+
 import { invalidPlayerDataFormatMessage } from '@/strings/serverStrings';
 import { formatError } from '@/utils/errorUtils';
 
@@ -12,11 +14,37 @@ jest.mock('../src/app/actions/addMatchPlayer');
 const mockAddMatch = addMatch as jest.Mock;
 const mockAddMatchPlayer = addMatchPlayer as jest.Mock;
 
+const createMatchFormData = (
+  players: any,
+  pouleOpponentId = '1',
+  date: string = new Date().toISOString()
+): FormData => {
+  const formData = new FormData();
+  formData.append('pouleOpponentId', pouleOpponentId);
+  formData.append('date', date);
+  formData.append('players', JSON.stringify(players));
+  return formData;
+};
+
+const expectUnexpectedPlayerError = (
+  result: any,
+  expectedMessage: string,
+  expectedPath: (string | number)[]
+) => {
+  expect(result.errors).toBeDefined();
+  expect(result.errors.map((e: any) => e.message)).toContain(expectedMessage);
+  expect(result.errors[0].path).toEqual(expectedPath);
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('addMatchAndPlayers Functionality Tests', () => {
+  const playerAdditionErrorMessage = 'Mislukt om speler 1 toe te voegen.';
+  const unexpectedPlayerAdditionErrorMessage =
+    'Onverwachte fout bij het toevoegen van speler. 1.';
+
   it('should successfully create a match and add players', async () => {
     mockAddMatch.mockResolvedValue({ match: { id: 1 } });
     mockAddMatchPlayer.mockResolvedValue({ success: true });
@@ -79,7 +107,6 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     const formData = new FormData();
     formData.append('pouleOpponentId', '1');
     formData.append('date', new Date().toISOString());
-    // Supply an invalid JSON string for players.
     formData.append('players', 'invalid JSON string');
 
     const result = await addMatchAndPlayers(null, formData);
@@ -87,7 +114,6 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     expect(result.errors).toBeDefined();
     expect(Array.isArray(result.errors)).toBe(true);
     expect(result.errors[0].path).toEqual(['players']);
-    // The error message should include the invalid JSON format message.
     expect(result.errors[0].message).toContain(invalidPlayerDataFormatMessage);
   });
 
@@ -113,25 +139,17 @@ describe('addMatchAndPlayers Functionality Tests', () => {
   it('should handle an error during player addition', async () => {
     mockAddMatch.mockResolvedValue({ match: { id: 1 } });
     mockAddMatchPlayer.mockResolvedValue({
-      errors: formatError('Mislukt om speler 1 toe te voegen.', [
-        'players',
-        'form',
-      ]).errors,
+      errors: formatError(playerAdditionErrorMessage, ['players', 'form'])
+        .errors,
     });
 
-    const formData = new FormData();
-    formData.append('pouleOpponentId', '1');
-    formData.append('date', new Date().toISOString());
-    formData.append(
-      'players',
-      JSON.stringify([{ id: 1, minutes: '90', available: true }])
-    );
-
+    const formData = createMatchFormData([
+      { id: 1, minutes: '90', available: true },
+    ]);
     const result = await addMatchAndPlayers(null, formData);
 
     expect(result.errors).toEqual(
-      formatError('Mislukt om speler 1 toe te voegen.', ['players', 'form'])
-        .errors
+      formatError(playerAdditionErrorMessage, ['players', 'form']).errors
     );
     expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
   });
@@ -140,20 +158,94 @@ describe('addMatchAndPlayers Functionality Tests', () => {
     mockAddMatch.mockResolvedValue({ match: { id: 1 } });
     mockAddMatchPlayer.mockRejectedValue(new Error('Unexpected error'));
 
+    const formData = createMatchFormData([
+      { id: 1, minutes: '90', available: true },
+    ]);
+    const result = await addMatchAndPlayers(null, formData);
+
+    expectUnexpectedPlayerError(result, unexpectedPlayerAdditionErrorMessage, [
+      'players',
+      '1',
+    ]);
+    expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return an error if an unexpected error occurs during player addition', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+    mockAddMatchPlayer.mockImplementation(() => {
+      throw new Error('Unexpected server error');
+    });
+
+    const formData = createMatchFormData([
+      { id: 1, minutes: '90', available: true },
+    ]);
+    const result = await addMatchAndPlayers(null, formData);
+
+    expectUnexpectedPlayerError(result, unexpectedPlayerAdditionErrorMessage, [
+      'players',
+      '1',
+    ]);
+    expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
+  });
+
+  it('should collect player validation errors if player data is invalid', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+
     const formData = new FormData();
     formData.append('pouleOpponentId', '1');
     formData.append('date', new Date().toISOString());
     formData.append(
       'players',
-      JSON.stringify([{ id: 1, minutes: '90', available: true }])
+      JSON.stringify([{ id: 1, minutes: 'invalid', available: true }])
     );
 
     const result = await addMatchAndPlayers(null, formData);
 
-    const expectedMessage = 'Onverwachte fout bij het toevoegen van speler. 1.';
+    expect(result.errors).toBeDefined();
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0].message).toContain('Ongeldige minutenwaarde');
+    expect(result.errors[0].path).toEqual(['players', 'minutes']);
+  });
 
-    expect(result.errors.map((e) => e.message)).toContain(expectedMessage);
+  it('should push player errors when handleProcessSinglePlayer fails', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+    mockAddMatchPlayer.mockResolvedValue({
+      errors: formatError(playerAdditionErrorMessage, ['players', '1']).errors,
+    });
+
+    const formData = createMatchFormData([
+      { id: 1, minutes: '90', available: true },
+    ]);
+    const result = await addMatchAndPlayers(null, formData);
+
+    expect(result.errors).toBeDefined();
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0].message).toContain(playerAdditionErrorMessage);
     expect(result.errors[0].path).toEqual(['players', '1']);
-    expect(mockAddMatchPlayer).toHaveBeenCalledTimes(1);
+  });
+
+  it('should handle an empty player list gracefully', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+
+    const formData = createMatchFormData([]);
+    const result = await addMatchAndPlayers(null, formData);
+
+    expect(result.errors).toEqual([]);
+    expect(mockAddMatchPlayer).not.toHaveBeenCalled();
+  });
+
+  it('should catch and return unexpected errors in handleProcessSinglePlayer', async () => {
+    mockAddMatch.mockResolvedValue({ match: { id: 1 } });
+    mockAddMatchPlayer.mockRejectedValue(new Error('Database error occurred'));
+
+    const formData = createMatchFormData([
+      { id: 1, minutes: '90', available: true },
+    ]);
+    const result = await addMatchAndPlayers(null, formData);
+
+    expectUnexpectedPlayerError(result, unexpectedPlayerAdditionErrorMessage, [
+      'players',
+      '1',
+    ]);
   });
 });

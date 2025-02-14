@@ -1,10 +1,14 @@
-import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { toast } from 'react-toastify';
 
-import { SubstitutionManagementProps } from '@/types/match-types';
-import { Player } from '@/types/user-types';
+import { Substitution } from '@/types/match-types';
+import { handleConfirmAllAtOnce } from '@/utils/substitutionUtils';
 
-import SubstitutionManagement from '../src/components/helpers/matchHelpers/SubstitutionManagement';
+jest.mock('react-toastify', () => ({
+  toast: {
+    error: jest.fn(),
+  },
+}));
 
 jest.mock('../src/components/Button', () => {
   return function MockButton({ children, isDisabled, onPress, ...rest }: any) {
@@ -16,43 +20,33 @@ jest.mock('../src/components/Button', () => {
   };
 });
 
-const mockSetSubstitutions = jest.fn();
-
 jest.mock(
   '../src/components/helpers/matchHelpers/SubstitutionManagementBody',
   () => {
     return function MockSubstitutionManagementBody() {
-      mockSetSubstitutions.mockImplementation((substitutions) => {
-        console.log('Mock setSubstitutions called with:', substitutions);
-      });
       return <div data-testid="substitution-management-body" />;
     };
   }
 );
 
-jest.setTimeout(30000);
-
-describe('SubstitutionManagement', () => {
+describe('SubstitutionManagement - handleConfirmAllAtOnce', () => {
   let mockSetValue: jest.Mock;
   let mockSetPlayerStates: jest.Mock;
-  let players: Player[];
+  let mockSetOpen: jest.Mock;
+  let mockSetMinute: jest.Mock;
+  let mockSetSubstitutions: jest.Mock;
   let playerStates: Record<number, 'playing' | 'bench' | 'absent'>;
   let matchEvents: any[];
-  let mockOnSubstitution: jest.Mock;
+  let substitutions: Substitution[];
 
   beforeEach(() => {
-    jest.useFakeTimers();
     jest.clearAllMocks();
 
     mockSetValue = jest.fn();
     mockSetPlayerStates = jest.fn();
-    mockOnSubstitution = jest.fn();
-
-    players = [
-      { id: 1, username: 'Player 1' },
-      { id: 2, username: 'Player 2' },
-      { id: 3, username: 'Player 3' },
-    ];
+    mockSetOpen = jest.fn();
+    mockSetMinute = jest.fn();
+    mockSetSubstitutions = jest.fn();
 
     playerStates = {
       1: 'playing',
@@ -61,29 +55,119 @@ describe('SubstitutionManagement', () => {
     };
 
     matchEvents = [];
+
+    substitutions = [
+      { playerOutId: 1, playerInId: 2, substitutionReason: 'TACTICAL' },
+    ];
   });
 
-  afterEach(() => {
-    jest.useRealTimers();
+  it('should call setValue and update player states when valid substitutions are provided', () => {
+    handleConfirmAllAtOnce({
+      minute: 45,
+      substitutions,
+      matchEvents,
+      playerStates,
+      setValue: mockSetValue,
+      setPlayerStates: mockSetPlayerStates,
+      setOpen: mockSetOpen,
+      setMinute: mockSetMinute,
+      setSubstitutions: mockSetSubstitutions,
+    });
+
+    expect(mockSetValue).toHaveBeenCalledWith('matchEvents', [
+      {
+        minute: 45,
+        playerInId: 2,
+        playerOutId: 1,
+        eventType: 'SUBSTITUTION',
+        substitutionReason: 'TACTICAL',
+      },
+    ]);
+
+    expect(mockSetPlayerStates).toHaveBeenCalledWith({
+      1: 'bench',
+      2: 'playing',
+      3: 'playing',
+    });
+
+    expect(mockSetOpen).toHaveBeenCalledWith(false);
+    expect(mockSetMinute).toHaveBeenCalledWith('');
+    expect(mockSetSubstitutions).toHaveBeenCalledWith([]);
   });
 
-  const renderComponent = (props?: Partial<SubstitutionManagementProps>) =>
-    render(
-      <SubstitutionManagement
-        players={players}
-        playerStates={playerStates}
-        matchEvents={matchEvents}
-        setValue={mockSetValue}
-        setPlayerStates={mockSetPlayerStates}
-        onSubstitution={mockOnSubstitution}
-        {...props}
-      />
+  it('should show an error toast when a required field is missing', () => {
+    handleConfirmAllAtOnce({
+      minute: '',
+      substitutions,
+      matchEvents,
+      playerStates,
+      setValue: mockSetValue,
+      setPlayerStates: mockSetPlayerStates,
+      setOpen: mockSetOpen,
+      setMinute: mockSetMinute,
+      setSubstitutions: mockSetSubstitutions,
+    });
+
+    expect(toast.error).toHaveBeenCalledWith(
+      '⚠️ Vul alle velden in voor elke wissel.'
     );
+    expect(mockSetValue).not.toHaveBeenCalled();
+    expect(mockSetPlayerStates).not.toHaveBeenCalled();
+  });
 
-  it('should render the button to open modal', () => {
-    renderComponent();
+  it('should handle multiple substitutions correctly', () => {
+    handleConfirmAllAtOnce({
+      minute: 60,
+      substitutions: [
+        { playerOutId: 1, playerInId: 2, substitutionReason: 'TACTICAL' },
+        { playerOutId: 3, playerInId: 1, substitutionReason: 'INJURY' },
+      ],
+      matchEvents,
+      playerStates,
+      setValue: mockSetValue,
+      setPlayerStates: mockSetPlayerStates,
+      setOpen: mockSetOpen,
+      setMinute: mockSetMinute,
+      setSubstitutions: mockSetSubstitutions,
+    });
 
-    const openButton = screen.getByText('Beheer wissels');
-    expect(openButton).toBeInTheDocument();
+    expect(mockSetValue).toHaveBeenCalledWith('matchEvents', [
+      {
+        minute: 60,
+        playerInId: 2,
+        playerOutId: 1,
+        eventType: 'SUBSTITUTION',
+        substitutionReason: 'TACTICAL',
+      },
+      {
+        minute: 60,
+        playerInId: 1,
+        playerOutId: 3,
+        eventType: 'SUBSTITUTION',
+        substitutionReason: 'INJURY',
+      },
+    ]);
+  });
+
+  it('should not proceed when all substitutions are missing playerInId', () => {
+    handleConfirmAllAtOnce({
+      minute: 45,
+      substitutions: [
+        { playerOutId: 1, playerInId: null, substitutionReason: 'TACTICAL' },
+        { playerOutId: 3, playerInId: null, substitutionReason: 'INJURY' },
+      ],
+      matchEvents,
+      playerStates,
+      setValue: mockSetValue,
+      setPlayerStates: mockSetPlayerStates,
+      setOpen: mockSetOpen,
+      setMinute: mockSetMinute,
+      setSubstitutions: mockSetSubstitutions,
+    });
+
+    expect(toast.error).toHaveBeenCalledWith(
+      '⚠️ Vul alle velden in voor elke wissel.'
+    );
+    expect(mockSetValue).not.toHaveBeenCalled();
   });
 });
