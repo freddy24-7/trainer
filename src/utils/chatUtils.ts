@@ -42,11 +42,19 @@ export const subscribeToPusherEvents = ({
 
 export const handleDeleteVideoLocal = (
   messageId: number,
+  signedInUserId: number,
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>
 ): void => {
   setMessages((prevMessages) =>
     prevMessages.map((msg) =>
-      msg.id === messageId ? { ...msg, videoUrl: null } : msg
+      msg.id === messageId
+        ? {
+            ...msg,
+            hiddenVideos: msg.hiddenVideos
+              ? [...msg.hiddenVideos, signedInUserId]
+              : [signedInUserId],
+          }
+        : msg
     )
   );
 };
@@ -60,13 +68,14 @@ export async function handleOnDeleteVideo({
 }: HandleOnDeleteVideoParams): Promise<void> {
   if (removeFromDatabase) {
     const response = await deleteVideo(messageId, signedInUserId);
+
     if (response.success) {
-      handleDeleteVideoLocal(messageId, setMessages);
+      handleDeleteVideoLocal(messageId, signedInUserId, setMessages);
     } else {
       console.error(failedToDeleteVideoMessage);
     }
   } else {
-    handleDeleteVideoLocal(messageId, setMessages);
+    handleDeleteVideoLocal(messageId, signedInUserId, setMessages);
   }
 }
 

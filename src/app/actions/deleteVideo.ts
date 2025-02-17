@@ -17,6 +17,7 @@ export async function deleteVideo(
   try {
     const message = await prisma.message.findUnique({
       where: { id: messageId },
+      select: { senderId: true, recipientId: true, videoPublicId: true },
     });
 
     if (!message) {
@@ -26,7 +27,7 @@ export async function deleteVideo(
       };
     }
 
-    if (message.senderId !== userId) {
+    if (message.senderId !== userId && message.recipientId !== userId) {
       return {
         success: false,
         ...formatError(

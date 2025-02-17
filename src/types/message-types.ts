@@ -19,6 +19,7 @@ export interface Message {
   videoPublicId?: string | null;
   createdAt: Date;
   recipientId?: number | null;
+  hiddenVideos?: number[];
 }
 
 export interface PusherEventMessage {

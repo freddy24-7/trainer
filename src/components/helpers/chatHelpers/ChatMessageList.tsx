@@ -47,7 +47,7 @@ const renderVideoControls = (
       )}
       <div className="flex justify-end ml-2">
         <Button
-          onPress={() => onDeleteVideo(msg.id, true)}
+          onPress={() => onDeleteVideo(msg.id, msg.recipientId != null)}
           className="text-red-500 text-xs"
         >
           {removeVideoButtonText}
@@ -61,15 +61,21 @@ const renderMessageContent = (
   msg: MessageListProps['messages'][number],
   signedInUser: MessageListProps['signedInUser'],
   onDeleteVideo: (messageId: number, removeFromDatabase?: boolean) => void
-): React.ReactElement => (
-  <>
-    <div className="text-sm font-semibold mb-1">
-      {msg.sender.id === signedInUser.id ? youLabel : msg.sender.username}
-    </div>
-    {msg.content && <div className="text-sm">{msg.content}</div>}
-    {msg.videoUrl && renderVideoControls(msg, signedInUser, onDeleteVideo)}
-  </>
-);
+): React.ReactElement => {
+  const isVideoHidden = msg.hiddenVideos?.includes(signedInUser.id);
+
+  return (
+    <>
+      <div className="text-sm font-semibold mb-1">
+        {msg.sender.id === signedInUser.id ? youLabel : msg.sender.username}
+      </div>
+      {msg.content && <div className="text-sm">{msg.content}</div>}
+      {msg.videoUrl &&
+        !isVideoHidden &&
+        renderVideoControls(msg, signedInUser, onDeleteVideo)}
+    </>
+  );
+};
 
 const MessageList: React.FC<MessageListProps> = ({
   messages,
