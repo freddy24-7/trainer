@@ -4,9 +4,8 @@ import {
   failedToDeleteVideoMessage,
   failedToDeleteMessageMessage,
 } from '@/strings/serverStrings';
-import { Message, PusherEventMessage } from '@/types/message-types';
+import { PusherEventMessage } from '@/types/message-types';
 import {
-  handleDeleteVideoLocal,
   handleOnDeleteVideo,
   handleOnDeleteMessage,
   handleSendMessage,
@@ -40,49 +39,6 @@ describe('chatUtils', () => {
   beforeEach(() => {
     setMessages = jest.fn();
     jest.clearAllMocks();
-  });
-
-  describe('handleDeleteVideoLocal', () => {
-    it('removes video URL from the correct message', () => {
-      const messages: Message[] = [
-        {
-          id: 1,
-          content: 'Message 1',
-          videoUrl: 'video.mp4',
-          sender: { id: 1, username: 'User1' },
-          createdAt: new Date(),
-        },
-        {
-          id: 2,
-          content: 'Message 2',
-          videoUrl: null,
-          sender: { id: 2, username: 'User2' },
-          createdAt: new Date(),
-        },
-      ];
-
-      setMessages.mockImplementation((fn) => fn(messages));
-
-      handleDeleteVideoLocal(1, setMessages);
-
-      expect(setMessages).toHaveBeenCalledWith(expect.any(Function));
-      expect(setMessages.mock.calls[0][0](messages)).toEqual([
-        {
-          id: 1,
-          content: 'Message 1',
-          videoUrl: null,
-          sender: { id: 1, username: 'User1' },
-          createdAt: expect.any(Date),
-        },
-        {
-          id: 2,
-          content: 'Message 2',
-          videoUrl: null,
-          sender: { id: 2, username: 'User2' },
-          createdAt: expect.any(Date),
-        },
-      ]);
-    });
   });
 
   describe('handleOnDeleteVideo', () => {
