@@ -38,7 +38,7 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
 
   const isFormValid = opponents.length > 0;
 
-  const { buttonClassName } = useDisableSubmitButton({
+  const { buttonClassName, isButtonDisabled } = useDisableSubmitButton({
     isSubmitting,
     isFormValid,
   });
@@ -61,7 +61,13 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
         <OpponentsList opponents={opponents} onRemove={handleRemoveOpponent} />
       )}
 
-      <CustomButton type="submit" className={buttonClassName}>
+      <CustomButton
+        type="submit"
+        className={buttonClassName}
+        style={{
+          color: isButtonDisabled ? '#EF4444' : '#22C55E',
+        }}
+      >
         {isSubmitting ? submittingText : addPouleButtonText}
       </CustomButton>
     </form>

@@ -27,7 +27,7 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
 
   const isFormValid = !!date;
 
-  const { buttonClassName } = useDisableSubmitButton({
+  const { buttonClassName, isButtonDisabled } = useDisableSubmitButton({
     isSubmitting,
     isFutureDate,
     isFormValid,
@@ -60,6 +60,9 @@ const TrainingFormBody: React.FC<TrainingFormBodyProps> = ({
         type="submit"
         className={buttonClassName}
         isLoading={isSubmitting}
+        style={{
+          color: isButtonDisabled ? '#EF4444' : '#22C55E',
+        }}
       >
         {isSubmitting ? submittingButtonText : addTrainingButtonText}
       </CustomButton>

@@ -15,8 +15,8 @@ const useDisableSubmitButton = ({
     () =>
       `mt-4 w-full p-2 rounded ${
         isButtonDisabled
-          ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-          : 'bg-black text-white hover:bg-gray-800'
+          ? 'bg-red-200 cursor-not-allowed'
+          : 'bg-blue-600 hover:bg-blue-700 border border-black'
       }`,
     [isButtonDisabled]
   );

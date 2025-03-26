@@ -16,14 +16,14 @@ model User {
   clerkId          String?          @unique
   teamId           Int?
   whatsappNumber   String?
-  matchPlayers     MatchPlayer[]
+  MatchEvent       MatchEvent[]
   substitutedIn    MatchEvent[]     @relation("PlayerInUser")
   substitutedOut   MatchEvent[]     @relation("PlayerOutUser")
+  matchPlayers     MatchPlayer[]
   messagesReceived Message[]        @relation("Recipient")
   messagesSent     Message[]        @relation("Sender")
   trainingPlayers  TrainingPlayer[]
   team             Team?            @relation(fields: [teamId], references: [id])
-  MatchEvent       MatchEvent[]
 }
 
 model Team {
@@ -55,14 +55,14 @@ model PouleOpponents {
 model Match {
   id               Int               @id @default(autoincrement())
   pouleOpponentId  Int?
-  trainingMatch    Boolean
-  opponentName     String?
-  opponentStrength OpponentStrength?
   date             DateTime
   createdAt        DateTime          @default(now())
+  opponentName     String?
+  trainingMatch    Boolean
+  opponentStrength OpponentStrength?
   pouleOpponent    PouleOpponents?   @relation(fields: [pouleOpponentId], references: [id])
-  matchPlayers     MatchPlayer[]
   matchEvents      MatchEvent[]
+  matchPlayers     MatchPlayer[]
 }
 
 model MatchPlayer {
@@ -82,15 +82,14 @@ model MatchEvent {
   matchId            Int
   playerInId         Int?
   playerOutId        Int?
-  playerId           Int?
   minute             Int
   eventType          EventType
   substitutionReason SubstitutionReason?
-
-  match     Match @relation(fields: [matchId], references: [id])
-  playerIn  User? @relation("PlayerInUser", fields: [playerInId], references: [id])
-  playerOut User? @relation("PlayerOutUser", fields: [playerOutId], references: [id])
-  player    User? @relation(fields: [playerId], references: [id])
+  playerId           Int?
+  match              Match               @relation(fields: [matchId], references: [id])
+  player             User?               @relation(fields: [playerId], references: [id])
+  playerIn           User?               @relation("PlayerInUser", fields: [playerInId], references: [id])
+  playerOut          User?               @relation("PlayerOutUser", fields: [playerOutId], references: [id])
 }
 
 model Training {

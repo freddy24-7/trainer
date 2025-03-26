@@ -3,7 +3,6 @@ import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 import {
   userNotAuthenticatedMessage,
-  prismaUserNotFoundMessage,
   prismaUserLogMessage,
 } from '@/strings/serverStrings';
 import { SignedInUser } from '@/types/user-types';
@@ -20,10 +19,7 @@ export async function fetchAndCheckUser(): Promise<SignedInUser | null> {
     where: { clerkId: userId },
   });
 
-  if (!prismaUser) {
-    console.error(prismaUserNotFoundMessage, userId);
-    return null;
-  }
+  if (prismaUser === null) return null;
 
   const signedInUser: SignedInUser = {
     id: prismaUser.id.toString(),
