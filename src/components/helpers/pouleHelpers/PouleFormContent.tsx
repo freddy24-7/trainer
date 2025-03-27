@@ -5,7 +5,6 @@ import { OpponentsList } from '@/components/helpers/pouleHelpers/OpponentsList';
 import { PouleFormFields } from '@/components/helpers/pouleHelpers/PouleFormFields';
 import useDisableSubmitButton from '@/hooks/useDisableSubmitButton';
 import {
-  pouleManagementHeading,
   addOpponentButtonText,
   addPouleButtonText,
   submittingText,
@@ -45,8 +44,6 @@ const PouleFormContent: React.FC<PouleFormContentProps> = ({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-      <h3 className="text-lg font-semibold">{pouleManagementHeading}</h3>
-
       <PouleFormFields
         control={control}
         errors={errors}

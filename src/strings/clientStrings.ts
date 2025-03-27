@@ -20,7 +20,6 @@ export const avgPlayingTimeHeaderOpponent =
   'Gemiddelde Speeltijd - kracht van tegenstander';
 export const absencesHeader = 'Afwezigheden';
 export const unknownPlayerPlaceholder = 'Onbekende Speler';
-export const pouleManagementHeading = 'Poulebewerking';
 export const addOpponentButtonText = 'Tegenstander Toevoegen';
 export const addPouleButtonText = 'Poule Toevoegen';
 export const onlyVideoFilesMessage = 'Alleen videobestanden zijn toegestaan';
