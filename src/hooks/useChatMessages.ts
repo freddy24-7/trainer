@@ -4,6 +4,7 @@ import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useRef,
 } from 'react';
 
 import { PusherEventMessage, Message } from '@/types/message-types';
@@ -23,17 +24,13 @@ export function handleIncomingMessage(
     recipientId: data.recipientId ?? null,
   };
 
-  setMessages((prevMessages) => {
-    const alreadyExists =
-      prevMessages.some((msg) => msg.id === incomingMessage.id) ||
-      trackedMessageIds.has(incomingMessage.id);
+  const alreadyExists = trackedMessageIds.has(incomingMessage.id);
 
-    if (alreadyExists) {
-      return prevMessages;
-    }
+  if (alreadyExists) return;
 
-    return [...prevMessages, incomingMessage];
-  });
+  trackedMessageIds.add(incomingMessage.id);
+
+  setMessages((prevMessages) => [...prevMessages, incomingMessage]);
 }
 
 export const useChatMessages = (
@@ -51,28 +48,20 @@ export const useChatMessages = (
   ) => void;
 } => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
-  const [trackedMessageIds, setTrackedMessageIds] = useState<Set<number>>(
-    new Set()
+  const trackedMessageIdsRef = useRef<Set<number>>(
+    new Set(initialMessages.map((m) => m.id))
   );
 
   const handleDeleteMessageLocal = useCallback((messageId: number) => {
     setMessages((prevMessages) =>
       prevMessages.filter((msg) => msg.id !== messageId)
     );
-    setTrackedMessageIds((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(messageId);
-      return newSet;
-    });
+    trackedMessageIdsRef.current.delete(messageId);
   }, []);
 
   const addOptimisticMessage = useCallback((message: Message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
-    setTrackedMessageIds((prev) => {
-      const newSet = new Set(prev);
-      newSet.add(message.id);
-      return newSet;
-    });
+    trackedMessageIdsRef.current.add(message.id);
   }, []);
 
   const replaceOptimisticMessage = useCallback(
@@ -82,20 +71,18 @@ export const useChatMessages = (
           msg.id === temporaryId ? confirmedMessage : msg
         )
       );
-      setTrackedMessageIds((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(temporaryId);
-        newSet.add(confirmedMessage.id);
-        return newSet;
-      });
+      trackedMessageIdsRef.current.delete(temporaryId);
+      trackedMessageIdsRef.current.add(confirmedMessage.id);
     },
     []
   );
 
   useEffect(() => {
+    const onMessageReceived = (data: PusherEventMessage): void =>
+      handleIncomingMessage(data, setMessages, trackedMessageIdsRef.current);
+
     const unsubscribe = subscribeToPusherEvents({
-      onMessageReceived: (data: PusherEventMessage) =>
-        handleIncomingMessage(data, setMessages, trackedMessageIds),
+      onMessageReceived,
       onDeleteMessage: handleDeleteMessageLocal,
       setLoading,
       userId: signedInUserId,
@@ -104,7 +91,7 @@ export const useChatMessages = (
     return () => {
       unsubscribe();
     };
-  }, [signedInUserId, handleDeleteMessageLocal, setLoading, trackedMessageIds]);
+  }, [signedInUserId, handleDeleteMessageLocal, setLoading]);
 
   const handleDeleteMessage = useCallback(
     (messageId: number) => {

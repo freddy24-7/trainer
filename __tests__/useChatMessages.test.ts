@@ -69,6 +69,8 @@ describe('useChatMessages', () => {
   it('should prevent duplicate incoming messages', () => {
     const { result } = renderHook(() => useChatMessages(1, [], mockSetLoading));
 
+    const trackedIds = new Set<number>();
+
     const newMessage: PusherEventMessage = {
       id: 3,
       content: 'Duplicate Message',
@@ -79,11 +81,11 @@ describe('useChatMessages', () => {
     };
 
     act(() => {
-      handleIncomingMessage(newMessage, result.current.setMessages, new Set());
+      handleIncomingMessage(newMessage, result.current.setMessages, trackedIds);
     });
 
     act(() => {
-      handleIncomingMessage(newMessage, result.current.setMessages, new Set());
+      handleIncomingMessage(newMessage, result.current.setMessages, trackedIds);
     });
 
     expect(result.current.messages).toHaveLength(1);
