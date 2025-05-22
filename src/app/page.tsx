@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function Home(): React.ReactElement {
-  const cloudinaryBaseURL = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/v1737901142/hometrainer/6077699-uhd_3840_2160_25fps_vy8onm.mp4`;
+  const cloudinaryBaseURL = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/v1747944347/trainer2/wvfbpg3rdw01u1k1ob4s.mp4`;
 
   return (
     <div
