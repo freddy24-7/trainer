@@ -5,9 +5,9 @@ import { ManagementDropdown } from '@/components/navigation/ManagementDropdown';
 import NavLink from '@/components/navigation/NavLink';
 import { StatsDropdown } from '@/components/navigation/StatsDropdown';
 import {
+  chatLabel,
   infoLabel,
   myStatsLabel,
-  chatLabel,
   signInLabel,
 } from '@/strings/clientStrings';
 import { NavBarUserContentProps } from '@/types/ui-types';

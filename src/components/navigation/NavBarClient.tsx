@@ -1,6 +1,7 @@
 'use client';
 
 import { NavbarContent } from '@heroui/react';
+import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import React, { useState, useEffect, ReactElement } from 'react';
 import { CiHome } from 'react-icons/ci';
@@ -30,7 +31,23 @@ export default function NavBarClient({
 
   return (
     <>
-      <div className="md:hidden flex items-center w-min">
+      <div className="md:hidden flex items-center space-x-2">
+        {userRole === 'TRAINER' && (
+          <>
+            <Link
+              href="/matches"
+              className="bg-black text-brandcolor font-semibold px-3 py-1.5 rounded text-sm"
+            >
+              Enter Match
+            </Link>
+            <Link
+              href="/trainings"
+              className="bg-black text-brandcolor font-semibold px-3 py-1.5 rounded text-sm"
+            >
+              Enter Training
+            </Link>
+          </>
+        )}
         <MobileMenu
           userId={userId}
           userRole={userRole}
